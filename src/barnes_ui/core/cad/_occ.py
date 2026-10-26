@@ -48,7 +48,8 @@ class _OccNamespace:
         from OCP.Bnd import Bnd_Box
         from OCP.BRep import BRep_Builder, BRep_Tool
         from OCP.BRepAdaptor import BRepAdaptor_Surface
-        from OCP.BRepAlgoAPI import BRepAlgoAPI_Section
+        from OCP.BRepAlgoAPI import BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse, BRepAlgoAPI_Section
+        from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox, BRepPrimAPI_MakeCylinder
         from OCP.BRepBndLib import BRepBndLib
         from OCP.BRepBuilderAPI import BRepBuilderAPI_MakeFace
         from OCP.BRepCheck import BRepCheck_Analyzer
@@ -57,7 +58,8 @@ class _OccNamespace:
         from OCP.BRepTools import BRepTools
         from OCP.collections import HSequence_TopoDS_Shape
         from OCP.GeomAbs import GeomAbs_SurfaceType
-        from OCP.gp import gp_Ax3, gp_Dir, gp_Pln, gp_Pnt
+        from OCP.gp import gp_Ax2, gp_Ax3, gp_Dir, gp_Pln, gp_Pnt
+        from OCP.STEPControl import STEPControl_StepModelType, STEPControl_Writer
         from OCP.GProp import GProp_GProps
         from OCP.ShapeAnalysis import ShapeAnalysis_FreeBounds
         from OCP.IFSelect import IFSelect_ReturnStatus
@@ -73,7 +75,11 @@ class _OccNamespace:
         self.BRep_Builder = BRep_Builder
         self.BRep_Tool = BRep_Tool
         self.BRepAdaptor_Surface = BRepAdaptor_Surface
+        self.BRepAlgoAPI_Cut = BRepAlgoAPI_Cut
+        self.BRepAlgoAPI_Fuse = BRepAlgoAPI_Fuse
         self.BRepAlgoAPI_Section = BRepAlgoAPI_Section
+        self.BRepPrimAPI_MakeBox = BRepPrimAPI_MakeBox
+        self.BRepPrimAPI_MakeCylinder = BRepPrimAPI_MakeCylinder
         self.BRepBndLib = BRepBndLib
         self.BRepBuilderAPI_MakeFace = BRepBuilderAPI_MakeFace
         self.BRepCheck_Analyzer = BRepCheck_Analyzer
@@ -82,10 +88,13 @@ class _OccNamespace:
         self.BRepTools = BRepTools
         self.HSequence_TopoDS_Shape = HSequence_TopoDS_Shape
         self.GeomAbs_SurfaceType = GeomAbs_SurfaceType
+        self.gp_Ax2 = gp_Ax2
         self.gp_Ax3 = gp_Ax3
         self.gp_Dir = gp_Dir
         self.gp_Pln = gp_Pln
         self.gp_Pnt = gp_Pnt
+        self.STEPControl_StepModelType = STEPControl_StepModelType
+        self.STEPControl_Writer = STEPControl_Writer
         self.GProp_GProps = GProp_GProps
         self.ShapeAnalysis_FreeBounds = ShapeAnalysis_FreeBounds
         self.IFSelect_ReturnStatus = IFSelect_ReturnStatus
