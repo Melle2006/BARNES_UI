@@ -114,22 +114,21 @@ list beside it and a statement that the error against FEA is not yet known.
 
 ---
 
-## Phase 3 — Nonlinear FEA — **PIPELINE COMPLETE, 6 of 8 CRITERIA MET**
+## Phase 3 — Nonlinear FEA — **7 of 8 CRITERIA MET, VERIFIED AGAINST A REAL SOLVER**
 
-**Blocked on one thing: CalculiX is not installed on the development machine.** The
-pipeline is built and the criteria that do not need the binary are met and measured.
-Two criteria cannot be closed without it, and are listed as blocked rather than
-quietly skipped.
+CalculiX 2.23 is now installed and every benchmark below has been run through it. See
+[08-calculix-installation.md](08-calculix-installation.md) for what was installed, why,
+and what checking it revealed.
 
 | # | Criterion | Status |
 |---|---|---|
-| 1 | Cantilever vs analytical, < 2 % | **MET — 0.7 %** on a practical mesh, 0.5 % at the extrapolated limit |
-| 2 | Hyperelastic uniaxial vs Neo-Hookean closed form, < 1 % | **BLOCKED** — the material law is verified to 0.1 % in `test_material`, but confirming CalculiX integrates it needs a run |
+| 1 | Cantilever vs analytical, < 2 % | **MET — 0.75 % in CalculiX** (0.503757 N vs 0.500000 N); 0.7 % in the independent backend |
+| 2 | Hyperelastic uniaxial vs Neo-Hookean closed form, < 1 % | **MET — worst 0.094 %** across stretches to λ = 2.0, in CalculiX with `*NLGEOM` |
 | 3 | Mesh convergence, < 2 % between two finest | **MET — 0.012 %**, monotonic over four refinements |
 | 4 | Reaction = applied load, < 0.5 % | **MET — 0.0000 %** |
 | 5 | Non-converged run reports failure, no result shown | **MET** — `tagged_moment` raises rather than returning a caveated number |
 | 6 | CalculiX absent → FEA disabled, no fallback | **MET** — tested against the machine's actual state |
-| 7 | Reduced-order vs FEA discrepancy on the real flexure | **BLOCKED** — needs a production run |
+| 7 | Reduced-order vs FEA discrepancy on the real flexure | **IN PROGRESS** — the A3 part meshes (32,965 C3D10) and solves; the comparison figure is not yet recorded |
 | 8 | CalculiX viscoelasticity resolved | **MET — resolved: not available.** See [03-solver-comparison.md](03-solver-comparison.md) |
 
 **Criterion 8, settled.** CalculiX has **no** viscoelastic material capability. There is
@@ -158,12 +157,31 @@ legitimately stiffer.
 - Nodal lumping of the end load was replaced by a consistently integrated facet
   traction, so the applied resultant is mesh-independent.
 
-**What is built and not yet proven.** The CalculiX deck generator follows the documented
-keyword syntax and its structure is tested — keywords, one-based renumbering, D1 from
-Poisson's ratio, material provenance recorded in the deck itself — but no deck has been
-submitted to a real `ccx`. The `*RIGID BODY` rotational driving in particular needs
-confirming. Nothing in the application reports results from an unexecuted deck, so the
-exposure is a failed run rather than a wrong number.
+**Four defects that only a real solver could expose.** The deck generator passed every
+structural test and was still wrong in four ways, each found by submitting to `ccx`:
+
+- The runner invoked `ccx jobname` instead of `ccx -i jobname`. Without the flag
+  CalculiX prints its usage banner and **exits 0 without solving** — a successful-looking
+  run with no results.
+- Gmsh and CalculiX order C3D10 mid-side nodes differently at positions 8 and 9. Every
+  element failed with `*ERROR in e_c3d: nonpositive jacobian` despite positive corner
+  volumes; a 10-node tet's Jacobian depends on all ten nodes.
+- The log parser matched bare `error`, which is how CalculiX's linear solver prints its
+  convergence *residuals*. A perfectly healthy run was declared non-converged.
+- A `*RIGID BODY` whose member node set was never written produced a **converged null
+  solve**: one `*WARNING`, then every displacement and reaction exactly zero, reported as
+  CONVERGED. `FeaResult.is_null_solution` now catches this.
+
+The last one is worth dwelling on: convergence was genuinely true and the result was
+meaningless. It is the cleanest example this project has produced of why convergence is
+a numerical property and not a statement about whether a question was asked.
+
+**Mesh sizing on a part with interior thin features.** The default element size derives
+from the bounding box's smallest extent. For the A3 twin strap that is 10.95 mm, giving
+5.48 mm elements, while the actual strap is 1.0 mm thick and the collar wall 1.2 mm —
+both interior. CalculiX rejected that mesh outright. The thinnest feature must be passed
+explicitly for such a part, which is what `generate_mesh`'s `smallest_dimension`
+argument is for.
 
 ### Original specification
 

@@ -285,6 +285,111 @@ class TestDeckGeneration:
                 [BoundaryCondition("no_such_set", (1, 2, 3))], DeckSettings(),
             )
 
+    def test_tet10_nodes_are_reordered_for_calculix(self, coarse_mesh) -> None:
+        """Gmsh and CalculiX disagree on mid-side node positions 8 and 9.
+
+        Regression for the first real submission, which failed on every element with
+        "*ERROR in e_c3d: nonpositive jacobian" despite all corner volumes being
+        positive. A 10-node tet's Jacobian depends on all ten nodes, so two swapped
+        mid-edge nodes fold the element.
+        """
+        from barnes_ui.core.fea.deck import _GMSH_TO_CALCULIX_TET10
+
+        assert _GMSH_TO_CALCULIX_TET10 == (0, 1, 2, 3, 4, 5, 6, 7, 9, 8)
+
+        deck = self._deck(coarse_mesh)
+        lines = deck.splitlines()
+        start = next(
+            i for i, line in enumerate(lines) if line.startswith("*ELEMENT")
+        ) + 1
+        # Each C3D10 row spans two lines: 8 ids then 2.
+        first = [v.strip() for v in lines[start].rstrip(",").split(",")][1:]
+        second = [v.strip() for v in lines[start + 1].split(",")]
+        written = [int(v) - 1 for v in first + second]
+
+        expected = [
+            int(coarse_mesh.elements[0][i]) for i in _GMSH_TO_CALCULIX_TET10
+        ]
+        assert written == expected
+
+    def test_first_order_elements_are_not_reordered(self, cantilever_shape) -> None:
+        """The permutation applies to C3D10 only; C3D4 has no mid-side nodes."""
+        mesh = generate_mesh(
+            cantilever_shape,
+            MeshSettings(elements_through_thickness=2, second_order=False),
+        )
+        sets = sorted(mesh.node_sets)
+        deck = write_deck(
+            mesh, provisional_tpu(),
+            [BoundaryCondition(sets[0], (1, 2, 3), 0.0)],
+            DeckSettings(),
+        )
+        lines = deck.splitlines()
+        start = next(i for i, line in enumerate(lines) if line.startswith("*ELEMENT")) + 1
+        written = [int(v) - 1 for v in lines[start].split(",")[1:]]
+        assert written == [int(v) for v in mesh.elements[0]]
+
+
+@requires_kernel
+class TestRigidBodyDriving:
+    """Prescribing a joint rotation, and the bug that made it silently do nothing."""
+
+    def _deck_with_body(self, mesh):
+        from barnes_ui.core.fea.deck import RigidBody
+
+        sets = sorted(mesh.node_sets)
+        body = RigidBody(node_set=sets[1], reference_point=(0.0, 0.0, 0.0), name="distal")
+        return write_deck(
+            mesh, provisional_tpu(),
+            [
+                BoundaryCondition(sets[0], (1, 2, 3), 0.0, "fixed"),
+                BoundaryCondition("distal_rot", (1,), 0.1, "prescribed rotation"),
+            ],
+            DeckSettings(rigid_bodies=[body], reaction_sets=["distal_rot"]),
+        ), body, sets[1]
+
+    def test_rigid_body_member_set_is_written(self, coarse_mesh) -> None:
+        """The bug: the tied set was never defined, so nothing was tied.
+
+        CalculiX only warned, then solved a model with no load and reported CONVERGED
+        with every displacement and reaction exactly zero.
+        """
+        deck, _, member_set = self._deck_with_body(coarse_mesh)
+        assert f"*NSET, NSET={member_set}" in deck
+
+    def test_rigid_body_card_is_written_with_both_nodes(self, coarse_mesh) -> None:
+        deck, body, member_set = self._deck_with_body(coarse_mesh)
+        assert (
+            f"*RIGID BODY, NSET={member_set}, REF NODE={body.reference_node}, "
+            f"ROT NODE={body.rotation_node}" in deck
+        )
+
+    def test_reference_nodes_are_appended_after_the_mesh(self, coarse_mesh) -> None:
+        _, body, _ = self._deck_with_body(coarse_mesh)
+        assert body.reference_node == coarse_mesh.node_count + 1
+        assert body.rotation_node == coarse_mesh.node_count + 2
+
+    def test_generated_sets_are_valid_bc_targets(self, coarse_mesh) -> None:
+        """'distal_rot' is not a mesh surface but must still be constrainable."""
+        deck, _, _ = self._deck_with_body(coarse_mesh)
+        assert "*NSET, NSET=distal_rot" in deck
+        assert "distal_rot, 1, 1" in deck
+
+    def test_rigid_body_on_an_unknown_set_is_refused(self, coarse_mesh) -> None:
+        from barnes_ui.core.fea.deck import RigidBody
+
+        sets = sorted(coarse_mesh.node_sets)
+        with pytest.raises(DeckError, match="not in the mesh"):
+            write_deck(
+                coarse_mesh, provisional_tpu(),
+                [BoundaryCondition(sets[0], (1, 2, 3), 0.0)],
+                DeckSettings(
+                    rigid_bodies=[
+                        RigidBody(node_set="nope", reference_point=(0, 0, 0))
+                    ]
+                ),
+            )
+
 
 # ---------------------------------------------------------------------------
 # Result handling -- Phase 3 criterion 5
@@ -346,6 +451,61 @@ class TestResultHandling:
         report = parse_convergence(log)
         assert not report.converged
         assert report.errors
+
+    def test_solver_residual_lines_are_not_mistaken_for_errors(self) -> None:
+        """CalculiX's linear solver prints residuals on lines reading 'error  1e-09'.
+
+        Regression: matching bare 'error' declared a perfectly healthy run
+        non-converged on the strength of its own convergence residuals -- three
+        decreasing residuals, a clean 'Job finished', correct reactions, verdict
+        failure. The mirror image of the bug this module exists to prevent.
+        """
+        log = (
+            " STEP            1\n"
+            "    - iteration 1 :\n"
+            "         error                                  9.2425e-09\n"
+            "    - iteration 2 :\n"
+            "         error                                  3.9084e-11\n"
+            "\n Job finished\n"
+        )
+        report = parse_convergence(log)
+        assert report.converged
+        assert report.errors == []
+
+    def test_a_linear_run_without_increment_markers_counts_as_one(self) -> None:
+        """A linear static prints no 'increment' lines; '0 of 0' would be useless."""
+        report = parse_convergence(" STEP 1\n Job finished\n")
+        assert report.converged
+        assert report.increments_completed >= 1
+
+    def test_null_solution_is_detected(self) -> None:
+        """Converged, but nothing happened -- a correct answer to no problem."""
+        result = FeaResult(
+            convergence=ConvergenceReport(converged=True, increments_completed=8),
+            reaction_forces={"driven": np.zeros(3)},
+            displacements=np.zeros((100, 3)),
+        )
+        assert result.is_null_solution
+        assert not result.is_trustworthy
+
+    def test_null_solution_refuses_to_report_a_moment(self) -> None:
+        result = FeaResult(
+            convergence=ConvergenceReport(converged=True),
+            reaction_forces={"driven": np.zeros(3)},
+            displacements=np.zeros((10, 3)),
+            reaction_moments={"driven": np.zeros(3)},
+        )
+        with pytest.raises(ValueError, match="null problem"):
+            result.tagged_moment("driven", np.array([1.0, 0.0, 0.0]))
+
+    def test_a_real_solution_is_not_flagged_as_null(self) -> None:
+        result = FeaResult(
+            convergence=ConvergenceReport(converged=True),
+            reaction_forces={"driven": np.array([0.0, 0.0, 0.5])},
+            displacements=np.full((10, 3), 0.01),
+        )
+        assert not result.is_null_solution
+        assert result.is_trustworthy
 
     def test_convergence_parser_defaults_to_not_converged(self) -> None:
         """An ambiguous log must read as failure, not success.

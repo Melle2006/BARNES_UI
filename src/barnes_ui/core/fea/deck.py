@@ -69,6 +69,36 @@ class BoundaryCondition:
 
 
 @dataclass
+class RigidBody:
+    """A node set tied to a rigid reference, so a rotation can be prescribed on it.
+
+    This is how a joint rotation is driven. A finger joint rotates the distal phalanx
+    rigidly about its axis, so the flexure's distal attachment has to follow that
+    rotation exactly -- which is a single kinematic condition on a whole set of nodes,
+    not something expressible as per-node displacements without computing each one.
+
+    CalculiX's ``*RIGID BODY`` takes a reference node carrying the translations and a
+    rotation node whose degrees of freedom 1-3 are the rotations about the global axes.
+    Both are extra nodes appended after the mesh, and the reference node must lie **on
+    the joint axis**, or the prescribed rotation is about the wrong line.
+
+    Reading the reaction moment off the rotation node is what makes the torque-angle
+    workflow possible at all: it concentrates a distributed reaction into one point
+    where the moment is exact, rather than requiring per-node forces.
+    """
+
+    node_set: str
+    #: A point on the joint axis, in mm. Becomes the rigid body's reference node.
+    reference_point: tuple[float, float, float]
+    #: Name given to the generated reference node set, for boundary conditions.
+    name: str = "rigid"
+
+    #: Filled in by the deck writer: the one-based node numbers it allocated.
+    reference_node: int = 0
+    rotation_node: int = 0
+
+
+@dataclass
 class DeckSettings:
     """Everything needed to turn a mesh and a material into a deck."""
 
@@ -84,6 +114,8 @@ class DeckSettings:
     reaction_sets: list[str] = field(default_factory=list)
     #: Request stress and strain fields in the .frd file.
     output_fields: bool = True
+    #: Rigid bodies, for prescribing a joint rotation on an attachment region.
+    rigid_bodies: list[RigidBody] = field(default_factory=list)
 
 
 def write_deck(
@@ -108,11 +140,28 @@ def write_deck(
             "body modes and will not solve."
         )
 
-    missing = [bc.node_set for bc in boundary_conditions if bc.node_set not in mesh.node_sets]
+    # Rigid bodies allocate extra nodes, so their generated set names are legitimate
+    # boundary-condition targets even though they are not mesh surfaces.
+    generated_sets = set()
+    next_node = mesh.node_count + 1
+    for body in settings.rigid_bodies:
+        if body.node_set not in mesh.node_sets:
+            raise DeckError(
+                f"Rigid body {body.name!r} references node set {body.node_set!r}, "
+                f"which is not in the mesh. Available: {sorted(mesh.node_sets)}"
+            )
+        body.reference_node = next_node
+        body.rotation_node = next_node + 1
+        next_node += 2
+        generated_sets.add(f"{body.name}_ref")
+        generated_sets.add(f"{body.name}_rot")
+
+    known = set(mesh.node_sets) | generated_sets
+    missing = [bc.node_set for bc in boundary_conditions if bc.node_set not in known]
     if missing:
         raise DeckError(
             f"Boundary conditions reference node sets that are not in the mesh: "
-            f"{missing}. Available: {sorted(mesh.node_sets)}"
+            f"{missing}. Available: {sorted(known)}"
         )
 
     lines: list[str] = []
@@ -128,29 +177,78 @@ def write_deck(
         out(f"**   CAVEAT: {caveat.message}")
     out("**")
 
-    _write_nodes(out, mesh)
+    _write_nodes(out, mesh, settings)
     _write_elements(out, mesh)
     _write_node_sets(out, mesh, boundary_conditions, settings)
+    _write_rigid_bodies(out, settings)
     _write_material(out, material)
     _write_step(out, boundary_conditions, settings)
 
     return "\n".join(lines) + "\n"
 
 
-def _write_nodes(out, mesh: Mesh) -> None:
+def _write_nodes(out, mesh: Mesh, settings: DeckSettings) -> None:
     out("*NODE, NSET=Nall")
     for index, (x, y, z) in enumerate(mesh.nodes, start=1):
         out(f"{index}, {x:.9g}, {y:.9g}, {z:.9g}")
 
+    # Rigid-body reference and rotation nodes, appended after the mesh. The reference
+    # node sits on the joint axis; the rotation node's position is immaterial to
+    # CalculiX but is placed alongside it so a viewer shows them together.
+    for body in settings.rigid_bodies:
+        x, y, z = body.reference_point
+        out(f"** rigid body {body.name}: reference node on the joint axis")
+        out(f"{body.reference_node}, {x:.9g}, {y:.9g}, {z:.9g}")
+        out(f"** rigid body {body.name}: rotation node (DOFs 1-3 are rotations)")
+        out(f"{body.rotation_node}, {x:.9g}, {y:.9g}, {z:.9g}")
+
+
+def _write_rigid_bodies(out, settings: DeckSettings) -> None:
+    for body in settings.rigid_bodies:
+        out(f"*NSET, NSET={body.name}_ref")
+        out(f"{body.reference_node}")
+        out(f"*NSET, NSET={body.name}_rot")
+        out(f"{body.rotation_node}")
+        out(
+            f"*RIGID BODY, NSET={body.node_set}, "
+            f"REF NODE={body.reference_node}, ROT NODE={body.rotation_node}"
+        )
+
+
+#: Permutation from Gmsh's 10-node tetrahedron ordering to CalculiX's C3D10.
+#:
+#: The two conventions agree on the four corners and on the first four mid-edge nodes,
+#: then disagree on the last two:
+#:
+#:     position   Gmsh        CalculiX / Abaqus
+#:        8       mid(2,3)    mid(1,3)
+#:        9       mid(1,3)    mid(2,3)
+#:
+#: So positions 8 and 9 are swapped. This is not cosmetic. A 10-node tetrahedron's
+#: Jacobian depends on all ten node positions, and misplacing two mid-edge nodes folds
+#: the element: the first real submission to CalculiX failed with
+#: "*ERROR in e_c3d: nonpositive jacobian" on element after element, despite every
+#: element having a positive corner volume by the project's own quality check. The
+#: corner orientation was fine all along; the mid-side nodes were not.
+_GMSH_TO_CALCULIX_TET10 = (0, 1, 2, 3, 4, 5, 6, 7, 9, 8)
+
 
 def _write_elements(out, mesh: Mesh) -> None:
     out(f"*ELEMENT, TYPE={mesh.calculix_element_type}, ELSET=Eall")
+
     for index, connectivity in enumerate(mesh.elements, start=1):
+        if mesh.second_order:
+            ordered = [connectivity[i] for i in _GMSH_TO_CALCULIX_TET10]
+        else:
+            ordered = list(connectivity)
+
+        node_ids = [str(int(n) + 1) for n in ordered]
         # CalculiX limits an input line's length, so long C3D10 rows are continued.
-        node_ids = [str(int(n) + 1) for n in connectivity]
-        first = ", ".join(node_ids[:8])
-        out(f"{index}, {first},")
-        out(f"{', '.join(node_ids[8:])}")
+        if len(node_ids) > 8:
+            out(f"{index}, {', '.join(node_ids[:8])},")
+            out(f"{', '.join(node_ids[8:])}")
+        else:
+            out(f"{index}, {', '.join(node_ids)}")
 
 
 def _write_node_sets(
@@ -159,7 +257,19 @@ def _write_node_sets(
     boundary_conditions: Sequence[BoundaryCondition],
     settings: DeckSettings,
 ) -> None:
-    needed = {bc.node_set for bc in boundary_conditions} | set(settings.reaction_sets)
+    # Rigid-body *member* sets must be written here. Omitting them produced the most
+    # instructive failure of this phase: CalculiX reported only
+    # "*WARNING reading *RIGID BODY: node set ... does not exist", carried on, solved a
+    # model with nothing tied and nothing loaded, and reported CONVERGED with every
+    # displacement and every reaction exactly zero. A converged run on a null problem.
+    #
+    # The rigid body's own reference and rotation node sets are written by
+    # _write_rigid_bodies; it is the set of mesh nodes being tied that belongs here.
+    needed = (
+        {bc.node_set for bc in boundary_conditions}
+        | set(settings.reaction_sets)
+        | {body.node_set for body in settings.rigid_bodies}
+    )
     for name in sorted(needed):
         indices = mesh.node_sets.get(name)
         if indices is None:

@@ -73,8 +73,12 @@ def run_analysis(
 
     started = time.perf_counter()
     try:
+        # "-i jobname", not a bare job name. The official Windows build's own usage
+        # banner is "Usage: CalculiX.exe -i jobname", and invoking it without -i makes
+        # it print that banner and exit 0 without solving anything -- which would have
+        # looked like a successful run producing no results.
         completed = subprocess.run(
-            [str(solver.executable), job],
+            [str(solver.executable), "-i", job],
             cwd=str(scratch),
             capture_output=True,
             text=True,

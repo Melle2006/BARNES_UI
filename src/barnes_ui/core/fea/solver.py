@@ -171,10 +171,26 @@ def probe_solver(info: SolverInfo, timeout: float = 30.0) -> SolverInfo:
     if match:
         info.version = match.group(1)
     else:
-        info.notes.append(
-            "The solver started but its banner did not contain a recognisable version "
-            "string. The banner is archived with each run regardless."
+        # The official Windows build prints only "Usage: CalculiX.exe -i jobname" when
+        # invoked bare, with no version at all. Its distribution directory is named for
+        # the version (calculix_2.23_4win), so fall back to that -- clearly labelled as
+        # inferred, because a directory can be renamed and the version then becomes a
+        # guess rather than a fact.
+        from_path = re.search(
+            r"calculix[_-]?([0-9]+\.[0-9]+)", str(info.executable), re.IGNORECASE
         )
+        if from_path:
+            info.version = f"{from_path.group(1)} (inferred from the install path)"
+            info.notes.append(
+                "The solver's banner carries no version string, so the version was read "
+                "from the install directory name. Rename the directory and this becomes "
+                "unreliable; the banner is archived with every run regardless."
+            )
+        else:
+            info.notes.append(
+                "The solver started but its banner did not contain a recognisable "
+                "version string. The banner is archived with each run regardless."
+            )
 
     logger.info("CalculiX probe: version=%s", info.version)
     return info

@@ -98,9 +98,41 @@ class FeaResult:
     notes: list[str] = field(default_factory=list)
 
     @property
+    def is_null_solution(self) -> bool:
+        """True when the run converged but nothing actually happened.
+
+        A model with no load applied solves instantly and converges perfectly, with
+        every displacement and every reaction exactly zero. It is a correct solution to
+        a problem nobody asked for.
+
+        This is not hypothetical. A mis-written ``*RIGID BODY`` card referenced a node
+        set that was never defined; CalculiX emitted a warning, carried on, and reported
+        CONVERGED on a model where the driven region was tied to nothing. Convergence
+        was true and the result was meaningless, which is exactly the shape of failure
+        this project is built to catch.
+        """
+        if not self.convergence.converged:
+            return False
+
+        # Only positive evidence counts. A result carrying no quantities at all is not
+        # a null solve -- it is a result whose output could not be read, which is a
+        # different problem with a different fix. Treating absence as evidence made two
+        # legitimate results look null.
+        evidence: list[np.ndarray] = [
+            np.asarray(v) for v in self.reaction_forces.values()
+        ]
+        evidence.extend(np.asarray(v) for v in self.reaction_moments.values())
+        if self.displacements is not None:
+            evidence.append(np.asarray(self.displacements))
+
+        if not evidence:
+            return False
+        return all(not np.any(np.abs(array) > 1.0e-12) for array in evidence)
+
+    @property
     def is_trustworthy(self) -> bool:
         """Whether this result may be quoted as a prediction at all."""
-        return self.convergence.converged
+        return self.convergence.converged and not self.is_null_solution
 
     def caveats(self) -> tuple[Caveat, ...]:
         caveats = tuple(self.material_caveats)
@@ -122,6 +154,13 @@ class FeaResult:
                 "This run did not converge, so it has no reaction moment to report. "
                 f"{self.convergence.summary}"
             )
+        if self.is_null_solution:
+            raise ValueError(
+                "This run converged on a null problem: every displacement and every "
+                "reaction is exactly zero, so nothing was actually loaded. Check the "
+                "solver log for warnings about boundary conditions or constraint "
+                "definitions -- an undefined node set is the usual cause."
+            )
         moment = self.reaction_moments.get(node_set)
         if moment is None:
             raise KeyError(
@@ -141,39 +180,61 @@ class FeaResult:
 def parse_convergence(log_text: str) -> ConvergenceReport:
     """Read convergence status out of the CalculiX log.
 
-    CalculiX does not emit a single machine-readable status line, so this works from
-    the increment accounting and the error text. When the picture is ambiguous the
-    result is reported as *not* converged, because the cost of wrongly trusting a bad
-    solve is far higher than the cost of re-running a good one.
+    CalculiX emits no single machine-readable status line, so this works from the
+    increment accounting and the error markers. When the picture is ambiguous the
+    result is reported as *not* converged, because wrongly trusting a bad solve costs
+    far more than re-running a good one.
+
+    On matching "error"
+    ------------------
+
+    Only ``*ERROR`` counts. CalculiX marks genuine errors with a leading asterisk, and
+    its linear solver separately reports residuals on lines reading
+    ``error  9.2425e-09``. An earlier version matched bare ``error`` as well, and so
+    declared a perfectly healthy run non-converged on the strength of its own
+    convergence residuals -- three decreasing residuals, a clean "Job finished", correct
+    reactions, and a verdict of failure.
+
+    That bug was the mirror image of the one this module exists to prevent: instead of
+    reporting a bad result as good, it reported a good result as bad. Less dangerous,
+    but it would have made every successful run look broken.
     """
-    attempted = len(re.findall(r"increment\s+(\d+)", log_text, re.IGNORECASE))
-    completed = len(re.findall(r"convergence", log_text, re.IGNORECASE))
+    lines = log_text.splitlines()
+
+    # CalculiX prints "increment n" per increment in a nonlinear step, and nothing at
+    # all for a single-increment linear static.
+    attempted = len(re.findall(r"^\s*increment\s+\d+", log_text, re.IGNORECASE | re.MULTILINE))
+    converged_increments = len(
+        re.findall(r"^\s*convergence", log_text, re.IGNORECASE | re.MULTILINE)
+    )
     cutbacks = len(
-        re.findall(r"divergence|cutback|decreasing the increment", log_text, re.IGNORECASE)
+        re.findall(
+            r"no convergence|divergence allowed|increment size decreased|cutback",
+            log_text, re.IGNORECASE,
+        )
     )
 
-    errors = [
-        line.strip() for line in log_text.splitlines()
-        if re.search(r"\*ERROR|error\b", line, re.IGNORECASE)
-    ]
-    warnings = [
-        line.strip() for line in log_text.splitlines()
-        if re.search(r"\*WARNING", line, re.IGNORECASE)
-    ]
+    errors = [line.strip() for line in lines if "*ERROR" in line.upper()]
+    warnings = [line.strip() for line in lines if "*WARNING" in line.upper()]
 
-    finished_cleanly = bool(
-        re.search(r"Job finished", log_text, re.IGNORECASE)
-    )
+    finished_cleanly = bool(re.search(r"Job finished", log_text, re.IGNORECASE))
     converged = finished_cleanly and not errors
+
+    # A linear static run prints no increment markers. Reporting "0 of 0 increments"
+    # for a run that completed is accurate but useless, so a clean finish counts as one.
+    if converged and attempted == 0:
+        attempted = 1
+    if converged and converged_increments == 0:
+        converged_increments = attempted
 
     return ConvergenceReport(
         converged=converged,
         increments_attempted=attempted,
-        increments_completed=completed,
+        increments_completed=converged_increments,
         cutbacks=cutbacks,
         warnings=warnings[:50],
         errors=errors[:50],
-        raw_tail="\n".join(log_text.splitlines()[-40:]),
+        raw_tail="\n".join(lines[-40:]),
     )
 
 
