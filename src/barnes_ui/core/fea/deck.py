@@ -87,7 +87,11 @@ class RigidBody:
     where the moment is exact, rather than requiring per-node forces.
     """
 
-    node_set: str
+    #: The mesh node set or sets to tie. A whole attachment region generally spans many
+    #: surfaces -- the A3 flexure's distal collar is 62 of them -- and tying only one of
+    #: them leaves the rest free. Doing exactly that produced a result wrong by a factor
+    #: of 63; see the note on ``node_sets`` below.
+    node_sets: Sequence[str] | str
     #: A point on the joint axis, in mm. Becomes the rigid body's reference node.
     reference_point: tuple[float, float, float]
     #: Name given to the generated reference node set, for boundary conditions.
@@ -96,6 +100,20 @@ class RigidBody:
     #: Filled in by the deck writer: the one-based node numbers it allocated.
     reference_node: int = 0
     rotation_node: int = 0
+
+    def __post_init__(self) -> None:
+        if isinstance(self.node_sets, str):
+            self.node_sets = [self.node_sets]
+        if not self.node_sets:
+            raise DeckError(
+                f"Rigid body {self.name!r} ties no node sets. A rigid body with no "
+                "members constrains nothing."
+            )
+
+    @property
+    def member_set_name(self) -> str:
+        """Name of the combined set the writer generates for the tied nodes."""
+        return f"{self.name}_members"
 
 
 @dataclass
@@ -111,9 +129,27 @@ class DeckSettings:
     minimum_increment: float = 1.0e-5
     maximum_increment: float = 0.2
     #: Node sets whose reaction forces are printed to the .dat file.
+    #:
+    #: Always written at every increment. This is the torque history the torque-angle
+    #: workflow is built on, and it is a few hundred bytes of text per increment.
     reaction_sets: list[str] = field(default_factory=list)
-    #: Request stress and strain fields in the .frd file.
-    output_fields: bool = True
+
+    #: How often to write displacement/stress/strain fields to the .frd file, in
+    #: increments. ``None`` means **no field output at all**, which is the default.
+    #:
+    #: Field output is expensive and is off by default because leaving it on cost a
+    #: real run dearly. Requesting ``*NODE FILE`` and ``*EL FILE`` with no frequency
+    #: control writes a full snapshot of every node and element on *every* increment.
+    #: On the A3 twin-strap flexure -- 61,021 nodes, and an increment size that
+    #: collapsed to 0.0105 so the step needed roughly 95 increments -- the .frd file
+    #: reached 462 MB at increment 26 and was heading for about 1.8 GB, for an analysis
+    #: whose actual output is a single reaction moment per increment.
+    #:
+    #: Set it to 1 to visualise a deformation, or to a larger number to sample the
+    #: motion. For a torque-angle sweep, leave it as None: the reaction history in the
+    #: .dat file is the result, and the fields are not looked at.
+    field_output_frequency: int | None = None
+
     #: Rigid bodies, for prescribing a joint rotation on an attachment region.
     rigid_bodies: list[RigidBody] = field(default_factory=list)
 
@@ -145,16 +181,18 @@ def write_deck(
     generated_sets = set()
     next_node = mesh.node_count + 1
     for body in settings.rigid_bodies:
-        if body.node_set not in mesh.node_sets:
+        unknown = [s for s in body.node_sets if s not in mesh.node_sets]
+        if unknown:
             raise DeckError(
-                f"Rigid body {body.name!r} references node set {body.node_set!r}, "
-                f"which is not in the mesh. Available: {sorted(mesh.node_sets)}"
+                f"Rigid body {body.name!r} references node set(s) {unknown}, which are "
+                f"not in the mesh. Available: {sorted(mesh.node_sets)}"
             )
         body.reference_node = next_node
         body.rotation_node = next_node + 1
         next_node += 2
         generated_sets.add(f"{body.name}_ref")
         generated_sets.add(f"{body.name}_rot")
+        generated_sets.add(body.member_set_name)
 
     known = set(mesh.node_sets) | generated_sets
     missing = [bc.node_set for bc in boundary_conditions if bc.node_set not in known]
@@ -180,7 +218,7 @@ def write_deck(
     _write_nodes(out, mesh, settings)
     _write_elements(out, mesh)
     _write_node_sets(out, mesh, boundary_conditions, settings)
-    _write_rigid_bodies(out, settings)
+    _write_rigid_bodies(out, mesh, settings)
     _write_material(out, material)
     _write_step(out, boundary_conditions, settings)
 
@@ -203,14 +241,31 @@ def _write_nodes(out, mesh: Mesh, settings: DeckSettings) -> None:
         out(f"{body.rotation_node}, {x:.9g}, {y:.9g}, {z:.9g}")
 
 
-def _write_rigid_bodies(out, settings: DeckSettings) -> None:
+def _write_rigid_bodies(out, mesh: Mesh, settings: DeckSettings) -> None:
     for body in settings.rigid_bodies:
         out(f"*NSET, NSET={body.name}_ref")
         out(f"{body.reference_node}")
         out(f"*NSET, NSET={body.name}_rot")
         out(f"{body.rotation_node}")
+
+        # One combined set covering every tied surface. An attachment region is
+        # generally many surfaces, and tying one of them is not an approximation of
+        # tying all of them -- it is a different structure. Driving 1 of the A3's 62
+        # distal collar surfaces, while fixing all 60 proximal ones, produced an
+        # apparent flexure stiffness 63 times softer than the beam model and took 90
+        # convergence cutbacks to get there. The severe cutback count was the clue: a
+        # single facet being rotated against an otherwise free collar is badly
+        # conditioned, not merely compliant.
+        indices = np.unique(
+            np.concatenate([np.asarray(mesh.node_sets[s]).ravel() for s in body.node_sets])
+        )
+        out(f"*NSET, NSET={body.member_set_name}")
+        ids = [str(int(i) + 1) for i in indices]
+        for start in range(0, len(ids), 8):
+            out(", ".join(ids[start:start + 8]) + ("," if start + 8 < len(ids) else ""))
+
         out(
-            f"*RIGID BODY, NSET={body.node_set}, "
+            f"*RIGID BODY, NSET={body.member_set_name}, "
             f"REF NODE={body.reference_node}, ROT NODE={body.rotation_node}"
         )
 
@@ -265,11 +320,7 @@ def _write_node_sets(
     #
     # The rigid body's own reference and rotation node sets are written by
     # _write_rigid_bodies; it is the set of mesh nodes being tied that belongs here.
-    needed = (
-        {bc.node_set for bc in boundary_conditions}
-        | set(settings.reaction_sets)
-        | {body.node_set for body in settings.rigid_bodies}
-    )
+    needed = {bc.node_set for bc in boundary_conditions} | set(settings.reaction_sets)
     for name in sorted(needed):
         indices = mesh.node_sets.get(name)
         if indices is None:
@@ -369,10 +420,15 @@ def _write_step(
         out(f"*NODE PRINT, NSET={name}, TOTALS=ONLY")
         out("RF")
 
-    if settings.output_fields:
-        out("*NODE FILE")
+    if settings.field_output_frequency is not None:
+        frequency = max(1, int(settings.field_output_frequency))
+        out(f"*NODE FILE, FREQUENCY={frequency}")
         out("U, RF")
-        out("*EL FILE")
+        out(f"*EL FILE, FREQUENCY={frequency}")
         out("S, E")
+    else:
+        out("** No field output requested. The reaction history above is the result;")
+        out("** writing fields on every increment produced a 462 MB .frd on the A3")
+        out("** flexure for an analysis whose output is one moment per increment.")
 
     out("*END STEP")

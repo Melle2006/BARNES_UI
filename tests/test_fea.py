@@ -216,6 +216,33 @@ class TestDeckGeneration:
             count += 1
         assert count == coarse_mesh.node_count
 
+    def test_field_output_is_off_by_default(self, coarse_mesh) -> None:
+        """Regression: unthrottled field output produced a 462 MB .frd.
+
+        ``*NODE FILE`` and ``*EL FILE`` without a FREQUENCY write a full snapshot of
+        every node and element on every increment. On the A3 flexure -- 61,021 nodes
+        over roughly 95 increments -- that reached 462 MB by increment 26 and was
+        heading for about 1.8 GB, for an analysis whose output is one reaction moment
+        per increment.
+        """
+        deck = self._deck(coarse_mesh)
+        assert "*NODE FILE" not in deck
+        assert "*EL FILE" not in deck
+
+    def test_field_output_can_be_requested_with_a_frequency(self, coarse_mesh) -> None:
+        sets = sorted(coarse_mesh.node_sets)
+        deck = self._deck(
+            coarse_mesh,
+            settings=DeckSettings(reaction_sets=[sets[0]], field_output_frequency=5),
+        )
+        assert "*NODE FILE, FREQUENCY=5" in deck
+        assert "*EL FILE, FREQUENCY=5" in deck
+
+    def test_reaction_print_survives_field_output_being_off(self, coarse_mesh) -> None:
+        """The reaction history is the result and is never throttled."""
+        deck = self._deck(coarse_mesh)
+        assert "*NODE PRINT" in deck
+
     def test_reaction_print_is_requested(self, coarse_mesh) -> None:
         """Without it the run yields a deformed shape and no force at all."""
         deck = self._deck(coarse_mesh)
@@ -338,7 +365,7 @@ class TestRigidBodyDriving:
         from barnes_ui.core.fea.deck import RigidBody
 
         sets = sorted(mesh.node_sets)
-        body = RigidBody(node_set=sets[1], reference_point=(0.0, 0.0, 0.0), name="distal")
+        body = RigidBody(node_sets=[sets[1]], reference_point=(0.0, 0.0, 0.0), name="distal")
         return write_deck(
             mesh, provisional_tpu(),
             [
@@ -354,15 +381,63 @@ class TestRigidBodyDriving:
         CalculiX only warned, then solved a model with no load and reported CONVERGED
         with every displacement and reaction exactly zero.
         """
-        deck, _, member_set = self._deck_with_body(coarse_mesh)
-        assert f"*NSET, NSET={member_set}" in deck
+        deck, body, _ = self._deck_with_body(coarse_mesh)
+        assert f"*NSET, NSET={body.member_set_name}" in deck
 
-    def test_rigid_body_card_is_written_with_both_nodes(self, coarse_mesh) -> None:
-        deck, body, member_set = self._deck_with_body(coarse_mesh)
+    def test_rigid_body_card_references_the_combined_set(self, coarse_mesh) -> None:
+        deck, body, _ = self._deck_with_body(coarse_mesh)
         assert (
-            f"*RIGID BODY, NSET={member_set}, REF NODE={body.reference_node}, "
-            f"ROT NODE={body.rotation_node}" in deck
+            f"*RIGID BODY, NSET={body.member_set_name}, "
+            f"REF NODE={body.reference_node}, ROT NODE={body.rotation_node}" in deck
         )
+
+    def test_all_requested_surfaces_are_tied(self, coarse_mesh) -> None:
+        """Tying one surface of an attachment region is not an approximation of
+        tying all of them -- it is a different structure.
+
+        Driving 1 of the A3 flexure's 62 distal collar surfaces, while fixing all 60
+        proximal ones, made the flexure appear 63 times softer than the beam model and
+        took 90 convergence cutbacks to get there. The cutback count was the clue: a
+        single facet rotated against an otherwise free collar is badly conditioned.
+        """
+        from barnes_ui.core.fea.deck import RigidBody
+
+        sets = sorted(coarse_mesh.node_sets)[1:4]
+        body = RigidBody(node_sets=sets, reference_point=(0, 0, 0), name="multi")
+        deck = write_deck(
+            coarse_mesh, provisional_tpu(),
+            [
+                BoundaryCondition(sorted(coarse_mesh.node_sets)[0], (1, 2, 3), 0.0),
+                BoundaryCondition("multi_rot", (1,), 0.1),
+            ],
+            DeckSettings(rigid_bodies=[body]),
+        )
+
+        lines = deck.splitlines()
+        start = lines.index(f"*NSET, NSET={body.member_set_name}") + 1
+        tied: set[int] = set()
+        for line in lines[start:]:
+            if line.startswith("*"):
+                break
+            tied.update(int(v) - 1 for v in line.rstrip(",").split(",") if v.strip())
+
+        expected = set()
+        for name in sets:
+            expected.update(int(i) for i in coarse_mesh.node_sets[name])
+        assert tied == expected
+
+    def test_a_string_node_set_is_accepted(self, coarse_mesh) -> None:
+        """Convenience for the single-surface case, without losing the plural API."""
+        from barnes_ui.core.fea.deck import RigidBody
+
+        body = RigidBody(node_sets="surface_1", reference_point=(0, 0, 0))
+        assert body.node_sets == ["surface_1"]
+
+    def test_a_rigid_body_with_no_members_is_refused(self) -> None:
+        from barnes_ui.core.fea.deck import RigidBody
+
+        with pytest.raises(DeckError, match="ties no node sets"):
+            RigidBody(node_sets=[], reference_point=(0, 0, 0))
 
     def test_reference_nodes_are_appended_after_the_mesh(self, coarse_mesh) -> None:
         _, body, _ = self._deck_with_body(coarse_mesh)
@@ -385,7 +460,7 @@ class TestRigidBodyDriving:
                 [BoundaryCondition(sets[0], (1, 2, 3), 0.0)],
                 DeckSettings(
                     rigid_bodies=[
-                        RigidBody(node_set="nope", reference_point=(0, 0, 0))
+                        RigidBody(node_sets=["nope"], reference_point=(0, 0, 0))
                     ]
                 ),
             )
