@@ -47,12 +47,19 @@ class _OccNamespace:
         # Imported inside the method on purpose: see the module docstring.
         from OCP.Bnd import Bnd_Box
         from OCP.BRep import BRep_Builder, BRep_Tool
+        from OCP.BRepAdaptor import BRepAdaptor_Surface
+        from OCP.BRepAlgoAPI import BRepAlgoAPI_Section
         from OCP.BRepBndLib import BRepBndLib
+        from OCP.BRepBuilderAPI import BRepBuilderAPI_MakeFace
         from OCP.BRepCheck import BRepCheck_Analyzer
         from OCP.BRepGProp import BRepGProp
         from OCP.BRepMesh import BRepMesh_IncrementalMesh
         from OCP.BRepTools import BRepTools
+        from OCP.collections import HSequence_TopoDS_Shape
+        from OCP.GeomAbs import GeomAbs_SurfaceType
+        from OCP.gp import gp_Ax3, gp_Dir, gp_Pln, gp_Pnt
         from OCP.GProp import GProp_GProps
+        from OCP.ShapeAnalysis import ShapeAnalysis_FreeBounds
         from OCP.IFSelect import IFSelect_ReturnStatus
         from OCP.IGESControl import IGESControl_Reader
         from OCP.Interface import Interface_Static
@@ -65,12 +72,22 @@ class _OccNamespace:
         self.Bnd_Box = Bnd_Box
         self.BRep_Builder = BRep_Builder
         self.BRep_Tool = BRep_Tool
+        self.BRepAdaptor_Surface = BRepAdaptor_Surface
+        self.BRepAlgoAPI_Section = BRepAlgoAPI_Section
         self.BRepBndLib = BRepBndLib
+        self.BRepBuilderAPI_MakeFace = BRepBuilderAPI_MakeFace
         self.BRepCheck_Analyzer = BRepCheck_Analyzer
         self.BRepGProp = BRepGProp
         self.BRepMesh_IncrementalMesh = BRepMesh_IncrementalMesh
         self.BRepTools = BRepTools
+        self.HSequence_TopoDS_Shape = HSequence_TopoDS_Shape
+        self.GeomAbs_SurfaceType = GeomAbs_SurfaceType
+        self.gp_Ax3 = gp_Ax3
+        self.gp_Dir = gp_Dir
+        self.gp_Pln = gp_Pln
+        self.gp_Pnt = gp_Pnt
         self.GProp_GProps = GProp_GProps
+        self.ShapeAnalysis_FreeBounds = ShapeAnalysis_FreeBounds
         self.IFSelect_ReturnStatus = IFSelect_ReturnStatus
         self.IGESControl_Reader = IGESControl_Reader
         self.Interface_Static = Interface_Static
