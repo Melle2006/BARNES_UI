@@ -233,6 +233,8 @@ def analyse_joint_flexure(
     if steps < 2:
         raise ValueError("steps must be at least 2.")
 
+    _reject_torsion_dominated(members, joint)
+
     E = material.initial_youngs_modulus
     G = material.initial_shear_modulus
     origin, direction = joint.as_arrays()
@@ -293,6 +295,50 @@ def analyse_joint_flexure(
         notes=list(notes),
     )
     return curve, stiffness
+
+
+#: Share of a member's stations whose tangent may align with the joint axis before this
+#: planar model is refused. Kept low because the error is not gradual.
+_MAX_AXIS_ALIGNED_FRACTION = 0.15
+
+
+def _reject_torsion_dominated(
+    members: Sequence[Member], joint: JointAxis
+) -> None:
+    """Refuse members that this planar model cannot represent.
+
+    A member whose tangent runs along the joint axis resists a relative end rotation by
+    twisting, not bending. This model has no torsion term and, worse, projects the
+    member into the plane normal to the joint axis -- which collapses an axis-parallel
+    run almost to a point and shortens the integration path dramatically.
+
+    The two errors compound. Measured on a generated 4-run meander with 83.5 per cent of
+    its stations axis-aligned, this model returned 28.05 N.mm/rad against the spatial
+    model's 0.0419 N.mm/rad: an overstatement of **670 times**. That is not an
+    approximation that degrades gracefully, so this is a refusal rather than a warning.
+    A warning on a number that wrong would still leave the number on screen.
+
+    Use :func:`barnes_ui.core.mechanics.spatial_beam.analyse_joint_flexure_spatial`
+    instead, which carries torsion and both bending axes.
+    """
+    _, direction = joint.as_arrays()
+    for member in members:
+        tangents = member.tangents()
+        if len(tangents) == 0:
+            continue
+        aligned = float(np.mean(np.abs(tangents @ direction) > 0.9))
+        if aligned > _MAX_AXIS_ALIGNED_FRACTION:
+            raise ValueError(
+                f"Member {member.index} has {aligned * 100:.1f}% of its length running "
+                f"along the joint axis, so it resists rotation mainly by torsion. This "
+                "planar model has no torsion term and projects axis-parallel runs to "
+                "near-zero length, which on a test meander overstated stiffness by a "
+                "factor of 670.\n\n"
+                "Use analyse_joint_flexure_spatial() from "
+                "barnes_ui.core.mechanics.spatial_beam instead. It is refused here "
+                "rather than warned about, because a result this wrong should not be "
+                "produced at all."
+            )
 
 
 def _member_rotational_stiffness(

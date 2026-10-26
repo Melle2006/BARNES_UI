@@ -72,6 +72,13 @@ class CrossSection:
     u_axis: tuple[float, float, float]
     #: Local V axis of the cutting plane, as a unit vector.
     v_axis: tuple[float, float, float]
+    #: Second-moment tensor about the centroid, in global axes, mm^4.
+    #:
+    #: Provided so a consumer can project onto whatever axes it needs rather than
+    #: being restricted to the u/v pair this cut happened to use. The spatial beam
+    #: model needs the moments about its own local normal and binormal, which are not
+    #: known when the section is taken.
+    inertia_tensor: tuple[tuple[float, float, float], ...] | None = None
 
     @property
     def i_bending(self) -> float:
@@ -98,6 +105,59 @@ class CrossSection:
         depth = math.sqrt(12.0 * self.i_uu / self.area)
         width = self.area / depth if depth > 0 else 0.0
         return (width, depth)
+
+    def second_moment_about(self, axis: Sequence[float]) -> float:
+        """Second moment of area about a centroidal axis in the section plane, mm^4.
+
+        For a planar region the moment about an in-plane axis ``d`` is ``d . J . d``
+        where ``J`` is the centroidal second-moment tensor. The spatial beam model uses
+        this to get the two bending stiffnesses about its own local frame, which is not
+        known at the time the section is cut.
+        """
+        if self.inertia_tensor is None:
+            raise ValueError(
+                "This section carries no inertia tensor, so a moment about an "
+                "arbitrary axis cannot be computed."
+            )
+        tensor = np.asarray(self.inertia_tensor, dtype=float)
+        direction = np.asarray(axis, dtype=float)
+        norm = np.linalg.norm(direction)
+        if norm < 1.0e-12:
+            raise ValueError("Cannot take a second moment about a zero-length axis.")
+        direction = direction / norm
+        return float(direction @ tensor @ direction)
+
+    @property
+    def torsion_constant(self) -> float:
+        """Saint-Venant torsion constant J, mm^4.
+
+        Uses the standard closed-form approximation for a solid rectangle of width
+        ``b`` and depth ``h`` with ``b >= h``:
+
+            J = b * h^3 * [ 1/3 - 0.21 * (h/b) * (1 - h^4 / (12 * b^4)) ]
+
+        taken on the section's equivalent rectangle. The formula reproduces the known
+        square-section value of 0.1406 * a^4 and tends to the thin-strip limit
+        ``b * h^3 / 3`` as the aspect ratio grows.
+
+        **This is an approximation and matters.** It is exact only for a rectangle, and
+        a flexure section is rectangular here but need not be in general. For a section
+        that is far from rectangular -- check :attr:`rectangularity` -- the torsional
+        stiffness it implies should not be relied on, and a warped-section calculation
+        or FEA is required instead.
+
+        Note also that it is the *Saint-Venant* constant: it assumes free warping. A
+        member whose ends are restrained against warping is stiffer in torsion than
+        this implies, and in a meander flexure the runs are built into turns at both
+        ends, so some warping restraint is present. The effect is to make the real part
+        stiffer than this model predicts, so the model errs toward compliance.
+        """
+        width, depth = self.equivalent_rectangle
+        if width <= 0 or depth <= 0:
+            return 0.0
+        b, h = (width, depth) if width >= depth else (depth, width)
+        ratio = h / b
+        return b * h**3 * (1.0 / 3.0 - 0.21 * ratio * (1.0 - h**4 / (12.0 * b**4)))
 
     @property
     def rectangularity(self) -> float:
@@ -213,7 +273,7 @@ def section_solid(
         com = props.CentreOfMass()
         centroid = np.array([com.X(), com.Y(), com.Z()])
 
-        i_uu, i_vv = _planar_second_moments(props, u, v)
+        i_uu, i_vv, tensor = _planar_second_moments(props, u, v)
         width_u, width_v = _planar_extents(face, centroid, u, v)
 
         sections.append(
@@ -227,6 +287,7 @@ def section_solid(
                 normal=(float(n[0]), float(n[1]), float(n[2])),
                 u_axis=(float(u[0]), float(u[1]), float(u[2])),
                 v_axis=(float(v[0]), float(v[1]), float(v[2])),
+                inertia_tensor=tuple(tuple(float(x) for x in row) for row in tensor),
             )
         )
 
@@ -236,7 +297,7 @@ def section_solid(
 
 def _planar_second_moments(
     props: Any, u: np.ndarray, v: np.ndarray
-) -> tuple[float, float]:
+) -> tuple[float, float, np.ndarray]:
     """Second moments of area about centroidal axes along ``u`` and ``v``.
 
     OpenCASCADE's GProp returns a full 3x3 inertia tensor about the centre of mass,
@@ -254,7 +315,7 @@ def _planar_second_moments(
     )
     i_uu = float(u @ tensor @ u)
     i_vv = float(v @ tensor @ v)
-    return i_uu, i_vv
+    return i_uu, i_vv, tensor
 
 
 def _planar_extents(

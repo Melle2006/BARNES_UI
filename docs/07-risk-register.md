@@ -80,6 +80,53 @@ kind of output that gets trusted.
 **Residual:** between Phase 2 and Phase 3 the error is genuinely unknown. The UI says so in
 those words during that window.
 
+**Update, measured.** The concern turned out to be understated, and in a different way
+than expected. On a generated serpentine meander the planar bending-only model
+overstated rotational stiffness by a **factor of 670** — not a percentage error, a
+multiple. Two causes compounded: the model has no torsion term, and a meander's straight
+runs lie along the joint axis so the planar projection collapses them to near-zero
+length. 83.5 % of that member's stations were axis-aligned, and torsion carried ~30 % of
+the strain energy.
+
+Mitigated by `core/mechanics/spatial_beam.py`, which carries torsion and both bending
+axes, and by a guard in the planar model that **refuses** a member with more than 15 %
+of its length along the joint axis rather than warning about it. An error of this size
+does not degrade gracefully, and a warning leaves the wrong number on screen.
+
+---
+
+## R3b — Geometry extraction that silently produces a wrong centreline
+
+**Severity: critical. Likelihood: high, until guarded.**
+
+Discovered while developing against a generated meander, and the most instructive
+failure the project has had so far.
+
+`extract_members` sweeps cutting planes along a straight axis. On a serpentine meander,
+a plane normal to the sweep axis cuts a straight run *and* part of the adjacent turn,
+and because they are one fused body the intersection returns as a single connected
+region — a long sliver, not a cross-section. The region-count guard therefore never
+fires.
+
+The result: **no error raised**, section area overstated 3.1×, second moment overstated
+4×, and an arc length of 1.61 mm against a true centreline of 62.14 mm. Every figure
+looked like a figure. It was caught only because the test geometry had analytically
+known properties to check against — which is itself the lesson.
+
+**Mitigation**
+- Two independent geometric guards on the axis sweep: the extracted path must span
+  roughly the requested sweep range, and arc length can never be less than the path's
+  own extent along that axis (geometrically impossible, so a reliable detector).
+- `core/flexure/tracing.py` provides path-following extraction for members that double
+  back, with its own continuity and section-area guards.
+- The refusal message names the tracer, so the user is routed to the right tool rather
+  than left stuck.
+
+**Residual:** both guards are heuristics on symptoms. The underlying defence is what
+caught it in the first place — developing against geometry whose answer is known
+exactly. Any new extraction strategy should be validated the same way before being
+pointed at a real part.
+
 ---
 
 ## R4 — Joint axes cannot be recovered from CAD

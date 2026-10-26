@@ -166,6 +166,46 @@ pytest -m "not gui"            # skip anything needing a display
 - Depth doubled → stiffness ×**8.000** exactly; two parallel members → ×**2.000** exactly
 - Castigliano against an independently written frame-FE solver, like-for-like: **0.057 %**
 
+## Meander (serpentine) support
+
+The A3 twin-strap part is a simple arch. The A8 family is a serpentine that doubles
+back, and it needs different machinery throughout — so the project carries both.
+
+| Capability | Notes |
+|---|---|
+| Parametric meander template | Generates a serpentine from parameters; volume exact against `width × thickness × centreline_length` |
+| Reference parts | `reference_parts/*.step` — a turn-count sweep with analytically known properties |
+| Path-following tracing | Marches along the member instead of sweeping across it |
+| Spatial beam model | Torsion plus both bending axes, for members that twist |
+
+**Two reference parts are generated, not supplied.** They are *not* the A8 design —
+they are meanders with exactly known arc length, volume and section, which is what the
+extraction and mechanics code can be verified against. Validating anything about the
+real A8 needs a STEP export of the actual part.
+
+### The most important result in this section
+
+On a generated meander, the **planar bending-only model overstated stiffness by a factor
+of 670**. Two causes compounded: it has no torsion term, and a meander's straight runs lie
+along the joint axis, so projecting into the plane of rotation collapses them to
+near-zero length. Torsion carries about 30 % of the strain energy in these parts — which
+is precisely why serpentine flexures are compliant.
+
+The planar model now **refuses** such a member rather than warning. An error of that size
+does not degrade gracefully, and a warning leaves the wrong number on screen.
+
+A related failure is recorded in the risk register as R3b: axis-sweep extraction on a
+meander returned **no error at all** while overstating the second moment 4× and reporting
+an arc length of 1.61 mm against a true 62.14 mm. Both are now guarded.
+
+**Verified against analytically known geometry:**
+
+- Generated meander volume vs `w·t·L`: **exact** (0.0000 %) across turn counts and widths
+- Traced centreline vs analytical path: max deviation **0.0075 mm**, arc length **99.99 %**
+- Pure torsion vs closed-form `GJ/L`: **ratio 1.000000**
+- Pure bending vs `4EI/L`: **9 ppm** — the spatial model reduces correctly to the planar one
+- Torsion constant vs the known square-section value `0.1406·a⁴`: within **0.2 %**
+
 ### What Phase 2 deliberately does not do
 
 Finite element analysis. Meshing. Nonlinear material response. Large-deflection kinematics.
