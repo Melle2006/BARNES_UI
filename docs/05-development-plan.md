@@ -44,7 +44,41 @@ and compare against the screenshot-derived estimates currently in use.
 
 ---
 
-## Phase 2 — Flexure geometry and reduced-order mechanics
+## Phase 2 — Flexure geometry and reduced-order mechanics — **COMPLETE**
+
+**Measured results**, recorded against the criteria below. Reference part:
+`A3_PIP_twin_strap_1.0mm.step` — twin arched straps between two PIP collars.
+
+| Check | Result |
+|---|---|
+| Straight fixed-fixed member, pure imposed rotation vs 4EI/L | **9 ppm** (1.333321 vs 1.333333) |
+| Section I extracted from CAD vs b·h³/12 | **0.166667 vs 0.1666667 mm⁴**, 6 significant figures |
+| Depth-cubed scaling (depth ×2) | **exactly 8.000** |
+| Two parallel members vs one | **exactly 2.000** |
+| Castigliano vs independent frame-FE, like-for-like | **0.057 %** |
+| Normal-section area along a constant-section strap | **constant to 0.0014 %** |
+
+**Extracted geometry** (all `GEOMETRIC_MEASUREMENT`): strap section 2.000 × 1.000 mm,
+area 2.00000 mm², I 0.166667 mm⁴, arc length 28.3813 mm, chord 27.8017 mm,
+arc/chord 1.02084, members 5.700 mm apart. Collar walls 1.200 mm.
+
+**Reduced-order result** with the provisional 12 MPa placeholder: 7.558 N·mm/rad at
+neutral, 11.87 N·mm at 90°, peak bending strain 42 %. Tagged
+`UNVALIDATED_ASSUMPTION` throughout, because the material is not calibrated.
+
+**Three findings worth carrying forward.** Sections must be cut normal to the local
+tangent rather than to a global axis: axis-normal cuts inflated the strap depth by up
+to 5.2 % near the collars, which is about 16 % in stiffness. The axial flexibility term
+matters — omitting it overstated stiffness by 13 %, because a shallow arch resists end
+displacement largely by stretching; shear accounts for a further 1.7 %. And a
+near-constant section profile must not be plotted on an auto-scaled axis, which
+magnified 0.0014 % numerical variation into an alarming sawtooth.
+
+**The 42 % peak strain is the headline caveat.** It is far outside small-strain
+validity, so the linear model is being driven well beyond its range and the absolute
+torque must not be trusted. Quantifying that error is Phase 3 criterion 7.
+
+### Original specification
 
 **Goal:** turn the solid into a mechanical model, with every assumption on screen.
 

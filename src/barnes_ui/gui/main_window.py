@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+import numpy as np
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import (
@@ -21,6 +22,8 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QScrollArea,
+    QTabWidget,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -31,13 +34,49 @@ from ..core.cad.model import GeometryModel
 from ..core.cad.registry import file_dialog_filter, load_geometry
 from ..core.logging_setup import log_file_path
 from ..core.project.store import PROJECT_SUFFIX, ProjectStore, ProjectStoreError
+from ..core.flexure import extract_members
+from ..core.material import provisional_tpu
+from ..core.mechanics import JointAxis, analyse_joint_flexure
+from .panels.flexure_panel import FlexurePanel
 from .panels.geometry_panel import GeometryPanel
+from .panels.plots_panel import PlotsPanel
 from .tasks import run_in_background
 from .viewer.viewport import Viewport
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["MainWindow"]
+
+
+def _flexure_worker(shape, settings: dict) -> tuple:
+    """Run the Phase 2 pipeline off the UI thread.
+
+    A module-level function rather than a method so that nothing about the window is
+    reachable from the worker thread. Everything it needs arrives as arguments, and it
+    returns plain results for the UI thread to display.
+    """
+    members = extract_members(
+        shape,
+        sweep_axis=settings["sweep_axis"],
+        bending_axis=settings["joint_direction"],
+        start=settings["range_start"],
+        end=settings["range_end"],
+        samples=settings["samples"],
+    )
+    material = provisional_tpu(settings["youngs_modulus"])
+    joint = JointAxis(
+        origin=settings["joint_origin"], direction=settings["joint_direction"]
+    )
+    curve, stiffness = analyse_joint_flexure(
+        members,
+        material,
+        joint,
+        max_angle_rad=np.radians(settings["max_angle_deg"]),
+        steps=settings["steps"],
+        include_shear=settings["include_shear"],
+        include_axial=settings["include_axial"],
+    )
+    return curve, stiffness, members, settings
 
 
 class MainWindow(QMainWindow):
@@ -60,6 +99,7 @@ class MainWindow(QMainWindow):
 
         self._build_geometry_dock()
         self._build_measurement_dock()
+        self._build_plots_dock()
         self._build_menus()
         self._build_status_bar()
 
@@ -68,19 +108,54 @@ class MainWindow(QMainWindow):
     # -- construction ----------------------------------------------------------
 
     def _build_geometry_dock(self) -> None:
+        """Left dock: a tab per workflow stage.
+
+        Tabbed rather than stacked vertically because later phases add assembly
+        integration and hand simulation, and five panels in one column would be
+        unusable. Each panel is wrapped in a scroll area so a small window never
+        hides the run button.
+        """
         self.geometry_panel = GeometryPanel(self)
         self.geometry_panel.solid_visibility_changed.connect(
             self.viewport.set_solid_visible
         )
 
-        dock = QDockWidget("Geometry", self)
-        dock.setWidget(self.geometry_panel)
+        self.flexure_panel = FlexurePanel(self)
+        self.flexure_panel.analysis_requested.connect(self._run_flexure_analysis)
+        self.flexure_panel.axis_suggestion_requested.connect(self._suggest_joint_axis)
+
+        tabs = QTabWidget()
+        tabs.addTab(self._scrolled(self.geometry_panel), "Geometry")
+        tabs.addTab(self._scrolled(self.flexure_panel), "Flexure")
+        self._tabs = tabs
+
+        dock = QDockWidget("Workflow", self)
+        dock.setWidget(tabs)
         dock.setAllowedAreas(
             Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea
         )
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock)
-        dock.setMinimumWidth(420)
+        dock.setMinimumWidth(440)
         self._geometry_dock = dock
+
+    @staticmethod
+    def _scrolled(widget: QWidget) -> QScrollArea:
+        area = QScrollArea()
+        area.setWidget(widget)
+        area.setWidgetResizable(True)
+        area.setFrameShape(QScrollArea.Shape.NoFrame)
+        return area
+
+    def _build_plots_dock(self) -> None:
+        self.plots_panel = PlotsPanel(self)
+        dock = QDockWidget("Plots", self)
+        dock.setWidget(self.plots_panel)
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
+        # A minimum only, not a preferred size. Set too high, Qt gives the dock most of
+        # the window the moment it appears and the 3D view is squeezed to a sliver.
+        dock.setMinimumHeight(220)
+        dock.hide()  # shown once there is something to plot
+        self._plots_dock = dock
 
     def _build_measurement_dock(self) -> None:
         widget = QWidget()
@@ -200,6 +275,10 @@ class MainWindow(QMainWindow):
         self._model = model
         self.geometry_panel.show_model(model)
         self.viewport.show_model(model)
+        self.flexure_panel.set_enabled_for_model(model)
+        self.flexure_panel.clear_results()
+        self.plots_panel.clear()
+        self._plots_dock.hide()
 
         summary = (
             f"{model.source_path.name}: {model.solid_count} body/bodies, "
@@ -224,6 +303,92 @@ class MainWindow(QMainWindow):
         self._progress.setVisible(False)
         self._progress.setRange(0, 100)
         self.setEnabled(True)
+
+    # -- flexure analysis ------------------------------------------------------
+
+    def _suggest_joint_axis(self) -> None:
+        """Propose a joint axis from the model's overall geometry.
+
+        A suggestion, not a determination. Two attachment features either side of a
+        joint do not establish where its axis lies -- the axis can be offset dorsally
+        or palmarly, and a millimetre of offset changes the moment arm and hence the
+        torque. The point of offering one is that an axis is far easier to check in
+        the viewport than to type in correctly.
+        """
+        if self._model is None or not self._model.solids:
+            return
+        box = self._model.overall_bounding_box
+        if box is None:
+            return
+
+        # Midway along the long axis, centred laterally, at the mid-height of the
+        # attachment features rather than of the whole part -- the arch pushes the
+        # overall bounding box upward and would bias a naive mid-height.
+        centre = box.centre
+        origin = (centre[0], centre[1], box.zmin + 0.35 * (box.zmax - box.zmin))
+        self.flexure_panel.set_joint_axis(origin, (1.0, 0.0, 0.0))
+        self._set_status(
+            "Joint axis suggested from the bounding box. Check it against the model "
+            "before running - this is a guess, not a measurement."
+        )
+
+    def _run_flexure_analysis(self, settings: dict) -> None:
+        if self._model is None or not self._model.solids:
+            return
+        if not self._model.is_analysis_ready:
+            QMessageBox.warning(
+                self, "Not ready for analysis",
+                "This model is not ready for analysis:\n\n"
+                + "\n".join(f"- {r}" for r in self._model.analysis_readiness_reasons()),
+            )
+            return
+
+        shape = self._model.solids[0].shape
+        self._set_status("Extracting centrelines and running reduced-order analysis...")
+        self._progress.setVisible(True)
+        self._progress.setRange(0, 0)
+        self.setEnabled(False)
+
+        job = run_in_background(
+            self,
+            _flexure_worker,
+            shape,
+            settings,
+            on_finished=self._on_flexure_finished,
+            on_failed=self._on_flexure_failed,
+        )
+        self._jobs.append(job)
+
+    def _on_flexure_finished(self, payload: tuple) -> None:
+        self._finish_job()
+        curve, stiffness, members, settings = payload
+
+        self.flexure_panel.show_results(
+            curve, stiffness, members, settings["max_angle_deg"]
+        )
+        self.plots_panel.show_analysis(curve, members)
+        self._plots_dock.show()
+        # Give the plots roughly a third of the height, so the model stays visible
+        # beside its results rather than being pushed off screen.
+        self.resizeDocks(
+            [self._plots_dock], [max(300, int(self.height() * 0.34))], Qt.Orientation.Vertical
+        )
+
+        self._set_status(
+            f"Reduced-order analysis complete: {stiffness.rotational_stiffness:.6g} "
+            f"N.mm/rad at neutral  -  {curve.provenance.label} result, see the "
+            "assumptions panel"
+        )
+
+    def _on_flexure_failed(self, message: str, detail: str) -> None:
+        self._finish_job()
+        self._set_status("Flexure analysis failed.")
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Icon.Warning)
+        box.setWindowTitle("Flexure analysis failed")
+        box.setText(message)
+        box.setDetailedText(detail)
+        box.exec()
 
     # -- measurement -----------------------------------------------------------
 

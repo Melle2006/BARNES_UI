@@ -3,12 +3,14 @@
 A desktop application for designing TPU compliant flexures, measuring their stiffness, fitting
 them to prosthetic-hand finger joints, and simulating the resulting motion and restoring torque.
 
-**Current state: Phase 1 — CAD import and inspection.** The application imports CAD geometry and
-measures it. It does **not** yet compute stiffness, force, torque, stress or strain, and it does
-not display any such value. Those arrive in Phases 2 and 3. See
+**Current state: Phase 2 — flexure geometry and reduced-order mechanics.** The application
+imports CAD, measures it, reconstructs flexure centrelines and section profiles, and computes a
+reduced-order torque–angle curve about a joint axis. It does **not** yet run finite element
+analysis, so no result here is a high-fidelity prediction, and the error of the fast model against
+FEA has not yet been measured. That is Phase 3. See
 [docs/05-development-plan.md](docs/05-development-plan.md).
 
-![Phase 1 application window](docs/phase1-screenshot.png)
+![Phase 2 application window](docs/phase2-screenshot.png)
 
 ---
 
@@ -114,7 +116,7 @@ python -m barnes_ui path/to/flexure.step
 pytest
 ```
 
-159 tests, running in about four seconds with no display required. The engineering core is
+234 tests, running in about four seconds with no display required. The engineering core is
 deliberately free of GUI dependencies so the test suite stays fast and headless — a rule enforced
 by `tests/test_architecture.py` rather than left to discipline.
 
@@ -139,16 +141,44 @@ pytest -m "not gui"            # skip anything needing a display
 | Unit detection | Read from the STEP/IGES header; explicit confirmation for formats that declare none |
 | Validity checking | OpenCASCADE topology check, disconnected bodies, zero-volume bodies, high aspect ratio |
 | Analysis-readiness report | States exactly why a model is not ready, if it is not |
-| Point-to-point measurement | On the display tessellation; exact vertex snapping is Phase 2 |
+| Point-to-point measurement | On the display tessellation; exact vertex snapping not yet implemented |
 | Projects | Save, reopen, imported CAD copied in so the project is self-contained |
 
-### What Phase 1 deliberately does not do
+## What Phase 2 adds
 
-Stiffness. Force. Torque. Stress. Strain. Meshing. FEA. Flexure fitting. Hand animation.
-Optimisation.
+| Capability | Notes |
+|---|---|
+| Cross-section extraction | Area, centroid, second moments, from exact surfaces |
+| Centreline reconstruction | Two-pass: locate along an axis, then re-cut normal to the tangent |
+| Multi-member separation | Twin straps recovered as two independent members |
+| Section profiles | Area and I against arc length |
+| Material models | Neo-Hookean, Mooney-Rivlin, Ogden (N=1,2), linear elastic |
+| Material fitting | Least-squares fit to uniaxial test data, with recorded validity range |
+| Reduced-order stiffness | Clamped-clamped curved beam by Castigliano, bending + axial + shear |
+| Torque–angle curves | Restoring torque and peak strain against joint angle |
+| Provenance everywhere | Badge in the panel, banner stamped onto every exported figure |
+
+**Verified in Phase 2** — the numbers, not the intent:
+
+- Straight fixed-fixed member under pure imposed rotation: **9 ppm** against the exact
+  slope-deflection result 4EI/L
+- Section I extracted from CAD: **0.166667 mm⁴** against b·h³/12 = 0.1666667, six figures
+- Depth doubled → stiffness ×**8.000** exactly; two parallel members → ×**2.000** exactly
+- Castigliano against an independently written frame-FE solver, like-for-like: **0.057 %**
+
+### What Phase 2 deliberately does not do
+
+Finite element analysis. Meshing. Nonlinear material response. Large-deflection kinematics.
+Contact. Flexure fitting onto an assembly. Hand animation. Optimisation.
 
 None of it is stubbed out or faked. Where a later phase is referenced in the UI, it says which
 phase and what is missing.
+
+**The most important limitation of Phase 2**: the reduced-order model is linear, and on the A3
+twin-strap part it predicts 42 % peak bending strain at 90° of flexion. That is far outside
+small-strain validity, so the absolute torque is not trustworthy — only the relative comparison
+between design variants is. Measuring the error against nonlinear FEA is the whole point of
+Phase 3.
 
 ---
 
@@ -214,7 +244,7 @@ Full details, including the data model and the fidelity ladder:
 | Phase | Scope | State |
 |---|---|---|
 | 1 | CAD import and inspection | **Complete** |
-| 2 | Flexure geometry, material models, reduced-order mechanics | Not started |
+| 2 | Flexure geometry, material models, reduced-order mechanics | **Complete** |
 | 3 | Nonlinear FEA via CalculiX, with analytical verification | Not started |
 | 4 | Hand assembly import, joint definition, flexure adaptation | Not started |
 | 5 | Whole-hand kinematics and reduced-order coupling | Not started |
