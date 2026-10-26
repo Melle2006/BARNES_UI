@@ -18,6 +18,7 @@ cyclopts==5.3.0
 docstring_parser==0.18.0
 ezdxf==1.4.5
 fonttools==4.67.0
+gmsh==4.15.2
 idna==3.20
 iniconfig==2.3.1
 kiwisolver==1.5.1
@@ -45,6 +46,7 @@ QtPy==2.4.3
 requests==2.34.2
 rich==15.0.0
 rich-rst==2.2.0
+scikit-fem==12.0.2
 scipy==1.18.1
 scooby==0.12.0
 shiboken6==6.8.2.1

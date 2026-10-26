@@ -34,6 +34,19 @@ license = { text = "MIT" }
 #   ezdxf         DXF parsing, pure Python, complete entity coverage.
 #   numpy/scipy   Numerics. SciPy is used from Phase 2 for fitting and integration.
 #   matplotlib    Report-quality static figures. GUI-side only.
+#   gmsh          Mesh generation. Consumes an OpenCASCADE BREP directly, so the solid
+#                 never round-trips through a mesh format. Ships its own binary; no
+#                 separate install. Produces second-order tets, which is what a nearly
+#                 incompressible material needs -- first-order tets lock.
+#   scikit-fem    VERIFICATION ONLY, never production. Pure Python, pip-installable,
+#                 and a genuinely independent implementation rather than a wrapper on
+#                 the same kernel. docs/03 originally planned FEniCSx for this role;
+#                 it needs conda or WSL on Windows, which defeats the purpose of a
+#                 check that has to be easy to run.
+#
+# NOT a Python package: CalculiX (ccx), the production solver. It is a native
+# executable and must be installed separately -- see core/fea/solver.py. When it is
+# absent, FEA is unavailable and nothing is substituted for it.
 dependencies = [
     "cadquery-ocp>=7.7",
     "PySide6>=6.6,<6.9",
@@ -44,6 +57,8 @@ dependencies = [
     "numpy>=1.26",
     "scipy>=1.11",
     "matplotlib>=3.8",
+    "gmsh>=4.12",
+    "scikit-fem>=9.0",
 ]
 
 [project.optional-dependencies]
