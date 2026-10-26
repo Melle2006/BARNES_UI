@@ -114,7 +114,7 @@ list beside it and a statement that the error against FEA is not yet known.
 
 ---
 
-## Phase 3 — Nonlinear FEA — **7 of 8 CRITERIA MET, VERIFIED AGAINST A REAL SOLVER**
+## Phase 3 — Nonlinear FEA — **COMPLETE, 8 of 8 CRITERIA MET**
 
 CalculiX 2.23 is now installed and every benchmark below has been run through it. See
 [08-calculix-installation.md](08-calculix-installation.md) for what was installed, why,
@@ -128,7 +128,7 @@ and what checking it revealed.
 | 4 | Reaction = applied load, < 0.5 % | **MET — 0.0000 %** |
 | 5 | Non-converged run reports failure, no result shown | **MET** — `tagged_moment` raises rather than returning a caveated number |
 | 6 | CalculiX absent → FEA disabled, no fallback | **MET** — tested against the machine's actual state |
-| 7 | Reduced-order vs FEA discrepancy on the real flexure | **IN PROGRESS** — the A3 part meshes (32,965 C3D10) and solves; the comparison figure is not yet recorded |
+| 7 | Reduced-order vs FEA discrepancy on the real flexure | **MET — the reduced-order model overstates stiffness by 23.8 %** on the A3 twin strap (7.558 vs 6.103 N·mm/rad) |
 | 8 | CalculiX viscoelasticity resolved | **MET — resolved: not available.** See [03-solver-comparison.md](03-solver-comparison.md) |
 
 **Criterion 8, settled.** CalculiX has **no** viscoelastic material capability. There is
@@ -156,6 +156,48 @@ legitimately stiffer.
   `3 × n_points` were corner nodes in mesh order. They are not.
 - Nodal lumping of the end load was replaced by a consistently integrated facet
   traction, so the applied resultant is mesh-independent.
+
+### Criterion 7: the reduced-order model is 24 % stiff on the A3 twin strap
+
+The headline Phase 3 number, and the one the fast model's usefulness depends on.
+
+| | N·mm/rad |
+|---|---|
+| Reduced-order (Castigliano curved beam) | 7.558 |
+| Nonlinear FEA (CalculiX, 32,965 C3D10, 61,021 nodes) | 6.103 |
+| **Ratio** | **1.238** |
+
+Compared at **2° of joint rotation**, deliberately. The reduced-order model is a tangent
+stiffness at the neutral position and linear by construction, so comparing at a large
+angle would conflate the beam idealisation with the linear-kinematics extrapolation. At
+2° both models are inside the regime the fast one claims to describe, so the difference
+isolates the idealisation itself. The large-angle divergence is a separate measurement.
+
+**The ratio is independent of the material.** Both models are linear in E, so the
+provisional 12 MPa placeholder cancels out of the comparison entirely. The 23.8 % figure
+is therefore considerably more trustworthy than either absolute value, both of which
+remain tagged `UNVALIDATED_ASSUMPTION`.
+
+**Sanity-checked by hand** before being reported, because this part produced two
+spurious answers first. Bracketing the stiffness between pure bending with no arch
+action (0.404 N·mm/rad) and full axial restraint with no arch relief (32.15 N·mm/rad)
+puts both values inside the band, which is where a shallow arch belongs: much stiffer
+than pure bending because it carries load axially, much softer than rigid axial restraint
+because it bows to relieve.
+
+**Direction is as expected.** The beam model is the stiffer of the two: it idealises away
+the compliance of the strap roots, the flexibility of the 1.2 mm collar walls, and the
+three-dimensional stress state where strap meets collar.
+
+**What this licenses.** A 24 % error means the reduced-order model is usable for ranking
+design variants and for parameter sweeps, which is what it was built for, and is not
+usable for an absolute torque figure. That was the standing assumption; it is now a
+measurement.
+
+**Caveats on the FEA value itself.** Single mesh, with no convergence study on this
+particular quantity, so `CAVEAT_NO_MESH_STUDY` applies — the 6.103 figure carries an
+unknown discretisation error. The solve also needed 285 cutbacks across 48 increments,
+so the model is stiff to converge and the increment sizing is not comfortable.
 
 **Four defects that only a real solver could expose.** The deck generator passed every
 structural test and was still wrong in four ways, each found by submitting to `ccx`:

@@ -3,12 +3,17 @@
 A desktop application for designing TPU compliant flexures, measuring their stiffness, fitting
 them to prosthetic-hand finger joints, and simulating the resulting motion and restoring torque.
 
-**Current state: Phase 3 — the FEA pipeline is built; CalculiX must be installed to run it.**
+**Current state: Phase 3 complete — nonlinear FEA, verified against analytical benchmarks.**
 The application imports CAD, measures it, reconstructs flexure centrelines, computes reduced-order
-stiffness, meshes with second-order tetrahedra, and generates CalculiX input decks. **CalculiX
-itself is a native executable that you must install separately** — until then FEA is disabled, and
-the application will not substitute a reduced-order result for one you asked a solver for. See
-[docs/05-development-plan.md](docs/05-development-plan.md).
+stiffness, meshes with second-order tetrahedra, and runs nonlinear hyperelastic analysis in
+CalculiX. **CalculiX is a native executable you must install separately** — see
+[docs/08-calculix-installation.md](docs/08-calculix-installation.md). Until it is installed, FEA is
+disabled and the application will not substitute a reduced-order result for one you asked a solver
+for.
+
+**The headline result: the reduced-order model overstates the A3 flexure's stiffness by 23.8 %**
+(7.558 against 6.103 N·mm/rad). That makes it sound for ranking design variants and unsound for an
+absolute torque figure — which was the standing assumption and is now a measurement.
 
 ![Phase 2 application window](docs/phase2-screenshot.png)
 
@@ -285,7 +290,7 @@ Full details, including the data model and the fidelity ladder:
 |---|---|---|
 | 1 | CAD import and inspection | **Complete** |
 | 2 | Flexure geometry, material models, reduced-order mechanics | **Complete** |
-| 3 | Nonlinear FEA via CalculiX, with analytical verification | **Pipeline complete; 6/8 criteria met, 2 blocked on installing CalculiX** |
+| 3 | Nonlinear FEA via CalculiX, with analytical verification | **Complete — 8/8 criteria met** |
 | 4 | Hand assembly import, joint definition, flexure adaptation | Not started |
 | 5 | Whole-hand kinematics and reduced-order coupling | Not started |
 | 6 | Contact, self-contact, friction, viscoelasticity | Not started |

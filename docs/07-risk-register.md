@@ -77,8 +77,18 @@ kind of output that gets trusted.
 - Both curves are always plotted together once FEA exists.
 - The assumptions panel names the slender-beam and small-strain assumptions explicitly.
 
-**Residual:** between Phase 2 and Phase 3 the error is genuinely unknown. The UI says so in
-those words during that window.
+**Residual:** none for the A3 arch — the error is now measured. See the update below.
+
+**MEASURED, Phase 3.** On the A3 twin-strap flexure the reduced-order model overstates
+rotational stiffness by **23.8 %** (7.558 against 6.103 N·mm/rad from CalculiX), compared
+at 2° where the linear model is inside its own regime. The ratio is independent of the
+material, since both models are linear in E, so the provisional modulus cancels out and
+the figure is more trustworthy than either absolute value.
+
+24 % licenses the reduced-order model for ranking design variants and parameter sweeps,
+and rules it out for absolute torque. That was the standing assumption; it is now a
+number. For the A8 meander the equivalent figure is still unmeasured and the planar model
+is refused outright there (see R3 above).
 
 **Update, measured.** The concern turned out to be understated, and in a different way
 than expected. On a generated serpentine meander the planar bending-only model
