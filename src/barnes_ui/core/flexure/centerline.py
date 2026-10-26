@@ -262,6 +262,7 @@ def extract_members(
 
         stations = _assign_arc_length(stations)
         member = Member(index=member_index, stations=stations)
+        _reject_implausible_path(member, axis, start, end, member_index)
         member.notes.append(
             f"{len(stations)} normal sections over {member.arc_length:.4f} mm of "
             f"centreline (chord {member.chord_length:.4f} mm, "
@@ -278,6 +279,60 @@ def extract_members(
         members.append(member)
 
     return members
+
+
+def _reject_implausible_path(
+    member: Member, axis: np.ndarray, start: float, end: float, index: int
+) -> None:
+    """Catch a 'centreline' that is not actually following a member.
+
+    The varying-region-count guard above catches one failure signature. It does not
+    catch the worse one: on a serpentine meander, a plane normal to the sweep axis cuts
+    a straight run *and* part of the adjacent turn, and since they are one fused body
+    the intersection comes back as a single connected region -- a long sliver rather
+    than a cross-section. The region count never varies, so nothing fires.
+
+    Measured on a generated 4-run meander whose true section is 1.0 x 1.2 mm: the sweep
+    returned no error at all and reported section area overstated 3.1x, second moment
+    overstated 4x, and an arc length of 1.61 mm against a true centreline of 62.14 mm.
+    Every figure looked like a figure. This is risk R1 exactly, and it was caught only
+    because the meander had analytically known properties to check against.
+
+    Two geometric facts make it detectable without knowing the answer in advance:
+
+    * A path sampled across a sweep range must span roughly that range along the sweep
+      axis. If it spans far less, the stations are clustered and the path is not
+      traversing the member.
+    * Arc length can never be less than the straight-line extent along the sweep axis,
+      since the path has to cover at least that distance. A shortfall is geometrically
+      impossible and means the stations are not ordered along a single member.
+
+    For anything genuinely non-single-valued along a straight axis, use
+    :func:`barnes_ui.core.flexure.tracing.trace_centerline`.
+    """
+    positions = member.positions()
+    projected = positions @ axis
+    spanned = float(projected.max() - projected.min())
+    requested = abs(end - start)
+
+    if requested > 0 and spanned < 0.5 * requested:
+        raise CenterlineError(
+            f"Member {index}: the extracted path spans only {spanned:.4f} mm along the "
+            f"sweep axis, against a requested range of {requested:.4f} mm. The sections "
+            "are clustered rather than traversing the member, which happens when a "
+            "plane normal to the sweep axis cuts across several parts of the same body "
+            "-- a serpentine meander being the usual cause.\n\n"
+            "Use trace_centerline() from barnes_ui.core.flexure.tracing, which follows "
+            "the member instead of sweeping across it."
+        )
+
+    if member.arc_length < 0.99 * spanned:
+        raise CenterlineError(
+            f"Member {index}: arc length {member.arc_length:.4f} mm is less than its "
+            f"own extent along the sweep axis ({spanned:.4f} mm), which is "
+            "geometrically impossible for a path traversed in order. The stations are "
+            "not ordered along a single member, so the grouping has failed."
+        )
 
 
 def _group_into_tracks(
