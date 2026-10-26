@@ -1,0 +1,39 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Installation / run artefacts
+install.log
+
+# Barnes UI projects. These contain copies of imported CAD and solver run output,
+# so they are large and are the user's data rather than source.
+*.barnesproj/
+
+# Solver scratch. Kept out of the tree anyway (see core/logging_setup.py for why
+# OneDrive and generated files do not mix), but ignored here as a second line of
+# defence in case someone redirects it.
+scratch/
+runs/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
