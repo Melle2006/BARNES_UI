@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "barnes-ui"
+version = "0.1.0"
+description = "TPU flexure design, stiffness analysis and prosthetic-hand simulation platform"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { text = "MIT" }
+
+# Dependency notes (see docs/02-software-stack.md for the full rationale):
+#
+#   cadquery-ocp  OpenCASCADE 7.9/8.0 Python bindings. The CAD kernel. Chosen over
+#                 pythonocc-core because it ships a native win_amd64 wheel for CPython
+#                 3.12, which removes the conda requirement from the setup instructions.
+#                 Large download (~200 MB) because it contains the whole OCCT runtime.
+#   PySide6       Qt 6 bindings under LGPL. PyQt6 is functionally equivalent but its
+#                 GPL/commercial dual licence is an obligation this project does not need.
+#                 UPPER-BOUNDED ON PURPOSE. 6.12.0 installs but fails at import with
+#                 "DLL load failed while importing QtCore: The specified procedure
+#                 could not be found" on Windows 11 / CPython 3.12, with a current
+#                 MSVC runtime (14.51) and no conflicting Qt on PATH -- so it is a
+#                 fault inside that release, not a machine problem. 6.8.2.1 was
+#                 verified working. Raise the ceiling only after testing the import.
+#                 Do not install PySide6_Pdf or PySide6_WebEngine: this project needs
+#                 neither, and mixing their versions with Essentials/Addons breaks the
+#                 shared DLLs in the PySide6 directory.
+#   pyvista       Thin wrapper over VTK. Reduces clipping planes and picking callbacks
+#                 from ~80 lines of VTK boilerplate to ~5. Raw VTK stays reachable.
+#   pyvistaqt     Supplies QtInteractor, the render widget that drops into a Qt layout.
+#   trimesh       STL reading and mesh utilities. Mesh imports are explicitly inexact.
+#   ezdxf         DXF parsing, pure Python, complete entity coverage.
+#   numpy/scipy   Numerics. SciPy is used from Phase 2 for fitting and integration.
+#   matplotlib    Report-quality static figures. GUI-side only.
+dependencies = [
+    "cadquery-ocp>=7.7",
+    "PySide6>=6.6,<6.9",
+    "pyvista>=0.44",
+    "pyvistaqt>=0.11",
+    "trimesh>=4.0",
+    "ezdxf>=1.3",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[project.scripts]
+barnes-ui = "barnes_ui.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Phase 1 tests must run with no display attached, so GUI tests are opt-in.
+markers = [
+    "gui: requires a Qt application and a display (deselect with '-m \"not gui\"')",
+    "cad_kernel: requires the OpenCASCADE bindings to be installed",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
