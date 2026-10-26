@@ -433,6 +433,54 @@ class TestRigidBodyDriving:
         body = RigidBody(node_sets="surface_1", reference_point=(0, 0, 0))
         assert body.node_sets == ["surface_1"]
 
+    def test_reference_node_is_pinned_by_default(self, coarse_mesh) -> None:
+        """Regression for the trap that made the A3 flexure look 55x too soft.
+
+        The reference node sits on the joint axis. Left free to translate, the driven
+        body relieves the imposed rotation by floating sideways -- and the run
+        converges, reports a linear reaction history, and raises no warnings while
+        doing it.
+        """
+        deck, body, _ = self._deck_with_body(coarse_mesh)
+        assert f"{body.name}_ref, 1, 1, 0" in deck
+        assert f"{body.name}_ref, 2, 2, 0" in deck
+        assert f"{body.name}_ref, 3, 3, 0" in deck
+
+    def test_an_explicit_reference_constraint_is_not_duplicated(self, coarse_mesh) -> None:
+        """A caller-supplied constraint wins; two would be a duplicate BC."""
+        from barnes_ui.core.fea.deck import RigidBody
+
+        sets = sorted(coarse_mesh.node_sets)
+        body = RigidBody(node_sets=[sets[1]], reference_point=(0, 0, 0), name="distal")
+        deck = write_deck(
+            coarse_mesh, provisional_tpu(),
+            [
+                BoundaryCondition(sets[0], (1, 2, 3), 0.0),
+                BoundaryCondition("distal_ref", (1, 2, 3), 0.0, "mine"),
+                BoundaryCondition("distal_rot", (1,), 0.1),
+            ],
+            DeckSettings(rigid_bodies=[body]),
+        )
+        assert deck.count("distal_ref, 1, 1, 0") == 1
+
+    def test_pinning_can_be_opted_out_of(self, coarse_mesh) -> None:
+        from barnes_ui.core.fea.deck import RigidBody
+
+        sets = sorted(coarse_mesh.node_sets)
+        body = RigidBody(
+            node_sets=[sets[1]], reference_point=(0, 0, 0), name="free",
+            pin_reference=False,
+        )
+        deck = write_deck(
+            coarse_mesh, provisional_tpu(),
+            [
+                BoundaryCondition(sets[0], (1, 2, 3), 0.0),
+                BoundaryCondition("free_rot", (1,), 0.1),
+            ],
+            DeckSettings(rigid_bodies=[body]),
+        )
+        assert "free_ref, 1, 1" not in deck
+
     def test_a_rigid_body_with_no_members_is_refused(self) -> None:
         from barnes_ui.core.fea.deck import RigidBody
 

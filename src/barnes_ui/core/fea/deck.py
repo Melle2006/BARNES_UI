@@ -97,6 +97,20 @@ class RigidBody:
     #: Name given to the generated reference node set, for boundary conditions.
     name: str = "rigid"
 
+    #: Hold the reference node against translation, so the body rotates about the joint
+    #: axis instead of floating.
+    #:
+    #: Default True, and it is the default because the alternative was a trap. The
+    #: reference node sits on the joint axis; a finger's distal phalanx rotates about
+    #: that axis and does not translate. With these degrees of freedom left free, the
+    #: A3 flexure's distal collar was prescribed a 2-degree rotation and simply
+    #: translated to relieve almost all of the strap deformation. The run converged,
+    #: reported a perfectly linear reaction history, raised no warnings -- and made the
+    #: flexure appear roughly 55 times softer than the beam model.
+    #:
+    #: Set it False only for a body that genuinely is free to translate, and say why.
+    pin_reference: bool = True
+
     #: Filled in by the deck writer: the one-based node numbers it allocated.
     reference_node: int = 0
     rotation_node: int = 0
@@ -407,8 +421,24 @@ def _write_step(
         f"{settings.minimum_increment:.9g}, {settings.maximum_increment:.9g}"
     )
 
+    # Pin each rigid body's reference node unless the caller has already constrained it
+    # or has explicitly opted out. Emitting it twice would be a duplicate boundary
+    # condition, so an existing constraint on that set wins.
+    already_constrained = {bc.node_set for bc in boundary_conditions}
+    auto_pins: list[BoundaryCondition] = []
+    for body in settings.rigid_bodies:
+        reference_set = f"{body.name}_ref"
+        if body.pin_reference and reference_set not in already_constrained:
+            auto_pins.append(
+                BoundaryCondition(
+                    reference_set, (1, 2, 3), 0.0,
+                    "reference node pinned on the joint axis so the body rotates "
+                    "about it rather than translating",
+                )
+            )
+
     out("*BOUNDARY")
-    for bc in boundary_conditions:
+    for bc in list(boundary_conditions) + auto_pins:
         if bc.description:
             out(f"** {bc.description}")
         for dof in bc.dofs:
