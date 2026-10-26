@@ -19,6 +19,7 @@ from barnes_ui.core.cad.registry import (
     supported_extensions,
 )
 from barnes_ui.core.cad.loaders.errors import GeometryLoadError, UnsupportedFormatError
+from barnes_ui.core.cad.loaders.step import parse_declared_unit
 from barnes_ui.core.units import LengthUnit, UnitConfidence
 
 from conftest import BOX_AREA, BOX_VOLUME, BOX_X, BOX_Y, BOX_Z, requires_kernel
@@ -145,6 +146,41 @@ class TestStepImport:
         assert model.declared_unit is LengthUnit.MILLIMETRE
         assert model.unit_confidence is UnitConfidence.DECLARED
         assert model.unit_confidence.is_trustworthy
+
+    def test_unit_is_found_when_declared_late_in_a_large_file(
+        self, tmp_path: Path, box_step: Path
+    ) -> None:
+        """Regression: the declaration may sit at the very end of the file.
+
+        parse_declared_unit originally read only the first 2 MB, assuming unit
+        entities appear near the start of the DATA section. Files written by
+        OpenCASCADE's own STEP processor put the global unit context at the end
+        instead, so a real 2.27 MB part had its declaration at line 51425 of 51430
+        and came back undetected -- which flagged the model units-assumed and refused
+        it for analysis even though the file plainly said millimetres.
+
+        Built here by padding a valid STEP with comment filler so the declaration
+        lands well beyond any fixed head window, without needing a large fixture.
+        """
+        original = box_step.read_text(encoding="utf-8", errors="replace")
+        marker = "#44198 = ( LENGTH_UNIT() NAMED_UNIT(*) SI_UNIT(.MILLI.,.METRE.) );"
+        assert "LENGTH_UNIT" in original
+
+        # Strip the real declaration, pad past the old window, then re-add it at the end.
+        stripped = "\n".join(
+            line for line in original.splitlines() if "LENGTH_UNIT" not in line
+        )
+        filler = "\n".join(f"/* padding line {i} to push the unit declaration late */"
+                           for i in range(60_000))
+        padded = tmp_path / "late_unit.step"
+        padded.write_text(
+            stripped.replace("ENDSEC;\nEND-ISO-10303-21;", "")
+            + "\n" + filler + "\n" + marker + "\nENDSEC;\nEND-ISO-10303-21;\n",
+            encoding="utf-8",
+        )
+        assert padded.stat().st_size > 2_500_000, "fixture must exceed the old 2 MB window"
+
+        assert parse_declared_unit(padded) is LengthUnit.MILLIMETRE
 
     def test_topology_counts_match_a_box(self, box_step: Path) -> None:
         counts = load_geometry(box_step).solids[0].counts

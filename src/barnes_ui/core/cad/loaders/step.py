@@ -69,37 +69,71 @@ _CONVERSION_RE = re.compile(
 )
 
 
+#: Size of each chunk read while scanning for the unit declaration.
+_SCAN_CHUNK = 1 << 20  # 1 MiB
+
+#: Overlap carried between chunks so a declaration straddling a boundary is still
+#: matched. A LENGTH_UNIT entity is around 70 characters even when pretty-printed
+#: across several lines, so 8 KiB is comfortably more than enough.
+_SCAN_OVERLAP = 8192
+
+
 def parse_declared_unit(path: Path) -> LengthUnit | None:
     """Read the length unit declared in a STEP file's data section.
 
     Returns ``None`` when no recognisable declaration is found, which is reported as a
     caution rather than being guessed at.
 
-    This is a text scan rather than a call into the kernel because OpenCASCADE applies
+    This is a text scan rather than a call into the kernel, because OpenCASCADE applies
     the conversion internally and does not expose the original declaration in a
-    convenient form. The scan is bounded: unit entities appear early, so only the first
-    part of the file is read. A 200 MB assembly is not loaded into memory to find a
-    unit string.
+    convenient form.
+
+    The scan covers the **whole file**, streamed in overlapping chunks so that memory
+    use stays bounded regardless of file size.
+
+    An earlier version read only the first 2 MB, on the assumption that unit entities
+    appear near the start of the DATA section. That assumption is wrong and was caught
+    by a real export: files written by OpenCASCADE's own STEP processor place the
+    global unit context at the *end*, so a 2.27 MB part had its declaration at line
+    51425 of 51430 and the unit came back undetected. The model was then flagged
+    units-assumed and refused for analysis, despite the file stating millimetres
+    perfectly clearly. Small test fixtures hid the bug because their declarations fell
+    inside the window.
+
+    Scanning the whole file costs a single sequential read, which is negligible beside
+    the kernel's own parse of the same file.
     """
     try:
         with path.open("r", encoding="utf-8", errors="replace") as handle:
-            # Unit declarations sit near the start of the DATA section. 2 MB is far
-            # more than enough and bounds the cost on large assemblies.
-            head = handle.read(2_000_000)
+            carry = ""
+            while True:
+                chunk = handle.read(_SCAN_CHUNK)
+                if not chunk:
+                    break
+                window = carry + chunk
+                unit = _match_unit(window)
+                if unit is not None:
+                    return unit
+                carry = window[-_SCAN_OVERLAP:]
     except OSError as exc:
         logger.warning("Could not read %s to detect units: %s", path, exc)
         return None
 
-    si_match = _SI_LENGTH_RE.search(head)
+    return None
+
+
+def _match_unit(text: str) -> LengthUnit | None:
+    """Find a length-unit declaration in a block of STEP text."""
+    si_match = _SI_LENGTH_RE.search(text)
     if si_match:
         prefix = si_match.group(1).upper().strip(".")
         unit = _SI_PREFIX_TO_UNIT.get(prefix)
         if unit is not None:
             return unit
-        logger.warning("Unrecognised SI prefix %r in STEP header.", prefix)
+        logger.warning("Unrecognised SI prefix %r in STEP unit declaration.", prefix)
 
     # Fall back to a conversion-based unit, which is how inches are expressed.
-    for name in _CONVERSION_RE.findall(head):
+    for name in _CONVERSION_RE.findall(text):
         unit = _CONVERSION_NAME_TO_UNIT.get(name.strip().upper())
         if unit is not None:
             return unit
