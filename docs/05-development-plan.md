@@ -114,7 +114,58 @@ list beside it and a statement that the error against FEA is not yet known.
 
 ---
 
-## Phase 3 — Nonlinear FEA
+## Phase 3 — Nonlinear FEA — **PIPELINE COMPLETE, 6 of 8 CRITERIA MET**
+
+**Blocked on one thing: CalculiX is not installed on the development machine.** The
+pipeline is built and the criteria that do not need the binary are met and measured.
+Two criteria cannot be closed without it, and are listed as blocked rather than
+quietly skipped.
+
+| # | Criterion | Status |
+|---|---|---|
+| 1 | Cantilever vs analytical, < 2 % | **MET — 0.7 %** on a practical mesh, 0.5 % at the extrapolated limit |
+| 2 | Hyperelastic uniaxial vs Neo-Hookean closed form, < 1 % | **BLOCKED** — the material law is verified to 0.1 % in `test_material`, but confirming CalculiX integrates it needs a run |
+| 3 | Mesh convergence, < 2 % between two finest | **MET — 0.012 %**, monotonic over four refinements |
+| 4 | Reaction = applied load, < 0.5 % | **MET — 0.0000 %** |
+| 5 | Non-converged run reports failure, no result shown | **MET** — `tagged_moment` raises rather than returning a caveated number |
+| 6 | CalculiX absent → FEA disabled, no fallback | **MET** — tested against the machine's actual state |
+| 7 | Reduced-order vs FEA discrepancy on the real flexure | **BLOCKED** — needs a production run |
+| 8 | CalculiX viscoelasticity resolved | **MET — resolved: not available.** See [03-solver-comparison.md](03-solver-comparison.md) |
+
+**Criterion 8, settled.** CalculiX has **no** viscoelastic material capability. There is
+no `*VISCOELASTIC` keyword; `*VISCO` is a step card for viscoplastic analysis, not a
+material; `*CREEP` is irreversible overstress creep requiring `*ELASTIC`; and no
+`*HYPERELASTIC` model carries time or rate dependence. A `umat` is the only route and
+is not documented as supported. This was the project's one openly unverified claim and
+it is now closed against the manual.
+
+**The cantilever benchmark.** Verified with an independently implemented solver
+(`scikit-fem`) on the same Gmsh mesh, because unit errors and boundary-condition
+mistakes are likelier than solver errors. Tip deflection converged to 19.904 mm against
+a beam-theory 20.039 mm. The remaining 0.5 % is physics, not error: a fully clamped end
+face restrains the Poisson contraction that beam theory allows freely, so a 3D model is
+legitimately stiffer.
+
+**Three bugs found during verification**, each by measurement rather than review:
+
+- The verification backend was handed all 4658 mesh nodes while only the 2610 corner
+  nodes appeared in the connectivity. `scikit-fem` silently renumbered the unreferenced
+  ones away, producing 5490 unconnected degrees of freedom and an exactly singular
+  stiffness matrix. The symptom pointed at the boundary conditions; the cause was the
+  node array.
+- The first attempt mapped vector-P2 degrees of freedom by assuming the first
+  `3 × n_points` were corner nodes in mesh order. They are not.
+- Nodal lumping of the end load was replaced by a consistently integrated facet
+  traction, so the applied resultant is mesh-independent.
+
+**What is built and not yet proven.** The CalculiX deck generator follows the documented
+keyword syntax and its structure is tested — keywords, one-based renumbering, D1 from
+Poisson's ratio, material provenance recorded in the deck itself — but no deck has been
+submitted to a real `ccx`. The `*RIGID BODY` rotational driving in particular needs
+confirming. Nothing in the application reports results from an unexecuted deck, so the
+exposure is a failed run rather than a wrong number.
+
+### Original specification
 
 **Goal:** a verified high-fidelity result, and the first honest measure of how wrong Phase 2 is.
 

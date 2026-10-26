@@ -74,16 +74,52 @@ entry expects.
   limiting for whole-hand ones — which is a further reason the staged approach is right.
 - The documentation is a reference manual, not a guide.
 
-**Unverified — must be checked in Phase 3 before use:**
-- Time-domain viscoelasticity. CalculiX has a `*VISCO` procedure and `*CREEP` material behaviour,
-  but whether it supports a Prony-series viscoelastic *hyperelastic* material in the way Abaqus's
-  `*VISCOELASTIC, TIME=PRONY` does has **not** been confirmed. A targeted search did not return
-  authoritative CalculiX documentation on this point. Until the CalculiX user manual is checked
-  directly and a test case is run, the project assumes **no viscoelastic capability** and reports
-  hyperelastic-only results with that limitation stated on the output.
-- Self-contact robustness on thin hyperelastic members.
-- Whether the specific Windows build obtained is compiled with the needed options and with
-  multithreading enabled.
+### Viscoelasticity — RESOLVED, and the answer is no
+
+This was carried as the project's one explicitly unverified claim. It has now been checked
+against the CalculiX 2.18 user manual directly, which settles Phase 3 acceptance
+criterion 8.
+
+**CalculiX has no viscoelastic material capability.** Specifically:
+
+- **There is no `*VISCOELASTIC` keyword.** The manual's keyword index runs `*VIEWFACTOR`
+  straight to `*VISCO`. There is no Prony-series option anywhere, so the Abaqus
+  `*VISCOELASTIC, TIME=PRONY` layered on `*HYPERELASTIC` has no equivalent.
+- **`*VISCO` is a step card, not a material card.** The manual states "Keyword type:
+  step" and that it performs "a static analysis for materials with viscous behavior",
+  with syntax identical to `*STATIC` plus a required `CETOL` tolerance. It selects a
+  procedure; it does not define a material.
+- **`*CREEP` is viscoplastic, not viscoelastic.** It "define[s] the creep properties of a
+  viscoplastic material", implements a Norton overstress law, must be preceded by
+  `*ELASTIC`, and produces irreversible strain above yield. It is not documented as
+  combinable with `*HYPERELASTIC`, and creep is switched off in a `*STATIC` step.
+- **No `*HYPERELASTIC` model carries time or rate dependence.** The accepted models are
+  ARRUDA-BOYCE, MOONEY-RIVLIN, NEO HOOKE, OGDEN, POLYNOMIAL, REDUCED POLYNOMIAL and
+  YEOH; the manual states "All constants may be temperature dependent" and nothing more.
+- **A user material is the only route**, via `*USER MATERIAL` with the ABAQUSNL umat
+  interface for finite strain, or a shared library (the manual points at MFront). The
+  manual does not document this as a supported path to hyperelastic viscoelasticity, so
+  it would be development work with no guarantee.
+
+**Consequence for this project.** TPU genuinely creeps, relaxes, shows hysteresis and
+takes a permanent set. None of that can be modelled in CalculiX. Every result the
+application produces is purely hyperelastic, and
+`CAVEAT_NO_VISCOELASTICITY` states so on the output rather than leaving it in a document.
+
+If rate and history effects turn out to matter for this hand — which needs the cyclic
+test data in [06-required-inputs.md](06-required-inputs.md) item 7 to establish — the
+options are Code_Aster under WSL, which does have viscoelastic laws, or a umat. Neither
+is cheap, and neither is worth starting before the test data says it is necessary.
+
+**Still unverified, and flagged as such:**
+- Self-contact robustness on thin hyperelastic members. A Phase 6 investigation with a
+  permitted negative outcome.
+- Whether a particular Windows build is compiled with the needed options and with
+  multithreading enabled. Cannot be checked until a build is actually installed.
+- **Whether the decks this project generates are accepted by a real `ccx`.** The
+  generator follows the documented keyword syntax, and the structure is tested, but
+  CalculiX is not installed on the development machine, so "ccx accepts this deck" is
+  not yet a fact. The `*RIGID BODY` rotational driving needs confirming first.
 
 ### Code_Aster — rejected as primary, strong on capability
 

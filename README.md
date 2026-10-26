@@ -3,11 +3,11 @@
 A desktop application for designing TPU compliant flexures, measuring their stiffness, fitting
 them to prosthetic-hand finger joints, and simulating the resulting motion and restoring torque.
 
-**Current state: Phase 2 — flexure geometry and reduced-order mechanics.** The application
-imports CAD, measures it, reconstructs flexure centrelines and section profiles, and computes a
-reduced-order torque–angle curve about a joint axis. It does **not** yet run finite element
-analysis, so no result here is a high-fidelity prediction, and the error of the fast model against
-FEA has not yet been measured. That is Phase 3. See
+**Current state: Phase 3 — the FEA pipeline is built; CalculiX must be installed to run it.**
+The application imports CAD, measures it, reconstructs flexure centrelines, computes reduced-order
+stiffness, meshes with second-order tetrahedra, and generates CalculiX input decks. **CalculiX
+itself is a native executable that you must install separately** — until then FEA is disabled, and
+the application will not substitute a reduced-order result for one you asked a solver for. See
 [docs/05-development-plan.md](docs/05-development-plan.md).
 
 ![Phase 2 application window](docs/phase2-screenshot.png)
@@ -116,7 +116,7 @@ python -m barnes_ui path/to/flexure.step
 pytest
 ```
 
-234 tests, running in about four seconds with no display required. The engineering core is
+350 tests, running in under a minute with no display required. The engineering core is
 deliberately free of GUI dependencies so the test suite stays fast and headless — a rule enforced
 by `tests/test_architecture.py` rather than left to discipline.
 
@@ -285,7 +285,7 @@ Full details, including the data model and the fidelity ladder:
 |---|---|---|
 | 1 | CAD import and inspection | **Complete** |
 | 2 | Flexure geometry, material models, reduced-order mechanics | **Complete** |
-| 3 | Nonlinear FEA via CalculiX, with analytical verification | Not started |
+| 3 | Nonlinear FEA via CalculiX, with analytical verification | **Pipeline complete; 6/8 criteria met, 2 blocked on installing CalculiX** |
 | 4 | Hand assembly import, joint definition, flexure adaptation | Not started |
 | 5 | Whole-hand kinematics and reduced-order coupling | Not started |
 | 6 | Contact, self-contact, friction, viscoelasticity | Not started |
@@ -308,9 +308,13 @@ These are honest limitations of the current build, not bugs:
   with a current MSVC runtime. The reason is recorded in `pyproject.toml`; raise the cap only
   after testing the import.
 - **Python 3.13 is not supported**, because `cadquery-ocp` has no wheel for it.
-- **CalculiX's viscoelastic capability is unverified.** Until it is confirmed against the manual
-  and a test case, the project assumes no viscoelastic support. See
-  [docs/03-solver-comparison.md](docs/03-solver-comparison.md).
+- **CalculiX has no viscoelastic capability** — now confirmed against the manual, not assumed.
+  There is no `*VISCOELASTIC` keyword, `*VISCO` is a step card for viscoplasticity, and no
+  `*HYPERELASTIC` model carries rate dependence. TPU genuinely creeps and relaxes, and none of
+  that can be modelled here. Every result is purely hyperelastic and says so.
+- **No deck has been submitted to a real CalculiX yet**, because it is not installed on the
+  development machine. The generator follows documented syntax and its structure is tested, but
+  "ccx accepts this deck" is not yet a fact. Nothing reports results from an unexecuted deck.
 
 ## Licence
 
