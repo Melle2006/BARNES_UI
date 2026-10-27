@@ -214,6 +214,49 @@ produces convincing nonsense:
 
 ---
 
+## 5. Contact in CalculiX 2.23, as measured here
+
+Added in Phase 6. These are not statements about CalculiX in general; they are what
+this build did on these benchmarks, which is the only form the question has a useful
+answer in.
+
+### Surface-to-surface converged where node-to-surface did not
+
+The conventional advice, and what this project's own `contact.py` said when it was
+written, is that node-to-surface is the robust formulation and surface-to-surface the
+fragile one. On every contact benchmark run here it was the other way round:
+
+| Configuration | Two blocks, 100 N normal | Two blocks, friction | Hairpin self-contact |
+|---|---|---|---|
+| node-to-surface, K = 10E/h | did not converge | did not converge | did not converge |
+| node-to-surface, K = E/h | did not converge | did not converge | did not converge |
+| surface-to-surface, K = 10E/h | **converged, 14 increments** | **converged, 14 increments** | **converged, 24 increments** |
+
+Node-to-surface failed by cutting the increment below the minimum while reporting
+"convergence" on individual increments — chatter, not divergence. The benchmark
+script now tries configurations in order and records which one worked, so the
+evidence names the setting instead of the setting becoming an assumption.
+
+The practical consequence: `ContactFormulation.SURFACE_TO_SURFACE` is the setting to
+reach for on this toolchain, and it requires **both** surfaces to be element-face
+based. Only node-to-surface accepts a bare node set as the slave.
+
+### Penalty stiffness
+
+`10 * E / h` was adequate everywhere it converged, giving 0.0041 mm of interface
+penetration on a 4 mm element at 0.25 MPa contact pressure — a tenth of a per cent of
+an element. The softer `E / h` did not improve convergence and would allow ten times
+the penetration, so there is no reason to prefer it here.
+
+### What the contact benchmarks cost
+
+Each stacked-block run is about 1,700 second-order tetrahedra and finishes in under a
+minute. The hairpin is about 8,000 and takes a few minutes, with 53 convergence
+cutbacks across 24 increments. Contact is affordable at this scale; nothing has been
+attempted at the 33,000-element scale of the A3 flexure.
+
+---
+
 ## Sources
 
 - [CalculiX 2.7 user manual, `*HYPERELASTIC`](https://web.mit.edu/calculix_v2.7/CalculiX/ccx_2.7/doc/ccx/node212.html)

@@ -62,6 +62,21 @@ ROTATION_DEG = 2.0
 #: 10.95 mm -- giving 5.48 mm elements, which CalculiX rejected outright.
 SMALLEST_FEATURE_MM = 1.0
 
+#: A point on the joint axis, in mm.
+#:
+#: Recovered from the archived deck of the run that produced the project's documented
+#: 6.103 N.mm/rad, because the script that generated it was never saved. X and Y are
+#: the bounding box centre; Z is the mean height of the four cylindrical mounting
+#: features on the proximal collar, which sit at z = 4.29 and z = 6.59.
+#:
+#: Not the bounding box centre, which is at z = 7.42. The straps arch upward to
+#: z = 12.89 and drag the box with them, so a naive mid-height sits two millimetres
+#: above the joint. A refactor briefly introduced exactly that error, it produced a
+#: perfectly converged run, and the only way it was caught was comparing the deck
+#: against the archived one. Risk R4, and the reason JointStiffnessSetup now requires
+#: an axis point rather than defaulting one.
+AXIS_POINT_MM = (6.09, 44.935, 5.44)
+
 #: Provisional modulus, in MPa. NOT a calibrated TPU property.
 #:
 #: The stiffness *ratio* this script exists to feed is independent of it: both the
@@ -92,12 +107,10 @@ def build_and_run(step_path: Path, element_size: float, archive_root: Path | Non
 
     setup = JointStiffnessSetup(
         attachment_depth=COLLAR_DEPTH_MM,
+        axis_point=AXIS_POINT_MM,
         rotation_deg=ROTATION_DEG,
         span_axis=SPAN_AXIS,
         joint_direction=(1.0, 0.0, 0.0),
-        # axis_point left at the default: the A3's straps arch symmetrically about
-        # the centre of its envelope, so the two coincide here. On a part where they
-        # do not, the axis is a user input and must not be inferred -- risk R4.
         smallest_feature=SMALLEST_FEATURE_MM,
         element_size=element_size,
         second_order=True,

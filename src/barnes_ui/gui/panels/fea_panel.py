@@ -46,7 +46,7 @@ from PySide6.QtWidgets import (
 from ...core.fea.capabilities import Capability, CapabilityRegistry, CapabilityStatus
 from ...core.fea.solver import SolverInfo, find_solver, installation_instructions
 from ...core.provenance import Provenance
-from ._common import float_spin, int_spin, note_label, provenance_badge
+from ._common import float_spin, int_spin, note_label, provenance_badge, row
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +65,7 @@ class FeaPanel(QWidget):
 
     analysis_requested = Signal(dict)
     cancel_requested = Signal()
+    axis_suggestion_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -138,6 +139,21 @@ class FeaPanel(QWidget):
         self._collar_depth = float_spin(0.1, 50.0, 2, 3.2, 0.1, " mm")
         form.addRow("Prescribed rotation:", self._angle)
         form.addRow("Attachment depth:", self._collar_depth)
+
+        self._axis_point = [float_spin(-1000.0, 1000.0, 3, 0.0, 0.1) for _ in range(3)]
+        form.addRow("Axis passes through (mm):", row(*self._axis_point))
+
+        self._suggest_button = QPushButton("Suggest from the bounding box")
+        self._suggest_button.clicked.connect(self.axis_suggestion_requested)
+        form.addRow(self._suggest_button)
+
+        form.addRow(note_label(
+            "The axis is a required input, not a default. On the A3 twin strap the "
+            "bounding box centre sits two millimetres above the real joint, because "
+            "the straps arch upward and drag the box with them -- and a run at the "
+            "wrong height converges perfectly and reports a different stiffness. "
+            "Check the suggestion against the model."
+        ))
         form.addRow(note_label(
             "Every surface within the attachment depth of each end is tied. Tying "
             "one surface of a collar rather than all of them is not an approximation "
@@ -252,8 +268,16 @@ class FeaPanel(QWidget):
         """Remember the Phase 2 answer so the comparison can be drawn later."""
         self._reduced_order_stiffness = value
 
+    def set_axis_point(self, point) -> None:
+        for spin, value in zip(self._axis_point, point):
+            spin.setValue(float(value))
+
+    def axis_point(self) -> tuple[float, float, float]:
+        return tuple(spin.value() for spin in self._axis_point)
+
     def settings(self) -> dict:
         return {
+            "axis_point": self.axis_point(),
             "smallest_dimension": self._smallest_feature.value(),
             "elements_through_thickness": self._through_thickness.value(),
             "second_order": self._second_order.isChecked(),

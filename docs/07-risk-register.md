@@ -37,6 +37,18 @@ represents reality.
 match the physical mounting. Only item 11 in [06-required-inputs.md](06-required-inputs.md) — a
 physical measurement — closes that gap, and nothing else does.
 
+**A fourth instance, from Phase 6.** The self-contact benchmark drove a hairpin's free
+end with a *prescribed displacement* larger than the gap between its legs. Contact
+cannot resist a prescribed displacement: the node goes where it is told, and it took
+one leg straight through the other. The run converged, raised no error, and reported
+a closest approach of exactly minus the overshoot. The only visible symptom was 129
+convergence cutbacks.
+
+What makes it worth recording alongside the Phase 3 cases is that the obvious reading
+— "CalculiX self-contact does not work" — would have been wrong, and would have gone
+into the documentation as a solver limitation. The fault was in the question, not the
+answer. See R13.
+
 ---
 
 ## R2 — Material characterisation is the accuracy ceiling
@@ -59,6 +71,19 @@ absolute force this tool reports scales directly with the material parameters.
 **Residual:** absolute predictions stay unvalidated until a specimen is tested. Relative
 comparisons between designs remain useful throughout, because the material error is largely
 common to both.
+
+**MEASURED, Phase 7.** "Largely common to both" is now a number rather than a hope.
+Both the reduced-order model and a small-strain FEA are linear in the elastic modulus,
+so a modulus uncertainty multiplies every design's stiffness by the same factor. Over
+a stated 8 to 18 MPa range the Pareto front is **identical at every modulus**: the
+geometric objectives move 0 % and the stiffness moves 38 % of the mean, and the
+ranking does not change at all.
+
+So design *selection* is available today, while the material is uncalibrated. Design
+*sizing* is not. `core/optimise/sensitivity.py` re-runs the search across the range
+and compares the fronts rather than asserting the invariance, so an objective that
+breaks the linearity — a fixed strain or force allowable — is reported instead of
+quietly invalidating the conclusion.
 
 ---
 
@@ -156,6 +181,17 @@ a joint axis that is a millimetre off or a degree skewed changes the torque–an
 
 **Residual:** a user can confirm a wrong axis. The visual preview is the main defence.
 
+**Hardened, Phase 4 and 5.** The mitigation is now in the type system rather than in
+the UI. `Joint.require_axis()` raises until `confirm()` has been called, there is no
+automatic path to `confirm()` anywhere in the codebase, and `SerialChain` calls
+`require_axis()` on every joint when it is constructed — so an unconfirmed guess
+cannot reach an animation. `find_axis_candidates` returns ranked *candidates* with
+the supporting evidence (face count, total cylindrical area, axial extent) rather
+than a single answer, and the ranking is labelled a heuristic wherever it appears.
+
+The GUI's simulation tab drives one joint rather than a chain for the same reason:
+the assembly importer is not exposed yet, so a hand would need guessed axes.
+
 ---
 
 ## R5 — Geometry adaptation distorts mechanical behaviour
@@ -177,7 +213,14 @@ for and nobody sees.
 
 **Residual:** the template must genuinely match the A8 design family. If the real part has
 features the template does not model, the regenerated part is a different part. Criterion 2 is
-what detects this.
+what detects this, and it cannot run against the A8 until the file arrives.
+
+**Implemented, Phase 4.** `adapt_to_span` regenerates and never scales. Thickness and
+width preservation is **asserted inside the function** rather than intended, so a
+future strategy that forgets is caught there rather than in a plausible-looking
+stiffness number. Criterion 2's volume check runs on every build from the GUI, not
+only in the test suite. Four parameter sets reproduce the template's exact closed-form
+volume.
 
 ---
 
@@ -197,6 +240,18 @@ open-source nonlinear solvers become unreliable. CalculiX's diagnostics are ters
 
 **Residual:** some analyses may simply not be achievable with this toolchain. Documenting that
 honestly is an acceptable result.
+
+**PARTLY MEASURED, Phase 6.** Contact converges on small benchmarks, with one
+important qualification: only in the **surface-to-surface** formulation. Node-to-
+surface — the formulation conventionally described as the robust one, and the one this
+project's own code assumed — failed to converge on every contact benchmark at both
+penalty stiffnesses tried, chattering until the increment fell below its minimum. The
+benchmark script tries configurations in order and records which worked, so the
+evidence names the setting. See [03-solver-comparison.md §5](03-solver-comparison.md).
+
+Nothing has been attempted at the 33,000-element scale of the A3 flexure. The
+benchmarks are 1,700 to 8,000 elements and finish in minutes; that is not evidence
+about a real part.
 
 ---
 
@@ -257,6 +312,14 @@ assumption has broken.
 
 **Residual:** real. This is a known approximation, used deliberately, with its limits stated.
 
+**Hardened, Phase 5.** Extrapolation beyond the fitted angular range is now *refused*
+rather than warned about: `JointSpring.torque()` raises unless the caller explicitly
+opts in, and opting in attaches a caveat to the returned value. A fitted curve outside
+its data is not a worse estimate but an arbitrary one, and a flexure genuinely
+stiffens sharply as its turns begin to close — behaviour no fit over gentler angles
+can know about. Every Mode 2 value also carries the four reduced-order caveats by
+construction, attached at fit time rather than by whichever call site remembers.
+
 ---
 
 ## R10 — Tessellation error on mesh imports
@@ -303,6 +366,45 @@ person is unavailable.
   plan, kept current as part of each phase.
 - A README written for someone starting from nothing.
 - Decisions recorded with their rejected alternatives so they are not silently reopened.
+
+---
+
+## R13 — Concluding a capability is missing when the question was posed wrong
+
+**Severity: medium. Likelihood: high, and it already happened.**
+
+Registered after Phase 6. An investigative phase with a permitted negative outcome
+has a failure mode of its own: a benchmark that does not pass is recorded as "the
+solver cannot do this", and the record is believed afterwards by people who will not
+re-run it. If the benchmark was set up wrong, a false limitation is now documentation.
+
+The self-contact benchmark produced exactly this. Three set-ups, two of them wrong:
+
+1. Every surface declared as both slave and master — the textbook self-contact
+   recipe, which here meant every node began in contact with the face it belongs to.
+   Diverged in the first increment.
+2. A prescribed displacement driving the free end past the gap. Contact cannot resist
+   a prescribed displacement. It converged, and the legs passed through each other.
+3. A *force* closing the hairpin, which contact can balance.
+
+Each failure looked like a solver limitation and none of them was one.
+
+**Mitigation**
+- A benchmark records the configurations it tried and which one worked, not only the
+  verdict. A single-configuration "it does not converge" is not evidence.
+- A capability record carries its run archive, so the deck can be read by someone who
+  doubts the conclusion.
+- `FAILED` and `NOT_AVAILABLE` are different statuses. `NOT_AVAILABLE` is reserved for
+  what was checked against the manual — currently only viscoelasticity — and no
+  benchmark result can set it.
+- The benchmark scripts' docstrings record the wrong set-ups as well as the right one,
+  so the next person does not repeat them and does not trust a verdict that came from
+  one of them.
+
+**Residual:** real, and not fully closable. A benchmark that passes for the wrong
+reason is harder still to catch than one that fails for the wrong reason, which is
+why every benchmark here compares against an answer known in advance rather than
+against a previous run.
 
 ---
 

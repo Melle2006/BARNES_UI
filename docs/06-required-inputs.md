@@ -150,20 +150,34 @@ objective, and these are it.
 
 ## Summary
 
-| # | Item | Phase | Status |
-|---|---|---|---|
-| 1 | A8 flexure STEP | 1 | **Blocking** |
-| 2 | SolidWorks mass properties | 1 | **Blocking** |
-| 3 | Units confirmation | 1 | Helpful |
-| 4 | A3 collar STEP | 2 | Helpful |
-| 5 | Verified vs estimated dimension list | 2 | **Blocking for trust** |
-| 6 | Joint motion ranges | 2 | **Blocking** (default available) |
-| 7 | TPU tensile test data | 2 | **Blocking for absolute forces** |
-| 8 | Hand assembly STEP | 4 | **Blocking** |
-| 9 | Joint axes and limits | 4 | **Blocking** |
-| 10 | Attachment method and clearances | 4 | **Blocking** |
-| 11 | Measured torque–angle data | 7 | Highest value |
-| 12 | Design targets | 7 | Helpful |
+| # | Item | Phase | Status | What is blocked now that all seven phases are built |
+|---|---|---|---|---|
+| 1 | A8 flexure STEP | 1 | **Blocking** | Phase 1 criterion 1 against a real export; the A8 meander family's template fidelity |
+| 2 | SolidWorks mass properties | 1 | **Blocking** | Phase 1 criterion 1 and Phase 4 criterion 1 — the only untested link in the import chain |
+| 3 | Units confirmation | 1 | Helpful | — |
+| 4 | A3 collar STEP | 2 | **Supplied** | Nothing. Phases 2 and 3 were measured on it |
+| 5 | Verified vs estimated dimension list | 2 | **Blocking for trust** | Whether any A8 dimension in this repository is a measurement |
+| 6 | Joint motion ranges | 2 | **Blocking** (default available) | The angular range a joint spring has to be fitted over |
+| 7 | TPU tensile test data | 2 | **Blocking for absolute forces** | Every absolute torque. Ranking and selection are **not** blocked — see R2 |
+| 8 | Hand assembly STEP | 4 | **Blocking** | The assembly importer has no real file to run against, so it is not exposed in the GUI |
+| 9 | Joint axes and limits | 4 | **Blocking** | A whole-hand chain. One joint works without it |
+| 10 | Attachment method and clearances | 4 | **Blocking** | Whether an interference sweep is checking the right clearances |
+| 11 | Measured torque–angle data | 7 | **Blocking — the last one** | Phase 7 criterion 5. Nothing in this project is experimentally validated and nothing can be until this exists |
+| 12 | Design targets | 7 | Helpful | Objective weights that mean something |
 
-Items 1 and 2 together unblock the Phase 1 demonstration and are a few minutes of work in
-SolidWorks.
+### Where this stands now
+
+Every phase is built. What is missing is not code; it is the four inputs that decide
+whether the code is describing the right part.
+
+Items 1, 2 and 5 are a few minutes of work in SolidWorks and would close the last
+untested link in the CAD import chain — the reader is verified against a generated
+assembly to 1e-5 mm, which proves the reader and nothing about how SolidWorks writes
+placements.
+
+Item 7 sets the accuracy ceiling for absolute forces and nothing else. Phase 7
+measured that the design ranking does not move across an 8 to 18 MPa modulus range,
+so screening and selection work today.
+
+Item 11 is the only one that can produce an `EXPERIMENTALLY_VALIDATED` value. The
+gate that would accept it is built and tested; it has nothing to accept.

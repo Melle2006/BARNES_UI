@@ -174,6 +174,23 @@ class TestFeaPanel:
         panel._update_comparison(6.103)
         assert "Run the Phase 2" in panel._comparison.text()
 
+    def test_the_axis_point_starts_unset(self, qt_app) -> None:
+        """It is an input, not a default.
+
+        A bounding-box centre silently supplied as the axis is what put the A3's
+        joint two millimetres above where it belongs, in a run that converged
+        perfectly. The window refuses to submit while the point is at the origin.
+        """
+        panel = FeaPanel()
+        assert panel.axis_point() == (0.0, 0.0, 0.0)
+        assert "required input, not a default" in _panel_notes(panel)
+
+    def test_the_axis_point_round_trips(self, qt_app) -> None:
+        panel = FeaPanel()
+        panel.set_axis_point((6.09, 44.935, 5.44))
+        assert panel.axis_point() == pytest.approx((6.09, 44.935, 5.44))
+        assert panel.settings()["axis_point"] == pytest.approx((6.09, 44.935, 5.44))
+
 
 class TestOptimisePanel:
     def _panel(self, qt_app) -> OptimisePanel:
@@ -247,3 +264,11 @@ class TestOptimisePanel:
         text = panel._front_output.toPlainText()
         assert "With weights" in text
         assert "These weights are the decision." in text
+
+
+def _panel_notes(panel) -> str:
+    """Every QLabel's text in a panel, joined. For asserting that a warning is on
+    screen without coupling the test to the layout."""
+    from PySide6.QtWidgets import QLabel
+
+    return " ".join(label.text() for label in panel.findChildren(QLabel))

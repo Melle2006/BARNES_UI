@@ -187,6 +187,7 @@ class MainWindow(QMainWindow):
         self.fea_panel = FeaPanel(self)
         self.fea_panel.analysis_requested.connect(self._run_fea)
         self.fea_panel.cancel_requested.connect(self._cancel_fea)
+        self.fea_panel.axis_suggestion_requested.connect(self._suggest_fea_axis)
 
         self.simulation_panel = SimulationPanel(self)
         self.simulation_panel.run_requested.connect(self._run_simulation)
@@ -572,8 +573,19 @@ class MainWindow(QMainWindow):
         # argued with, not an inference about the design.
         span_axis = int(max(range(3), key=lambda i: box.size[i]))
 
+        axis_point = settings["axis_point"]
+        if all(value == 0.0 for value in axis_point):
+            QMessageBox.information(
+                self, "No joint axis",
+                "The joint axis point is still at the origin. STEP carries no mates, "
+                "so the axis has to be stated -- press 'Suggest from the bounding "
+                "box' and then check it against the model, or type it in.",
+            )
+            return
+
         setup = JointStiffnessSetup(
             attachment_depth=settings["collar_depth"],
+            axis_point=axis_point,
             rotation_deg=settings["rotation_deg"],
             span_axis=span_axis,
             smallest_feature=settings["smallest_dimension"],
@@ -646,6 +658,26 @@ class MainWindow(QMainWindow):
         if job is not None:
             job[1].token.cancel()
             self._set_status("Cancelling after the current increment...")
+
+    def _suggest_fea_axis(self) -> None:
+        """Fill the FEA panel's axis point from the bounding box, and say so.
+
+        The suggestion is the box centre, which is a starting point and not a
+        determination -- on an arched flexure it sits above the real joint. The
+        status bar says that every time, because the number looks equally
+        authoritative either way.
+        """
+        if self._model is None or not self._model.solids:
+            return
+        box = self._model.overall_bounding_box
+        if box is None:
+            return
+        self.fea_panel.set_axis_point(box.centre)
+        self._set_status(
+            "Axis point suggested from the bounding box. On a part whose flexure "
+            "arches away from the joint this sits above the real axis -- check it "
+            "in the viewport before running."
+        )
 
     # -- hand simulation -------------------------------------------------------
 

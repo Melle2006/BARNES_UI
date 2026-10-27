@@ -691,40 +691,47 @@ def benchmark_mechanical_stop(solver, archive) -> BenchmarkOutcome:
 
 
 def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
-    """A hairpin strip squeezed until its two legs meet.
+    """A hairpin strip pressed closed until its two legs meet.
 
-    The hardest of the five and the one most likely to fail, which is why a failure
-    here is recorded rather than worked around. The geometry is a two-run meander --
-    the template already builds exactly this shape -- with one leg driven toward the
-    other by more than the gap between them.
+    The hardest of the five, and the one that took three attempts to pose correctly.
+    Both failures are worth writing down because neither was a solver problem.
 
-    The contact surfaces are the two *facing* inner walls, not the whole boundary.
-    An earlier attempt declared every surface of the part as both slave and master,
-    which is the textbook way to set up self-contact and here meant every node
-    starting in contact with the face it belongs to. It diverged in the first
-    increment. Naming the two faces that can actually meet is both cheaper and
-    better posed, and it is possible here because the hairpin's geometry says
-    exactly which they are.
+    **Attempt one** declared every surface of the part as both slave and master,
+    which is the textbook way to set up self-contact and here meant every node began
+    in contact with the face it belongs to. It diverged in the first increment.
+    Naming the two walls that can actually meet is cheaper and better posed, and the
+    hairpin's geometry says exactly which they are.
+
+    **Attempt two** drove the upper leg's free end with a *prescribed displacement*
+    larger than the gap. A prescribed displacement is not something contact can
+    resist: the node goes where it is told, and it took the leg straight through the
+    other one. The run converged, the closest approach came out at exactly minus the
+    overshoot, and the 129 cutbacks were the only sign anything was wrong. It is the
+    cleanest illustration this project has produced of a converged, warning-free,
+    entirely meaningless result -- and the cause was the boundary condition, not the
+    contact formulation, which is why "contact does not work here" would have been
+    the wrong conclusion to record.
+
+    The load is therefore a **force**, which contact can balance. Without contact the
+    hairpin would close far past its gap; with it the legs stop on each other.
     """
     from barnes_ui.core.flexure.templates.meander import (
         MeanderParameters,
         build_meander,
     )
 
-    # A 1.0 mm starting gap, not the 4.5 mm one tried first. That earlier version
-    # CONVERGED while the legs passed clean through each other: the closest approach
-    # came out at exactly minus the overshoot, meaning the contact pair contributed
-    # no resistance at all. The run archive is kept. It is the clearest example this
-    # project has produced of convergence being a statement about the numerics and
-    # nothing else, and the practical lesson is that CalculiX's surface-to-surface
-    # contact search did not pair faces several element sizes apart. Starting close
-    # separates "does contact engage" from "does the search span a large gap", and
-    # only the first question is what this benchmark is for.
     parameters = MeanderParameters(
         run_length=20.0, n_runs=2, pitch=2.5, width=1.5, thickness=2.0
     )
     gap = parameters.pitch - parameters.width       # 1.0 mm of clear air
-    push = gap + 0.3
+
+    # A leg bending in-plane has I = thickness * width^3 / 12, so a cantilever of
+    # this length is worth roughly 0.21 N/mm. A 1 N push would close about 4.7 mm
+    # free, against a 1.0 mm gap -- enough margin that a stop which is not engaging
+    # is unmistakable, and small enough that the material stays in a sane range.
+    inertia = parameters.thickness * parameters.width ** 3 / 12.0
+    leg_stiffness = 3.0 * E_MPA * inertia / parameters.run_length ** 3
+    push_force = 1.0
 
     mesh = generate_mesh(
         build_meander(parameters),
@@ -733,7 +740,7 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
     )
 
     half = parameters.width / 2.0
-    # Facing walls: the top of the lower run and the bottom of the upper one.
+    # The facing walls: the top of the lower run and the bottom of the upper one.
     lower_wall = surfaces_where(mesh, lambda p: abs(p[1] - half) < 1e-4)
     upper_wall = surfaces_where(
         mesh, lambda p: abs(p[1] - (parameters.pitch - half)) < 1e-4
@@ -783,22 +790,19 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
             initial_increment=0.01,
             minimum_increment=1.0e-8,
             maximum_increment=0.05,
+            reaction_sets=lower_end,
             field_output_frequency=1,
             contact_pairs=[pair],
+            point_loads=[
+                PointLoad(
+                    node_set=upper_end[0], force=(0.0, -push_force, 0.0), total=True,
+                    description="force closing the hairpin",
+                )
+            ],
         )
         boundary = [
             BoundaryCondition(n, (1, 2, 3), 0.0, "lower leg's free end fixed")
             for n in lower_end
-        ]
-        boundary += [
-            BoundaryCondition(n, (2,), -push,
-                              "upper leg's free end driven toward the lower one")
-            for n in upper_end
-        ]
-        boundary += [
-            BoundaryCondition(n, (1, 3), 0.0,
-                              "upper leg's free end held in the other two directions")
-            for n in upper_end
         ]
         result = submit(
             mesh, boundary, settings,
@@ -811,11 +815,12 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
         return BenchmarkOutcome(
             Capability.SELF_CONTACT, False,
             (
-                f"The hairpin did not converge in any configuration when its "
-                f"{gap:.1f} mm gap was closed by {push:.1f} mm of prescribed "
-                f"motion. Attempts: " + "; ".join(attempted) + ". Phase 6 permits "
-                "this outcome: it is a statement about what this toolchain can do, "
-                "not a gap to paper over. Every deck and solver log is archived."
+                f"The hairpin did not converge in any configuration under a "
+                f"{push_force} N closing force on a {gap:.1f} mm gap. Attempts: "
+                + "; ".join(attempted)
+                + ". Phase 6 permits this outcome: it is a statement about what this "
+                "toolchain can do, not a gap to paper over. Every deck and solver "
+                "log is archived."
             ),
             convergence=attempted[-1] if attempted else "",
             run_directory=str(result.run_directory) if result else None,
@@ -829,22 +834,37 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
             run_directory=str(result.run_directory),
         )
 
+    # Measure over the straight runs only, clear of both ends.
+    #
+    # The turn at the far end spans the whole pitch, so classifying nodes by their
+    # original y puts part of the turn in each group. As the hairpin closes the turn
+    # deforms, and the "upper" part of it legitimately moves past the "lower" part --
+    # which is the turn bending, not the legs interpenetrating. Including it reported
+    # 0.215 mm of apparent penetration on a run whose true penalty penetration, at
+    # this pressure and stiffness, is of order a micron.
+    straight = (mesh.nodes[:, 0] > 1.0) & (
+        mesh.nodes[:, 0] < parameters.run_length - 1.0
+    )
     deformed = mesh.nodes + displacements
-    lower = deformed[mesh.nodes[:, 1] < half + 1e-4]
-    upper = deformed[mesh.nodes[:, 1] > parameters.pitch - half - 1e-4]
+    lower = deformed[straight & (mesh.nodes[:, 1] < half + 1e-4)]
+    upper = deformed[straight & (mesh.nodes[:, 1] > parameters.pitch - half - 1e-4)]
     separation = float(upper[:, 1].min() - lower[:, 1].max())
+    closure = gap - separation
     tolerance = 0.05 * mesh.element_size
-    passed = separation > -tolerance
+    passed = separation > -tolerance and closure > 0.5 * gap
+
     return BenchmarkOutcome(
         Capability.SELF_CONTACT,
         passed,
         (
             f"Converged with {label}. Attempts: " + "; ".join(attempted) + ". "
-            f"Hairpin with a {gap:.1f} mm clear gap, one leg driven {push:.1f} mm "
-            f"toward the other. Closest approach after the solve "
-            f"{separation:+.4g} mm; a negative value of order the drive would mean "
-            f"the legs passed through each other. Element size "
-            f"{mesh.element_size:.3g} mm."
+            f"Hairpin with a {gap:.1f} mm clear gap, closed by a {push_force} N "
+            f"force against a leg stiffness of about {leg_stiffness:.3g} N/mm -- "
+            f"enough to close roughly {push_force / leg_stiffness:.1f} mm if nothing "
+            f"stopped it. Closest approach after the solve {separation:+.4g} mm, so "
+            f"the gap closed by {closure:.4g} mm and the legs stopped on each other. "
+            f"Element size {mesh.element_size:.3g} mm, penetration tolerance "
+            f"{tolerance:.3g} mm."
         ),
         measured=separation, expected=0.0, tolerance=tolerance,
         convergence=result.convergence.summary,

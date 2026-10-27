@@ -265,7 +265,57 @@ table alongside.
 
 ---
 
-## Phase 4 — Assembly import and flexure integration
+## Phase 4 — Assembly import and flexure integration — **COMPLETE, 5 of 6 CRITERIA MET**
+
+| # | Criterion | Status |
+|---|---|---|
+| 1 | STEP assembly placement within 0.01 mm of SolidWorks | **PARTIAL — the reader is verified to 1e-5 mm, against a generated assembly. Not yet checked against a SolidWorks export, which nobody has supplied.** |
+| 2 | Regenerated flexure reproduces its volume to better than 0.5 % | **MET — exact** on four parameter sets, against the template's own closed form |
+| 3 | Adaptation changes only the intended parameters | **MET** — thickness and width equality is asserted inside `adapt_to_span`, not merely intended |
+| 4 | Interference detected at a known-bad configuration | **MET** on a configuration whose collision angle is arithmetic |
+| 5 | A sub-manufacturable design is flagged and not auto-approved | **MET** — the build button is disabled, not a dialog to dismiss |
+| 6 | Every adaptation produces a parameter-change report | **MET** — and separates changes nobody asked for |
+
+### Criterion 1, and what is honestly missing
+
+The requirement is placement agreeing with SolidWorks to better than 0.01 mm. What
+has been done instead is to generate an assembly whose transforms are known exactly,
+write it to STEP, read it back and compare: the distal phalanx, placed 15° about an
+axis through (0, 23, 5) and translated 26 mm, comes back agreeing to **better than
+1e-5 mm over a 50 mm radius** — six orders tighter than the requirement, and measured
+over a radius so a rotation error cannot hide behind a matching translation.
+
+That is a sharper test of the *reader* than a spot-checked reference point would be,
+and it is not the test the criterion asks for. It says nothing about how SolidWorks
+writes its placements. The gap is one named link in the chain rather than a vague
+doubt, and it closes the moment item 2 of
+[06-required-inputs.md](06-required-inputs.md) arrives.
+
+### What was built
+
+`core/assembly/` — `model.py` (placements, component tree), `loader.py` (XCAF
+product-structure import), `joint.py` (axis candidates and the confirmation gate),
+`interference.py` (boolean clash and clearance). `core/flexure/adaptation.py`
+regenerates a template to a new span and reports what moved.
+
+### Three rules this phase put in the code rather than in prose
+
+**A joint axis is never inferred.** `find_axis_candidates` returns ranked candidates
+with the evidence that produced each one, and `Joint.require_axis()` raises until a
+person has called `confirm()`. There is no automatic path to `confirm()` anywhere in
+the codebase. Risk R4.
+
+**A scaled or mirrored component instance is refused.** `Placement.from_matrix`
+checks the rotation block is orthonormal with a positive determinant. A scaled
+instance is a different part: its section dimensions, and so its stiffness, are not
+those of the definition it refers to.
+
+**A deformable body is never swept rigidly.** `sweep_interference` raises on any body
+named in `deformable_labels`. Rotating a flexure rigidly about the joint axis shows
+it in a pose the real part never takes, and confident interference results about a
+shape that does not exist are worse than no check.
+
+### Original specification
 
 **Goal:** attach a parametric flexure to a real joint without distorting it.
 
@@ -300,7 +350,52 @@ parameter diff shown.
 
 ---
 
-## Phase 5 — Whole-hand kinematics and reduced-order coupling
+## Phase 5 — Whole-hand kinematics and reduced-order coupling — **COMPLETE, 5 of 5 CRITERIA MET**
+
+| # | Criterion | Status |
+|---|---|---|
+| 1 | Kinematic preview labelled as such, no force or torque displayed | **MET structurally** — the Mode 1 result type has nowhere to put a torque |
+| 2 | Fitted joint spring reproduces its FEA data to better than 1 %, refuses to extrapolate | **MET — exact at the nodes**, better than 1 % of full scale between them, and `fit_joint_spring` refuses to return a fit that misses its own data |
+| 3 | Motion through a full range completes or reports where interference occurs | **MET** — `check_trajectory` reports the pose, the pair and the overlap volume |
+| 4 | Two designs compared on one plot with provenance shown | **MET** — the tag is in the legend text, and ranking across methods is refused |
+| 5 | Every Mode 2 result displays the reduced-order caveats | **MET** — attached at fit time, so no call site can omit them |
+
+### Criterion 1 is a type, not a label
+
+A label is a promise someone has to keep rendering correctly forever. `KinematicPose`
+simply has no torque, force, stress or energy field, and refuses to be relabelled as
+a stronger mode. The test asserts the *absence* of those attributes rather than the
+presence of a caption.
+
+### Why joint axes have to travel with their link
+
+The DIP axis is attached to the middle phalanx, so flexing the PIP carries it along.
+A chain that rotates every joint about its as-imported axis produces a hand that
+looks almost right and is wrong by a growing amount down the chain.
+`SerialChain.placements()` composes outward from the base so each joint acts about
+its axis *as currently placed*. Verified by arithmetic: with links along Y and joints
+at Y = 20 and Y = 36, flexing both 90° must send the tip from (0, 52, 0) to
+(0, 4, 16), and it does to 1e-9 mm.
+
+### Extrapolation is refused, not warned about
+
+A fitted spring outside its fitted range is not a worse estimate; it is an arbitrary
+one. A curve that fits beautifully to 60° can turn the wrong way at 70°, and a real
+flexure stiffens sharply as its turns begin to close. `JointSpring.torque()` raises
+unless the caller passes `allow_extrapolation=True`, which attaches a caveat that
+travels with the number.
+
+### A finding worth carrying forward
+
+The default fit is shape-preserving (PCHIP) rather than a cubic spline, because a
+plain spline through a stiffening curve invents a local softening the FEA never
+showed. PCHIP is exact at its nodes but estimates the **endpoint** derivative
+one-sidedly: on a 7-point grid the tangent stiffness at the neutral angle came out
+**3 % low** against an exactly known 6.1 N·mm/rad, while an interior point was within
+0.1 %. A neutral-position stiffness should be read from the FEA run itself, or the
+FEA sampled on both sides of neutral.
+
+### Original specification
 
 **Goal:** see the hand move, with restoring torque that comes from Phase 3.
 
@@ -327,7 +422,58 @@ against angle, traceable to the FEA run that produced it.
 
 ---
 
-## Phase 6 — Advanced coupled simulation
+## Phase 6 — Advanced coupled simulation — **COMPLETE, 3 of 3 CRITERIA MET**
+
+Complete in the sense this phase defines: every capability was either demonstrated on
+a benchmark or documented as not achievable, with evidence either way. Six of the
+seven capabilities have a verdict; one of those verdicts is a failure, which is a
+permitted and useful outcome.
+
+Full evidence, including the two wrong set-ups that nearly became documented solver
+limitations: [09-phase6-capability-findings.md](09-phase6-capability-findings.md).
+
+| # | Criterion | Status |
+|---|---|---|
+| 1 | Each capability demonstrated on a benchmark, or documented as unachievable with evidence | **MET** for all seven |
+| 2 | No capability enabled in the UI until it has passed its benchmark | **MET** — enforced by `CapabilityRegistry`, which the FEA panel reads |
+| 3 | Where a coupled result exists, compare it against the Phase 5 reduced-order prediction | **MET vacuously, and that is the honest answer** — no coupled result exists on a real flexure, so there is nothing to compare |
+
+| Capability | Verdict | Measured |
+|---|---|---|
+| Gravity (body load) | **PASSED** | Cantilever self-weight, -1.21 % against the closed form |
+| Tendon load | **PASSED** | 2 N resultant over 119 nodes; root reaction exact |
+| Frictionless contact | **PASSED** | 100 N through an interface, exact; 0.0041 mm penetration on a 4 mm element |
+| Contact with friction | **PASSED** | mu = 0.3, tangential reaction exact, 0.0068 mm of in-plane motion |
+| Mechanical stops | **PASSED** | 0.5017 mm against a 0.5 mm gap, +0.3 % |
+| Self-contact | **FAILED** | Contact engages but leaves 12 % of an element of interpenetration, against a 5 % criterion |
+| Viscoelasticity | **NOT AVAILABLE** | No such material model. Settled in Phase 3 against the manual |
+
+### Criterion 2 is a file, not a promise
+
+A fresh checkout has every capability `NOT_TESTED`, which disables it. A capability is
+enabled by running `scripts/phase6_benchmarks.py` on the machine in question and
+reproducing an answer known in advance. "CalculiX supports contact" is a statement
+about CalculiX; "contact converges here, with this build, on this geometry" is the
+statement the application needs, and no amount of source code establishes it.
+
+### The finding that contradicted the project's own code
+
+Node-to-surface contact — conventionally the robust formulation, and what
+`core/fea/contact.py` said when it was written - failed to converge on **every**
+contact benchmark at both penalty stiffnesses tried. Surface-to-surface converged in
+14 increments on all of them. The benchmark now tries configurations in order and
+records which one worked.
+
+### Criterion 3, and why "vacuously met" is the right description
+
+The criterion is contingent: *where* a coupled result exists, compare it. None does.
+Contact has been demonstrated on stacked blocks of 1,700 elements; the A3 flexure is
+33,000 elements and takes half an hour without contact. Running a coupled analysis of
+a closing meander has not been attempted, so there is no coupled number to set beside
+the reduced-order one. Writing this criterion off as met without saying that would be
+the kind of quiet pass this plan exists to prevent.
+
+### Original specification
 
 **Goal:** establish how much further the physics can honestly be pushed.
 
@@ -353,7 +499,60 @@ result for this phase.
 
 ---
 
-## Phase 7 — Optimisation and experimental calibration
+## Phase 7 — Optimisation and experimental calibration — **4 of 6 CRITERIA MET; 2 BLOCKED ON A PHYSICAL MEASUREMENT**
+
+| # | Criterion | Status |
+|---|---|---|
+| 1 | A sweep reproduces designs analysed individually | **MET** — compared value for value, not to a tolerance |
+| 2 | Optimisation refuses to run on a model that failed its validity checks | **MET** — `require_valid` raises; invalid points are excluded from ranking, not penalised |
+| 3 | Conflicting objectives produce a Pareto front, not a winner | **MET** — `ParetoFront.winner()` raises when more than one design survives |
+| 4 | Sensitivity reports how far the optimum shifts under stated material uncertainty | **MET — and the answer is that the ranking does not shift at all** |
+| 5 | A predicted torque–angle curve compared against a physical measurement | **BLOCKED.** No specimen has been tested. The machinery exists and is tested; the measurement does not. |
+| 6 | Only experimentally validated results carry that tag | **MET** — enforced by an AST scan over every core module |
+
+### Criterion 4: the result that decides what this tool is usable for today
+
+Both the reduced-order model and a small-strain FEA are **linear in the elastic
+modulus**, so a modulus uncertainty multiplies every design's stiffness by the same
+factor and cancels out of a comparison. Over a stated 8 to 18 MPa range about a
+nominal 12, the Pareto front is **identical at every modulus**: the chosen design's
+geometric objectives move by 0 % and its stiffness by 38 % of the mean.
+
+So **design selection is available now, while the material is uncalibrated**, because
+selection depends on the ranking and the ranking does not depend on the modulus.
+Absolute torque is not, and will not be until item 7 of
+[06-required-inputs.md](06-required-inputs.md) arrives.
+
+`modulus_sensitivity()` establishes this by re-running the search at the ends of the
+range and comparing the fronts, rather than asserting it from the algebra. If a
+future objective breaks the linearity — a fixed strain or force allowable, typically
+— the report says the front changed instead of quietly staying wrong.
+
+### Criteria 5 and 6: the gate, and what is on the other side of it
+
+`core/material/calibration.py` is the **only** module in the codebase that can
+produce an `EXPERIMENTALLY_VALIDATED` value, and `tests/test_architecture.py` walks
+the AST of every other core module to confirm none of them name the tag. The gate
+refuses three ways: without agreement inside a tolerance the caller stated *before*
+seeing the result; without a `MeasurementSeries` carrying a specimen identifier, a
+description of the rig and a stated uncertainty; and for any angle outside the range
+the specimen was actually measured over.
+
+A disagreeing comparison is a result, not an error. "The model is 40 % stiff against
+the printed part" is the most useful sentence this project could produce, so
+recording it is as easy as recording agreement, and the report separates bias from
+scatter — a large bias with small scatter points at the material or a boundary
+condition, the reverse points at the rig.
+
+**Nothing in this project is experimentally validated.** That is the honest state of
+criterion 5 and it cannot be changed from the keyboard.
+
+### What was built
+
+`core/optimise/` — `objectives.py` (design points, objectives, the validity gate),
+`sweep.py`, `pareto.py`, `sensitivity.py`; plus `core/material/calibration.py`.
+
+### Original specification
 
 **Goal:** search the design space, and close the loop against reality.
 

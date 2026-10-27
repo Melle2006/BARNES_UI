@@ -34,10 +34,19 @@ pinned by default. Neither is optional here.
 What it does not decide
 -----------------------
 
-The joint axis. ``axis_point`` defaults to the centre of the part's bounding box,
-which is right for a symmetric twin-strap flexure and is a guess on anything else.
-Risk R4 says an axis must never be inferred, and this default exists so the common
-case does not need typing -- not so that the axis can go unexamined.
+The joint axis. ``axis_point`` has **no default**, and that is the result of a real
+mistake rather than caution.
+
+An earlier version of this code defaulted it to the centre of the part's bounding
+box. On the A3 twin strap that puts the axis at z = 7.42 mm, because the arch bulges
+upward and drags the box with it, while the run the project's documented
+6.103 N.mm/rad came from used z = 5.44 mm -- the centroid of the mounting features on
+the collars, which is where the joint physically is. Nobody noticed, because both
+numbers are plausible and the run converged either way.
+
+So the axis is a required argument. :func:`suggest_axis_point` offers the bounding
+box centre for a caller that wants somewhere to start, and it is named "suggest"
+because that is all it is. Risk R4.
 """
 
 from __future__ import annotations
@@ -46,7 +55,7 @@ import logging
 import math
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Sequence
+from typing import Any, Callable
 
 import numpy as np
 
@@ -63,6 +72,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = [
     "JointStiffnessSetup",
+    "suggest_axis_point",
     "JointStiffnessResult",
     "JointStiffnessError",
     "classify_attachment_surfaces",
@@ -74,12 +84,29 @@ class JointStiffnessError(RuntimeError):
     """The analysis could not be set up."""
 
 
+def suggest_axis_point(shape: Any) -> tuple[float, float, float]:
+    """The centre of a shape's bounding box, offered as a starting point.
+
+    A suggestion and nothing more. On a flexure whose straps arch away from the
+    joint, the arch drags the bounding box with it and this sits a millimetre or two
+    off the real axis -- on the A3 part, two millimetres, which is enough to change
+    the reported stiffness substantially. Look at it in the viewport, and prefer a
+    point derived from the mounting features where there are any.
+    """
+    box = bounding_box(shape)
+    return tuple(float(c) for c in box.centre)
+
+
 @dataclass(frozen=True)
 class JointStiffnessSetup:
     """Everything that defines the analysis except the geometry and the material."""
 
     #: Depth of each attachment region, measured along ``span_axis``, in mm.
     attachment_depth: float
+
+    #: A point on the joint axis, in mm. Required, deliberately -- see the module
+    #: docstring for the two-millimetre mistake that made it so.
+    axis_point: tuple[float, float, float]
 
     #: Prescribed rotation, in degrees.
     #:
@@ -94,10 +121,6 @@ class JointStiffnessSetup:
 
     #: Joint axis direction. Must not be parallel to ``span_axis``.
     joint_direction: tuple[float, float, float] = (1.0, 0.0, 0.0)
-
-    #: Point on the joint axis. ``None`` uses the bounding box centre -- a default
-    #: for the symmetric case, not a substitute for looking at it.
-    axis_point: tuple[float, float, float] | None = None
 
     #: The part's thinnest feature, in mm. Required when it is interior: the default
     #: element size comes from the bounding box's smallest extent, which on the A3
@@ -248,7 +271,7 @@ def measure_joint_stiffness(
             "spans."
         )
 
-    axis_point = setup.axis_point or box.centre
+    axis_point = setup.axis_point
 
     if progress:
         progress(0.05, "Meshing...")

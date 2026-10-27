@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "records": [
+    {
+      "capability": "viscoelasticity",
+      "status": "not_available",
+      "evidence": "CalculiX 2.23 has no viscoelastic material model. Checked against the manual in Phase 3 criterion 8 and recorded in docs/03-solver-comparison.md. No benchmark can change this; it needs a different solver or a user material subroutine.",
+      "measured": null,
+      "expected": null,
+      "tolerance": null,
+      "convergence": "",
+      "run_directory": null,
+      "solver_version": "",
+      "recorded_at": ""
+    },
+    {
+      "capability": "gravity",
+      "status": "passed",
+      "evidence": "Cantilever 60.0x8.0x4.0 mm at 1.2 g/cm^3 under 9806.6 mm/s^2. Distributed load 0.000376575 N/mm. Tip deflection 0.0141902 mm against the closed-form 0.0143642 mm (bending plus shear), -1.21 %. 5193 C3D10 elements, 9164 nodes, target size 1.3333 mm.",
+      "measured": 0.0141902,
+      "expected": 0.01436418467568,
+      "tolerance": 0.05,
+      "convergence": "Converged in 1 increment(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\8150eaeff7e3",
+      "solver_version": "2.23 (inferred from the install path)",
+      "recorded_at": "2026-10-27T04:13:23+00:00"
+    },
+    {
+      "capability": "tendon_load",
+      "status": "passed",
+      "evidence": "2.0 N applied as a resultant over the tip patch (119 nodes); root reaction 2 N, +0.000 %. A per-node interpretation would have given 238 N.",
+      "measured": 2.0,
+      "expected": 2.0,
+      "tolerance": 0.005,
+      "convergence": "Converged in 1 increment(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\7d73cedd1d29",
+      "solver_version": "2.23 (inferred from the install path)",
+      "recorded_at": "2026-10-27T04:13:56+00:00"
+    },
+    {
+      "capability": "contact_frictionless",
+      "status": "passed",
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: node-to-surface, K = 10E/h: DID NOT CONVERGE after 36 of 36 increment(s); 1 solver warning(s); node-to-surface, K = E/h: DID NOT CONVERGE after 23 of 28 increment(s); 1 solver warning(s); surface-to-surface, K = 10E/h: Converged in 14 increment(s) with 15 cutback(s); 1 solver warning(s). 100.0 N pressed through the interface; base reaction 100 N, +0.000 %. Interface penetration 0.004103 mm against an element size of 4 mm. Penalty stiffness 2500 N/mm^3. 1661 C3D10 elements, 3054 nodes, target size 4.0000 mm.",
+      "measured": 100.0,
+      "expected": 100.0,
+      "tolerance": 0.02,
+      "convergence": "Converged in 14 increment(s) with 15 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\6bc69a6e0661",
+      "solver_version": "2.23 (inferred from the install path)",
+      "recorded_at": "2026-10-27T04:21:09+00:00"
+    },
+    {
+      "capability": "contact_friction",
+      "status": "passed",
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: node-to-surface, K = 10E/h: DID NOT CONVERGE after 35 of 35 increment(s); 1 solver warning(s); node-to-surface, K = E/h: DID NOT CONVERGE after 21 of 29 increment(s); 1 solver warning(s); surface-to-surface, K = 10E/h: Converged in 14 increment(s) with 16 cutback(s); 1 solver warning(s). Normal 100.0 N and tangential 10.0 N with mu=0.3, so the Coulomb limit 30 N is never reached. Base tangential reaction -10 N against -10 N (+0.000 %). Peak in-plane displacement of the upper block 0.006799 mm; anything approaching an element size would be sliding.",
+      "measured": -10.0,
+      "expected": -10.0,
+      "tolerance": 0.02,
+      "convergence": "Converged in 14 increment(s) with 16 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\aa2d676a517c",
+      "solver_version": "2.23 (inferred from the install path)",
+      "recorded_at": "2026-10-27T04:25:22+00:00"
+    },
+    {
+      "capability": "mechanical_stops",
+      "status": "passed",
+      "evidence": "Beam stiffness 0.5926 N/mm, gap 0.5 mm, so 0.2963 N just closes it. Loaded to 0.8889 N, which without a stop would give 1.50 mm. Tip deflection 0.5017 mm against the 0.5 mm gap (+0.3 %).",
+      "measured": 0.50167,
+      "expected": 0.5,
+      "tolerance": 0.15,
+      "convergence": "Converged in 9 increment(s) with 26 cutback(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\319b750b4bec",
+      "solver_version": "2.23 (inferred from the install path)",
+      "recorded_at": "2026-10-27T04:28:51+00:00"
+    },
+    {
+      "capability": "self_contact",
+      "status": "failed",
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: node-to-surface, K = 10E/h: DID NOT CONVERGE after 20 of 26 increment(s); 1 solver warning(s); node-to-surface, K = E/h: DID NOT CONVERGE after 14 of 21 increment(s); 1 solver warning(s); surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve -0.1079 mm, so the gap closed by 1.108 mm and the legs stopped on each other. Element size 0.9 mm, penetration tolerance 0.045 mm.",
+      "measured": -0.10788500000000001,
+      "expected": 0.0,
+      "tolerance": 0.045000000000000005,
+      "convergence": "Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\4698ed07bc8c",
+      "solver_version": "2.23 (inferred from the install path)",
+      "recorded_at": "2026-10-27T04:58:56+00:00"
+    }
+  ]
+}
