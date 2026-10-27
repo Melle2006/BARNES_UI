@@ -21,7 +21,8 @@ accept. See [docs/06-required-inputs.md](docs/06-required-inputs.md).
 ### The three numbers worth knowing
 
 **The reduced-order model overstates the A3 flexure's stiffness by 9 % to 20 %**, against
-6.103 N·mm/rad from CalculiX, with the spread coming from where the strap is taken to be
+6.103 N·mm/rad from CalculiX — a figure with its own convergence study, 0.936 % between a
+17,042-element and a 32,965-element mesh — with the spread coming from where the strap is taken to be
 clamped rather than from the physics. That makes it sound for ranking design variants and
 unsound for an absolute torque figure — which was the standing assumption and is now a
 measurement. An earlier single figure of 23.8 % compared two different spans; the correction,

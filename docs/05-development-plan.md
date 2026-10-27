@@ -124,7 +124,7 @@ and what checking it revealed.
 |---|---|---|
 | 1 | Cantilever vs analytical, < 2 % | **MET — 0.75 % in CalculiX** (0.503757 N vs 0.500000 N); 0.7 % in the independent backend |
 | 2 | Hyperelastic uniaxial vs Neo-Hookean closed form, < 1 % | **MET — worst 0.094 %** across stretches to λ = 2.0, in CalculiX with `*NLGEOM` |
-| 3 | Mesh convergence, < 2 % between two finest | **MET — 0.012 %**, monotonic over four refinements |
+| 3 | Mesh convergence, < 2 % between two finest | **MET — 0.012 %** on the cantilever benchmark, and **0.936 %** on the A3 joint stiffness itself |
 | 4 | Reaction = applied load, < 0.5 % | **MET — 0.0000 %** |
 | 5 | Non-converged run reports failure, no result shown | **MET** — `tagged_moment` raises rather than returning a caveated number |
 | 6 | CalculiX absent → FEA disabled, no fallback | **MET** — tested against the machine's actual state |
@@ -234,10 +234,31 @@ a large angle would conflate the beam idealisation with the linear-kinematics
 extrapolation. At 2° both models are inside the regime the fast one claims to
 describe. The large-angle divergence is a separate measurement and has not been made.
 
-**Caveats on the FEA value itself.** Single mesh, with no convergence study on this
-particular quantity, so `CAVEAT_NO_MESH_STUDY` applies — the 6.103 figure carries an
-unknown discretisation error. The solve also needed 285 cutbacks across 48 increments,
-so the model is stiff to converge and the increment sizing is not comfortable.
+### The FEA value now has a convergence study of its own
+
+Criterion 3 was originally met on a cantilever benchmark, not on this quantity, so
+the 6.103 figure carried `CAVEAT_NO_MESH_STUDY` and an unknown discretisation error.
+`scripts/a3_mesh_study.py` closes that:
+
+| elements through the strap | element size | elements | DOF | stiffness | change |
+|---|---|---|---|---|---|
+| 1 | 1.0 mm | 17,042 | 99,045 | 6.1604 N·mm/rad | — |
+| 2 | 0.5 mm | 32,965 | 183,063 | **6.1033 N·mm/rad** | **0.936 %** |
+
+**0.936 % between the two meshes, inside criterion 3's 2 %.** The caveat is lifted
+for this quantity.
+
+Two things worth noting beyond the number. The 0.5 mm run reproduced the archived
+6.10336 to **1.5 parts in 100,000**, from a committed script rather than an ad-hoc
+session — which is also what confirms the joint axis recovered from the archived
+deck (z = 5.44 mm) was the one the original run used. And the study is **two points,
+not three**: a third at 0.333 mm would be roughly 75,000 elements and several hours,
+and Richardson extrapolation needs three. So the discretisation error is bounded by
+the 0.936 %, not estimated.
+
+The solve still needs about 285 cutbacks across 48 increments at 0.5 mm, and 278 at
+1.0 mm. The model is stiff to converge and the increment sizing is not comfortable;
+that has not changed and is not a discretisation question.
 
 **Four defects that only a real solver could expose.** The deck generator passed every
 structural test and was still wrong in four ways, each found by submitting to `ccx`:

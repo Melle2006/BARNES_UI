@@ -1,0 +1,25 @@
+{
+  "quantity": "A3 joint rotational stiffness",
+  "unit": "N.mm/rad",
+  "points": [
+    {
+      "elements_through_thickness": 1,
+      "element_size_mm": 1.0,
+      "element_count": 17042,
+      "degrees_of_freedom": 99045,
+      "stiffness_n_mm_per_rad": 6.160416430145831
+    },
+    {
+      "elements_through_thickness": 2,
+      "element_size_mm": 0.5,
+      "element_count": 32965,
+      "degrees_of_freedom": 183063,
+      "stiffness_n_mm_per_rad": 6.103266754870506
+    }
+  ],
+  "final_change_fraction": 0.009363784604321624,
+  "converged_2pc": true,
+  "monotonic": true,
+  "richardson_estimate": null,
+  "notes": []
+}
