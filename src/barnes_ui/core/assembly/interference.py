@@ -46,6 +46,7 @@ from .model import Placement
 logger = logging.getLogger(__name__)
 
 __all__ = [
+    "box_separation",
     "place_shape",
     "rotate_shape",
     "InterferenceAtAngle",
@@ -267,7 +268,7 @@ def sweep_interference(
             posed = rotate_shape(shape, axis, float(angle))
             posed_box = bounding_box(posed)
             for other_label, other_shape, other_box in static_boxes:
-                gap = _box_separation(posed_box, other_box)
+                gap = box_separation(posed_box, other_box)
                 if gap > clearance_of_interest:
                     report.screened_out += 1
                     continue
@@ -290,7 +291,7 @@ def sweep_interference(
     return report
 
 
-def _box_separation(first: BoundingBox, second: BoundingBox) -> float:
+def box_separation(first: BoundingBox, second: BoundingBox) -> float:
     """Lower bound on the distance between two solids, from their boxes.
 
     Zero when the boxes overlap, which means nothing about the solids and simply says

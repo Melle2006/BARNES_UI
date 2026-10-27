@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 from typing import Any, Mapping, Sequence
 
 from ..assembly.interference import (
+    box_separation,
     minimum_clearance,
     pair_interference,
     place_shape,
@@ -176,7 +177,7 @@ def check_trajectory(
             boxes[index] = bounding_box(moved)
 
         for first, second in pairs:
-            gap = _box_separation(boxes[first], boxes[second])
+            gap = box_separation(boxes[first], boxes[second])
             if gap > clearance_of_interest:
                 report.screened_out += 1
                 continue
@@ -198,14 +199,3 @@ def check_trajectory(
                 report.tightest_at = pose.time
 
     return report
-
-
-def _box_separation(first, second) -> float:
-    import numpy as np
-
-    gaps = [
-        max(second.xmin - first.xmax, first.xmin - second.xmax, 0.0),
-        max(second.ymin - first.ymax, first.ymin - second.ymax, 0.0),
-        max(second.zmin - first.zmax, first.zmin - second.zmax, 0.0),
-    ]
-    return float(np.linalg.norm(gaps))

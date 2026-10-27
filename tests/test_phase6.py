@@ -376,3 +376,77 @@ class TestRecordedBenchmarkResults:
         for capability, record in registry.records.items():
             if record.status in (CapabilityStatus.PASSED, CapabilityStatus.FAILED):
                 assert record.solver_version, capability
+
+
+class TestJointStiffnessSetup:
+    """The analysis recipe's bookkeeping, without a solver.
+
+    The recipe itself can only be checked by running CalculiX, which
+    scripts/a3_joint_stiffness.py does. What is testable here is the part that
+    produced a silent two-millimetre error once already.
+    """
+
+    def _setup(self, **changes):
+        from barnes_ui.core.fea.joint_stiffness import JointStiffnessSetup
+
+        defaults = dict(attachment_depth=3.2, axis_point=(6.09, 44.935, 5.44))
+        defaults.update(changes)
+        return JointStiffnessSetup(**defaults)
+
+    def test_an_axis_point_is_required(self) -> None:
+        """No default. A default is an inference nobody reads."""
+        from barnes_ui.core.fea.joint_stiffness import JointStiffnessSetup
+
+        with pytest.raises(TypeError):
+            JointStiffnessSetup(attachment_depth=3.2)
+
+    def test_a_zero_rotation_is_refused(self) -> None:
+        from barnes_ui.core.fea.joint_stiffness import JointStiffnessError
+
+        with pytest.raises(JointStiffnessError, match="converged null solve"):
+            self._setup(rotation_deg=0.0)
+
+    def test_an_out_of_range_span_axis_is_refused(self) -> None:
+        from barnes_ui.core.fea.joint_stiffness import JointStiffnessError
+
+        with pytest.raises(JointStiffnessError, match="span_axis"):
+            self._setup(span_axis=3)
+
+    def test_the_axis_component_follows_the_direction(self) -> None:
+        assert self._setup(joint_direction=(1.0, 0.0, 0.0)).axis_component == 0
+        assert self._setup(joint_direction=(0.0, 0.0, -1.0)).axis_component == 2
+
+    def test_surfaces_are_split_by_whole_set_not_by_any_node(self) -> None:
+        """A surface straddling the boundary belongs to neither region.
+
+        That is the correct treatment for a strap root: fixing it would clamp part
+        of the member the analysis is trying to measure.
+        """
+        from barnes_ui.core.fea.joint_stiffness import classify_attachment_surfaces
+
+        nodes = np.array([
+            [0.0, 0.0, 0.0],    # 0  proximal
+            [0.0, 1.0, 0.0],    # 1  proximal
+            [0.0, 5.0, 0.0],    # 2  middle
+            [0.0, 9.0, 0.0],    # 3  distal
+            [0.0, 10.0, 0.0],   # 4  distal
+        ])
+        mesh = Mesh(
+            nodes=nodes,
+            elements=np.array([[0, 1, 2, 3]]),
+            second_order=False,
+            element_size=1.0,
+            node_sets={
+                "root": np.array([0, 1]),
+                "straddling": np.array([1, 2]),
+                "tip": np.array([3, 4]),
+            },
+        )
+        proximal, distal = classify_attachment_surfaces(mesh, 1, 2.0, 8.0)
+        assert proximal == ["root"]
+        assert distal == ["tip"]
+
+    def test_suggest_axis_point_is_the_box_centre_and_says_so(self) -> None:
+        from barnes_ui.core.fea.joint_stiffness import suggest_axis_point
+
+        assert "suggestion" in suggest_axis_point.__doc__.lower()
