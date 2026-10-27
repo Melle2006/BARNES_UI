@@ -248,8 +248,7 @@ def _summarise(result, mesh, element_size: float, wall: float,
         summary["failure"] = result.convergence.summary
         return summary
 
-    reaction = result.reaction_forces.get(rotation_set)
-    if reaction is None:
+    if not result.has_reaction(rotation_set):
         summary["torque_n_mm"] = None
         summary["stiffness_n_mm_per_rad"] = None
         summary["failure"] = (
@@ -260,7 +259,7 @@ def _summarise(result, mesh, element_size: float, wall: float,
 
     # On a rigid body's rotation node CalculiX reports moments in the force slots, so
     # component 0 is the moment about X -- the joint axis.
-    torque = float(np.asarray(reaction)[0])
+    torque = float(result.reaction(rotation_set)[0])
     summary["torque_n_mm"] = torque
     summary["stiffness_n_mm_per_rad"] = torque / angle_rad
     summary["reactions"] = {k: [float(x) for x in np.asarray(v)]

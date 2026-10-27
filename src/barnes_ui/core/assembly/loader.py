@@ -40,6 +40,7 @@ from ..cad.inspect import bounding_box, volume_properties
 from ..cad.loaders.errors import GeometryLoadError
 from ..cad.loaders.step import parse_declared_unit
 from ..units import LengthUnit, UnitConfidence
+from .interference import place_shape
 from .model import Assembly, Component, Placement
 
 logger = logging.getLogger(__name__)
@@ -185,7 +186,7 @@ def _read_label(shape_tool: Any, label: Any, parent_placement: Placement,
     # Position the shape in world coordinates. Analysis and interference checking both
     # want a placed solid, and re-deriving it from the tree at every use is how a
     # placement eventually gets applied twice.
-    component.shape = _transformed(shape, placement)
+    component.shape = place_shape(shape, placement)
     try:
         volume, _, _ = volume_properties(component.shape)
         component.volume = float(volume)
@@ -231,19 +232,3 @@ def _placement_from_trsf(trsf: Any, label: Any, assembly: Assembly) -> Placement
             "the scale was dropped and only the rigid placement kept."
         )
     return Placement.from_matrix(matrix)
-
-
-def _transformed(shape: Any, placement: Placement) -> Any:
-    """Return ``shape`` moved by ``placement``, as a new shape."""
-    if placement.is_identity:
-        return shape
-    trsf = occ.gp_Trsf()
-    rotation = placement.rotation
-    translation = placement.translation
-    trsf.SetValues(
-        rotation[0][0], rotation[0][1], rotation[0][2], translation[0],
-        rotation[1][0], rotation[1][1], rotation[1][2], translation[1],
-        rotation[2][0], rotation[2][1], rotation[2][2], translation[2],
-    )
-    builder = occ.BRepBuilderAPI_Transform(shape, trsf, True)
-    return builder.Shape()

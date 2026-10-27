@@ -134,6 +134,33 @@ class FeaResult:
         """Whether this result may be quoted as a prediction at all."""
         return self.convergence.converged and not self.is_null_solution
 
+    def reaction(self, node_set: str) -> np.ndarray:
+        """Reaction on a node set, looked up without regard to case.
+
+        CalculiX upper-cases every set name on its way into the ``.dat`` file, so a
+        deck that defines ``distal_rot`` gets results back under ``DISTAL_ROT``. A
+        caller holding the name it wrote should not have to know that, and the first
+        time it did not know, a 25-minute solve was thrown away at the final
+        dictionary lookup.
+
+        On a rigid body's *rotation* node the quantities CalculiX reports in the force
+        slots are moments, so this is also how a joint torque is read.
+        """
+        exact = self.reaction_forces.get(node_set)
+        if exact is not None:
+            return np.asarray(exact)
+        folded = {k.casefold(): v for k, v in self.reaction_forces.items()}
+        found = folded.get(node_set.casefold())
+        if found is None:
+            raise KeyError(
+                f"No reaction was recorded for node set {node_set!r}. Available: "
+                f"{sorted(self.reaction_forces)}"
+            )
+        return np.asarray(found)
+
+    def has_reaction(self, node_set: str) -> bool:
+        return node_set.casefold() in {k.casefold() for k in self.reaction_forces}
+
     def caveats(self) -> tuple[Caveat, ...]:
         caveats = tuple(self.material_caveats)
         if not self.convergence.converged:
@@ -162,6 +189,10 @@ class FeaResult:
                 "definitions -- an undefined node set is the usual cause."
             )
         moment = self.reaction_moments.get(node_set)
+        if moment is None:
+            # Same case-folding rule as reaction(): CalculiX upper-cases set names.
+            folded = {k.casefold(): v for k, v in self.reaction_moments.items()}
+            moment = folded.get(node_set.casefold())
         if moment is None:
             raise KeyError(
                 f"No reaction moment was recorded for node set {node_set!r}. Available: "

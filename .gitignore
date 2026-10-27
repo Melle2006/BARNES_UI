@@ -37,3 +37,7 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# Solver run logs: the per-mesh JSON summaries are the evidence worth keeping;
+# the console transcript is reproducible from the archived run directory.
+results/**/run.log

@@ -41,10 +41,12 @@ from ..cad.inspect import bounding_box, volume_properties
 from ..cad.model import BoundingBox
 from ..mechanics.curved_beam import JointAxis
 from ..provenance import Provenance, TaggedValue
+from .model import Placement
 
 logger = logging.getLogger(__name__)
 
 __all__ = [
+    "place_shape",
     "rotate_shape",
     "InterferenceAtAngle",
     "InterferenceReport",
@@ -52,6 +54,26 @@ __all__ = [
     "minimum_clearance",
     "sweep_interference",
 ]
+
+
+def place_shape(shape: Any, placement: Placement) -> Any:
+    """Return ``shape`` moved by ``placement``, as a new shape.
+
+    The one place in the project that turns a :class:`Placement` into a moved solid.
+    Having two of these is how a transform ends up applied twice.
+    """
+    require_kernel()
+    if placement.is_identity:
+        return shape
+    transform = occ.gp_Trsf()
+    rotation = placement.rotation
+    translation = placement.translation
+    transform.SetValues(
+        rotation[0][0], rotation[0][1], rotation[0][2], translation[0],
+        rotation[1][0], rotation[1][1], rotation[1][2], translation[1],
+        rotation[2][0], rotation[2][1], rotation[2][2], translation[2],
+    )
+    return occ.BRepBuilderAPI_Transform(shape, transform, True).Shape()
 
 
 def rotate_shape(shape: Any, axis: JointAxis, angle: float) -> Any:
