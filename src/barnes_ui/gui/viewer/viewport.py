@@ -54,6 +54,12 @@ class Viewport(QWidget):
         self._meshes: dict[int, TriangleMesh] = {}
         self._model: GeometryModel | None = None
         self._pick_callback: Callable[[tuple[float, float, float]], None] | None = None
+        self._miss_callback: Callable[[], None] | None = None
+        # Incremented on every start_point_picking. Handed to the caller so that a
+        # point arriving from a session that has since been torn down can be told
+        # apart from a real pick -- VTK observers outlive the code that added them.
+        self._pick_session = 0
+        self._picking_active = False
 
         self._configure_scene()
 
@@ -65,7 +71,14 @@ class Viewport(QWidget):
         # A triad in the corner: orientation is the first thing you lose when
         # tumbling a symmetric part.
         self.plotter.add_axes(interactive=False)
-        self.plotter.show_grid(color="#5A6069")
+        grid = self.plotter.show_grid(color="#5A6069")
+        # The bounds grid must never be a pick target. A click that lands on it
+        # would otherwise report a coordinate out in empty space as though it were
+        # on the part.
+        try:
+            grid.SetPickable(False)
+        except AttributeError:  # pragma: no cover - depends on the VTK actor type
+            logger.debug("Bounds grid actor does not support SetPickable.")
 
     # -- display ---------------------------------------------------------------
 
@@ -136,6 +149,16 @@ class Viewport(QWidget):
         self.reset_view()
 
     def clear(self) -> None:
+        """Empty the scene.
+
+        Picking is torn down first, deliberately. ``Plotter.clear`` removes the
+        actors and the on-screen picking instruction but leaves PyVista's picking
+        observers installed and its internal ``_picker_in_use`` flag set, so a
+        viewport cleared mid-pick is left armed against geometry that no longer
+        exists -- and the next ``enable_*_picking`` raises ``PyVistaPickingError``
+        rather than re-arming.
+        """
+        self.stop_point_picking()
         self.plotter.clear()
         self._actors.clear()
         self._meshes.clear()
@@ -188,6 +211,9 @@ class Viewport(QWidget):
         if not self._model:
             return
 
+        # Same reasoning as in clear(): the scene is about to be rebuilt, so any
+        # live picking session is pointing at actors that are going away.
+        self.stop_point_picking()
         self.plotter.clear()
         self._configure_scene()
         self._actors.clear()
@@ -211,35 +237,125 @@ class Viewport(QWidget):
             self.plotter.clear_plane_widgets()
         self.plotter.render()
 
-    # -- measurement -----------------------------------------------------------
+    # -- point picking ---------------------------------------------------------
+    #
+    # Everything below turns mouse events into coordinates and draws what was
+    # captured. It decides nothing about what a pair of points means; that is
+    # viewer/selection.py's job.
+
+    #: Names of the actors this class owns for selection feedback. Named so that
+    #: they can be replaced and removed individually -- PyVista's own picked-point
+    #: representation uses one name for every pick, so each new point replaces the
+    #: marker for the previous one and a two-point selection is never both visible.
+    _MARKER_NAMES = ("selection_point_1", "selection_point_2")
+    _LINE_NAME = "selection_line"
+    _INSTRUCTION_NAME = "selection_instruction"
 
     def start_point_picking(
-        self, callback: Callable[[tuple[float, float, float]], None]
-    ) -> None:
-        """Begin picking points on the surface.
+        self,
+        callback: Callable[[tuple[float, float, float]], None],
+        *,
+        on_miss: Callable[[], None] | None = None,
+        instruction: str | None = None,
+    ) -> int:
+        """Arm picking on the surface of the displayed solids.
+
+        Returns a session token. Hand it back to the selection controller with each
+        point so that a callback from a replaced session is discarded.
 
         The picked point lies on the display tessellation, so it carries the chord
         tolerance of the mesh. That is well below the precision needed for the
         overall-dimension checks Phase 1 targets. Snapping to exact vertices and
-        edges needs the kernel's topology and is Phase 2 work.
+        edges needs the kernel's topology and is still not implemented -- the panel
+        says so, and that warning stays until it is.
+
+        Three of the arguments here are the fix for the original defect and are
+        worth stating:
+
+        ``left_clicking=True``
+            PyVista binds picking to the **right** button and the ``P`` key by
+            default (``picking.py``: ``'Left-click' if left_clicking else
+            'Right-click'``). The panel told the user to click, the left button did
+            nothing, and the on-screen hint that would have revealed it was
+            suppressed by ``show_message=False``.
+
+        ``pickable_window=True``
+            Not because empty space should be pickable -- it should not -- but
+            because PyVista returns early on a miss *before* invoking the callback,
+            so with the default there is no way to learn that a click happened at
+            all. The miss is detected here instead, from the picker's actor, and
+            reported through ``on_miss``.
+
+        ``show_point=False``
+            Markers are drawn by this class, one actor per point, so that both
+            points of a pair stay visible.
         """
+        # Re-arming over a live session raises in PyVista, so tear down first. This
+        # also makes the call idempotent, which matters because the panel's toggle
+        # and a model replacement can both reach it.
+        self.stop_point_picking()
+
         self._pick_callback = callback
+        self._miss_callback = on_miss
+        self._pick_session += 1
+        self._picking_active = True
+
         self.plotter.enable_surface_point_picking(
             callback=self._on_point_picked,
+            use_picker=True,
+            pickable_window=True,
+            clear_on_no_selection=False,
+            show_point=False,
             show_message=False,
-            show_point=True,
-            point_size=12,
-            color="#FF6B6B",
+            left_clicking=True,
+            picker="cell",
+            tolerance=0.01,
         )
+        if instruction:
+            self.set_picking_instruction(instruction)
+        return self._pick_session
 
     def stop_point_picking(self) -> None:
+        """Disarm picking and remove the on-screen instruction.
+
+        Leaves the markers and the line alone: stopping the tool is not the same as
+        discarding the result, and the panel decides which of those happened. Call
+        ``clear_selection_graphics`` for the other one.
+        """
         self._pick_callback = None
+        self._miss_callback = None
+        self._picking_active = False
         try:
             self.plotter.disable_picking()
         except Exception:  # pragma: no cover - depends on PyVista version
             logger.debug("disable_picking() unavailable in this PyVista build.")
+        self._remove_actors((self._INSTRUCTION_NAME,))
 
-    def _on_point_picked(self, point, *_args) -> None:
+    @property
+    def is_picking(self) -> bool:
+        return self._picking_active
+
+    @property
+    def pick_session(self) -> int:
+        return self._pick_session
+
+    def _on_point_picked(self, point, picker=None) -> None:
+        """VTK's pick callback. Decides hit or miss, then hands over coordinates."""
+        if not self._picking_active:
+            return
+
+        # A pick with no actor behind it is a click into the background. It must not
+        # become a coordinate: ``GetPickPosition`` still returns a point on the
+        # focal plane, which looks like a perfectly ordinary measurement.
+        if picker is not None:
+            try:
+                if picker.GetActor() is None:
+                    if self._miss_callback is not None:
+                        self._miss_callback()
+                    return
+            except AttributeError:  # pragma: no cover - picker without GetActor
+                logger.debug("Picker has no GetActor; treating the pick as a hit.")
+
         if self._pick_callback is None or point is None:
             return
         coords = np.asarray(point, dtype=float).ravel()
@@ -247,23 +363,107 @@ class Viewport(QWidget):
             return
         self._pick_callback((float(coords[0]), float(coords[1]), float(coords[2])))
 
+    # -- selection feedback ----------------------------------------------------
+
+    def set_picking_instruction(self, text: str) -> None:
+        """Put the current instruction in the viewport itself.
+
+        In the viewport and not only in the panel, because the eyes are on the model
+        while picking. One named actor, replaced on each update.
+        """
+        self.plotter.add_text(
+            text,
+            position="lower_left",
+            font_size=9,
+            color="#D8DEE6",
+            name=self._INSTRUCTION_NAME,
+        )
+        self.plotter.render()
+
+    def mark_point(self, index: int, point: tuple[float, float, float]) -> None:
+        """Draw the marker for picked point ``index`` (0 or 1)."""
+        import pyvista as pv
+
+        if not 0 <= index < len(self._MARKER_NAMES):
+            raise ValueError(f"A two-point selection has no point {index}.")
+        self.plotter.add_mesh(
+            pv.PolyData(np.asarray([point], dtype=float)),
+            color="#FF6B6B",
+            style="points",  # explicit: a single-point dataset must not be surfaced
+            point_size=14,
+            render_points_as_spheres=True,
+            name=self._MARKER_NAMES[index],
+            pickable=False,  # a marker must never become the next pick target
+            reset_camera=False,
+        )
+        self.plotter.render()
+
     def draw_measurement_line(
         self, start: tuple[float, float, float], end: tuple[float, float, float]
     ) -> None:
         import pyvista as pv
 
         self.plotter.add_mesh(
-            pv.Line(start, end), color="#FF6B6B", line_width=3, name="measurement_line"
+            pv.Line(start, end),
+            color="#FF6B6B",
+            line_width=3,
+            name=self._LINE_NAME,
+            pickable=False,
+            reset_camera=False,
         )
         self.plotter.render()
 
-    def clear_measurement(self) -> None:
-        for name in ("measurement_line",):
-            try:
-                self.plotter.remove_actor(name)
-            except Exception:  # pragma: no cover
-                pass
+    def draw_axis_preview(
+        self,
+        origin: tuple[float, float, float],
+        direction: tuple[float, float, float],
+        length: float | None = None,
+    ) -> None:
+        """Draw a candidate joint axis as a line through ``origin``.
+
+        Extended well past the two picked points on purpose. The question a person
+        has to answer before confirming an axis is whether the line passes through
+        where the joint actually rotates, and a segment that stops at the picks is
+        too short to judge that against the part.
+        """
+        import pyvista as pv
+
+        if length is None:
+            box = self._model.overall_bounding_box if self._model else None
+            length = box.diagonal if box else 10.0
+        half = 0.5 * float(length)
+        axis = np.asarray(direction, dtype=float)
+        norm = float(np.linalg.norm(axis))
+        if norm <= 0.0:
+            raise ValueError("An axis preview needs a non-zero direction.")
+        axis = axis / norm
+        centre = np.asarray(origin, dtype=float)
+
+        self.plotter.add_mesh(
+            pv.Line(centre - half * axis, centre + half * axis),
+            color="#E8A33D",
+            line_width=3,
+            name=self._LINE_NAME,
+            pickable=False,
+            reset_camera=False,
+        )
         self.plotter.render()
+
+    def clear_selection_graphics(self) -> None:
+        """Remove every marker and line this class drew for a selection."""
+        self._remove_actors((*self._MARKER_NAMES, self._LINE_NAME))
+        self.plotter.render()
+
+    # Kept under its original name: the measurement panel is not the only caller
+    # and "clear the measurement" is still what it means there.
+    clear_measurement = clear_selection_graphics
+
+    def _remove_actors(self, names) -> None:
+        for name in names:
+            try:
+                self.plotter.remove_actor(name, render=False)
+            except Exception:  # pragma: no cover - absent actor, nothing to undo
+                logger.debug("Could not remove actor %s.", name)
 
     # -- lifecycle -------------------------------------------------------------
 
@@ -273,7 +473,14 @@ class Viewport(QWidget):
         Must be called before the application exits. A QtInteractor left open at
         shutdown reliably produces a crash or a hang on Windows as VTK and Qt tear
         down in an unfortunate order.
+
+        Picking is disarmed first so that no observer is left holding a reference
+        into a half-destroyed render window.
         """
+        try:
+            self.stop_point_picking()
+        except Exception:  # pragma: no cover
+            logger.debug("Disarming picking at shutdown raised; continuing.")
         try:
             self.plotter.close()
         except Exception:  # pragma: no cover
