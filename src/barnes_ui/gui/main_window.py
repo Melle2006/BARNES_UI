@@ -36,6 +36,7 @@ from ..core.cad.registry import file_dialog_filter, load_geometry
 from ..core.logging_setup import log_file_path
 from ..core.project.store import PROJECT_SUFFIX, ProjectStore, ProjectStoreError
 from ..core.flexure import extract_members
+from ..core.flexure.tracing import trace_centerline
 from ..core.flexure.adaptation import verify_regeneration
 from ..core.flexure.templates.meander import build_meander
 from ..core.fea.joint_stiffness import JointStiffnessSetup, measure_joint_stiffness
@@ -49,6 +50,7 @@ from ..core.kinematics.profiles import (
 )
 from ..core.material import provisional_tpu
 from ..core.mechanics import JointAxis, analyse_joint_flexure
+from ..core.mechanics.spatial_beam import analyse_joint_flexure_spatial
 from .panels.fea_panel import FeaPanel
 from .panels.flexure_panel import FlexurePanel
 from .panels.geometry_panel import GeometryPanel
@@ -71,19 +73,37 @@ def _flexure_worker(shape, settings: dict) -> tuple:
     reachable from the worker thread. Everything it needs arrives as arguments, and it
     returns plain results for the UI thread to display.
     """
-    members = extract_members(
-        shape,
-        sweep_axis=settings["sweep_axis"],
-        bending_axis=settings["joint_direction"],
-        start=settings["range_start"],
-        end=settings["range_end"],
-        samples=settings["samples"],
-    )
+    if settings.get("strategy") == "trace":
+        # Path-following extraction, and with it the spatial beam model. The two go
+        # together on purpose: a member that needs tracing is one that doubles back,
+        # and a member that doubles back has runs along the joint axis that the
+        # planar model cannot represent. Pairing them in the UI would be a
+        # convenience; pairing them here is the point.
+        members = [
+            trace_centerline(
+                shape,
+                seed_point=settings["seed_point"],
+                seed_direction=settings["seed_direction"],
+                bending_axis=settings["joint_direction"],
+            )
+        ]
+        analyse = analyse_joint_flexure_spatial
+    else:
+        members = extract_members(
+            shape,
+            sweep_axis=settings["sweep_axis"],
+            bending_axis=settings["joint_direction"],
+            start=settings["range_start"],
+            end=settings["range_end"],
+            samples=settings["samples"],
+        )
+        analyse = analyse_joint_flexure
+
     material = provisional_tpu(settings["youngs_modulus"])
     joint = JointAxis(
         origin=settings["joint_origin"], direction=settings["joint_direction"]
     )
-    curve, stiffness = analyse_joint_flexure(
+    curve, stiffness = analyse(
         members,
         material,
         joint,
@@ -496,6 +516,14 @@ class MainWindow(QMainWindow):
         self.flexure_panel.set_enabled_for_model(model)
         self.flexure_panel.clear_results()
         self.optimise_panel.set_base_design(parameters)
+
+        # The template knows this part's geometry exactly, so the flexure panel can
+        # be set up for it rather than left for the user to work out: a meander
+        # needs the tracer, and the first run starts at the origin heading along X.
+        self.flexure_panel.select_strategy("trace")
+        self.flexure_panel.set_trace_seed(
+            (0.0, 0.0, parameters.thickness / 2.0), (1.0, 0.0, 0.0)
+        )
 
         if issue is not None:
             QMessageBox.warning(

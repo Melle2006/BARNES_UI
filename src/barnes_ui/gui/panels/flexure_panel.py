@@ -16,6 +16,7 @@ import logging
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QCheckBox,
+    QComboBox,
     QDoubleSpinBox,
     QFormLayout,
     QGroupBox,
@@ -112,6 +113,18 @@ class FlexurePanel(QWidget):
         box = QGroupBox("Centreline extraction")
         form = QFormLayout(box)
 
+        # Two extraction strategies, chosen rather than guessed. The axis sweep is
+        # right for a strap or a shallow arch and produces nonsense on a meander --
+        # a plane normal to the sweep axis cuts a straight run and part of the
+        # adjacent turn as one connected sliver, which the region count cannot
+        # detect. Risk R3b. The sweep's own guards refuse that case and name the
+        # tracer; this is where the user takes them up on it.
+        self._strategy = QComboBox()
+        self._strategy.addItem("Axis sweep - straps and shallow arches", "sweep")
+        self._strategy.addItem("Path-following trace - meanders", "trace")
+        self._strategy.currentIndexChanged.connect(self._on_strategy_changed)
+        form.addRow("Strategy:", self._strategy)
+
         self._sweep = [self._spin(-1.0, 1.0, 4) for _ in range(3)]
         self._sweep[1].setValue(1.0)
         row = QHBoxLayout()
@@ -134,6 +147,21 @@ class FlexurePanel(QWidget):
         )
         form.addRow("Samples:", self._samples)
 
+        self._seed_point = [self._spin(-1000.0, 1000.0, 3) for _ in range(3)]
+        seed_row = QHBoxLayout()
+        for spin in self._seed_point:
+            seed_row.addWidget(spin)
+        self._seed_point_row = self._wrap(seed_row)
+        form.addRow("Trace seed point (mm):", self._seed_point_row)
+
+        self._seed_direction = [self._spin(-1.0, 1.0, 4) for _ in range(3)]
+        self._seed_direction[0].setValue(1.0)
+        direction_row = QHBoxLayout()
+        for spin in self._seed_direction:
+            direction_row.addWidget(spin)
+        self._seed_direction_row = self._wrap(direction_row)
+        form.addRow("Trace seed direction:", self._seed_direction_row)
+
         hint = QLabel(
             "Set the range to span only the beam-like part, excluding the collars. "
             "Attachment features are not beam-like and must not enter the beam model."
@@ -141,7 +169,35 @@ class FlexurePanel(QWidget):
         hint.setWordWrap(True)
         hint.setStyleSheet("color: #9AA3AD;")
         form.addRow(hint)
+
+        self._strategy_hint = QLabel()
+        self._strategy_hint.setWordWrap(True)
+        self._strategy_hint.setStyleSheet("color: #9AA3AD;")
+        form.addRow(self._strategy_hint)
+
+        self._on_strategy_changed()
         return box
+
+    def _on_strategy_changed(self) -> None:
+        tracing = self._strategy.currentData() == "trace"
+        for spin in self._sweep:
+            spin.setEnabled(not tracing)
+        self._range_start.setEnabled(not tracing)
+        self._range_end.setEnabled(not tracing)
+        self._seed_point_row.setEnabled(tracing)
+        self._seed_direction_row.setEnabled(tracing)
+        self._strategy_hint.setText(
+            "The tracer marches along the member from the seed, so it follows a "
+            "member that doubles back. It also selects the SPATIAL beam model, which "
+            "carries torsion -- the planar model has no torsion term and a meander's "
+            "straight runs lie along the joint axis, which together made it 670 "
+            "times too stiff on a generated meander. The planar model refuses such "
+            "a member outright rather than warning about it."
+            if tracing else
+            "The axis sweep cuts planes normal to the sweep axis. Right for a strap "
+            "or a shallow arch; it produces a plausible, wrong centreline on a "
+            "meander, so its guards refuse that case."
+        )
 
     def _build_material_box(self) -> QWidget:
         box = QGroupBox("Material")
@@ -275,8 +331,22 @@ class FlexurePanel(QWidget):
         for spin, value in zip(self._direction, direction):
             spin.setValue(float(value))
 
+    def set_trace_seed(self, point, direction) -> None:
+        for spin, value in zip(self._seed_point, point):
+            spin.setValue(float(value))
+        for spin, value in zip(self._seed_direction, direction):
+            spin.setValue(float(value))
+
+    def select_strategy(self, key: str) -> None:
+        index = self._strategy.findData(key)
+        if index >= 0:
+            self._strategy.setCurrentIndex(index)
+
     def settings(self) -> dict:
         return {
+            "strategy": self._strategy.currentData(),
+            "seed_point": tuple(s.value() for s in self._seed_point),
+            "seed_direction": tuple(s.value() for s in self._seed_direction),
             "joint_origin": tuple(s.value() for s in self._origin),
             "joint_direction": tuple(s.value() for s in self._direction),
             "sweep_axis": tuple(s.value() for s in self._sweep),

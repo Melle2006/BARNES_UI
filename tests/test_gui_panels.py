@@ -272,3 +272,75 @@ def _panel_notes(panel) -> str:
     from PySide6.QtWidgets import QLabel
 
     return " ".join(label.text() for label in panel.findChildren(QLabel))
+
+
+class TestTemplateToAnalysisPipeline:
+    """The whole chain a user walks through, end to end.
+
+    Build a meander from parameters, write it to STEP, read it back through the
+    normal importer, trace its centreline and analyse it with the spatial beam
+    model. Every link has unit tests; what this checks is that they are connected,
+    which is the part that was missing until the GUI work.
+    """
+
+    @pytest.fixture(scope="class")
+    def built(self, qt_app, tmp_path_factory):
+        pytest.importorskip("OCP")
+        from barnes_ui.gui.main_window import _template_worker
+
+        parameters = MeanderParameters(
+            run_length=12.0, n_runs=4, pitch=3.0, width=1.0, thickness=1.2
+        )
+        destination = tmp_path_factory.mktemp("template") / "meander.step"
+        return _template_worker(parameters, destination)
+
+    def test_the_built_solid_passes_its_own_volume_check(self, built) -> None:
+        parameters, model, issue = built
+        assert issue is None, issue
+        assert model.solids
+        assert model.is_analysis_ready
+
+    def test_the_traced_centreline_recovers_the_exact_arc_length(self, built) -> None:
+        """Phase 2 criterion 3's standard, applied through the GUI's own worker."""
+        from barnes_ui.gui.main_window import _flexure_worker
+
+        parameters, model, _ = built
+        settings = {
+            "strategy": "trace",
+            "seed_point": (0.0, 0.0, parameters.thickness / 2.0),
+            "seed_direction": (1.0, 0.0, 0.0),
+            "joint_origin": (6.0, 4.5, 0.6),
+            "joint_direction": (1.0, 0.0, 0.0),
+            "sweep_axis": (0.0, 1.0, 0.0),
+            "range_start": 0.0, "range_end": 1.0, "samples": 120,
+            "youngs_modulus": 12.0, "max_angle_deg": 30.0, "steps": 10,
+            "include_shear": True, "include_axial": True,
+        }
+        curve, stiffness, members, _ = _flexure_worker(model.solids[0].shape, settings)
+
+        traced = members[0].arc_length
+        exact = parameters.centreline_length
+        assert traced == pytest.approx(exact, rel=0.005), (
+            f"traced {traced:.4f} mm against an exact {exact:.4f} mm"
+        )
+        assert stiffness.rotational_stiffness > 0.0
+
+    def test_the_result_is_no_stronger_than_the_material(self, built) -> None:
+        """A provisional modulus makes every number downstream an assumption."""
+        from barnes_ui.core.provenance import Provenance
+        from barnes_ui.gui.main_window import _flexure_worker
+
+        parameters, model, _ = built
+        settings = {
+            "strategy": "trace",
+            "seed_point": (0.0, 0.0, parameters.thickness / 2.0),
+            "seed_direction": (1.0, 0.0, 0.0),
+            "joint_origin": (6.0, 4.5, 0.6),
+            "joint_direction": (1.0, 0.0, 0.0),
+            "sweep_axis": (0.0, 1.0, 0.0),
+            "range_start": 0.0, "range_end": 1.0, "samples": 120,
+            "youngs_modulus": 12.0, "max_angle_deg": 30.0, "steps": 10,
+            "include_shear": True, "include_axial": True,
+        }
+        _, stiffness, _, _ = _flexure_worker(model.solids[0].shape, settings)
+        assert stiffness.provenance is Provenance.UNVALIDATED_ASSUMPTION
