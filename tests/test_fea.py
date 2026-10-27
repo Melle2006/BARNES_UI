@@ -80,9 +80,21 @@ def coarse_mesh(cantilever_shape):
 
 class TestSolverDiscovery:
     def test_missing_solver_returns_none_rather_than_raising(self) -> None:
-        """Absence is a normal state the UI must present, not an exception."""
+        """Absence is a normal state the UI must present, not an exception.
+
+        A named path that does not exist also must not fall through to whatever
+        CalculiX happens to be installed. This test passed for a while because
+        discovery was broken on Windows and found nothing anywhere; once the search
+        paths were fixed it failed, which is how the fallback was noticed.
+        """
         result = find_solver("/definitely/not/a/real/path/ccx")
         assert result is None
+
+    def test_an_explicit_path_that_exists_is_used_verbatim(self, tmp_path) -> None:
+        pretend = tmp_path / "ccx.exe"
+        pretend.write_text("not really a solver", encoding="utf-8")
+        found = find_solver(pretend)
+        assert found is not None and found.executable == pretend
 
     def test_installation_instructions_are_actionable(self) -> None:
         """'Install CalculiX' is not actionable to someone who has not done it."""

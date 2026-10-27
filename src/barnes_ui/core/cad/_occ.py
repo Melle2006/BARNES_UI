@@ -48,7 +48,14 @@ class _OccNamespace:
         from OCP.Bnd import Bnd_Box
         from OCP.BRep import BRep_Builder, BRep_Tool
         from OCP.BRepAdaptor import BRepAdaptor_Surface
-        from OCP.BRepAlgoAPI import BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse, BRepAlgoAPI_Section
+        from OCP.BRepAlgoAPI import (
+            BRepAlgoAPI_Common,
+            BRepAlgoAPI_Cut,
+            BRepAlgoAPI_Fuse,
+            BRepAlgoAPI_Section,
+        )
+        from OCP.BRepBuilderAPI import BRepBuilderAPI_Transform
+        from OCP.BRepExtrema import BRepExtrema_DistShapeShape
         from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox, BRepPrimAPI_MakeCylinder
         from OCP.BRepBndLib import BRepBndLib
         from OCP.BRepBuilderAPI import BRepBuilderAPI_MakeFace
@@ -58,7 +65,31 @@ class _OccNamespace:
         from OCP.BRepTools import BRepTools
         from OCP.collections import HSequence_TopoDS_Shape
         from OCP.GeomAbs import GeomAbs_SurfaceType
-        from OCP.gp import gp_Ax2, gp_Ax3, gp_Dir, gp_Pln, gp_Pnt
+        from OCP.gp import (
+            gp_Ax1,
+            gp_Ax2,
+            gp_Ax3,
+            gp_Dir,
+            gp_Pln,
+            gp_Pnt,
+            gp_Trsf,
+            gp_Vec,
+        )
+        # XCAF: the product-structure half of STEP. A plain STEPControl_Reader hands
+        # back one shape with every component's placement already baked in, which is
+        # fine for a single part and useless for an assembly -- the component tree,
+        # the names and the individual placements are all gone. These classes read
+        # that structure.
+        from OCP.STEPCAFControl import STEPCAFControl_Reader, STEPCAFControl_Writer
+        from OCP.TCollection import TCollection_AsciiString, TCollection_ExtendedString
+        from OCP.TDataStd import TDataStd_Name
+        from OCP.TDF import TDF_Label
+        # OCP exposes OpenCASCADE's TDF_LabelSequence under its generic-collection
+        # name. The upstream C++ name does not exist in the bindings at all, so
+        # importing it by that name fails outright rather than degrading.
+        from OCP.collections import Sequence_TDF_Label as TDF_LabelSequence
+        from OCP.TDocStd import TDocStd_Document
+        from OCP.XCAFDoc import XCAFDoc_DocumentTool
         from OCP.STEPControl import STEPControl_StepModelType, STEPControl_Writer
         from OCP.GProp import GProp_GProps
         from OCP.ShapeAnalysis import ShapeAnalysis_FreeBounds
@@ -75,7 +106,10 @@ class _OccNamespace:
         self.BRep_Builder = BRep_Builder
         self.BRep_Tool = BRep_Tool
         self.BRepAdaptor_Surface = BRepAdaptor_Surface
+        self.BRepAlgoAPI_Common = BRepAlgoAPI_Common
         self.BRepAlgoAPI_Cut = BRepAlgoAPI_Cut
+        self.BRepBuilderAPI_Transform = BRepBuilderAPI_Transform
+        self.BRepExtrema_DistShapeShape = BRepExtrema_DistShapeShape
         self.BRepAlgoAPI_Fuse = BRepAlgoAPI_Fuse
         self.BRepAlgoAPI_Section = BRepAlgoAPI_Section
         self.BRepPrimAPI_MakeBox = BRepPrimAPI_MakeBox
@@ -88,11 +122,23 @@ class _OccNamespace:
         self.BRepTools = BRepTools
         self.HSequence_TopoDS_Shape = HSequence_TopoDS_Shape
         self.GeomAbs_SurfaceType = GeomAbs_SurfaceType
+        self.gp_Ax1 = gp_Ax1
         self.gp_Ax2 = gp_Ax2
         self.gp_Ax3 = gp_Ax3
         self.gp_Dir = gp_Dir
         self.gp_Pln = gp_Pln
         self.gp_Pnt = gp_Pnt
+        self.gp_Trsf = gp_Trsf
+        self.gp_Vec = gp_Vec
+        self.STEPCAFControl_Reader = STEPCAFControl_Reader
+        self.STEPCAFControl_Writer = STEPCAFControl_Writer
+        self.TCollection_AsciiString = TCollection_AsciiString
+        self.TCollection_ExtendedString = TCollection_ExtendedString
+        self.TDataStd_Name = TDataStd_Name
+        self.TDF_Label = TDF_Label
+        self.TDF_LabelSequence = TDF_LabelSequence
+        self.TDocStd_Document = TDocStd_Document
+        self.XCAFDoc_DocumentTool = XCAFDoc_DocumentTool
         self.STEPControl_StepModelType = STEPControl_StepModelType
         self.STEPControl_Writer = STEPControl_Writer
         self.GProp_GProps = GProp_GProps

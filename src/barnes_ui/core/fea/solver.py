@@ -54,12 +54,23 @@ _EXECUTABLE_NAMES = ("ccx", "ccx.exe", "ccx_static.exe", "CalculiX.exe")
 
 #: Places a Windows CalculiX commonly lands, searched after PATH. FreeCAD bundles
 #: ccx and is the easiest legitimate way to obtain it without a separate download.
+#:
+#: ``%LOCALAPPDATA%\Programs\CalculiX\*`` is where docs/08-calculix-installation.md
+#: tells a reader to unpack the official dhondt.de Windows archive, and it is where
+#: this project's own copy lives. Its absence from this list was a real defect: the
+#: first run of scripts/a3_mesh_study.py aborted with "CalculiX was not found" on the
+#: very machine the solver was installed on, because the working session had happened
+#: to export BARNES_UI_CCX and a fresh process had not. Discovery must not depend on an
+#: environment variable that only one shell knows about.
 _WINDOWS_HINTS = (
     r"C:\Program Files\FreeCAD*\bin",
     r"C:\Program Files\FreeCAD*\lib",
     r"C:\Program Files\bConverged\CalculiX\ccx",
     r"C:\CalculiX\ccx*\src",
     r"C:\Program Files\CalculiX*",
+    r"%LOCALAPPDATA%\Programs\CalculiX\*",
+    r"%LOCALAPPDATA%\Programs\CalculiX\*\bin",
+    r"%PROGRAMFILES%\CalculiX\*",
 )
 
 
@@ -97,7 +108,20 @@ def find_solver(explicit: Path | str | None = None) -> SolverInfo | None:
     candidates: list[Path] = []
 
     if explicit:
-        candidates.append(Path(explicit))
+        # An explicit path is an instruction, not a hint. If it is wrong, say so --
+        # searching on and quietly running a *different* CalculiX than the one the
+        # caller named is how two machines end up disagreeing about a result with
+        # nothing on screen to explain it.
+        chosen = Path(explicit)
+        if chosen.is_file():
+            logger.info("Using the explicitly supplied CalculiX at %s", chosen)
+            return SolverInfo(executable=chosen)
+        logger.info(
+            "The explicitly supplied CalculiX path %s does not exist. Not falling "
+            "back to a discovered solver, because an explicit path is a choice.",
+            chosen,
+        )
+        return None
 
     from_env = os.environ.get(_ENV_VAR)
     if from_env:
@@ -109,9 +133,22 @@ def find_solver(explicit: Path | str | None = None) -> SolverInfo | None:
             candidates.append(Path(found))
 
     for pattern in _WINDOWS_HINTS:
-        parent = Path(pattern).parent
+        # Expand %LOCALAPPDATA% and friends first; on a non-Windows machine these stay
+        # unexpanded, the path simply does not exist, and the glob finds nothing.
+        #
+        # Each hint is globbed as a whole from its drive anchor. The previous version
+        # globbed only the *second to last* component and then joined the executable
+        # name to it, which silently discarded the final directory -- so the FreeCAD
+        # hints looked for ccx.exe in ``FreeCAD1.0\`` rather than ``FreeCAD1.0\bin\``
+        # and could never have matched.
+        expanded = Path(os.path.expandvars(pattern))
+        anchor = Path(expanded.anchor)
+        if not expanded.anchor:  # pragma: no cover - relative hint, not used
+            continue
         try:
-            for directory in parent.parent.glob(parent.name):
+            for directory in anchor.glob(str(expanded.relative_to(anchor))):
+                if not directory.is_dir():
+                    continue
                 for name in _EXECUTABLE_NAMES:
                     candidates.append(directory / name)
         except (OSError, ValueError):  # pragma: no cover - malformed pattern or drive

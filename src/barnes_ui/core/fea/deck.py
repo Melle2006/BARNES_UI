@@ -129,6 +129,26 @@ class RigidBody:
         """Name of the combined set the writer generates for the tied nodes."""
         return f"{self.name}_members"
 
+    @property
+    def reference_set_name(self) -> str:
+        """Name of the one-node set holding the reference node.
+
+        Callers need this to name the set in ``DeckSettings.reaction_sets`` and to
+        read the reaction back out of the result, so it is a property rather than a
+        convention each caller re-spells.
+        """
+        return f"{self.name}_ref"
+
+    @property
+    def rotation_set_name(self) -> str:
+        """Name of the one-node set holding the rotation node.
+
+        This is where a prescribed joint rotation is applied and where the reaction
+        *moment* appears -- CalculiX reports a rotation node's moments in the force
+        slots, so component 0 of its reaction is the moment about X.
+        """
+        return f"{self.name}_rot"
+
 
 @dataclass
 class DeckSettings:
@@ -257,9 +277,9 @@ def _write_nodes(out, mesh: Mesh, settings: DeckSettings) -> None:
 
 def _write_rigid_bodies(out, mesh: Mesh, settings: DeckSettings) -> None:
     for body in settings.rigid_bodies:
-        out(f"*NSET, NSET={body.name}_ref")
+        out(f"*NSET, NSET={body.reference_set_name}")
         out(f"{body.reference_node}")
-        out(f"*NSET, NSET={body.name}_rot")
+        out(f"*NSET, NSET={body.rotation_set_name}")
         out(f"{body.rotation_node}")
 
         # One combined set covering every tied surface. An attachment region is
