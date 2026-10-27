@@ -30,16 +30,32 @@ from PySide6.QtWidgets import (
 )
 
 from .. import __version__
+from ..core.cad.export import write_step
 from ..core.cad.model import GeometryModel
 from ..core.cad.registry import file_dialog_filter, load_geometry
 from ..core.logging_setup import log_file_path
 from ..core.project.store import PROJECT_SUFFIX, ProjectStore, ProjectStoreError
 from ..core.flexure import extract_members
+from ..core.flexure.adaptation import verify_regeneration
+from ..core.flexure.templates.meander import build_meander
+from ..core.fea.joint_stiffness import JointStiffnessSetup, measure_joint_stiffness
+from ..core.fea.solver import SolverNotAvailableError, find_solver, probe_solver
+from ..core.kinematics.modes import SimulationMode
+from ..core.kinematics.profiles import (
+    LinearRamp,
+    SinusoidalCycle,
+    TrapezoidalProfile,
+    sample_profiles,
+)
 from ..core.material import provisional_tpu
 from ..core.mechanics import JointAxis, analyse_joint_flexure
+from .panels.fea_panel import FeaPanel
 from .panels.flexure_panel import FlexurePanel
 from .panels.geometry_panel import GeometryPanel
+from .panels.optimise_panel import OptimisePanel
 from .panels.plots_panel import PlotsPanel
+from .panels.simulation_panel import SimulationPanel
+from .panels.template_panel import TemplatePanel
 from .tasks import run_in_background
 from .viewer.viewport import Viewport
 
@@ -77,6 +93,46 @@ def _flexure_worker(shape, settings: dict) -> tuple:
         include_axial=settings["include_axial"],
     )
     return curve, stiffness, members, settings
+
+
+def _template_worker(parameters, destination: Path) -> tuple:
+    """Build a meander solid and read it back through the normal import path.
+
+    Written to STEP and re-imported rather than handed straight to the viewport.
+    Two reasons, and the second is the real one. STEP declares its unit, so the
+    re-imported model is analysis-ready in the same sense an imported part is --
+    whereas a model fabricated in memory would have to claim a unit confidence
+    nobody set. And it means the generated part travels through exactly the same
+    reader as a SolidWorks export, so a template whose solid the importer dislikes
+    fails here rather than three panels later.
+
+    The volume check is the Phase 4 criterion 2 test applied to every build: the
+    measured volume against the exact value the parameters imply.
+    """
+    shape = build_meander(parameters)
+    write_step(shape, destination)
+    model = load_geometry(destination)
+    issue = None
+    if model.solids:
+        issue = verify_regeneration(parameters, model.solids[0].volume)
+    return parameters, model, issue
+
+
+def _fea_worker(shape, modulus: float, setup: JointStiffnessSetup,
+                progress=None, cancellation=None):
+    """Run one joint-stiffness measurement off the UI thread."""
+    solver = find_solver()
+    if solver is None:
+        raise SolverNotAvailableError(
+            "CalculiX was not found, so there is no FEA to run. The application "
+            "does not substitute the reduced-order model for it."
+        )
+    solver = probe_solver(solver)
+    return measure_joint_stiffness(
+        shape, provisional_tpu(modulus), setup, solver,
+        progress=progress, cancellation=cancellation,
+        title="Joint rotational stiffness",
+    )
 
 
 class MainWindow(QMainWindow):
@@ -124,9 +180,26 @@ class MainWindow(QMainWindow):
         self.flexure_panel.analysis_requested.connect(self._run_flexure_analysis)
         self.flexure_panel.axis_suggestion_requested.connect(self._suggest_joint_axis)
 
+        self.template_panel = TemplatePanel(self)
+        self.template_panel.build_requested.connect(self._build_template)
+        self.template_panel.export_requested.connect(self._export_template)
+
+        self.fea_panel = FeaPanel(self)
+        self.fea_panel.analysis_requested.connect(self._run_fea)
+        self.fea_panel.cancel_requested.connect(self._cancel_fea)
+
+        self.simulation_panel = SimulationPanel(self)
+        self.simulation_panel.run_requested.connect(self._run_simulation)
+
+        self.optimise_panel = OptimisePanel(self)
+
         tabs = QTabWidget()
         tabs.addTab(self._scrolled(self.geometry_panel), "Geometry")
         tabs.addTab(self._scrolled(self.flexure_panel), "Flexure")
+        tabs.addTab(self._scrolled(self.template_panel), "Template")
+        tabs.addTab(self._scrolled(self.fea_panel), "FEA")
+        tabs.addTab(self._scrolled(self.simulation_panel), "Simulate")
+        tabs.addTab(self._scrolled(self.optimise_panel), "Optimise")
         self._tabs = tabs
 
         dock = QDockWidget("Workflow", self)
@@ -374,6 +447,12 @@ class MainWindow(QMainWindow):
             [self._plots_dock], [max(300, int(self.height() * 0.34))], Qt.Orientation.Vertical
         )
 
+        # Hand the number to the FEA panel so that, once an FEA of the same joint
+        # finishes, the two can be shown together with the gap as a percentage.
+        # That comparison is Phase 3 criterion 7 and is the most useful single thing
+        # this application reports.
+        self.fea_panel.set_reduced_order_stiffness(stiffness.rotational_stiffness)
+
         self._set_status(
             f"Reduced-order analysis complete: {stiffness.rotational_stiffness:.6g} "
             f"N.mm/rad at neutral  -  {curve.provenance.label} result, see the "
@@ -389,6 +468,248 @@ class MainWindow(QMainWindow):
         box.setText(message)
         box.setDetailedText(detail)
         box.exec()
+
+    # -- parametric template ---------------------------------------------------
+
+    def _build_template(self, parameters) -> None:
+        """Build the meander and show it, replacing whatever is displayed."""
+        destination = self._scratch_directory() / "generated_meander.step"
+        self._set_status("Building the meander...")
+        self._progress.setVisible(True)
+        self._progress.setRange(0, 0)
+        self.setEnabled(False)
+
+        job = run_in_background(
+            self, _template_worker, parameters, destination,
+            on_finished=self._on_template_built,
+            on_failed=self._on_template_failed,
+        )
+        self._jobs.append(job)
+
+    def _on_template_built(self, payload: tuple) -> None:
+        self._finish_job()
+        parameters, model, issue = payload
+        self._model = model
+        self.geometry_panel.show_model(model)
+        self.viewport.show_model(model)
+        self.flexure_panel.set_enabled_for_model(model)
+        self.flexure_panel.clear_results()
+        self.optimise_panel.set_base_design(parameters)
+
+        if issue is not None:
+            QMessageBox.warning(
+                self, "Regenerated volume does not match the parameters",
+                issue.message
+                + "\n\nThe solid was still built and displayed, because looking at "
+                  "it is how you work out what went wrong. Do not analyse it.",
+            )
+            self._set_status("Built, but the volume check failed - see the warning.")
+            return
+
+        self._set_status(
+            f"Built: {parameters.describe()}  -  volume matches the exact value the "
+            "parameters imply."
+        )
+
+    def _on_template_failed(self, message: str, detail: str) -> None:
+        self._finish_job()
+        self._set_status("Could not build the meander.")
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Icon.Warning)
+        box.setWindowTitle("Could not build the meander")
+        box.setText(message)
+        box.setDetailedText(detail)
+        box.exec()
+
+    def _export_template(self, parameters) -> None:
+        path_text, _ = QFileDialog.getSaveFileName(
+            self, "Export meander as STEP", "meander.step", "STEP (*.step *.stp)"
+        )
+        if not path_text:
+            return
+        try:
+            write_step(build_meander(parameters), Path(path_text))
+        except Exception as exc:  # noqa: BLE001 - reported to the user
+            QMessageBox.warning(self, "Export failed", str(exc))
+            return
+        self._set_status(f"Exported {Path(path_text).name}.")
+
+    def _scratch_directory(self) -> Path:
+        """Somewhere to put generated geometry, outside any synced folder.
+
+        Solver and generator scratch files must not live inside OneDrive: a sync
+        starting mid-write is a corrupt file, and the project directory is usually
+        inside one. Risk R11.
+        """
+        import tempfile
+
+        directory = Path(tempfile.gettempdir()) / "barnes_ui_generated"
+        directory.mkdir(parents=True, exist_ok=True)
+        return directory
+
+    # -- finite element analysis -----------------------------------------------
+
+    def _run_fea(self, settings: dict) -> None:
+        if self._model is None or not self._model.solids:
+            QMessageBox.information(
+                self, "Nothing to analyse",
+                "Open a CAD file or build a meander first.",
+            )
+            return
+        if not self._model.is_analysis_ready:
+            QMessageBox.warning(
+                self, "Not ready for analysis",
+                "This model is not ready for analysis:\n\n"
+                + "\n".join(f"- {r}" for r in self._model.analysis_readiness_reasons()),
+            )
+            return
+
+        box = self._model.overall_bounding_box
+        if box is None:
+            return
+        # Span the longest bounding-box direction, which is the axis a flexure
+        # bridges along. It is a default, shown in the status bar so it can be
+        # argued with, not an inference about the design.
+        span_axis = int(max(range(3), key=lambda i: box.size[i]))
+
+        setup = JointStiffnessSetup(
+            attachment_depth=settings["collar_depth"],
+            rotation_deg=settings["rotation_deg"],
+            span_axis=span_axis,
+            smallest_feature=settings["smallest_dimension"],
+            elements_through_thickness=settings["elements_through_thickness"],
+            second_order=settings["second_order"],
+        )
+
+        self._set_status(
+            f"Meshing and submitting to CalculiX. Spanning axis "
+            f"{'XYZ'[span_axis]}, attachment depth "
+            f"{settings['collar_depth']:g} mm."
+        )
+        self._progress.setVisible(True)
+        self._progress.setRange(0, 100)
+        self.fea_panel.set_running(True)
+
+        job = run_in_background(
+            self, _fea_worker,
+            self._model.solids[0].shape,
+            12.0,
+            setup,
+            accepts_progress=True,
+            accepts_token=True,
+            on_progress=self._on_fea_progress,
+            on_finished=self._on_fea_finished,
+            on_failed=self._on_fea_failed,
+            on_cancelled=self._on_fea_cancelled,
+        )
+        self._jobs.append(job)
+        self._fea_job = job
+
+    def _on_fea_progress(self, fraction: float, message: str) -> None:
+        if fraction >= 0:
+            self._progress.setValue(int(fraction * 100))
+        if message:
+            self._set_status(message)
+
+    def _on_fea_finished(self, outcome) -> None:
+        self._finish_job()
+        self.fea_panel.set_running(False)
+        self.fea_panel.show_result(
+            outcome.result, outcome.stiffness, outcome.setup.rotation_deg
+        )
+        if outcome.succeeded:
+            self._set_status(
+                f"FEA complete: {outcome.stiffness:.6g} N.mm/rad. "
+                f"{outcome.result.convergence.summary}"
+            )
+        else:
+            self._set_status(f"FEA produced no usable result. {outcome.failure}")
+
+    def _on_fea_failed(self, message: str, detail: str) -> None:
+        self._finish_job()
+        self.fea_panel.set_running(False)
+        self._set_status("FEA failed.")
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Icon.Warning)
+        box.setWindowTitle("FEA failed")
+        box.setText(message)
+        box.setDetailedText(detail)
+        box.exec()
+
+    def _on_fea_cancelled(self) -> None:
+        self._finish_job()
+        self.fea_panel.set_running(False)
+        self._set_status("FEA cancelled.")
+
+    def _cancel_fea(self) -> None:
+        job = getattr(self, "_fea_job", None)
+        if job is not None:
+            job[1].token.cancel()
+            self._set_status("Cancelling after the current increment...")
+
+    # -- hand simulation -------------------------------------------------------
+
+    def _run_simulation(self, settings: dict) -> None:
+        """Run a Mode 1 preview or a Mode 2 reduced-order pass on one joint.
+
+        Deliberately a single joint rather than a whole hand. A chain needs joint
+        axes confirmed on an imported assembly, which is Phase 4 work the GUI does
+        not yet expose; offering a hand whose axes were guessed would be exactly the
+        failure risk R4 describes.
+        """
+        profile_kind = settings["profile"]
+        start, end = settings["start"], settings["end"]
+        if profile_kind == "ramp":
+            profile = LinearRamp(start, end)
+        elif profile_kind == "sinusoid":
+            profile = SinusoidalCycle(start, end)
+        else:
+            profile = TrapezoidalProfile(start, end)
+
+        schedule = sample_profiles({"joint": profile}, steps=settings["steps"])
+
+        if settings["mode"] is SimulationMode.KINEMATIC_PREVIEW:
+            from ..core.kinematics.modes import KinematicPose
+
+            poses = [
+                KinematicPose(angles=dict(angles), time=time)
+                for time, angles in schedule
+            ]
+            self.simulation_panel.show_preview(poses)
+            self._set_status(
+                f"Kinematic preview: {len(poses)} poses. No force or torque is "
+                "reported, because none was computed."
+            )
+            return
+
+        spring = settings["spring"]
+        if spring is None:
+            self.simulation_panel.show_error(
+                "Reduced-order dynamics needs a joint spring fitted to FEA results."
+            )
+            return
+
+        import numpy as np
+
+        from ..core.kinematics.spring import ExtrapolationError
+
+        try:
+            angles = np.array([a["joint"] for _, a in schedule])
+            torques = np.array([spring.torque(float(a)).value for a in angles])
+        except ExtrapolationError as exc:
+            self.simulation_panel.show_error(
+                f"{exc}\n\nThe motion was not run. Shorten the range, or run the "
+                "FEA at the angles you need."
+            )
+            self._set_status("Simulation refused: outside the spring's fitted range.")
+            return
+
+        self.simulation_panel.show_torque_history(angles, torques, spring)
+
+        self._set_status(
+            f"Reduced-order pass complete: peak |torque| "
+            f"{np.max(np.abs(torques)):.6g} N.mm."
+        )
 
     # -- measurement -----------------------------------------------------------
 

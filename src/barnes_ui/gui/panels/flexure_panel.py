@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import logging
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QDoubleSpinBox,
@@ -33,7 +33,7 @@ from PySide6.QtWidgets import (
 from ...core.cad.model import GeometryModel
 from ...core.mechanics.curved_beam import FlexureStiffness, TorqueAngleCurve
 from ...core.provenance import Provenance
-from ...core.units import format_quantity, rad_to_deg
+from ...core.units import format_quantity
 
 logger = logging.getLogger(__name__)
 
