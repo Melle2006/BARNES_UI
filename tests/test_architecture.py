@@ -91,3 +91,81 @@ def test_gui_is_allowed_to_import_core() -> None:
     assert main_window.is_file()
     source = main_window.read_text(encoding="utf-8")
     assert "core" in source, "main_window should depend on the core package"
+
+
+# ---------------------------------------------------------------------------
+# Phase 7 criterion 6: nothing but experimental validation produces that tag
+# ---------------------------------------------------------------------------
+
+#: Modules allowed to mention EXPERIMENTALLY_VALIDATED, and why.
+_VALIDATION_TAG_OWNERS = {
+    # Defines the enum member and documents what it means.
+    "provenance.py",
+    # The only place that constructs a value carrying it, behind a comparison
+    # against a real measured specimen.
+    "calibration.py",
+}
+
+
+def test_only_the_calibration_module_can_produce_the_validated_tag() -> None:
+    """Phase 7 criterion 6, enforced mechanically.
+
+    EXPERIMENTALLY_VALIDATED means a person compared a prediction against a measured
+    part. No calculation can make that true, so no calculation may apply the tag. The
+    provenance module's ``downgraded_to`` already refuses to strengthen a tag; this
+    closes the other route, which is constructing a fresh TaggedValue with it.
+
+    A scan rather than a runtime check, for the same reason as the GUI scan above: a
+    line inside a rarely taken branch would pass a runtime check and still be wrong.
+    """
+    offenders = []
+    for module in _core_modules():
+        if module.name in _VALIDATION_TAG_OWNERS:
+            continue
+        tree = ast.parse(module.read_text(encoding="utf-8"), filename=str(module))
+        for node in ast.walk(tree):
+            named = (
+                isinstance(node, ast.Attribute) and node.attr == "EXPERIMENTALLY_VALIDATED"
+            ) or (
+                isinstance(node, ast.Name) and node.id == "EXPERIMENTALLY_VALIDATED"
+            )
+            if named:
+                offenders.append(
+                    f"{module.relative_to(CORE_ROOT)}:{node.lineno}"
+                )
+
+    # Prose about the tag is fine and in fact wanted -- this looks for code that
+    # names it, which is why it walks the AST instead of grepping. A docstring in
+    # material/models.py explaining what the tag means tripped the grep version.
+    assert not offenders, (
+        "EXPERIMENTALLY_VALIDATED appears outside the modules allowed to produce it:\n"
+        + "\n".join(offenders)
+        + "\nIf a new module legitimately needs it, the question to answer first is "
+        "what physical measurement it is reading."
+    )
+
+
+def test_the_calibration_gate_refuses_without_agreement() -> None:
+    """The gate itself, exercised here so the scan above cannot pass vacuously."""
+    import math
+
+    import numpy as np
+
+    from barnes_ui.core.material.calibration import (
+        CalibrationError,
+        MeasurementSeries,
+        compare_with_measurement,
+    )
+    from barnes_ui.core.provenance import Provenance, TaggedValue
+
+    angles = np.linspace(0.0, math.radians(40.0), 9)
+    measurement = MeasurementSeries(
+        angles=angles, torques=6.0 * angles,
+        specimen_id="unit-test", method="synthetic", uncertainty=0.05,
+    )
+    bad = compare_with_measurement(
+        angles, 9.0 * angles, measurement, tolerance=0.02,
+        prediction_label="deliberately wrong",
+    )
+    with pytest.raises(CalibrationError, match="disagrees"):
+        bad.validated(TaggedValue(1.0, "N.mm", Provenance.FEA_RESULT), angles[-1])
