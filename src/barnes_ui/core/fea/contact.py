@@ -219,6 +219,15 @@ class ContactPair:
                 "element faces, because the contact algorithm needs a surface normal "
                 "and a bare node set does not have one."
             )
+        if (
+            self.formulation is ContactFormulation.SURFACE_TO_SURFACE
+            and self.slave.kind is not SurfaceType.ELEMENT
+        ):
+            raise ContactError(
+                f"Contact pair {self.name!r}: surface-to-surface contact needs both "
+                "surfaces to be element faces. Only the node-to-surface formulation "
+                "accepts a bare node set as the slave."
+            )
         if self.friction < 0.0:
             raise ContactError(
                 f"Contact pair {self.name!r}: a negative friction coefficient "

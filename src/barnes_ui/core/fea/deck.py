@@ -38,7 +38,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Sequence
+from typing import Any, Sequence
 
 import numpy as np
 
@@ -47,7 +47,7 @@ from .meshing import Mesh
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["BoundaryCondition", "DeckSettings", "write_deck", "DeckError"]
+__all__ = ["BoundaryCondition", "RigidBody", "DeckSettings", "write_deck", "DeckError"]
 
 
 class DeckError(ValueError):
@@ -187,6 +187,21 @@ class DeckSettings:
     #: Rigid bodies, for prescribing a joint rotation on an attachment region.
     rigid_bodies: list[RigidBody] = field(default_factory=list)
 
+    #: Phase 6. Contact pairs, each carrying its two surfaces.
+    #:
+    #: Writing these cards is not the same as the capability working. Nothing in this
+    #: module claims contact converges on real geometry; that claim is made only by
+    #: core/fea/capabilities.py, and only from a benchmark recorded on the machine in
+    #: question.
+    contact_pairs: list[Any] = field(default_factory=list)
+
+    #: Phase 6. A uniform body acceleration. Requires a density, which the load
+    #: carries -- the material model deliberately has no default density.
+    gravity: Any = None
+
+    #: Phase 6. Concentrated forces, for tendon loading.
+    point_loads: list[Any] = field(default_factory=list)
+
 
 def write_deck(
     mesh: Mesh,
@@ -253,8 +268,10 @@ def write_deck(
     _write_elements(out, mesh)
     _write_node_sets(out, mesh, boundary_conditions, settings)
     _write_rigid_bodies(out, mesh, settings)
-    _write_material(out, material)
-    _write_step(out, boundary_conditions, settings)
+    _write_contact_surfaces(out, mesh, settings)
+    _write_material(out, material, settings)
+    _write_contact_interactions(out, settings)
+    _write_step(out, mesh, boundary_conditions, settings)
 
     return "\n".join(lines) + "\n"
 
@@ -354,7 +371,15 @@ def _write_node_sets(
     #
     # The rigid body's own reference and rotation node sets are written by
     # _write_rigid_bodies; it is the set of mesh nodes being tied that belongs here.
-    needed = {bc.node_set for bc in boundary_conditions} | set(settings.reaction_sets)
+    # Point loads name a node set too, and a set that is referenced but never
+    # defined is a fatal *ERROR in CalculiX rather than a warning -- which at least
+    # fails loudly, unlike the rigid-body case above. Collecting every referencing
+    # card in one place is what stops the next kind of reference from being missed.
+    needed = (
+        {bc.node_set for bc in boundary_conditions}
+        | set(settings.reaction_sets)
+        | {load.node_set for load in settings.point_loads}
+    )
     for name in sorted(needed):
         indices = mesh.node_sets.get(name)
         if indices is None:
@@ -365,7 +390,22 @@ def _write_node_sets(
             out(", ".join(ids[start:start + 8]) + ("," if start + 8 < len(ids) else ""))
 
 
-def _write_material(out, material: HyperelasticModel) -> None:
+def _write_density(out, settings: DeckSettings | None) -> None:
+    """``*DENSITY``, written only when a body load actually needs it.
+
+    Not written otherwise, because a density nobody supplied would have to be
+    invented, and a static analysis without body loads does not use one.
+    """
+    if settings is None or settings.gravity is None:
+        return
+    out("** Density in tonnes per cubic millimetre: the mass unit implied by")
+    out("** millimetres, newtons and seconds. A polymer is around 1.2e-9 here.")
+    out("*DENSITY")
+    out(f"{settings.gravity.density:.9g}")
+
+
+def _write_material(out, material: HyperelasticModel,
+                    settings: DeckSettings | None = None) -> None:
     name = "TPU"
     out(f"*MATERIAL, NAME={name}")
 
@@ -402,6 +442,7 @@ def _write_material(out, material: HyperelasticModel) -> None:
         else:  # pragma: no cover - guarded by calculix_keyword above
             raise DeckError(f"Unhandled material kind {material.kind}")
 
+    _write_density(out, settings)
     out("*SOLID SECTION, ELSET=Eall, MATERIAL=" + name)
 
 
@@ -428,8 +469,98 @@ def _compressibility_parameter(material: HyperelasticModel) -> float:
     return 2.0 / bulk
 
 
+def _write_contact_surfaces(out, mesh: Mesh, settings: DeckSettings) -> None:
+    """Write every surface referenced by a contact pair, once each.
+
+    A surface used as both a master and a slave -- which is exactly what
+    self-contact is -- must still be written only once, or CalculiX reports a
+    duplicate definition and stops.
+    """
+    if not settings.contact_pairs:
+        return
+
+    from .contact import SurfaceType
+
+    written: set[str] = set()
+    for pair in settings.contact_pairs:
+        for surface in (pair.slave, pair.master):
+            if surface.name in written:
+                continue
+            written.add(surface.name)
+            out(f"*SURFACE, NAME={surface.name}, TYPE={surface.kind.value}")
+            if surface.kind is SurfaceType.NODE:
+                # One node per line. *SURFACE is not *NSET: CalculiX reads a surface
+                # definition as one entry per line and rejects the eight-per-line
+                # packing that node sets use, with
+                # "*ERROR reading *SURFACE: only one entry per line".
+                for index in surface.nodes:
+                    out(f"{int(index) + 1}")
+            else:
+                for element, face in surface.faces:
+                    out(f"{element + 1}, {face}")
+
+
+def _write_contact_interactions(out, settings: DeckSettings) -> None:
+    """Surface interactions and contact pairs.
+
+    Written after the material block and before the step, which is where CalculiX
+    expects model-level cards.
+    """
+    for pair in settings.contact_pairs:
+        interaction = f"{pair.name}_interaction"
+        out(f"*SURFACE INTERACTION, NAME={interaction}")
+        out("*SURFACE BEHAVIOR, PRESSURE-OVERCLOSURE=LINEAR")
+        if pair.stiffness <= 0.0:
+            raise DeckError(
+                f"Contact pair {pair.name!r} has no normal stiffness. A linear "
+                "pressure-overclosure law with zero stiffness lets the surfaces pass "
+                "through each other while the run converges happily. Use "
+                "ContactPair.suggested_stiffness() as a starting point and check the "
+                "penetration."
+            )
+        out(f"{pair.stiffness:.9g}")
+        if pair.friction > 0.0:
+            out("*FRICTION")
+            out(f"{pair.friction:.9g}, {pair.resolved_stick_stiffness():.9g}")
+        out(f"** {pair.describe()}")
+        out(
+            f"*CONTACT PAIR, INTERACTION={interaction}, "
+            f"TYPE={pair.formulation.value}"
+        )
+        out(f"{pair.slave.name}, {pair.master.name}")
+
+
+def _write_loads(out, mesh: Mesh, settings: DeckSettings) -> None:
+    """Body and concentrated loads, inside the step."""
+    gravity = settings.gravity
+    if gravity is not None:
+        x, y, z = gravity.unit_direction
+        out(f"** {gravity.describe()}")
+        out("*DLOAD")
+        out(
+            f"{gravity.element_set}, GRAV, {gravity.magnitude:.9g}, "
+            f"{x:.9g}, {y:.9g}, {z:.9g}"
+        )
+
+    if settings.point_loads:
+        out("*CLOAD")
+        for load in settings.point_loads:
+            nodes = mesh.node_sets.get(load.node_set)
+            if nodes is None:
+                raise DeckError(
+                    f"Point load references node set {load.node_set!r}, which is not "
+                    f"in the mesh. Available: {sorted(mesh.node_sets)}"
+                )
+            components = load.per_node(len(nodes))
+            out(f"** {load.describe()} over {len(nodes)} node(s)")
+            for dof, value in enumerate(components, start=1):
+                if value != 0.0:
+                    out(f"{load.node_set}, {dof}, {value:.9g}")
+
+
 def _write_step(
     out,
+    mesh: Mesh,
     boundary_conditions: Sequence[BoundaryCondition],
     settings: DeckSettings,
 ) -> None:
@@ -463,6 +594,8 @@ def _write_step(
             out(f"** {bc.description}")
         for dof in bc.dofs:
             out(f"{bc.node_set}, {dof}, {dof}, {bc.value:.9g}")
+
+    _write_loads(out, mesh, settings)
 
     # Reaction forces go to the .dat file, which is the route used to extract the
     # restoring moment. Without this the run produces a deformed shape and no force.

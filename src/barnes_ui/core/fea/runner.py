@@ -25,7 +25,6 @@ import subprocess
 import tempfile
 import time
 import uuid
-from dataclasses import asdict
 from pathlib import Path
 from typing import Callable
 
