@@ -128,7 +128,7 @@ and what checking it revealed.
 | 4 | Reaction = applied load, < 0.5 % | **MET — 0.0000 %** |
 | 5 | Non-converged run reports failure, no result shown | **MET** — `tagged_moment` raises rather than returning a caveated number |
 | 6 | CalculiX absent → FEA disabled, no fallback | **MET** — tested against the machine's actual state |
-| 7 | Reduced-order vs FEA discrepancy on the real flexure | **MET — the reduced-order model overstates stiffness by 23.8 %** on the A3 twin strap (7.558 vs 6.103 N·mm/rad) |
+| 7 | Reduced-order vs FEA discrepancy on the real flexure | **MET — 9 % to 20 %** on the A3 twin strap, depending on where the clamp line is taken. Corrected from a non-like-for-like 23.8 %; see below |
 | 8 | CalculiX viscoelasticity resolved | **MET — resolved: not available.** See [03-solver-comparison.md](03-solver-comparison.md) |
 
 **Criterion 8, settled.** CalculiX has **no** viscoelastic material capability. There is
@@ -157,42 +157,82 @@ legitimately stiffer.
 - Nodal lumping of the end load was replaced by a consistently integrated facet
   traction, so the applied resultant is mesh-independent.
 
-### Criterion 7: the reduced-order model is 24 % stiff on the A3 twin strap
+### Criterion 7: how far the reduced-order model is from the FEA on the A3 twin strap
 
-The headline Phase 3 number, and the one the fast model's usefulness depends on.
+**Corrected after Phase 7.** This section previously reported a single figure of
+23.8 % (7.558 against 6.103 N·mm/rad). That number was not like for like, and the
+correction is as instructive as the result.
 
 | | N·mm/rad |
 |---|---|
-| Reduced-order (Castigliano curved beam) | 7.558 |
-| Nonlinear FEA (CalculiX, 32,965 C3D10, 61,021 nodes) | 6.103 |
-| **Ratio** | **1.238** |
+| Nonlinear FEA (CalculiX, 32,965 C3D10, 61,021 nodes) | **6.103** |
+| Reduced-order, clamp line 0.10 mm inside the collar face | 6.650 (**+9.0 %**) |
+| Reduced-order, 0.15 mm | 6.759 (+10.7 %) |
+| Reduced-order, 0.25 mm | 6.984 (+14.4 %) |
+| Reduced-order, 0.40 mm | 7.336 (+20.2 %) |
+| *Previously reported, clamp line roughly 0.5 mm in* | *7.558 (+23.8 %)* |
 
-Compared at **2° of joint rotation**, deliberately. The reduced-order model is a tangent
-stiffness at the neutral position and linear by construction, so comparing at a large
-angle would conflate the beam idealisation with the linear-kinematics extrapolation. At
-2° both models are inside the regime the fast one claims to describe, so the difference
-isolates the idealisation itself. The large-angle divergence is a separate measurement.
+**The reduced-order model overstates the A3's rotational stiffness by roughly 9 % at
+the FEA's own boundary, rising to 20 % if the clamp line is drawn 0.4 mm further
+in.** Reproduce with `scripts/a3_rom_vs_fea.py`.
 
-**The ratio is independent of the material.** Both models are linear in E, so the
-provisional 12 MPa placeholder cancels out of the comparison entirely. The 23.8 % figure
-is therefore considerably more trustworthy than either absolute value, both of which
+### Why the original figure was wrong, and why it is worth writing down
+
+Neither half of the original comparison was reproducible: both came from ad-hoc
+sessions, and the two settings the answer is most sensitive to were never recorded.
+Measuring that sensitivity is what exposed the problem.
+
+**The joint axis.** The reduced-order stiffness at the bounding box centre
+(z = 7.42 mm) is 3.16 N·mm/rad; at the collar's mounting-feature height
+(z = 5.44 mm, which is what the FEA used) it is 6.86. A two-millimetre shift more
+than doubles it. A refactor briefly introduced exactly that error and produced a
+perfectly converged run — see the note on `axis_point` in
+`core/fea/joint_stiffness.py`.
+
+**Where the member is taken to be clamped.** Moving the extraction boundary from
+0.10 mm to 0.40 mm inside the collar face changes the reduced-order answer from 6.65
+to 7.34 N·mm/rad. The published 7.558 corresponds to roughly 0.5 mm — about half a
+millimetre shorter at each end than the span the FEA actually left free. A shorter
+member is a stiffer member, and most of the gap between 23.8 % and 9 % is that,
+rather than the beam idealisation.
+
+Both halves now use the same axis and the same span, and the script that computes
+them is in the repository.
+
+### What remains irreducible
+
+A strap root blends into a collar; there is no plane at which the member becomes
+free. The FEA fixes every surface wholly inside the attachment depth and leaves
+straddling surfaces free, so its own boundary is a band. The comparison therefore
+carries several per cent of uncertainty from the definition alone, which is why the
+result is reported as a band and not as a figure to three significant digits.
+
+The centreline extractor refuses to start closer than about 0.1 mm inside the collar
+face — the collar's internal features make the cross-section count vary along the
+sweep, and the guard that catches that is working correctly. So 9 % is the closest
+like-for-like comparison available, not a limit that has been approached from both
+sides.
+
+### What this licenses
+
+A 9 to 20 % error, with the dominant uncertainty in the boundary rather than the
+physics, still means the same thing in practice as the 24 % did: the reduced-order
+model is usable for ranking design variants and parameter sweeps, and not usable for
+an absolute torque figure. It is a better-characterised version of the same
+conclusion, and the direction is as expected — the beam model idealises away the
+compliance of the strap roots, the 1.2 mm collar walls and the three-dimensional
+stress state at the junction, so it should be the stiffer of the two.
+
+**The ratio is still independent of the material.** Both models are linear in E, so
+the provisional 12 MPa placeholder cancels out of the comparison. The band is
+therefore considerably more trustworthy than either absolute value, both of which
 remain tagged `UNVALIDATED_ASSUMPTION`.
 
-**Sanity-checked by hand** before being reported, because this part produced two
-spurious answers first. Bracketing the stiffness between pure bending with no arch
-action (0.404 N·mm/rad) and full axial restraint with no arch relief (32.15 N·mm/rad)
-puts both values inside the band, which is where a shallow arch belongs: much stiffer
-than pure bending because it carries load axially, much softer than rigid axial restraint
-because it bows to relieve.
-
-**Direction is as expected.** The beam model is the stiffer of the two: it idealises away
-the compliance of the strap roots, the flexibility of the 1.2 mm collar walls, and the
-three-dimensional stress state where strap meets collar.
-
-**What this licenses.** A 24 % error means the reduced-order model is usable for ranking
-design variants and for parameter sweeps, which is what it was built for, and is not
-usable for an absolute torque figure. That was the standing assumption; it is now a
-measurement.
+**Compared at 2° of joint rotation, deliberately.** The reduced-order model is a
+tangent stiffness at the neutral position and linear by construction, so comparing at
+a large angle would conflate the beam idealisation with the linear-kinematics
+extrapolation. At 2° both models are inside the regime the fast one claims to
+describe. The large-angle divergence is a separate measurement and has not been made.
 
 **Caveats on the FEA value itself.** Single mesh, with no convergence study on this
 particular quantity, so `CAVEAT_NO_MESH_STUDY` applies — the 6.103 figure carries an

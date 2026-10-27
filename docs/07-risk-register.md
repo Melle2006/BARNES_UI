@@ -104,16 +104,28 @@ kind of output that gets trusted.
 
 **Residual:** none for the A3 arch — the error is now measured. See the update below.
 
-**MEASURED, Phase 3.** On the A3 twin-strap flexure the reduced-order model overstates
-rotational stiffness by **23.8 %** (7.558 against 6.103 N·mm/rad from CalculiX), compared
-at 2° where the linear model is inside its own regime. The ratio is independent of the
-material, since both models are linear in E, so the provisional modulus cancels out and
-the figure is more trustworthy than either absolute value.
+**MEASURED, Phase 3; CORRECTED, Phase 7.** On the A3 twin-strap flexure the
+reduced-order model overstates rotational stiffness by **9 % to 20 %**, depending on
+where the member is taken to be clamped — 6.65 to 7.34 N·mm/rad against the FEA's
+6.103. Compared at 2°, where the linear model is inside its own regime.
 
-24 % licenses the reduced-order model for ranking design variants and parameter sweeps,
-and rules it out for absolute torque. That was the standing assumption; it is now a
-number. For the A8 meander the equivalent figure is still unmeasured and the planar model
-is refused outright there (see R3 above).
+The figure first reported was 23.8 %, and it was not like for like. The reduced-order
+half used a free length about half a millimetre shorter at each end than the span the
+FEA left free, and a shorter member is a stiffer member. Neither half recorded its
+joint axis either, which matters more than anything else: the reduced-order stiffness
+at the bounding box centre is 3.16 N·mm/rad against 6.86 at the collar's
+mounting-feature height, two millimetres away.
+
+The practical conclusion is unchanged — the reduced-order model is for ranking
+variants and not for absolute torque — but it now rests on a comparison both halves
+of which are reproducible, by `scripts/a3_rom_vs_fea.py`. The ratio remains
+independent of the material, since both models are linear in E.
+
+**A new residual, and it is the honest one:** several per cent of the remaining
+spread is the definition of the clamp line rather than the physics. A strap root
+blends into a collar and there is no plane at which it becomes free. For the A8
+meander the equivalent figure is still unmeasured and the planar model is refused
+outright there (see R3 above).
 
 **Update, measured.** The concern turned out to be understated, and in a different way
 than expected. On a generated serpentine meander the planar bending-only model

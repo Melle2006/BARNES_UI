@@ -20,9 +20,13 @@ accept. See [docs/06-required-inputs.md](docs/06-required-inputs.md).
 
 ### The three numbers worth knowing
 
-**The reduced-order model overstates the A3 flexure's stiffness by 23.8 %** (7.558 against
-6.103 N·mm/rad). That makes it sound for ranking design variants and unsound for an absolute
-torque figure — which was the standing assumption and is now a measurement.
+**The reduced-order model overstates the A3 flexure's stiffness by 9 % to 20 %**, against
+6.103 N·mm/rad from CalculiX, with the spread coming from where the strap is taken to be
+clamped rather than from the physics. That makes it sound for ranking design variants and
+unsound for an absolute torque figure — which was the standing assumption and is now a
+measurement. An earlier single figure of 23.8 % compared two different spans; the correction,
+and why it matters more than the number, is in
+[docs/05-development-plan.md](docs/05-development-plan.md).
 
 **Design ranking does not depend on the material being calibrated.** Both the fast model and a
 small-strain FEA are linear in the elastic modulus, so across a stated 8 to 18 MPa range the
