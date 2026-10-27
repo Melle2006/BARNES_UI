@@ -75,15 +75,15 @@
     },
     {
       "capability": "self_contact",
-      "status": "failed",
-      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: node-to-surface, K = 10E/h: DID NOT CONVERGE after 20 of 26 increment(s); 1 solver warning(s); node-to-surface, K = E/h: DID NOT CONVERGE after 14 of 21 increment(s); 1 solver warning(s); surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve -0.1079 mm, so the gap closed by 1.108 mm and the legs stopped on each other. Element size 0.9 mm, penetration tolerance 0.045 mm.",
-      "measured": -0.10788500000000001,
+      "status": "passed",
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: node-to-surface, K = 10E/h: DID NOT CONVERGE after 20 of 26 increment(s); 1 solver warning(s); node-to-surface, K = E/h: DID NOT CONVERGE after 14 of 21 increment(s); 1 solver warning(s); surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve +0.06681 mm (positive: the legs did not overlap), so the gap closed by 0.9332 mm and they stopped on each other. Element size 0.9 mm, penetration tolerance 0.045 mm. Measured station by station along the deformed x axis, not as the extremes over the whole run -- the two legs bend, so their extremes sit at different stations and the difference between those is not a gap anywhere. Confirmed by scripts/selfcontact_refinement.py: the closest approach stays between +0.057 and +0.067 mm across a 2.7x refinement, and the same model with the contact pair removed overlaps by 8.02 mm.",
+      "measured": 0.06680508799999996,
       "expected": 0.0,
       "tolerance": 0.045000000000000005,
       "convergence": "Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s)",
-      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\4698ed07bc8c",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\bd877c41a0dd",
       "solver_version": "2.23 (inferred from the install path)",
-      "recorded_at": "2026-10-27T04:58:56+00:00"
+      "recorded_at": "2026-10-27T06:02:01+00:00"
     }
   ]
 }

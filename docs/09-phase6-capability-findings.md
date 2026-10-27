@@ -42,7 +42,7 @@ evidence against it.
 | Frictionless contact | **PASSED** | 100 N through a stacked-block interface, 0.000 %; 0.0041 mm penetration on a 4 mm element |
 | Contact with friction | **PASSED** | μ = 0.3, tangential reaction exact, 0.0068 mm of in-plane motion |
 | Mechanical stops | **PASSED** | Tip deflection 0.5017 mm against a 0.5 mm gap, +0.3 % |
-| Self-contact | **FAILED** | Contact engages, but 0.108 mm of interpenetration — 12 % of an element, against a 5 % criterion |
+| Self-contact | **PASSED** | Closest approach +0.067 mm — positive, so no overlap. Mesh-independent across a 2.7× refinement; the same model without contact overlaps by 8.02 mm |
 | Viscoelasticity | **NOT AVAILABLE** | No such material model in CalculiX. Settled in Phase 3 against the manual |
 
 ### Gravity
@@ -106,10 +106,10 @@ the expected answer. A stop that was not engaging would give 1.5 mm. Measured
 
 ---
 
-## Self-contact: three set-ups, two of them wrong
+## Self-contact: four set-ups, three of them wrong
 
-The only `FAILED` verdict, and the most instructive entry in this document. Each
-failure looked like a solver limitation and none of them was one. See risk R13.
+The entry that took longest and taught most. Every failure looked like a solver
+limitation and none of them was one. See risk R13.
 
 **Attempt 1 — every surface as both slave and master.** The textbook self-contact
 recipe. Here it meant every node began in contact with the face it belongs to. It
@@ -123,26 +123,65 @@ approach of exactly minus the overshoot. The only visible symptom was 129 conver
 cutbacks. Recording "CalculiX self-contact does not work" at this point would have put
 a false limitation into the documentation permanently.
 
-**Attempt 3 — a closing force, which contact can balance.** A 1.0 N force on a hairpin
-whose legs are worth about 0.21 N/mm would close roughly 4.7 mm if nothing stopped it.
-It closed 1.1 mm against a 1.0 mm gap: **contact plainly engaged**.
+**Attempt 3 — a closing force, which contact can balance** — and a measurement that
+was still wrong. A 1.0 N force on a hairpin whose legs are worth about 0.21 N/mm
+would close roughly 4.7 mm if nothing stopped it. It closed about 1.1 mm against a
+1.0 mm gap, so contact plainly engaged — but the reported closest approach was
+−0.108 mm, and the benchmark was recorded as FAILED on 12 % of an element of
+apparent interpenetration.
 
-It still fails the criterion. The residual interpenetration is 0.108 mm, which is 12 %
-of the 0.9 mm element and far more than a penalty formulation accounts for — at this
-contact pressure and stiffness the penalty penetration should be of order a micron. A
-first measurement of 0.215 mm turned out to be half turn deformation: classifying
-nodes by their original coordinate puts part of the turn in each group, and the turn
-legitimately folds as the hairpin closes. Restricting the measurement to the straight
-runs halved it.
+**Attempt 4 — measuring a gap where a gap exists.** The separation was being taken as
+the *lowest* point of the upper leg against the *highest* point of the lower one,
+over the whole straight run. Both legs bend, so their extremes sit at different
+stations, and the difference between two points that are not above one another is not
+a gap anywhere. Binned along the deformed x axis and compared station by station, the
+closest approach is **+0.067 mm — positive. The legs never overlapped.**
 
-What remains is most likely an edge contact on a coarse mesh — the legs are not
-parallel when they meet, so the loaded end's corner digs in. That is a testable
-hypothesis: if it is discretisation, the penetration should fall roughly with element
-size. **It has not been tested.** Until it is, self-contact stays `FAILED` and the
-feature stays disabled, because relaxing the tolerance to make the verdict change is
-precisely the move this project exists to avoid.
+### How the measurement error was caught
 
----
+Not by review. By the refinement diagnostic in
+`scripts/selfcontact_refinement.py`, which was written to test a different
+hypothesis entirely — that the overlap was an edge contact a finer mesh would
+resolve. It made a prediction: if the overlap is discretisation, it falls with the
+element size.
+
+| element size | apparent penetration | as % of element |
+|---|---|---|
+| 1.20 mm | 0.1179 mm | 9.8 % |
+| 0.90 mm | 0.1079 mm | 12.0 % |
+| 0.60 mm | 0.1151 mm | 19.2 % |
+| 0.45 mm | 0.1078 mm | 24.0 % |
+
+Flat. Across a 2.7× refinement the number did not move, and it does not move with the
+penalty stiffness either — which scales as 1/h, so a penalty-driven overlap would
+have fallen with the mesh too. A quantity indifferent to both is not a property of
+the solution. That is what pointed at the measurement.
+
+The hypothesis the diagnostic was built to test turned out to be wrong, and it found
+the real fault anyway, because it predicted something specific and the prediction
+failed in a way that was itself informative.
+
+### The control the benchmark should have had from the start
+
+With the corrected measurement, the closest approach is +0.057 to +0.067 mm across
+the same refinement sequence — mesh-independent and on the correct side of zero,
+which is what a working contact looks like.
+
+That still does not prove contact did anything, so the diagnostic now runs a
+**control**: the identical model with the contact pair removed. The legs overlap by
+**8.02 mm**. Against +0.06 mm with contact, there is no remaining doubt about what
+stopped them.
+
+A benchmark that only ever runs *with* the feature cannot distinguish "contact held
+them apart" from "they were never going to touch". This one spent three set-ups
+unable to make that distinction. `benchmark_self_contact(..., with_contact=False)`
+exists so the next capability does not have to.
+
+### Reproducing
+
+```
+python scripts/selfcontact_refinement.py --sizes 1.2 0.9 0.6 0.45 --control
+```
 
 ## Viscoelasticity
 

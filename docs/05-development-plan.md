@@ -465,9 +465,15 @@ against angle, traceable to the FEA run that produced it.
 ## Phase 6 — Advanced coupled simulation — **COMPLETE, 3 of 3 CRITERIA MET**
 
 Complete in the sense this phase defines: every capability was either demonstrated on
-a benchmark or documented as not achievable, with evidence either way. Six of the
-seven capabilities have a verdict; one of those verdicts is a failure, which is a
-permitted and useful outcome.
+a benchmark or documented as not achievable, with evidence either way. Six pass; the
+seventh, viscoelasticity, does not exist in CalculiX at all.
+
+Self-contact was recorded as a failure first, on 12 % of an element of apparent
+interpenetration. It was a measurement error — the separation was taken between two
+points that were not above one another — and the benchmark had no control run to
+catch it. Both are fixed, and the sequence is written up in full because a benchmark
+that fails for the wrong reason becomes a documented solver limitation nobody
+re-checks.
 
 Full evidence, including the two wrong set-ups that nearly became documented solver
 limitations: [09-phase6-capability-findings.md](09-phase6-capability-findings.md).
@@ -485,7 +491,7 @@ limitations: [09-phase6-capability-findings.md](09-phase6-capability-findings.md
 | Frictionless contact | **PASSED** | 100 N through an interface, exact; 0.0041 mm penetration on a 4 mm element |
 | Contact with friction | **PASSED** | mu = 0.3, tangential reaction exact, 0.0068 mm of in-plane motion |
 | Mechanical stops | **PASSED** | 0.5017 mm against a 0.5 mm gap, +0.3 % |
-| Self-contact | **FAILED** | Contact engages but leaves 12 % of an element of interpenetration, against a 5 % criterion |
+| Self-contact | **PASSED** | Closest approach +0.067 mm, mesh-independent across a 2.7× refinement; the same model without contact overlaps by 8.02 mm |
 | Viscoelasticity | **NOT AVAILABLE** | No such material model. Settled in Phase 3 against the manual |
 
 ### Criterion 2 is a file, not a promise

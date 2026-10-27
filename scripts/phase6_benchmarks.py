@@ -574,6 +574,15 @@ def _maximum_interface_slip(result, mesh: Mesh) -> float:
     return float(np.linalg.norm(displacements[upper, :2], axis=1).max())
 
 
+#: Element size for the self-contact hairpin, in mm.
+#:
+#: Exposed as a parameter because the benchmark's residual interpenetration is
+#: suspected to be discretisation -- an edge contact between two legs that are not
+#: parallel when they meet -- and the way to find out is to refine and watch
+#: whether it falls with the element size. scripts/selfcontact_refinement.py does
+#: exactly that.
+SELF_CONTACT_ELEMENT_MM = 0.9
+
 #: Mechanical-stop benchmark: a cantilever deflected onto a rigid shelf below it.
 STOP_GAP = 0.5
 
@@ -690,7 +699,61 @@ def benchmark_mechanical_stop(solver, archive) -> BenchmarkOutcome:
     )
 
 
-def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
+def _leg_separation(mesh, deformed, parameters, half: float) -> float:
+    """Closest approach between the hairpin's two legs, measured station by station.
+
+    Two mistakes are already buried in this one number, and both of them produced a
+    confident wrong answer.
+
+    **Taking the extremes over the whole part.** The turn at the far end spans the
+    whole pitch, so classifying nodes by their original y puts part of the turn in
+    each group. The turn legitimately folds as the hairpin closes, and counting that
+    as interpenetration reported 0.215 mm.
+
+    **Taking the extremes over the whole straight run.** Restricting to the straight
+    runs halved it, which looked like progress and was not. Comparing the *lowest*
+    point of the upper leg against the *highest* point of the lower leg compares two
+    places that are not above one another: both legs bend, so their extremes sit at
+    different x, and the difference between them is not a gap anywhere. The
+    diagnostic in scripts/selfcontact_refinement.py is what exposed it -- the
+    apparent overlap stayed at about 0.11 mm across a 2.7x refinement, and neither
+    the mesh nor the penalty stiffness could produce a number that ignores both.
+
+    A gap is between two surfaces *at the same station*, so the comparison is binned
+    along the deformed x axis and the worst bin is reported. Bins are two elements
+    wide, which is enough to hold nodes from both legs without averaging across the
+    curvature.
+    """
+    straight = (mesh.nodes[:, 0] > 1.0) & (
+        mesh.nodes[:, 0] < parameters.run_length - 1.0
+    )
+    is_lower = straight & (mesh.nodes[:, 1] < half + 1e-4)
+    is_upper = straight & (mesh.nodes[:, 1] > parameters.pitch - half - 1e-4)
+    if not is_lower.any() or not is_upper.any():
+        return float("nan")
+
+    lower = deformed[is_lower]
+    upper = deformed[is_upper]
+
+    width = 2.0 * mesh.element_size
+    low_x = min(lower[:, 0].min(), upper[:, 0].min())
+    high_x = max(lower[:, 0].max(), upper[:, 0].max())
+    edges = np.arange(low_x, high_x + width, width)
+
+    worst = float("inf")
+    for start, stop in zip(edges[:-1], edges[1:]):
+        in_bin_lower = lower[(lower[:, 0] >= start) & (lower[:, 0] < stop)]
+        in_bin_upper = upper[(upper[:, 0] >= start) & (upper[:, 0] < stop)]
+        if in_bin_lower.size == 0 or in_bin_upper.size == 0:
+            continue
+        worst = min(worst, float(in_bin_upper[:, 1].min() - in_bin_lower[:, 1].max()))
+    return worst
+
+
+def benchmark_self_contact(solver, archive,
+                           element_size: float = SELF_CONTACT_ELEMENT_MM,
+                           attempts=CONTACT_ATTEMPTS,
+                           with_contact: bool = True) -> BenchmarkOutcome:
     """A hairpin strip pressed closed until its two legs meet.
 
     The hardest of the five, and the one that took three attempts to pose correctly.
@@ -735,7 +798,7 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
 
     mesh = generate_mesh(
         build_meander(parameters),
-        MeshSettings(element_size=0.9, second_order=True),
+        MeshSettings(element_size=element_size, second_order=True),
         smallest_dimension=parameters.width,
     )
 
@@ -766,7 +829,7 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
     attempted: list[str] = []
     result = None
     label = ""
-    for label, formulation, factor in CONTACT_ATTEMPTS:
+    for label, formulation, factor in attempts:
         slave_kind = (
             SurfaceType.ELEMENT
             if formulation is ContactFormulation.SURFACE_TO_SURFACE
@@ -792,7 +855,11 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
             maximum_increment=0.05,
             reaction_sets=lower_end,
             field_output_frequency=1,
-            contact_pairs=[pair],
+            # with_contact=False is the control: the identical model with nothing
+            # stopping the legs. A benchmark that only ever runs *with* the feature
+            # cannot tell "contact held them apart" from "they were never going to
+            # touch", and this one spent three set-ups being unable to tell.
+            contact_pairs=[pair] if with_contact else [],
             point_loads=[
                 PointLoad(
                     node_set=upper_end[0], force=(0.0, -push_force, 0.0), total=True,
@@ -834,21 +901,8 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
             run_directory=str(result.run_directory),
         )
 
-    # Measure over the straight runs only, clear of both ends.
-    #
-    # The turn at the far end spans the whole pitch, so classifying nodes by their
-    # original y puts part of the turn in each group. As the hairpin closes the turn
-    # deforms, and the "upper" part of it legitimately moves past the "lower" part --
-    # which is the turn bending, not the legs interpenetrating. Including it reported
-    # 0.215 mm of apparent penetration on a run whose true penalty penetration, at
-    # this pressure and stiffness, is of order a micron.
-    straight = (mesh.nodes[:, 0] > 1.0) & (
-        mesh.nodes[:, 0] < parameters.run_length - 1.0
-    )
     deformed = mesh.nodes + displacements
-    lower = deformed[straight & (mesh.nodes[:, 1] < half + 1e-4)]
-    upper = deformed[straight & (mesh.nodes[:, 1] > parameters.pitch - half - 1e-4)]
-    separation = float(upper[:, 1].min() - lower[:, 1].max())
+    separation = _leg_separation(mesh, deformed, parameters, half)
     closure = gap - separation
     tolerance = 0.05 * mesh.element_size
     passed = separation > -tolerance and closure > 0.5 * gap
@@ -861,10 +915,16 @@ def benchmark_self_contact(solver, archive) -> BenchmarkOutcome:
             f"Hairpin with a {gap:.1f} mm clear gap, closed by a {push_force} N "
             f"force against a leg stiffness of about {leg_stiffness:.3g} N/mm -- "
             f"enough to close roughly {push_force / leg_stiffness:.1f} mm if nothing "
-            f"stopped it. Closest approach after the solve {separation:+.4g} mm, so "
-            f"the gap closed by {closure:.4g} mm and the legs stopped on each other. "
-            f"Element size {mesh.element_size:.3g} mm, penetration tolerance "
-            f"{tolerance:.3g} mm."
+            f"stopped it. Closest approach after the solve {separation:+.4g} mm "
+            f"(positive: the legs did not overlap), so the gap closed by "
+            f"{closure:.4g} mm and they stopped on each other. Element size "
+            f"{mesh.element_size:.3g} mm, penetration tolerance {tolerance:.3g} mm. "
+            "Measured station by station along the deformed x axis, not as the "
+            "extremes over the whole run -- the two legs bend, so their extremes sit "
+            "at different stations and the difference between those is not a gap "
+            "anywhere. Confirmed by scripts/selfcontact_refinement.py: the closest "
+            "approach stays between +0.057 and +0.067 mm across a 2.7x refinement, "
+            "and the same model with the contact pair removed overlaps by 8.02 mm."
         ),
         measured=separation, expected=0.0, tolerance=tolerance,
         convergence=result.convergence.summary,

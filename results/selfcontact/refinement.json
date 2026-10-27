@@ -1,0 +1,55 @@
+{
+  "rows": [
+    {
+      "element_size_mm": 1.2,
+      "passed": true,
+      "separation_mm": 0.05670341000000001,
+      "penetration_mm": 0.0,
+      "penetration_over_element": 0.0,
+      "convergence": "Converged in 24 increment(s) with 48 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\7f45beb1e9fc",
+      "wall_seconds": 24.3,
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 48 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve +0.0567 mm, so the gap closed by 0.9433 mm and the legs stopped on each other. Element size 1.2 mm, penetration tolerance 0.06 mm."
+    },
+    {
+      "element_size_mm": 0.9,
+      "passed": true,
+      "separation_mm": 0.06680508799999996,
+      "penetration_mm": 0.0,
+      "penetration_over_element": 0.0,
+      "convergence": "Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\4d341851851d",
+      "wall_seconds": 43.8,
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 53 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve +0.06681 mm, so the gap closed by 0.9332 mm and the legs stopped on each other. Element size 0.9 mm, penetration tolerance 0.045 mm."
+    },
+    {
+      "element_size_mm": 0.6,
+      "passed": true,
+      "separation_mm": 0.06043118199999997,
+      "penetration_mm": 0.0,
+      "penetration_over_element": 0.0,
+      "convergence": "Converged in 24 increment(s) with 62 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\850fd723d664",
+      "wall_seconds": 127.4,
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 62 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve +0.06043 mm, so the gap closed by 0.9396 mm and the legs stopped on each other. Element size 0.6 mm, penetration tolerance 0.03 mm."
+    },
+    {
+      "element_size_mm": 0.45,
+      "passed": true,
+      "separation_mm": 0.06309205600000001,
+      "penetration_mm": 0.0,
+      "penetration_over_element": 0.0,
+      "convergence": "Converged in 24 increment(s) with 67 cutback(s); 1 solver warning(s)",
+      "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\651b2e68c71c",
+      "wall_seconds": 320.9,
+      "evidence": "Converged with surface-to-surface, K = 10E/h. Attempts: surface-to-surface, K = 10E/h: Converged in 24 increment(s) with 67 cutback(s); 1 solver warning(s). Hairpin with a 1.0 mm clear gap, closed by a 1.0 N force against a leg stiffness of about 0.211 N/mm -- enough to close roughly 4.7 mm if nothing stopped it. Closest approach after the solve +0.06309 mm, so the gap closed by 0.9369 mm and the legs stopped on each other. Element size 0.45 mm, penetration tolerance 0.0225 mm."
+    }
+  ],
+  "control": {
+    "element_size_mm": 0.6,
+    "separation_mm": -8.0202552,
+    "convergence": "Converged in 24 increment(s) with 40 cutback(s); 1 solver warning(s)",
+    "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\8a4d1c901b05"
+  },
+  "verdict": "No interpenetration at any element size: the closest approach is +0.0567 to +0.06681 mm across a 2.7x refinement, and it is positive throughout. Mesh-independent and on the correct side of zero is what a working contact looks like. The control, with the contact pair removed, gives -8.02 mm at the same mesh, so the legs were stopped by the contact rather than by their own stiffness."
+}

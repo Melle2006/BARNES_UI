@@ -390,18 +390,37 @@ has a failure mode of its own: a benchmark that does not pass is recorded as "th
 solver cannot do this", and the record is believed afterwards by people who will not
 re-run it. If the benchmark was set up wrong, a false limitation is now documentation.
 
-The self-contact benchmark produced exactly this. Three set-ups, two of them wrong:
+The self-contact benchmark produced exactly this. Four set-ups, three of them wrong:
 
 1. Every surface declared as both slave and master — the textbook self-contact
    recipe, which here meant every node began in contact with the face it belongs to.
    Diverged in the first increment.
 2. A prescribed displacement driving the free end past the gap. Contact cannot resist
    a prescribed displacement. It converged, and the legs passed through each other.
-3. A *force* closing the hairpin, which contact can balance.
+3. A *force* closing the hairpin, which contact can balance — with a measurement
+   that compared the lowest point of one leg against the highest point of the other,
+   at two stations that were not above one another. Recorded as FAILED on 12 % of an
+   element of interpenetration that did not exist.
+4. The same model, measured station by station. Closest approach **+0.067 mm**. The
+   legs had never overlapped, and the capability passes.
 
-Each failure looked like a solver limitation and none of them was one.
+Each failure looked like a solver limitation and none of them was one. The third is
+the one that nearly stuck, because it had a plausible physical explanation attached
+to it — an edge contact on a coarse mesh — and that explanation went into the
+documentation as a hypothesis.
 
 **Mitigation**
+- **A control run.** `benchmark_self_contact(..., with_contact=False)` runs the
+  identical model with the feature removed. A benchmark that only ever runs *with*
+  the capability cannot distinguish "contact held them apart" from "they were never
+  going to touch", and this one spent three set-ups unable to. With contact the legs
+  stop 0.06 mm apart; without it they overlap by 8.02 mm.
+- **A refinement sweep on any quantity used as a verdict.** The measurement error was
+  caught because the apparent interpenetration was flat across a 2.7x mesh refinement
+  and flat against a penalty stiffness that scales as 1/h. A number indifferent to
+  both is not a property of the solution. The diagnostic was written to test a
+  different hypothesis, which turned out to be wrong, and found the real fault anyway
+  — because it predicted something specific and the prediction failed informatively.
 - A benchmark records the configurations it tried and which one worked, not only the
   verdict. A single-configuration "it does not converge" is not evidence.
 - A capability record carries its run archive, so the deck can be read by someone who
@@ -417,6 +436,11 @@ Each failure looked like a solver limitation and none of them was one.
 reason is harder still to catch than one that fails for the wrong reason, which is
 why every benchmark here compares against an answer known in advance rather than
 against a previous run.
+
+Worth being honest about the asymmetry this episode revealed: a *failing* verdict got
+three attempts at being understood, because a failure invites investigation. A
+passing one would have got none. The control run exists to make a pass earn the same
+scrutiny.
 
 ---
 

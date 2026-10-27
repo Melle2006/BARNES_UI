@@ -33,10 +33,10 @@ small-strain FEA are linear in the elastic modulus, so across a stated 8 to 18 M
 Pareto front is identical: the geometric objectives move 0 % and the stiffness moves 38 %. So
 screening and selection work today; sizing does not.
 
-**Six of seven advanced solver capabilities have a verdict, and one of them is a failure.**
-Gravity, tendon loading, frictionless contact, friction and mechanical stops all reproduce an
-answer known in advance. Self-contact engages but leaves too much interpenetration and stays
-disabled. Viscoelasticity does not exist in CalculiX at all. See
+**Six of seven advanced solver capabilities reproduce an answer known in advance.** Gravity,
+tendon loading, frictionless contact, friction, mechanical stops and self-contact all pass.
+Viscoelasticity does not exist in CalculiX at all. Self-contact took four set-ups and was
+recorded as a failure for three of them — the write-up of why is the most useful part of
 [docs/09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md).
 
 ![Phase 2 application window](docs/phase2-screenshot.png)
@@ -385,7 +385,7 @@ Full details, including the data model and the fidelity ladder:
 | 3 | Nonlinear FEA via CalculiX, with analytical verification | **Complete — 8/8** |
 | 4 | Hand assembly import, joint definition, flexure adaptation | **Complete — 5/6**, criterion 1 awaits a SolidWorks assembly |
 | 5 | Whole-hand kinematics and reduced-order coupling | **Complete — 5/5** |
-| 6 | Contact, self-contact, friction, viscoelasticity | **Complete — 3/3**, with one capability failing its benchmark |
+| 6 | Contact, self-contact, friction, viscoelasticity | **Complete — 3/3**; six capabilities pass, viscoelasticity does not exist in the solver |
 | 7 | Optimisation and experimental calibration | **4/6** — criteria 5 and 6 blocked on a physical measurement |
 
 Each phase has acceptance criteria that are testable statements rather than descriptions of
@@ -405,9 +405,6 @@ These are honest limitations of the current build, not bugs:
   confirms it. On the A3 flexure the cylinder detector finds the mounting bosses and *not* the
   joint axis — a compliant joint has no pin on its axis — so the axis there has to be stated.
   A two-millimetre error in it changes the reported stiffness substantially.
-- **Self-contact does not meet its benchmark.** It converges and the surfaces plainly interact,
-  but 12 % of an element of interpenetration remains, against a 5 % criterion. The feature is
-  disabled. The likely cause is an edge contact on a coarse mesh; that has not been tested.
 - **Contact has only been demonstrated at 1,700 to 8,000 elements.** The A3 flexure is 33,000 and
   takes half an hour without contact. Nothing has been run at that scale.
 - **The assembly importer is not exposed in the GUI**, because no real assembly has been supplied

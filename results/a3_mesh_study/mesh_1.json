@@ -1,0 +1,39 @@
+{
+  "element_size_mm": 1.0,
+  "element_count": 17042,
+  "node_count": 33015,
+  "element_type": "C3D10",
+  "proximal_surface_sets": 60,
+  "distal_surface_sets": 62,
+  "axis_point_mm": [
+    6.09,
+    44.935,
+    5.44
+  ],
+  "rotation_deg": 2.0,
+  "converged": true,
+  "increments_completed": 49,
+  "cutbacks": 278,
+  "null_solution": false,
+  "trustworthy": true,
+  "wall_seconds": 1096.6,
+  "run_directory": "C:\\Users\\msaip\\AppData\\Local\\Temp\\barnes_ui_runs\\3de15d34f844",
+  "provisional_modulus_mpa": 12.0,
+  "torque_n_mm": 0.2150391,
+  "stiffness_n_mm_per_rad": 6.160416430145831,
+  "notes": [
+    "278 cutbacks across 49 increments. A cutback count far above the increment count has previously been the only visible symptom of a badly posed boundary condition, so check the setup before quoting this."
+  ],
+  "reactions": {
+    "DISTAL_ROT": [
+      0.2150391,
+      2.473435e-07,
+      1.871237e-07
+    ],
+    "DISTAL_REF": [
+      7.546646e-06,
+      -0.03287744,
+      -0.0001881303
+    ]
+  }
+}
