@@ -174,6 +174,39 @@ class TestMeshing:
         """A box has six faces, each of which must be selectable for a BC."""
         assert len(coarse_mesh.node_sets) == 6
 
+    def test_meshing_works_off_the_main_thread(self, cantilever_shape) -> None:
+        """The GUI only ever meshes from a worker, so the worker is the real case.
+
+        Gmsh's default initialise installs its own SIGINT handler, and CPython refuses
+        to set a signal handler from any thread but the main one. Meshing on the main
+        thread therefore passed every test while the application could not mesh at all:
+        every GUI submission died with "signal only works in main thread of the main
+        interpreter" before a single element was generated. Asserting on a mesh built
+        here, in a thread, is the only version of this test that would have caught it.
+        """
+        import threading
+
+        outcome: dict[str, object] = {}
+
+        def worker() -> None:
+            try:
+                outcome["mesh"] = generate_mesh(
+                    cantilever_shape, MeshSettings(elements_through_thickness=2)
+                )
+            except BaseException as exc:  # noqa: BLE001 - re-raised on the main thread
+                outcome["error"] = exc
+
+        thread = threading.Thread(target=worker)
+        thread.start()
+        thread.join()
+
+        if "error" in outcome:
+            raise AssertionError(
+                "Meshing failed off the main thread: "
+                f"{outcome['error']!r}"
+            ) from outcome["error"]  # type: ignore[misc]
+        assert outcome["mesh"].element_count > 0  # type: ignore[union-attr]
+
 
 # ---------------------------------------------------------------------------
 # Deck generation

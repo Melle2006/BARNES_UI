@@ -162,7 +162,17 @@ def generate_mesh(
     brep_path = scratch / "shape.brep"
     write_brep(shape, brep_path)
 
-    gmsh.initialize()
+    # ``interruptible=False`` is not a preference. Gmsh's default initialise installs
+    # its own SIGINT handler, and CPython refuses to set a signal handler from any
+    # thread but the main one -- so the default raises ValueError("signal only works in
+    # main thread of the main interpreter") the moment meshing is called from the GUI's
+    # worker thread, which is the only place the GUI ever calls it from. The flag is
+    # accepted by gmsh 4.11 onwards; older builds have no such handler to suppress, so
+    # falling back to the bare call is correct rather than merely tolerable.
+    try:
+        gmsh.initialize(interruptible=False)
+    except TypeError:
+        gmsh.initialize()
     try:
         gmsh.option.setNumber("General.Terminal", 1 if settings.verbose else 0)
         gmsh.model.add("barnes")
