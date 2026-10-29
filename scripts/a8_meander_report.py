@@ -114,6 +114,10 @@ def summarise(record: dict) -> dict:
         "lateral_extent_90_mm": _get(record, "lateral_extent_mm", "90"),
         "first_torque_drop_deg": drop,
         "efficiency_T90_per_strain": (t90 / e90) if t90 and e90 else None,
+        "efficiency_T60_per_strain": (
+            _get(record, "torque_n_mm", "60") / _get(record, "peak_strain_interior", "60")
+            if _get(record, "torque_n_mm", "60") and _get(record, "peak_strain_interior", "60")
+            else None),
         "printable": (geometry.get("min_true_width_mm", 99) >= PRINTABLE_WIDTH_MM)
         if geometry else None,
         "feasible": not reasons,
@@ -159,7 +163,9 @@ MATRIX_COLUMNS = [
     ("strain_60_pct", "ε60° (%)"),
     ("strain_90_pct", "ε90° (%)"),
     ("strain_90_at_clamp_pct", "ε90° at clamp (%)"),
+    ("efficiency_T60_per_strain", "T60/ε60 (N·mm)"),
     ("efficiency_T90_per_strain", "T90/ε90 (N·mm)"),
+    ("reached_deg", "Solved to (°)"),
     ("min_radius_90_mm", "Closest to axis at 90° (mm)"),
     ("lateral_extent_90_mm", "Width at 90° (mm)"),
     ("min_true_width_mm", "Narrowest wall (mm)"),
