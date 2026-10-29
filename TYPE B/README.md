@@ -26,21 +26,47 @@ python "TYPE B/build_finger_type_b.py" B_T110_X3 --no-stl --out /tmp/typeb
 
 Each build checks that every part is one valid solid, that adjacent parts in
 the assembly don't overlap, and that both retention pins pass clear through
-tab and socket at every joint. All variants listed below passed.
+tab and socket at every joint.
+
+`verify_type_b.py` does a fuller geometric check of every variant and writes
+the results to `verification_report.csv`. All variants pass all 35 checks:
+
+```bash
+python "TYPE B/verify_type_b.py"
+```
+
+It checks the following, on the assembled finger in its straight pose:
+
+* **Tendon and sensor-lead routing.** A rod 0.1 mm under the channel diameter
+  is run along the whole path, from the flange to the fingertip anchor,
+  including the bends in the phalanges and the open-air run down the
+  lattice's central corridor. It must not touch anything.
+* **Fit.** Tab-to-socket radial clearance is 0.3 mm. Every socket wall is
+  1.2 mm.
+* **Material in the TPU tabs.** At least 0.8 mm around each channel, and at
+  least 0.3 mm between each pin hole and the tendon channel or the side wall.
+* **Holes.** The retention pins, flange screw holes, M3 head clearance on the
+  flange, anchor-boss holes and fingertip tendon anchor hole are all clear.
+* **Feature side.** Every nub and boss is on the palmar side.
+
+It does not check how the lattice flexes, joint stiffness, or whether the hard
+stops engage at the intended angles. Those need FEA or a test print.
 
 ## Folder layout
 
 | Path | Contents |
 |---|---|
 | `build_finger_type_b.py` | The generator: every parameter, variant definition and check |
+| `verify_type_b.py` / `verification_report.csv` | The geometric verification and its results |
+| `previews/` | Rendered images of the assembled finger, the parts and the variant grid |
 | `common_phalanges/` | `02_Phalanx1`, `04_Phalanx2` and `06_Phalanx3` as STEP and STL. The phalanges don't depend on the lattice, so the same files are used for every variant. |
-| `B00_baseline/` | Your original lattice parameters with the errors corrected, plus `finger_assembly.step` (the full finger, assembled) |
-| `B_T###_X#/` | One folder per variant: `01_MCP_module_with_flange`, `03_PIP_module` and `05_DIP_module` as STEP and STL |
-| `variants_summary.csv` | Cell count, strut thickness, re-entrant angle, cell height, tendon moment arm and module volume for each joint of each variant |
+| `B00_baseline/` | Your original lattice parameters with the errors corrected |
+| `B_T###_X#/` | One folder per variant |
 
-Assembly STEPs for variants other than the baseline are left out to keep the
-repository small. To get one, run
-`python "TYPE B/build_finger_type_b.py" <variant>`.
+Every variant folder holds `01_MCP_module_with_flange`, `03_PIP_module` and
+`05_DIP_module` as STEP and STL, plus `finger_assembly.step`. The assembly is
+the whole finger, modules and phalanges, in position.
+| `variants_summary.csv` | Cell count, strut thickness, re-entrant angle, cell height, tendon moment arm and module volume for each joint of each variant |
 
 ## Variants
 
@@ -159,7 +185,7 @@ exported, which are identical to the reference STEPs you shared.
    *Fix:* the channels are defined once per joint. Each phalanx runs straight
    through its sockets and changes offset with smooth bends in between. The
    offset is capped so at least 0.8 mm of TPU surrounds the channel in the
-   tab, giving **effective moment arms of 3.2 / 2.2 / 1.2 mm (MCP / PIP / DIP)
+   tab, giving **effective moment arms of 3.06 / 1.93 / 1.06 mm (MCP / PIP / DIP)
    instead of 5.0 / 3.5 / 3.0**. This is the main functional consequence of
    giving the sockets real walls. A thinner tendon channel would let the arms
    grow (`CHAN_TENDON_D`; 3.0 mm is large for a Dyneema tendon).
@@ -179,8 +205,9 @@ exported, which are identical to the reference STEPs you shared.
    * The bands are clipped to the collar outline less 0.2 mm.
 8. **The flange screw holes were half covered by the MCP block.** The Ø3 holes
    at ±7 mm sat under a block reaching ±7.7 mm, so screws couldn't pass.
-   *Fix:* the flange is now 26 mm wide with holes at ±10 mm, which leaves
-   clearance for M3 heads.
+   *Fix:* the flange is now 28 mm wide with holes at ±11 mm. An M3 head
+   (Ø5.5) then clears the block, which the verification confirms. A first
+   attempt at ±10 mm still clipped the block by 0.45 mm.
 9. **The fingertip fillet always failed** (`BRep_API: command not done`), so
    the tip was flat.
    *Fix:* the tip is filleted on the plain loft before any cuts (r = 4 mm).
@@ -189,7 +216,13 @@ exported, which are identical to the reference STEPs you shared.
     shared the old fixed −3 mm offset.
     *Fix:* the channel now ends at the anchor hole, which sits on the DIP
     tendon line.
-11. **Dead code removed.** `socket_cut` and `add_hardstop_nub` were never
+11. **The proximal sockets thinned with the taper.** A phalanx is thinnest at
+    the floor of its proximal socket, so a socket sized to its end face left a
+    0.92 mm wall at the proximal end of Phalanx 2.
+    *Fix:* each proximal socket is sized to the phalanx section at the socket
+    floor, and so is the distal tab of the joint module that fits it. Every
+    wall now measures 1.2 mm.
+12. **Dead code removed.** `socket_cut` and `add_hardstop_nub` were never
     called, and the latter was also on the wrong side. The `fillet` argument
     of `tapered_box` was never used.
 

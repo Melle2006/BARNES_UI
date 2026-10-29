@@ -79,8 +79,9 @@ HARDSTOP_DIP = dict(w=3.0, d=3.0, h=1.0)
 ANCHOR_BOSS = dict(offset_from_joint=4.0, hole_d=1.5, boss_h=2.0, boss_wd=3.0,
                    hole_into_body=0.5)
 
-# Holes moved outboard (spacing 14 -> 20) so M3 heads clear the MCP block.
-FLANGE = dict(w=26.0, h=14.0, t=4.0, hole_d=3.0, hole_spacing=20.0)
+# Holes moved outboard (spacing 14 -> 22) so M3 heads (dia 5.5) clear the
+# MCP block, which reaches x = +/-7.7.
+FLANGE = dict(w=28.0, h=14.0, t=4.0, hole_d=3.0, hole_spacing=22.0)
 
 TIP_RECESS = dict(w=8.0, d=6.0, depth=1.0)
 TIP_FILLET_TRY = (4.0, 3.5, 3.0, 2.5, 2.0)
@@ -193,10 +194,18 @@ def channel(points, d):
 # ---------------------------------------------------------------------------
 # JOINT-LEVEL GEOMETRY (shared by the module and the two phalanges it joins)
 # ---------------------------------------------------------------------------
-def joint_layout(cs, spec):
+def section_at(cs0, cs1, length, z):
+    t = min(max(z / length, 0.0), 1.0)
+    return tuple(a + (b - a) * t for a, b in zip(cs0, cs1))
+
+
+def joint_layout(cs, spec, cs_d):
     """Channel offsets and pin positions that must agree between a joint
-    module's tabs and the sockets of the phalanges on either side of it."""
-    tw, th, _ = tab_dims(cs)
+    module's tabs and the sockets of the phalanges on either side of it.
+    cs_d is the section the distal tab is sized from: the following
+    phalanx's section at its socket floor, because that phalanx tapers and
+    is thinnest there. It is never larger than cs, so it sets the limits."""
+    tw, th, _ = tab_dims(cs_d)
     tendon_max = th / 2 - CHAN_TENDON_D / 2 - MIN_WALL
     sensor_max = th / 2 - CHAN_SENSOR_D / 2 - MIN_WALL
     tendon_y = -min(spec["pulley_r"], tendon_max)
@@ -209,7 +218,7 @@ def joint_layout(cs, spec):
         raise ValueError(f"tab {tw:.2f} mm wide has no room for retention pins")
     if spec["end_len"] < PIN_D + 2 * 1.0:
         raise ValueError(f"end_len {spec['end_len']} mm cannot hold a {PIN_D} mm pin")
-    return dict(tendon_y=tendon_y, sensor_y=sensor_y, pin_x=(x_lo + x_hi) / 2,
+    return dict(tendon_y=tendon_y, sensor_y=sensor_y, pin_x=(x_lo + x_hi) / 2, cs_d=cs_d,
                 pulley_clamped=abs(tendon_y) < spec["pulley_r"] - 1e-9)
 
 
@@ -318,6 +327,7 @@ def make_joint_module(cs, spec, name, layout, proximal_is_tab=True):
     is a plain block in the collar profile and has no separate collar."""
     e, F, c = spec["end_len"], spec["flex_len"], COLLAR_LEN
     tw, th, tr = tab_dims(cs)
+    dw, dh, dr = tab_dims(layout["cs_d"])
     cw, ch, cr = collar_dims(cs)
 
     parts = []
@@ -328,7 +338,7 @@ def make_joint_module(cs, spec, name, layout, proximal_is_tab=True):
         parts.append(prism(cw, ch, cr, 0, e))
         z_flex = e
     z_end_flex = z_flex + F
-    parts += [prism(cw, ch, cr, z_end_flex, c), prism(tw, th, tr, z_end_flex + c, e)]
+    parts += [prism(cw, ch, cr, z_end_flex, c), prism(dw, dh, dr, z_end_flex + c, e)]
     total = z_end_flex + c + e
 
     pal_band, dor_band, x_width = lattice_bands(cs, spec)
@@ -397,7 +407,7 @@ def make_phalanx(length, cs0, cs1, prox, dist, hardstop, tip=False,
     body = fuse([body] + adds)
 
     e_p = prox["spec"]["end_len"]
-    sw, sh, sr = socket_dims(cs0)
+    sw, sh, sr = socket_dims(prox["layout"]["cs_d"])
     cuts.append(prism(sw, sh, sr, -1, e_p + AX_CLR + 1))
     cuts += pins(prox["layout"]["pin_x"], e_p / 2)
 
@@ -445,8 +455,12 @@ def variant_specs(t_scale, crossings):
 
 def build_finger(t_scale=1.0, crossings=None, verbose=True):
     mcp, pip, dip = variant_specs(t_scale, crossings)
-    lay_m, lay_p, lay_d = (joint_layout(CS_MCP, mcp), joint_layout(CS_PIP, pip),
-                           joint_layout(CS_DIP, dip))
+    c = COLLAR_LEN
+    L1, L2, L3 = L_PHAL1 - 2 * c, L_PHAL2 - 2 * c, L_PHAL3 - c
+    floor = lambda s: s["end_len"] + AX_CLR
+    lay_m = joint_layout(CS_MCP, mcp, section_at(CS_MCP, CS_PIP, L1, floor(mcp)))
+    lay_p = joint_layout(CS_PIP, pip, section_at(CS_PIP, CS_DIP, L2, floor(pip)))
+    lay_d = joint_layout(CS_DIP, dip, section_at(CS_DIP, CS_TIP, L3, floor(dip)))
 
     mcp_mod, mcp_len, _, mcp_lat = make_joint_module(CS_MCP, mcp, "MCP", lay_m, proximal_is_tab=False)
     flange = _box(-FLANGE["w"] / 2, FLANGE["w"] / 2, -FLANGE["h"] / 2, FLANGE["h"] / 2, -FLANGE["t"], 0)
@@ -460,8 +474,6 @@ def build_finger(t_scale=1.0, crossings=None, verbose=True):
     pip_mod, pip_len, _, pip_lat = make_joint_module(CS_PIP, pip, "PIP", lay_p)
     dip_mod, dip_len, _, dip_lat = make_joint_module(CS_DIP, dip, "DIP", lay_d)
 
-    c = COLLAR_LEN
-    L1, L2, L3 = L_PHAL1 - 2 * c, L_PHAL2 - 2 * c, L_PHAL3 - c
     J = lambda s, l: dict(spec=s, layout=l)
     phal1 = make_phalanx(L1, CS_MCP, CS_PIP, J(mcp, lay_m), J(pip, lay_p), HARDSTOP_MCP)
     phal2 = make_phalanx(L2, CS_PIP, CS_DIP, J(pip, lay_p), J(dip, lay_d), HARDSTOP_PIP,
