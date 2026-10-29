@@ -1,6 +1,6 @@
 """Turn the A8 meander study's run records into matrices, figures and a ranking.
 
-Reads ``<study>/runs/*.json`` written by ``scripts/a8_meander_study.py`` and writes,
+Reads ``<study>/cases/*.json`` written by ``scripts/a8_meander_study.py`` and writes,
 next to them:
 
 * ``matrix_2turn.csv``, ``matrix_3turn.csv``, ``matrix_4turn.csv`` -- one row per spine
@@ -232,7 +232,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     records = [json.loads(p.read_text(encoding="utf-8"))
-               for p in sorted((args.study / "runs").glob("*.json"))]
+               for p in sorted((args.study / "cases").glob("*.json"))]
     if not records:
         print("No run records found.", file=sys.stderr)
         return 1

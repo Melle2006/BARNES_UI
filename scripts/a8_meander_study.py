@@ -49,7 +49,7 @@ Usage
     python scripts/a8_meander_study.py --steps-dir <folder with the three STEP files>
         --out results/a8_meander_study [--groups exports,replicas,sweep]
 
-Each run is written to ``<out>/runs/<label>.json`` as soon as it finishes, and a run
+Each run is written to ``<out>/cases/<label>.json`` as soon as it finishes, and a run
 whose JSON already exists is skipped, so an interrupted study resumes.
 """
 
@@ -602,7 +602,7 @@ def main(argv: list[str] | None = None) -> int:
     global CONTACT_FORMULATION
     if args.node_to_surface:
         CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
-    runs_dir = args.out / "runs"
+    runs_dir = args.out / "cases"
     runs_dir.mkdir(parents=True, exist_ok=True)
     archive = args.archive or Path("/tmp") / "a8_runs"
 
