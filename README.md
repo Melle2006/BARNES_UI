@@ -204,7 +204,7 @@ back, and it needs different machinery throughout — so the project carries bot
 | Capability | Notes |
 |---|---|
 | Parametric meander template | Generates a serpentine from parameters; volume exact against `width × thickness × centreline_length` |
-| Reference parts | `reference_parts/*.step` — a turn-count sweep with analytically known properties |
+| Reference parts | `reference_parts/meander_*.step` — a turn-count sweep with analytically known properties, plus `A3_PIP_twin_strap_1.0mm.step`, the real part the committed results were measured on |
 | Path-following tracing | Marches along the member instead of sweeping across it |
 | Spatial beam model | Torsion plus both bending axes, for members that twist |
 
@@ -343,7 +343,8 @@ scripts/        Reproducible analysis runs: the A3 stiffness, its mesh study, th
                 Phase 6 solver benchmarks, the reference assembly generator
 results/        Evidence those scripts produced, committed so it can be read
                 without re-running anything
-reference_parts/ Generated geometry with analytically known properties
+reference_parts/ Generated geometry with analytically known properties, plus the
+                real A3 twin strap the committed results were measured on
 src/barnes_ui/
     core/       Engineering code — CAD, assemblies, mechanics, FEA, kinematics,
                 optimisation, storage. NO GUI IMPORTS.

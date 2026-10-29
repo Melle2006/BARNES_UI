@@ -162,24 +162,27 @@ Launch:
 .venv/Scripts/python.exe -m barnes_ui
 ```
 
-Three things are **not** in the repository and have to be dealt with separately:
+Two things are **not** in the repository and have to be dealt with separately:
 
 1. **CalculiX.** A separate native binary — see
    [08-calculix-installation.md](08-calculix-installation.md). On the original machine it
    lives at `%LOCALAPPDATA%\Programs\CalculiX\calculix_2.23_4win\ccx_static.exe`. The
    FEA panel's `Look again` button re-probes after an install. Without it the FEA is
    unavailable and the reduced-order model is **not** substituted for it.
-2. **`A3_PIP_twin_strap_1.0mm.step`.** On the original machine it is in
-   `C:\Users\msaip\Downloads\`. It is not committed, and deliberately so: **this GitHub
-   repository is public**, and publishing the prosthetic CAD is your call, not something
-   to do by default. Copy it across by hand, or commit it to `reference_parts/`
-   (which already tracks five STEP files) if you are content for it to be public.
-3. **Material data.** Item 7 of [06-required-inputs.md](06-required-inputs.md) is still
+2. **Material data.** Item 7 of [06-required-inputs.md](06-required-inputs.md) is still
    open. Nothing in this project is experimentally validated.
 
-`reference_parts/` does contain `meander_2turn/3turn/3turn_wide/5turn.step` and
-`pip_joint_assembly.step`, so there is geometry to work with immediately. The parametric
-meander needs no files at all — `Design ▸ Build and display` generates it.
+The geometry *is* all here. `reference_parts/` holds
+`meander_2turn/3turn/3turn_wide/5turn.step`, `pip_joint_assembly.step` and
+`A3_PIP_twin_strap_1.0mm.step` — the last being the real part every committed result in
+`results/` was measured on, so the clone above is enough to reproduce 6.103 N·mm/rad
+without copying anything by hand. The parametric meander needs no file at all:
+`Design ▸ Build and display` generates it.
+
+Note that **this GitHub repository is public**, so the A3 strap is published with it.
+That was a deliberate decision taken to make the work portable; it is recorded here
+because git history keeps the file even if it is later deleted from the tree, so undoing
+it means rewriting history, not just removing the file.
 
 ---
 
