@@ -55,3 +55,36 @@ clear the MP cuff, and that is why the R30 design stands taller.
   sits, which these files do not include.
 * Print-in-place in TPU with a 0.25 mm gap. The head may fuse in its pocket. If it does,
   increase `CLEARANCE` in the script.
+
+## Can these designs reach a human PIP range? Not yet
+
+`scripts/a6_rom_check.py` treats the leaf as a large-deflection bending beam. The beam is
+fixed at the PP anchor, and its tip slides without friction along the guide as the MP swings
+about the PIP axis. It flexes each design from −5° to 110°, the human PIP range, and writes
+`A6_pip_rom_check.csv` and `A6_pip_rom_shapes.png`.
+
+The A8 export doesn't include the phalanges, so **the PIP axis position is an assumption**.
+It is tried at y = 10, 15, 20 and 24 mm, all at z = 0. The results depend strongly on it.
+
+![Leaf shapes through flexion, axis at y = 15](A6_pip_rom_shapes.png)
+
+What it shows:
+
+1. **The 2.5 mm stroke stops every design at 15–36° flexion.** To reach 110°, the tip has
+   to slide 4–16 mm, depending on radius and axis position. Tighter radii need more slide.
+   R30–R40 need 9–11 mm with the axis at y = 15.
+2. **Flatter leaves cut through the joint during flexion.** From R80 up to flat, the leaf
+   comes within 3.5 mm of the axis somewhere between 34° and 78°. In reality it would press
+   on the knuckle, and that contact isn't modelled. With the axis at y = 10 or 15, R30 and
+   R40 stay clear (R40 only just reaches 3.5 mm at 107°). With the axis further distal, the
+   solution stops before 110° (see next point).
+3. **The leaf is far too soft.** At 4 × 1 mm, stiffness near neutral is 0.1–0.75 N·mm/rad for
+   E = 8–18 MPa. That is about 10–50 times below the A3's 6.1 N·mm/rad. Stiffness grows
+   with thickness cubed and strain grows linearly, so a 2 mm leaf is 8 times stiffer and
+   strains twice as much. Peak strain at 1 mm is 3–5% with the axis at y = 10–15, and 11–20%
+   at y = 20–24.
+4. **With the axis near the MP cuff (y = 24), no design reaches 110°.** There is no nearby
+   equilibrium past 73–99°, so the leaf would snap through to another shape.
+
+None of this is experimentally validated. The modulus is uncalibrated, and contact and guide
+friction are ignored.
