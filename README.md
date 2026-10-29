@@ -374,6 +374,7 @@ Full details, including the data model and the fidelity ladder:
 | [08-calculix-installation.md](docs/08-calculix-installation.md) | What was installed, why, and the four defects checking it exposed |
 | [09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md) | Which advanced solver capabilities work here, measured rather than assumed |
 | [manual/running-a-simulation.md](docs/manual/running-a-simulation.md) | A recorded end-to-end run of the GUI — every click, every number, every caveat, with screenshots |
+| [handover.md](docs/handover.md) | Where things stand: recent changes, work in flight, open decisions, and what a second machine needs |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---
