@@ -115,7 +115,7 @@ AXIS_Z_MM = 0.0
 KNUCKLE_RADIUS_MM = 3.4
 KNUCKLE_WALL_MM = 0.6
 KNUCKLE_HALF_LENGTH_MM = 7.0
-KNUCKLE_ELEMENT_MM = 1.0
+KNUCKLE_ELEMENT_MM = 0.6
 
 #: Full flexion analysed, degrees. docs/06 gives 0 to 100 as the PIP placeholder;
 #: 90 is reported as the design point and the curve runs to the maximum.
@@ -272,7 +272,7 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     axis = np.array([axis_y, axis_z])
 
     # Strip and knuckle are meshed separately and merged. The knuckle is fixed and
-    # only its outer face matters, so it gets 1 mm elements; meshed together at the
+    # only its outer face matters, so it gets 0.6 mm elements; meshed together at the
     # strip's 0.35 mm it doubled the model to 21,700 elements for no gain.
     strip_mesh = generate_mesh(
         shape, MeshSettings(element_size=element_size, second_order=True),
@@ -324,6 +324,12 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                         and mesh.nodes[idx, 1].min() >= box.ymax - 0.12)
     strip_skin = sets_where(lambda idx: strip_node[idx].all())
     strip_skin = [n for n in strip_skin if n not in proximal and n not in distal]
+    # Only the underside can touch the knuckle, and only the underside is a slave.
+    # With every strip face as a slave the run diverged as soon as contact engaged:
+    # 351 contact elements in one iteration, from top- and side-face nodes paired
+    # with knuckle faces they lie behind. The underside is the long face nearest the
+    # joint axis on average.
+    strip_skin = [min(strip_skin, key=lambda n: radial0[mesh.node_sets[n]].mean())]
     if not proximal or not distal or not knuckle_outer or not strip_skin:
         raise RuntimeError(f"{label}: set classification failed "
                            f"({proximal}, {distal}, {knuckle_outer}, {len(strip_skin)}).")
@@ -349,7 +355,7 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
         increments=60,
         initial_increment=0.01,
         minimum_increment=1.0e-6,
-        maximum_increment=0.02,
+        maximum_increment=0.01,
         rigid_bodies=[rigid],
         reaction_sets=[rigid.rotation_set_name],
         field_output_frequency=1,
