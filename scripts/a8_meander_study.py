@@ -80,7 +80,7 @@ from barnes_ui.core.fea.deck import (  # noqa: E402
     RigidBody,
     write_deck,
 )
-from barnes_ui.core.fea.meshing import MeshSettings, generate_mesh  # noqa: E402
+from barnes_ui.core.fea.meshing import Mesh, MeshSettings, generate_mesh  # noqa: E402
 from barnes_ui.core.fea.results import parse_dat_reaction_history  # noqa: E402
 from barnes_ui.core.fea.runner import run_analysis  # noqa: E402
 from barnes_ui.core.fea.solver import find_solver, probe_solver  # noqa: E402
@@ -115,6 +115,7 @@ AXIS_Z_MM = 0.0
 KNUCKLE_RADIUS_MM = 3.4
 KNUCKLE_WALL_MM = 0.6
 KNUCKLE_HALF_LENGTH_MM = 7.0
+KNUCKLE_ELEMENT_MM = 1.0
 
 #: Full flexion analysed, degrees. docs/06 gives 0 to 100 as the PIP placeholder;
 #: 90 is reported as the design point and the curve runs to the maximum.
@@ -270,16 +271,31 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     box = bounding_box(shape)
     axis = np.array([axis_y, axis_z])
 
-    mesh = generate_mesh(
-        _compound(shape, knuckle_shell(axis_y, axis_z, knuckle_radius)),
-        MeshSettings(element_size=element_size, second_order=True),
+    # Strip and knuckle are meshed separately and merged. The knuckle is fixed and
+    # only its outer face matters, so it gets 1 mm elements; meshed together at the
+    # strip's 0.35 mm it doubled the model to 21,700 elements for no gain.
+    strip_mesh = generate_mesh(
+        shape, MeshSettings(element_size=element_size, second_order=True),
         smallest_dimension=element_size * 2.0,
     )
-    # Knuckle nodes are the ones inside its shell wall; everything else is strip.
+    knuckle_mesh = generate_mesh(
+        knuckle_shell(axis_y, axis_z, knuckle_radius),
+        MeshSettings(element_size=KNUCKLE_ELEMENT_MM, second_order=True),
+        smallest_dimension=KNUCKLE_WALL_MM,
+    )
+    offset = strip_mesh.node_count
+    mesh = Mesh(
+        nodes=np.vstack([strip_mesh.nodes, knuckle_mesh.nodes]),
+        elements=np.vstack([strip_mesh.elements, knuckle_mesh.elements + offset]),
+        second_order=True,
+        element_size=element_size,
+        node_sets={**strip_mesh.node_sets,
+                   **{f"k_{name}": np.asarray(idx) + offset
+                      for name, idx in knuckle_mesh.node_sets.items()}},
+        quality=strip_mesh.quality,
+    )
     radial0 = np.linalg.norm(mesh.nodes[:, 1:3] - axis, axis=1)
-    in_knuckle = ((radial0 >= knuckle_radius - KNUCKLE_WALL_MM - 1e-4)
-                  & (radial0 <= knuckle_radius + 1e-4)
-                  & (np.abs(mesh.nodes[:, 0]) <= KNUCKLE_HALF_LENGTH_MM + 1e-4))
+    in_knuckle = np.arange(mesh.node_count) >= offset
     strip_node = ~in_knuckle
     clearance0 = float(radial0[strip_node].min() - knuckle_radius)
     if clearance0 < 0.0:
@@ -298,7 +314,7 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     knuckle_sets = sets_where(lambda idx: in_knuckle[idx].all())
     knuckle_outer = sets_where(
         lambda idx: in_knuckle[idx].all()
-        and np.allclose(radial0[idx], knuckle_radius, atol=2e-3))
+        and np.allclose(radial0[idx], knuckle_radius, atol=1e-2))
     # End caps only. The strip's long faces run its whole length, so "every node
     # within the depth" selects exactly the caps; 0.12 mm covers the distal cap of
     # the exports, which is cut 0.08 mm out of square.
@@ -355,13 +371,14 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     # file. INC raised so a run with many cutbacks is not stopped by the cap.
     deck = deck.replace("U, RF", "U").replace("S, E", "E")
     deck = re.sub(r"(\*STEP, NLGEOM), INC=\d+", r"\1, INC=2000", deck)
-    # Let the increment grow after increments that take up to six iterations, not
-    # CalculiX's default four. This model settles at five per increment, so with the
-    # default the step stayed at 0.25 deg for all 400 increments -- about 100 minutes
-    # a run. Convergence tolerances are untouched; only the step-size policy changes.
+    # Let the increment grow after increments that take up to eight iterations, not
+    # CalculiX's default four. Without contact this model settles at five per
+    # increment and with contact at seven, so with the default the step never grew:
+    # 0.25 deg for all 400 increments, about 100 minutes a run. Convergence
+    # tolerances are untouched; only the step-size policy changes.
     deck = deck.replace(
         "*STATIC\n",
-        "*CONTROLS, PARAMETERS=TIME INCREMENTATION\n6, 10, 9, 16, 10, 6\n*STATIC\n", 1,
+        "*CONTROLS, PARAMETERS=TIME INCREMENTATION\n8, 12, 9, 20, 10, 8\n*STATIC\n", 1,
     )
 
     started = time.perf_counter()
