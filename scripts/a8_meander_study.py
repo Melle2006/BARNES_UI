@@ -353,12 +353,12 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
         formulation=CONTACT_FORMULATION,
         master=ContactSurface.from_node_sets(mesh, knuckle_outer, "knuckle_face",
                                              SurfaceType.ELEMENT),
-        # A tenth of the usual 10 E / h starting point. At 10 E / h the contact set
-        # flipped between 1 and 8 nodes from one iteration to the next, ten iterations
-        # an increment. The strip presses on the knuckle with hundredths of a newton,
-        # so the softer penalty still leaves the penetration negligible -- and it is
-        # measured rather than assumed: see min_radius_from_axis_mm.
-        stiffness=ContactPair.suggested_stiffness(TPU90A_MODULUS_MPA, element_size) / 10.0,
+        # The usual 10 E / h. A tenth of it was tried while node-to-surface contact
+        # was chattering, and with surface-to-surface it let the 2-turn export push
+        # through the knuckle shell at 69 deg: closest approach 3.13 mm, then
+        # 2.48 mm, inside the shell's own wall. Penetration is recorded on every run
+        # as min_radius_from_axis_mm, against KNUCKLE_RADIUS_MM.
+        stiffness=ContactPair.suggested_stiffness(TPU90A_MODULUS_MPA, element_size),
     )
     settings = DeckSettings(
         nlgeom=True,
