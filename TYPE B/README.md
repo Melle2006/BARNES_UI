@@ -1,5 +1,10 @@
 # TYPE B — TPU lattice-flexure finger
 
+> **Other Type B flexures:** the dual-leaf (B3), multi-leaf (B6), crossed-strip
+> (B5) and hourglass (B1) families, with the B7 taper option, use the same
+> finger and are described in [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md). This
+> page covers the bow-tie lattice designs.
+
 Type B joints are TPU modules whose flex zone is a re-entrant ("bow-tie" or
 criss-cross) lattice. Each joint has a compliant palmar lattice and a stiffer
 dorsal lattice, built in four columns around a clear central corridor for the
@@ -58,7 +63,8 @@ stops engage at the intended angles. Those need FEA or a test print.
 |---|---|
 | `build_finger_type_b.py` | The generator: every parameter, variant definition and check |
 | `verify_type_b.py` / `verification_report.csv` | The geometric verification and its results |
-| `previews/` | Rendered images of the assembled finger, the parts and the variant grid |
+| `previews/` | Rendered images of the assembled finger, the parts, the variant grid and the other flexure families |
+| `build_flexure_families.py`, `B1_hourglass/`, `B3_dual_leaf/`, `B5_crossed_strip/`, `B6_multi_leaf/` | The other Type B flexure families, see [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md) |
 | `common_phalanges/` | `02_Phalanx1`, `04_Phalanx2` and `06_Phalanx3` as STEP and STL. The phalanges don't depend on the lattice, so the same files are used for every variant. |
 | `B00_baseline/` | Your original lattice parameters with the errors corrected |
 | `B_T###_X#/` | One folder per variant |
