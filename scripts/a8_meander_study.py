@@ -86,6 +86,8 @@ from barnes_ui.core.fea.results import parse_dat_reaction_history  # noqa: E402
 from barnes_ui.core.fea.runner import run_analysis  # noqa: E402
 from barnes_ui.core.fea.solver import find_solver, probe_solver  # noqa: E402
 from barnes_ui.core.flexure.templates.a8_meander import (  # noqa: E402
+    A8_SPAN_END_Y,
+    A8_SPAN_START_Y,
     A8_MEASURED_SAGITTA,
     A8_PLAN_2TURN,
     A8_PLAN_3TURN,
@@ -236,10 +238,8 @@ def _principal_engineering_strain(green: np.ndarray) -> np.ndarray:
 def knuckle_shell(axis_y: float, axis_z: float, radius: float):
     """The proximal link's rounded head, as a thin cylindrical sector about the axis.
 
-    Only its outer face matters: it is the master surface the strip rides over. The
-    sector spans from 60 deg below +Y, over the top, to 40 deg past +Z towards -Y --
-    everything the strip can reach on its way round in 0 to 100 deg of flexion -- so
-    the shell carries no more elements than it needs.
+    Only its outer face matters: it is a master surface the strip rides over. The
+    sector spans from 60 deg below +Y, over the top, to 40 deg past +Z towards -Y.
     """
     from OCP.BRepAlgoAPI import BRepAlgoAPI_Cut
     from OCP.BRepPrimAPI import BRepPrimAPI_MakeCylinder
@@ -257,16 +257,46 @@ def knuckle_shell(axis_y: float, axis_z: float, radius: float):
     return cut.Shape()
 
 
-def _compound(*shapes):
-    from OCP.BRep import BRep_Builder
-    from OCP.TopoDS import TopoDS_Compound
+def _plate(x_half: float, y0: float, y1: float, top: float):
+    from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
+    from OCP.gp import gp_Pnt
 
-    result = TopoDS_Compound()
-    builder = BRep_Builder()
-    builder.MakeCompound(result)
-    for shape in shapes:
-        builder.Add(result, shape)
-    return result
+    return BRepPrimAPI_MakeBox(gp_Pnt(-x_half, y0, top - KNUCKLE_WALL_MM),
+                               2.0 * x_half, y1 - y0, KNUCKLE_WALL_MM).Shape()
+
+
+def finger_bodies(axis_y: float, axis_z: float, knuckle_radius: float) -> list[dict]:
+    """The rigid finger surfaces the strip can rest on, with which link each moves with.
+
+    Without them the strip has nothing beneath it and, past about 35 deg, folds
+    straight through the joint. With the knuckle alone, the 2-turn strip -- shorter
+    and stiffer than the 3-turn -- slid off the knuckle's distal side at 69 deg and
+    fell to within 0.5 mm of the axis, because the distal link it would really have
+    landed on was missing. So all three dorsal surfaces are modelled:
+
+    * the proximal link's top, z = 3.4 mm (the 3.5 mm link less the same 0.1 mm
+      allowance as the knuckle), 11.4 mm wide, from the proximal ring to the axis,
+      where it meets the knuckle tangentially; fixed;
+    * the knuckle, radius 3.4 mm about the joint axis; fixed;
+    * the distal link's top, z = 1.8 mm (its ring opening is 3.8 mm tall), 7.7 mm
+      wide, from 1 mm beyond the axis to the distal ring; rotates with the distal
+      ring, by being tied into the same rigid body.
+
+    Positions are relative to the joint axis, so moving the axis moves the finger.
+    """
+    dz = axis_z - AXIS_Z_MM
+    return [
+        {"name": "knuckle", "shape": knuckle_shell(axis_y, axis_z, knuckle_radius),
+         "moves_with": "proximal", "kind": "cylinder", "radius": knuckle_radius},
+        {"name": "proxlink",
+         "shape": _plate(5.7, A8_SPAN_START_Y + 0.3, axis_y, knuckle_radius + axis_z),
+         "moves_with": "proximal", "kind": "plate", "top": knuckle_radius + axis_z,
+         "x_half": 5.7, "y": (A8_SPAN_START_Y + 0.3, axis_y)},
+        {"name": "distlink",
+         "shape": _plate(3.85, axis_y + 1.0, A8_SPAN_END_Y - 0.1, 1.8 + dz),
+         "moves_with": "distal", "kind": "plate", "top": 1.8 + dz,
+         "x_half": 3.85, "y": (axis_y + 1.0, A8_SPAN_END_Y - 0.1)},
+    ]
 
 
 def analyse_strip(shape, label: str, archive: Path, element_size: float,
@@ -279,50 +309,74 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     box = bounding_box(shape)
     axis = np.array([axis_y, axis_z])
 
-    # Strip and knuckle are meshed separately and merged. The knuckle is fixed and
-    # only its outer face matters, so it gets 0.6 mm elements; meshed together at the
-    # strip's 0.35 mm it doubled the model to 21,700 elements for no gain.
+    # Strip and finger bodies are meshed separately and merged. The bodies are rigid
+    # and only their outer faces matter, so they get 0.6 mm elements; meshed together
+    # at the strip's 0.35 mm the knuckle alone doubled the model.
     strip_mesh = generate_mesh(
         shape, MeshSettings(element_size=element_size, second_order=True),
         smallest_dimension=element_size * 2.0,
     )
-    knuckle_mesh = generate_mesh(
-        knuckle_shell(axis_y, axis_z, knuckle_radius),
-        MeshSettings(element_size=KNUCKLE_ELEMENT_MM, second_order=True),
-        smallest_dimension=KNUCKLE_WALL_MM,
-    )
+    bodies = finger_bodies(axis_y, axis_z, knuckle_radius)
+    nodes = [strip_mesh.nodes]
+    elements = [strip_mesh.elements]
+    node_sets = dict(strip_mesh.node_sets)
+    owner = [np.full(strip_mesh.node_count, -1)]
     offset = strip_mesh.node_count
-    mesh = Mesh(
-        nodes=np.vstack([strip_mesh.nodes, knuckle_mesh.nodes]),
-        elements=np.vstack([strip_mesh.elements, knuckle_mesh.elements + offset]),
-        second_order=True,
-        element_size=element_size,
-        node_sets={**strip_mesh.node_sets,
-                   **{f"k_{name}": np.asarray(idx) + offset
-                      for name, idx in knuckle_mesh.node_sets.items()}},
-        quality=strip_mesh.quality,
-    )
+    for index, body in enumerate(bodies):
+        body_mesh = generate_mesh(
+            body["shape"], MeshSettings(element_size=KNUCKLE_ELEMENT_MM, second_order=True),
+            smallest_dimension=KNUCKLE_WALL_MM,
+        )
+        nodes.append(body_mesh.nodes)
+        elements.append(body_mesh.elements + offset)
+        node_sets.update({f"{body['name']}_{name}": np.asarray(idx) + offset
+                          for name, idx in body_mesh.node_sets.items()})
+        owner.append(np.full(body_mesh.node_count, index))
+        offset += body_mesh.node_count
+    mesh = Mesh(nodes=np.vstack(nodes), elements=np.vstack(elements), second_order=True,
+                element_size=element_size, node_sets=node_sets,
+                quality=strip_mesh.quality)
+    owner = np.concatenate(owner)
+    strip_node = owner < 0
     radial0 = np.linalg.norm(mesh.nodes[:, 1:3] - axis, axis=1)
-    in_knuckle = np.arange(mesh.node_count) >= offset
-    strip_node = ~in_knuckle
-    clearance0 = float(radial0[strip_node].min() - knuckle_radius)
+
+    # Clearance at rest, against every body. Checked before solving: a strip that
+    # starts inside the finger would be pushed out by the contact penalty and the
+    # "restoring torque" would include that preload. A geometric verdict.
+    sp = mesh.nodes[strip_node]
+    gaps = [float(np.linalg.norm(sp[:, 1:3] - axis, axis=1).min() - knuckle_radius)]
+    for body in bodies:
+        if body["kind"] != "plate":
+            continue
+        over = ((np.abs(sp[:, 0]) <= body["x_half"])
+                & (sp[:, 1] >= body["y"][0]) & (sp[:, 1] <= body["y"][1]))
+        if over.any():
+            gaps.append(float((sp[over, 2] - body["top"]).min()))
+    clearance0 = min(gaps)
     if clearance0 < 0.0:
-        # Checked before solving: a strip that starts inside the finger would be
-        # pushed out by the contact penalty and the "restoring torque" would include
-        # that preload. It is a geometric verdict, not an analysis.
         return {"label": label, "failure": (
-            f"strip starts {-clearance0:.3f} mm inside the {knuckle_radius} mm "
-            "knuckle: the spine is too flat to clear the joint at rest"),
+            f"strip starts {-clearance0:.3f} mm inside the finger (knuckle radius "
+            f"{knuckle_radius} mm): the spine is too flat to clear the joint at rest"),
             "geometric_interference_mm": -clearance0, "reached_deg": 0.0}
 
     def sets_where(predicate):
         return sorted(name for name, idx in mesh.node_sets.items()
                       if predicate(np.asarray(idx)))
 
-    knuckle_sets = sets_where(lambda idx: in_knuckle[idx].all())
-    knuckle_outer = sets_where(
-        lambda idx: in_knuckle[idx].all()
-        and np.allclose(radial0[idx], knuckle_radius, atol=1e-2))
+    fixed_sets, moving_sets, master_sets = [], [], []
+    for index, body in enumerate(bodies):
+        mine = sets_where(lambda idx, i=index: (owner[idx] == i).all())
+        (moving_sets if body["moves_with"] == "distal" else fixed_sets).extend(mine)
+        if body["kind"] == "cylinder":
+            face = [n for n in mine
+                    if np.allclose(radial0[mesh.node_sets[n]], body["radius"], atol=1e-2)]
+        else:
+            face = [n for n in mine
+                    if np.allclose(mesh.nodes[mesh.node_sets[n], 2], body["top"], atol=1e-3)]
+        if not face:
+            raise RuntimeError(f"{label}: no contact face found on {body['name']}.")
+        master_sets.extend(face)
+
     # End caps only. The strip's long faces run its whole length, so "every node
     # within the depth" selects exactly the caps; 0.12 mm covers the distal cap of
     # the exports, which is cut 0.08 mm out of square.
@@ -332,28 +386,29 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                         and mesh.nodes[idx, 1].min() >= box.ymax - 0.12)
     strip_skin = sets_where(lambda idx: strip_node[idx].all())
     strip_skin = [n for n in strip_skin if n not in proximal and n not in distal]
-    # Only the underside can touch the knuckle, and only the underside is a slave.
+    # Only the underside can touch the finger, and only the underside is a slave.
     # With every strip face as a slave the run diverged as soon as contact engaged:
     # 351 contact elements in one iteration, from top- and side-face nodes paired
-    # with knuckle faces they lie behind. The underside is the long face nearest the
-    # joint axis on average.
+    # with faces they lie behind. The underside is the long face nearest the joint
+    # axis on average.
     strip_skin = [min(strip_skin, key=lambda n: radial0[mesh.node_sets[n]].mean())]
-    if not proximal or not distal or not knuckle_outer or not strip_skin:
+    if not proximal or not distal or not strip_skin:
         raise RuntimeError(f"{label}: set classification failed "
-                           f"({proximal}, {distal}, {knuckle_outer}, {len(strip_skin)}).")
+                           f"({proximal}, {distal}, {len(strip_skin)}).")
 
     distal_nodes = np.unique(np.concatenate([mesh.node_sets[s] for s in distal]))
     cap_x = float(mesh.nodes[distal_nodes, 0].mean())
-    rigid = RigidBody(node_sets=distal, reference_point=(cap_x, axis_y, axis_z),
+    rigid = RigidBody(node_sets=distal + moving_sets,
+                      reference_point=(cap_x, axis_y, axis_z),
                       name="distal", pin_reference=True)
     contact = ContactPair(
-        name="knuckle",
+        name="finger",
         slave=ContactSurface.from_node_sets(
             mesh, strip_skin, "strip_skin",
             SurfaceType.ELEMENT if CONTACT_FORMULATION is ContactFormulation.SURFACE_TO_SURFACE
             else SurfaceType.NODE),
         formulation=CONTACT_FORMULATION,
-        master=ContactSurface.from_node_sets(mesh, knuckle_outer, "knuckle_face",
+        master=ContactSurface.from_node_sets(mesh, master_sets, "finger_face",
                                              SurfaceType.ELEMENT),
         # The usual 10 E / h. A tenth of it was tried while node-to-surface contact
         # was chattering, and with surface-to-surface it let the 2-turn export push
@@ -375,8 +430,8 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     )
     boundary = [BoundaryCondition(n, (1, 2, 3), 0.0, "proximal ring face held")
                 for n in proximal]
-    boundary += [BoundaryCondition(n, (1, 2, 3), 0.0, "knuckle is part of the proximal link")
-                 for n in knuckle_sets]
+    boundary += [BoundaryCondition(n, (1, 2, 3), 0.0, "proximal link and knuckle")
+                 for n in fixed_sets]
     boundary.append(BoundaryCondition(
         rigid.rotation_set_name, (1,), -math.radians(flexion_deg),
         f"PIP flexion {flexion_deg:g} deg about +X, distal ring towards -Z",
