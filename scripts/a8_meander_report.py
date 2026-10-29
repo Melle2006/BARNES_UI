@@ -79,12 +79,15 @@ def summarise(record: dict) -> dict:
     reached = record.get("reached_deg") or 0.0
     geometry = record.get("geometry") or {}
     reasons = []
-    if "failure" in record:
-        reasons.append("analysis failed")
-    if reached < 90.0 - 1e-6:
+    if "geometric_interference_mm" in record:
+        reasons.append(f"strip starts {record['geometric_interference_mm']:.2f} mm "
+                       "inside the finger (spine too flat)")
+    elif "failure" in record:
+        reasons.append(f"analysis failed: {record['failure'][:80]}")
+    elif reached < 90.0 - 1e-6:
         reasons.append(f"solve stopped at {reached:.0f} deg")
     if drop is not None and drop <= 90.0:
-        reasons.append(f"torque falls from {drop:.0f} deg (buckling)")
+        reasons.append(f"torque falls from {drop:.0f} deg (instability)")
     if e90 is not None and e90 > STRAIN_LIMIT:
         reasons.append(f"strain {e90 * 100:.0f} % > {STRAIN_LIMIT * 100:.0f} %")
     row = {
@@ -186,13 +189,16 @@ def plot_curves(records: list[dict], path: Path, title: str) -> None:
         if not curve.get("angle_deg"):
             continue
         colour = cmap(i / max(1, len(records) - 1))
+        name = (record["label"].replace("export_A8_PIP_Meander_", "")
+                if record.get("kind") == "export" else "")
         ax.plot([0] + curve["angle_deg"], [0] + curve["torque_n_mm"], color=colour,
-                label=f"sagitta {record.get('sagitta', 0):.2f} mm")
+                label=f"{name} sagitta {record.get('sagitta', 0):.2f} mm".strip())
     ax.set_xlabel("PIP flexion (deg)")
     ax.set_ylabel("Restoring torque (N·mm)")
     ax.set_title(title)
     ax.grid(alpha=0.3)
-    ax.legend(fontsize=8, ncol=2)
+    if ax.get_legend_handles_labels()[0]:
+        ax.legend(fontsize=8, ncol=2)
     fig.text(0.01, 0.01, "TPU 90A, Neo-Hookean E = 19.3 MPa (datasheet). Not "
              "experimentally validated.", fontsize=7, color="#a33")
     fig.tight_layout()
