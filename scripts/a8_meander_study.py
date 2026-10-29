@@ -117,6 +117,8 @@ KNUCKLE_RADIUS_MM = 3.4
 KNUCKLE_WALL_MM = 0.6
 KNUCKLE_HALF_LENGTH_MM = 7.0
 KNUCKLE_ELEMENT_MM = 0.6
+#: Keep the .frd field file of each run, for diagnosing one. Set by --keep-frd.
+KEEP_FRD = False
 #: Surface-to-surface. Node-to-surface on these 10-node tetrahedra chattered as soon
 #: as the strip met the knuckle (0 to 25 contact elements from one iteration to the
 #: next) and stalled at 7 deg on the 2-turn export and 18 deg on the 3-turn; face
@@ -446,7 +448,8 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                 entry["peak_strain_interior"] = float(
                     strain[mask_corner & interior[nodes]].max()
                 )
-        frd.unlink()  # hundreds of MB per run; the scalars above are what is kept
+        if not KEEP_FRD:
+            frd.unlink()  # hundreds of MB per run; the scalars above are what is kept
 
     field_times = np.array(sorted(fields))
 
@@ -595,11 +598,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--element-size", type=float, default=ELEMENT_SIZE_MM)
     parser.add_argument("--timeout", type=float, default=7200.0)
     parser.add_argument("--archive", type=Path, default=None)
+    parser.add_argument("--keep-frd", action="store_true",
+                        help="Keep each run's .frd field file (large).")
     parser.add_argument("--node-to-surface", action="store_true",
                         help="Use the node-to-surface formulation instead (comparison).")
     args = parser.parse_args(argv)
 
-    global CONTACT_FORMULATION
+    global CONTACT_FORMULATION, KEEP_FRD
+    KEEP_FRD = args.keep_frd
     if args.node_to_surface:
         CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
     runs_dir = args.out / "cases"
