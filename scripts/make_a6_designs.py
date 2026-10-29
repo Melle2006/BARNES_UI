@@ -1,5 +1,9 @@
 """Generate the A6 sliding-end leaf-spring PIP flexures, one per leaf radius.
 
+Every design here is sized to follow a human PIP from 0 to 105 degrees of flexion.
+``scripts/a6_rom_check.py`` is the test of that claim and the source of each design's
+travel; see "Sizing for a human range of motion" below.
+
 What A6 is
 ----------
 
@@ -39,10 +43,37 @@ The free end and its stop
 -------------------------
 
 The guide is a narrow neck followed by a wider pocket. The leaf ends in a T-head that
-lives in the pocket. It can slide ``TRAVEL_PROXIMAL`` toward the PP before the head meets
-the neck, which sets the flexion travel and keeps the leaf from pulling out, and
-``TRAVEL_DISTAL`` the other way before it meets the end wall. Every sliding gap is
-``CLEARANCE`` per side so the two bodies can be printed in place.
+lives in the pocket. It can slide the design's travel toward the PP before the head
+meets the neck, which keeps the leaf from pulling out, and ``TRAVEL_DISTAL`` the other
+way before it meets the end wall. Every sliding gap is ``CLEARANCE`` per side so the two
+bodies can be printed in place.
+
+Sizing for a human range of motion
+----------------------------------
+
+The first A6 set had a 2.5 mm stroke, a 4 x 1 mm leaf and a short guide centred on the
+MP cuff, and stopped at 15 to 36 degrees. What changed, and why:
+
+* **Travel is about 11 mm, tuned per radius.** As the PIP flexes, the path over the back of
+  the joint lengthens, and the tip slides out to make up the difference. Past roughly
+  60 degrees, a freely sliding tip has no equilibrium, so it runs on until the T-head
+  meets the neck. From then on the stop carries tension and the leaf bends between two
+  fixed ends. Too little travel and the leaf goes taut before 105 degrees. Too much and
+  the tip arrives at the stop with a jump, which reads as a moment of negative torque (a
+  snap). The travel for each radius is the centre of the window between those two
+  failures, found by ``a6_rom_check.py --tune``.
+* **The guide mouth sits 3.6 mm onto the MP cuff and the guide grows distally.**
+  Centring a longer guide on the cuff would move its mouth toward the joint. That needs
+  more slide and pulls the leaf into the knuckle. A mouth further from the joint widens
+  the range of travel that passes.
+* **The MP cuff runs the length of the guide**, so a guide about 15 mm long is carried
+  by the cuff rather than cantilevered off it. Its cross-section is still the A8's. Its
+  length is the one dimension here that has to be checked against the real MP and DIP.
+* **Only R24 to R30 are offered.** At R32, a single travel passed, and a design that
+  fails 0.5 mm either side is too fragile to print. Larger radii pass through the
+  joint or snap.
+* **The leaf is 6 mm wide** rather than 4. Width adds stiffness without adding strain,
+  and 6 mm is the most the MP cuff can carry with the head and guide walls around it.
 
 Needs CadQuery, which is not one of this project's dependencies (``pip install cadquery``).
 
@@ -75,8 +106,10 @@ MP_START = 28.86
 # --- Leaf -----------------------------------------------------------------------------
 
 #: Leaf width (X) and thickness, in mm. Wider and thinner than the A8's 2 x 1.2 spine,
-#: as a leaf should be: it has to bend in one plane and stay stiff in the other.
-LEAF_WIDTH = 4.0
+#: as a leaf should be: it has to bend in one plane and stay stiff in the other. Width
+#: scales stiffness without changing strain. Thickness scales strain linearly and
+#: stiffness as its cube, and peak strain is already the limiting quantity at 1 mm.
+LEAF_WIDTH = 6.0
 LEAF_THICKNESS = 1.0
 #: Where the leaf leaves the PP anchor, in mm along Y. The anchor overhangs the cuff
 #: by 1 mm so the leaf's root is supported past the cuff edge.
@@ -94,21 +127,28 @@ CLEARANCE = 0.25
 GUIDE_WALL = 0.8
 #: Length of the narrow neck the leaf slides through, in mm.
 NECK_LENGTH = 1.5
-#: T-head on the leaf tip: width (X) and length along the leaf, in mm.
-HEAD_WIDTH = 6.0
+#: T-head on the leaf tip: width (X) and length along the leaf, in mm. With the guide
+#: walls this makes the guide exactly as wide as the MP cuff.
+HEAD_WIDTH = 8.0
 HEAD_LENGTH = 1.2
-#: Free travel of the tip toward the PP (flexion) and away from it, in mm.
-TRAVEL_PROXIMAL = 2.5
-TRAVEL_DISTAL = 1.5
+#: Travel of the tip away from the PP, in mm. Only flexion is designed for, and the tip
+#: never moves this way in flexion, so this is a printing gap rather than a stroke.
+TRAVEL_DISTAL = 0.5
 #: Distance the guide's lowest point is kept above the MP cuff top, in mm.
 GUIDE_LIFT = 0.2
+#: Where the guide's mouth sits along Y, in mm: 3.6 mm onto the MP cuff. The guide runs
+#: distally from here, so lengthening it for more travel does not bring the mouth closer
+#: to the joint. Further from the joint widens the range of travel that passes: with the
+#: mouth at the cuff's proximal edge only one travel passed, for one radius.
+GUIDE_MOUTH_Y = 32.5
 
-#: Leaf radii to generate, in mm. ``None`` is the flat leaf. The tightest is set by the
-#: guide angle: below about 30 mm the guide tilts past 22 degrees and the device stands
-#: more than 5 mm proud of the PP cuff.
-RADII = (30.0, 40.0, 60.0, 80.0, 120.0, 200.0, None)
+#: Leaf radius -> travel of the tip toward the PP, in mm, from
+#: ``python scripts/a6_rom_check.py --tune``. Only radii with a passing travel are listed.
+TRAVEL_BY_RADIUS = {24.0: 12.5, 26.0: 11.5, 28.0: 11.5, 30.0: 11.0}
 
-GUIDE_LENGTH = NECK_LENGTH + TRAVEL_PROXIMAL + HEAD_LENGTH + TRAVEL_DISTAL + GUIDE_WALL
+#: Leaf radii to generate, in mm.
+RADII = tuple(TRAVEL_BY_RADIUS)
+
 GUIDE_WIDTH = HEAD_WIDTH + 2 * (CLEARANCE + GUIDE_WALL)
 #: Guide half-depth either side of the leaf's mid-plane.
 GUIDE_HALF_DEPTH = LEAF_THICKNESS / 2 + CLEARANCE + GUIDE_WALL
@@ -179,7 +219,12 @@ def _angle_deg(direction) -> float:
     return math.degrees(math.atan2(direction[1], direction[0]))
 
 
-def solve_layout(radius: float | None) -> Arc:
+def guide_length(travel: float) -> float:
+    """Guide length along its axis for a given proximal travel, in mm."""
+    return NECK_LENGTH + travel + HEAD_LENGTH + TRAVEL_DISTAL + GUIDE_WALL
+
+
+def solve_layout(radius: float | None, travel: float) -> Arc:
     """Place A and B so the anchor sits on the PP cuff and the guide clears the MP cuff.
 
     Both heights depend on the arc's end angles, which depend on both heights, so this
@@ -187,10 +232,9 @@ def solve_layout(radius: float | None) -> Arc:
     """
     pp_top = PP_OUTER[1] / 2
     mp_top = MP_OUTER[1] / 2
-    mp_centre = MP_START + CUFF_LENGTH / 2
     a = (ANCHOR_EXIT, pp_top + 1.0)
-    b = (mp_centre - GUIDE_LENGTH / 2, mp_top + 2.0)
-    for _ in range(100):
+    b = (GUIDE_MOUTH_Y, mp_top + 2.0)
+    for _ in range(500):
         arc = Arc(a, b, radius)
         ta, tb = arc.tangent(a), arc.tangent(b)
         # Anchor: the leaf's underside, run back along its tangent to y = 0, sits
@@ -198,13 +242,15 @@ def solve_layout(radius: float | None) -> Arc:
         slope_a = ta[1] / ta[0]
         new_a = (ANCHOR_EXIT, pp_top + ANCHOR_LIFT
                  + LEAF_THICKNESS / 2 / ta[0] + ANCHOR_EXIT * slope_a)
-        # Guide: centred on the MP cuff, its lowest corner GUIDE_LIFT above the cuff top.
-        span_y = GUIDE_LENGTH * tb[0]
-        drop = GUIDE_LENGTH * -tb[1] + GUIDE_HALF_DEPTH * tb[0]
-        new_b = (mp_centre - span_y / 2, mp_top + GUIDE_LIFT + drop)
+        # Guide: mouth at GUIDE_MOUTH_Y, lowest corner GUIDE_LIFT above the cuff top.
+        drop = guide_length(travel) * -tb[1] + GUIDE_HALF_DEPTH * tb[0]
+        new_b = (GUIDE_MOUTH_Y, mp_top + GUIDE_LIFT + drop)
         if math.dist(new_a, a) + math.dist(new_b, b) < 1e-9:
             break
-        a, b = new_a, new_b
+        # Half steps: a long, steep guide makes the plain iteration overshoot and
+        # oscillate, because raising B steepens the guide, which raises B further.
+        a = ((a[0] + new_a[0]) / 2, (a[1] + new_a[1]) / 2)
+        b = ((b[0] + new_b[0]) / 2, (b[1] + new_b[1]) / 2)
     else:  # pragma: no cover - would mean the layout has no solution
         raise RuntimeError(f"layout did not converge for R = {radius}")
     return Arc(a, b, radius)
@@ -212,24 +258,32 @@ def solve_layout(radius: float | None) -> Arc:
 
 # --- Solids ---------------------------------------------------------------------------
 
-def _rounded_rect(width: float, height: float, radius: float) -> cq.Workplane:
-    return (cq.Workplane("XZ").rect(width, height).extrude(-CUFF_LENGTH)
+def _rounded_rect(width: float, height: float, radius: float,
+                  length: float) -> cq.Workplane:
+    return (cq.Workplane("XZ").rect(width, height).extrude(-length)
             .edges("|Y").fillet(radius))
 
 
-def cuff(outer, start_y: float) -> cq.Workplane:
+def cuff(outer, start_y: float, length: float = CUFF_LENGTH) -> cq.Workplane:
     width, height, radius = outer
-    shell = _rounded_rect(width, height, radius).cut(
-        _rounded_rect(width - 2 * CUFF_WALL, height - 2 * CUFF_WALL, radius - CUFF_WALL))
+    shell = _rounded_rect(width, height, radius, length).cut(_rounded_rect(
+        width - 2 * CUFF_WALL, height - 2 * CUFF_WALL, radius - CUFF_WALL, length))
     return shell.translate((0, start_y, 0))
 
 
-def _lumen(outer, start_y: float) -> cq.Workplane:
+def _lumen(outer, start_y: float, length: float = CUFF_LENGTH) -> cq.Workplane:
     """The cuff's bore, run long enough to clear anything that hangs into it."""
     width, height, radius = outer
-    bore = (cq.Workplane("XZ").rect(width - 2 * CUFF_WALL, height - 2 * CUFF_WALL)
-            .extrude(-(CUFF_LENGTH + 20)).edges("|Y").fillet(radius - CUFF_WALL))
+    bore = _rounded_rect(width - 2 * CUFF_WALL, height - 2 * CUFF_WALL,
+                         radius - CUFF_WALL, length + 20)
     return bore.translate((0, start_y - 10, 0))
+
+
+def mp_cuff_length(arc: Arc, travel: float) -> float:
+    """MP cuff length that reaches the guide's distal end, rounded up to 0.5 mm."""
+    tb = arc.tangent(arc.b)
+    end_y = arc.b[0] + guide_length(travel) * tb[0] + GUIDE_HALF_DEPTH * abs(tb[1])
+    return max(CUFF_LENGTH, math.ceil((end_y - MP_START) * 2) / 2)
 
 
 def _yz_prism(points, width: float) -> cq.Workplane:
@@ -247,14 +301,14 @@ def _oriented_box(origin, tangent, s0, s1, n0, n1, width) -> cq.Workplane:
     return _yz_prism([at(s0, n0), at(s1, n0), at(s1, n1), at(s0, n1)], width)
 
 
-def leaf(arc: Arc) -> cq.Workplane:
+def leaf(arc: Arc, travel: float) -> cq.Workplane:
     """The leaf: a straight root in the anchor, the arc, and a straight tail with T-head."""
     half = LEAF_THICKNESS / 2
     a, b = arc.a, arc.b
     ta, tb = arc.tangent(a), arc.tangent(b)
     na, nb = arc.normal(a), arc.normal(b)
     root = _add(a, ta, -ANCHOR_EXIT / ta[0])
-    tail_length = NECK_LENGTH + TRAVEL_PROXIMAL
+    tail_length = NECK_LENGTH + travel
     tail = _add(b, tb, tail_length)
 
     wp = (cq.Workplane("YZ").moveTo(*_add(root, na, half)).lineTo(*_add(a, na, half)))
@@ -285,41 +339,47 @@ def anchor(arc: Arc) -> cq.Workplane:
     return _yz_prism(pts, LEAF_WIDTH + 2 * ANCHOR_SIDE)
 
 
-def guide(arc: Arc) -> cq.Workplane:
+def guide(arc: Arc, travel: float) -> cq.Workplane:
     """The guide on the MP cuff: neck, pocket, end wall, and a saddle down to the cuff."""
+    length = guide_length(travel)
     b, tb = arc.b, arc.tangent(arc.b)
-    shell = _oriented_box(b, tb, 0.0, GUIDE_LENGTH, -GUIDE_HALF_DEPTH, GUIDE_HALF_DEPTH,
+    shell = _oriented_box(b, tb, 0.0, length, -GUIDE_HALF_DEPTH, GUIDE_HALF_DEPTH,
                           GUIDE_WIDTH)
     normal = (-tb[1], tb[0])
     low0 = _add(b, normal, -GUIDE_HALF_DEPTH)
-    low1 = _add(low0, tb, GUIDE_LENGTH)
+    low1 = _add(low0, tb, length)
     seat = MP_OUTER[1] / 2 - CUFF_WALL / 2
     saddle = _yz_prism([low0, low1, (low1[0], seat), (low0[0], seat)], GUIDE_WIDTH)
 
     gap = LEAF_THICKNESS / 2 + CLEARANCE
     neck = _oriented_box(b, tb, -1.0, NECK_LENGTH + 0.01, -gap, gap,
                          LEAF_WIDTH + 2 * CLEARANCE)
-    pocket_end = GUIDE_LENGTH - GUIDE_WALL
+    pocket_end = length - GUIDE_WALL
     pocket = _oriented_box(b, tb, NECK_LENGTH, pocket_end, -gap, gap,
                            HEAD_WIDTH + 2 * CLEARANCE)
     return shell.union(saddle).cut(neck).cut(pocket)
 
 
-def build(radius: float | None):
-    arc = solve_layout(radius)
-    proximal = cuff(PP_OUTER, 0.0).union(anchor(arc)).union(leaf(arc)).cut(
+def build(radius: float | None, travel: float):
+    arc = solve_layout(radius, travel)
+    proximal = cuff(PP_OUTER, 0.0).union(anchor(arc)).union(leaf(arc, travel)).cut(
         _lumen(PP_OUTER, 0.0))
-    distal = cuff(MP_OUTER, MP_START).union(guide(arc)).cut(_lumen(MP_OUTER, MP_START))
+    mp_length = mp_cuff_length(arc, travel)
+    distal = cuff(MP_OUTER, MP_START, mp_length).union(guide(arc, travel)).cut(
+        _lumen(MP_OUTER, MP_START, mp_length))
     return arc, proximal, distal
 
 
-def summary(arc: Arc, proximal, distal) -> dict:
+def summary(arc: Arc, travel: float, proximal, distal) -> dict:
     a, b = arc.a, arc.b
     apex = max(arc.midpoint()[1], a[1], b[1]) + LEAF_THICKNESS / 2
     interference = proximal.intersect(distal).val().Volume() if proximal.intersect(
         distal).solids().size() else 0.0
     return {
         "radius_mm": "flat" if arc.radius is None else f"{arc.radius:g}",
+        "travel_mm": travel,
+        "guide_length_mm": guide_length(travel),
+        "mp_cuff_length_mm": mp_cuff_length(arc, travel),
         "free_arc_length_mm": round(arc.length(), 2),
         "chord_mm": round(math.dist(a, b), 2),
         "anchor_angle_deg": round(_angle_deg(arc.tangent(a)), 1),
@@ -342,14 +402,15 @@ def main() -> None:
 
     rows = []
     for radius in RADII:
-        arc, proximal, distal = build(radius)
+        travel = TRAVEL_BY_RADIUS[radius]
+        arc, proximal, distal = build(radius, travel)
         tag = "flat" if radius is None else f"R{radius:g}"
         name = f"A6_PIP_SlidingLeaf_{tag}"
         both = cq.Compound.makeCompound([proximal.val(), distal.val()])
         cq.exporters.export(cq.Workplane().add(both), str(args.out / f"{name}.STEP"))
         cq.exporters.export(cq.Workplane().add(both), str(args.out / f"{name}.STL"),
                             tolerance=0.01, angularTolerance=0.1)
-        row = {"file": name, **summary(arc, proximal, distal)}
+        row = {"file": name, **summary(arc, travel, proximal, distal)}
         rows.append(row)
         print(row)
 
