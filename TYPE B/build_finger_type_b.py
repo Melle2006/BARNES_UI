@@ -320,11 +320,15 @@ def lattice_bands(cs, spec):
 # ---------------------------------------------------------------------------
 # JOINT MODULE
 # ---------------------------------------------------------------------------
-def make_joint_module(cs, spec, name, layout, proximal_is_tab=True):
+def make_joint_module(cs, spec, name, layout, proximal_is_tab=True, flexure=None):
     """Module stack along Z, from 0:
-        proximal tab (in socket) | collar | lattice | collar | distal tab (in socket)
+        proximal tab (in socket) | collar | flexure | collar | distal tab (in socket)
     For the MCP the proximal end bolts to the flange instead of a socket, so it
-    is a plain block in the collar profile and has no separate collar."""
+    is a plain block in the collar profile and has no separate collar.
+
+    flexure(cs, spec, z_flex, flex_len, name) -> (solids, info) builds the
+    flex zone; the default is the bow-tie lattice. Whatever it builds must
+    keep clear of |x| < corridor/2 so the tendon and sensor lead pass."""
     e, F, c = spec["end_len"], spec["flex_len"], COLLAR_LEN
     tw, th, tr = tab_dims(cs)
     dw, dh, dr = tab_dims(layout["cs_d"])
@@ -341,12 +345,11 @@ def make_joint_module(cs, spec, name, layout, proximal_is_tab=True):
     parts += [prism(cw, ch, cr, z_end_flex, c), prism(dw, dh, dr, z_end_flex + c, e)]
     total = z_end_flex + c + e
 
-    pal_band, dor_band, x_width = lattice_bands(cs, spec)
-    pal, pal_info = bowtie_lattice(*pal_band, z_flex, F, spec["pal_n"], spec["pal_t"],
-                                   spec["pal_delta"], x_width, f"{name} palmar")
-    dor, dor_info = bowtie_lattice(*dor_band, z_flex, F, spec["dor_n"], spec["dor_t"],
-                                   spec["dor_delta"], x_width, f"{name} dorsal")
-    module = fuse(parts + pal + dor)
+    if flexure is None:
+        flex_parts, info = lattice_flexure(cs, spec, z_flex, F, name)
+    else:
+        flex_parts, info = flexure(cs, spec, z_flex, F, name)
+    module = fuse(parts + flex_parts)
 
     # Channels through the solid ends only; across the flex zone the tendon and
     # sensor lead run in open air down the lattice's central corridor.
@@ -360,7 +363,16 @@ def make_joint_module(cs, spec, name, layout, proximal_is_tab=True):
     cuts += pins(layout["pin_x"], total - e / 2)
     module = module.cut(fuse(cuts)).clean()
 
-    return module, total, z_flex, dict(palmar=pal_info, dorsal=dor_info)
+    return module, total, z_flex, info
+
+
+def lattice_flexure(cs, spec, z_flex, F, name):
+    pal_band, dor_band, x_width = lattice_bands(cs, spec)
+    pal, pal_info = bowtie_lattice(*pal_band, z_flex, F, spec["pal_n"], spec["pal_t"],
+                                   spec["pal_delta"], x_width, f"{name} palmar")
+    dor, dor_info = bowtie_lattice(*dor_band, z_flex, F, spec["dor_n"], spec["dor_t"],
+                                   spec["dor_delta"], x_width, f"{name} dorsal")
+    return pal + dor, dict(palmar=pal_info, dorsal=dor_info)
 
 
 # ---------------------------------------------------------------------------
@@ -453,7 +465,7 @@ def variant_specs(t_scale, crossings):
     return out
 
 
-def build_finger(t_scale=1.0, crossings=None, verbose=True):
+def build_finger(t_scale=1.0, crossings=None, verbose=True, flexure=None):
     mcp, pip, dip = variant_specs(t_scale, crossings)
     c = COLLAR_LEN
     L1, L2, L3 = L_PHAL1 - 2 * c, L_PHAL2 - 2 * c, L_PHAL3 - c
@@ -462,7 +474,8 @@ def build_finger(t_scale=1.0, crossings=None, verbose=True):
     lay_p = joint_layout(CS_PIP, pip, section_at(CS_PIP, CS_DIP, L2, floor(pip)))
     lay_d = joint_layout(CS_DIP, dip, section_at(CS_DIP, CS_TIP, L3, floor(dip)))
 
-    mcp_mod, mcp_len, _, mcp_lat = make_joint_module(CS_MCP, mcp, "MCP", lay_m, proximal_is_tab=False)
+    mcp_mod, mcp_len, _, mcp_lat = make_joint_module(CS_MCP, mcp, "MCP", lay_m, proximal_is_tab=False,
+                                                     flexure=flexure)
     flange = _box(-FLANGE["w"] / 2, FLANGE["w"] / 2, -FLANGE["h"] / 2, FLANGE["h"] / 2, -FLANGE["t"], 0)
     flange = flange.cut(fuse(
         [cyl(FLANGE["hole_d"] / 2, FLANGE["t"] + 2, (sx * FLANGE["hole_spacing"] / 2, 0, -FLANGE["t"] - 1), (0, 0, 1))
@@ -471,8 +484,8 @@ def build_finger(t_scale=1.0, crossings=None, verbose=True):
            cyl(CHAN_SENSOR_D / 2, 10, (0, lay_m["sensor_y"], -6), (0, 0, 1))]))
     mcp_part = fuse([flange, mcp_mod])
 
-    pip_mod, pip_len, _, pip_lat = make_joint_module(CS_PIP, pip, "PIP", lay_p)
-    dip_mod, dip_len, _, dip_lat = make_joint_module(CS_DIP, dip, "DIP", lay_d)
+    pip_mod, pip_len, _, pip_lat = make_joint_module(CS_PIP, pip, "PIP", lay_p, flexure=flexure)
+    dip_mod, dip_len, _, dip_lat = make_joint_module(CS_DIP, dip, "DIP", lay_d, flexure=flexure)
 
     J = lambda s, l: dict(spec=s, layout=l)
     phal1 = make_phalanx(L1, CS_MCP, CS_PIP, J(mcp, lay_m), J(pip, lay_p), HARDSTOP_MCP)
@@ -497,7 +510,7 @@ def build_finger(t_scale=1.0, crossings=None, verbose=True):
     report = dict(specs=dict(MCP=mcp, PIP=pip, DIP=dip),
                   layouts=dict(MCP=lay_m, PIP=lay_p, DIP=lay_d),
                   lattice=dict(MCP=mcp_lat, PIP=pip_lat, DIP=dip_lat))
-    if verbose:
+    if verbose and flexure is None:
         for j in ("MCP", "PIP", "DIP"):
             lat, lay = report["lattice"][j], report["layouts"][j]
             print(f"  [{j}] palmar {lat['palmar']['n']}x t={lat['palmar']['t']:.3f} "

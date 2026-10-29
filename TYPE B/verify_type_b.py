@@ -54,8 +54,9 @@ def dist(a, b):
     return a.distance(b)
 
 
-def verify(name, cfg):
-    parts, z, rep = B.build_finger(**cfg, verbose=False)
+def verify(name, cfg, built=None):
+    """cfg is passed to build_finger; built=(parts, z, report) skips the build."""
+    parts, z, rep = built or B.build_finger(**cfg, verbose=False)
     placed = {n: p.translate(cq.Vector(0, 0, z[n])) for n, p in parts.items()}
     everything = B.fuse(list(placed.values()))
     specs, lays = rep["specs"], rep["layouts"]
@@ -98,6 +99,13 @@ def verify(name, cfg):
     for j, mod, prox, dist_ph in JOINT_PARTS:
         spec, lay = specs[j], lays[j]
         e = spec["end_len"]
+        # the flex zone stays inside the collar outline
+        cs_j = {"MCP": B.CS_MCP, "PIP": B.CS_PIP, "DIP": B.CS_DIP}[j]
+        zf = z[mod] + e + (0 if prox is None else c)
+        cw, ch, cr = B.collar_dims(cs_j)
+        slab = B._box(-30, 30, -30, 30, zf, zf + spec["flex_len"])
+        v = placed[mod].intersect(slab).cut(B.prism(cw, ch, cr, zf - 1, spec["flex_len"] + 2)).Volume()
+        rec(f"{j} flex zone inside collar outline", v, f"<= {TOL}", v <= TOL, "mm^3")
         cs = {"MCP": B.CS_MCP, "PIP": B.CS_PIP, "DIP": B.CS_DIP}[j]
         cs_d = lay["cs_d"]
         ends = []
