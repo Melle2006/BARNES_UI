@@ -373,6 +373,7 @@ Full details, including the data model and the fidelity ladder:
 | [07-risk-register.md](docs/07-risk-register.md) | What could make the results wrong, and what is done about each |
 | [08-calculix-installation.md](docs/08-calculix-installation.md) | What was installed, why, and the four defects checking it exposed |
 | [09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md) | Which advanced solver capabilities work here, measured rather than assumed |
+| [10-tendon-pivot-analysis.md](docs/10-tendon-pivot-analysis.md) | Where to anchor the flexor tendon at MCP, PIP and DIP, and why maximising torque alone always picks the upper bound |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---
