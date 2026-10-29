@@ -64,10 +64,14 @@ settings and produced the same mesh; identical increments and cutbacks mean Calc
 the same path through it. The only difference is wall clock, and that is the machine being
 busy rather than anything about the solve.
 
-The run is archived at `%LOCALAPPDATA%\Temp\barnes_ui_runs\c284be4e014d` with its
-`input.inp`, `results.dat`, `results.sta`, `solver.log` and a `manifest.json`. Note that
-temp directories do not survive indefinitely — copy it somewhere permanent if the evidence
-matters.
+The evidence is committed at **`results/a3_gui_run/`** — `summary.json` with the inputs,
+the result and the comparison against the script, plus the runner's `manifest.json` and
+CalculiX's `results.dat`, `results.sta` and `results.cvg`. Three files from the original
+archive are deliberately not committed and `summary.json` says so: `input.inp` (5.0 MB,
+regenerated from the STEP and the stated inputs), `results.frd` (7.4 MB of field output,
+not needed for a stiffness) and `solver.log` (2.6 MB; the increments and cutbacks above
+were parsed from it with `core.fea.results.parse_convergence`). The full archive was at
+`%LOCALAPPDATA%\Temp\barnes_ui_runs\c284be4e014d`, which will not survive indefinitely.
 
 One thing the manifest records that the panel does not surface: the mesh quality block
 reports **2079 poor elements** and a **maximum edge ratio of 1100**, on a mesh that
