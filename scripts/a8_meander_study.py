@@ -117,7 +117,11 @@ KNUCKLE_RADIUS_MM = 3.4
 KNUCKLE_WALL_MM = 0.6
 KNUCKLE_HALF_LENGTH_MM = 7.0
 KNUCKLE_ELEMENT_MM = 0.6
-CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
+#: Surface-to-surface. Node-to-surface on these 10-node tetrahedra chattered as soon
+#: as the strip met the knuckle (0 to 25 contact elements from one iteration to the
+#: next) and stalled at 7 deg on the 2-turn export and 18 deg on the 3-turn; face
+#: to face, both ran through at one degree per increment with one cutback.
+CONTACT_FORMULATION = ContactFormulation.SURFACE_TO_SURFACE
 
 #: Full flexion analysed, degrees. docs/06 gives 0 to 100 as the PIP placeholder;
 #: 90 is reported as the design point and the curve runs to the maximum.
@@ -591,12 +595,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--element-size", type=float, default=ELEMENT_SIZE_MM)
     parser.add_argument("--timeout", type=float, default=7200.0)
     parser.add_argument("--archive", type=Path, default=None)
-    parser.add_argument("--surface-to-surface", action="store_true")
+    parser.add_argument("--node-to-surface", action="store_true",
+                        help="Use the node-to-surface formulation instead (comparison).")
     args = parser.parse_args(argv)
 
     global CONTACT_FORMULATION
-    if args.surface_to_surface:
-        CONTACT_FORMULATION = ContactFormulation.SURFACE_TO_SURFACE
+    if args.node_to_surface:
+        CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
     runs_dir = args.out / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
     archive = args.archive or Path("/tmp") / "a8_runs"
@@ -621,6 +626,14 @@ def main(argv: list[str] | None = None) -> int:
         if target.exists():
             print(f"skip  {run['label']} (done)")
             continue
+        # Several workers can share one run list: each run is claimed by creating
+        # its lock file exclusively, and a claimed run is left to its claimant.
+        claim = runs_dir / f"{run['label']}.claim"
+        try:
+            claim.open("x").close()
+        except FileExistsError:
+            print(f"skip  {run['label']} (claimed)")
+            continue
         if run["kind"] == "export":
             shape = strip_from_export(run["step"])
             geometry = None
@@ -644,6 +657,7 @@ def main(argv: list[str] | None = None) -> int:
         if geometry:
             record["geometry"] = geometry
         target.write_text(json.dumps(record, indent=2), encoding="utf-8")
+        claim.unlink(missing_ok=True)
         print(f"done  {run['label']}: reached {record.get('reached_deg')} deg, "
               f"T90 {record.get('torque_n_mm', {}).get('90')}", flush=True)
     return 0
