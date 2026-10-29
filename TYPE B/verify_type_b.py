@@ -178,8 +178,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("variants", nargs="*")
     ap.add_argument("--save-assembly", action="store_true",
-                    help="write <variant>/finger_assembly.step for each variant")
-    ap.add_argument("--report", default=None, help="CSV report path (default: verification_report.csv here)")
+                    help="write B_lattice/<variant>/finger_assembly.step for each variant")
+    ap.add_argument("--report", default=None, help="CSV report path (default: B_lattice/verification_report.csv)")
     args = ap.parse_args(argv)
     here = os.path.dirname(os.path.abspath(__file__))
     names = args.variants or list(B.VARIANTS)
@@ -192,9 +192,9 @@ def main(argv=None):
             print(f"  FAIL {r['check']}: {r['value']} (limit {r['limit']})")
         print(f"  {len(rows) - len(fails)}/{len(rows)} checks passed")
         if args.save_assembly:
-            B.export(parts, z, os.path.join(here, n), (), stl=False, assembly=True)
+            B.export(parts, z, os.path.join(here, "B_lattice", n), (), stl=False, assembly=True)
         all_rows += rows
-    path = args.report or os.path.join(here, "verification_report.csv")
+    path = args.report or os.path.join(here, "B_lattice", "verification_report.csv")
     with open(path, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(all_rows[0]))
         w.writeheader()

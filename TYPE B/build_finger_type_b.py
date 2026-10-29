@@ -603,7 +603,11 @@ def summary_rows(name, cfg, parts, report, problems):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("variants", nargs="*", help=f"variant names (default: all). Known: {', '.join(VARIANTS)}")
-    ap.add_argument("--out", default=os.path.dirname(os.path.abspath(__file__)))
+    here = os.path.dirname(os.path.abspath(__file__))
+    ap.add_argument("--out", default=os.path.join(here, "B_lattice"),
+                    help="where variant folders go (default: B_lattice/ next to this script)")
+    ap.add_argument("--phalanges-out", default=os.path.join(here, "common_phalanges"),
+                    help="where the shared phalanges go (default: common_phalanges/)")
     ap.add_argument("--no-stl", action="store_true")
     ap.add_argument("--no-assembly", action="store_true")
     ap.add_argument("--no-check", action="store_true")
@@ -636,7 +640,7 @@ def main(argv=None):
         if not common_done:
             # Phalanges depend only on the cross-sections, tabs and channels,
             # never on the lattice, so they are the same for every variant.
-            export(parts, z, os.path.join(args.out, "common_phalanges"), PHALANGES,
+            export(parts, z, args.phalanges_out, PHALANGES,
                    stl=not args.no_stl, assembly=False)
             common_done = True
         rows += summary_rows(name, cfg, parts, report, problems)

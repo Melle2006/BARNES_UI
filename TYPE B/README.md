@@ -1,18 +1,155 @@
-# TYPE B — TPU lattice-flexure finger
+# TYPE B: TPU itself as the joint
 
-> **Other Type B flexures:** the dual-leaf (B3), multi-leaf (B6), crossed-strip
-> (B5) and hourglass (B1) families, with the B7 taper option, use the same
-> finger and are described in [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md). This
-> page covers the bow-tie lattice designs.
+In every Type B design, the joint is a TPU module printed as a flexure. It
+plugs into PLA phalanges, and nothing else forms the joint. This folder holds
+five Type B flexure designs, **55 variants** in all. Every variant has its
+three joint modules (STEP and STL) and a full finger assembly (`finger_assembly.step`).
 
-Type B joints are TPU modules whose flex zone is a re-entrant ("bow-tie" or
-criss-cross) lattice. Each joint has a compliant palmar lattice and a stiffer
-dorsal lattice, built in four columns around a clear central corridor for the
-tendon. The modules plug into PLA phalanges.
+![one PIP module from each family](previews/04_flexure_families_PIP.png)
 
-Everything here comes from `build_finger_type_b.py`, a corrected version of
-`build_finger_one_more_lattice_level.py`. Run it again to regenerate all the
-files:
+## Folder layout
+
+| Folder | Design | Variants | Details |
+|---|---|---|---|
+| [`B_lattice/`](B_lattice/) | Bow-tie (re-entrant) lattice, your original design with its errors corrected | 13 | [B_lattice/README.md](B_lattice/README.md) |
+| `B_lattice/original_reference/` | Your original script and STEP files, unchanged, for reference only | n/a | [README](B_lattice/original_reference/README.md) |
+| [`B3_dual_leaf/`](B3_dual_leaf/) | B3 dual leaf, plus B7 taper variants | 12 | [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md#b3-dual-leaf-the-agreed-first-test) |
+| [`B6_multi_leaf/`](B6_multi_leaf/) | B6 side-by-side multi-leaf, plus B7 taper variants | 10 | [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md#b6-multi-leaf-side-by-side) |
+| [`B5_crossed_strip/`](B5_crossed_strip/) | B5 crossed strips (cross-axis pivot) | 12 | [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md#b5-crossed-strips-cross-axis-pivot) |
+| [`B1_hourglass/`](B1_hourglass/) | B1 elliptical-notch hourglass (control) | 8 | [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md#b1-hourglass-control) |
+| `common_phalanges/` | The three PLA phalanges, shared by every variant | n/a | |
+| `previews/` | Rendered images | n/a | |
+
+Each design folder has a `variants_summary.csv`, with every dimension of
+every joint in every variant, and a `verification_report.csv`.
+
+The scripts are:
+
+* `build_finger_type_b.py`: the shared finger and the lattice.
+* `build_flexure_families.py`: B1, B3, B5 and B6.
+* `verify_type_b.py`: the geometric checks.
+
+## What every variant has in common
+
+Only the TPU between the two collars of each joint changes from variant to
+variant. Everything else is identical, so test results compare the flexures
+alone:
+
+* **Envelope.** Finger cross-sections are MCP 16 × 14, PIP 14 × 12 and DIP
+  12 × 10 mm, tapering to 11 × 9 mm at the tip. Overall length is 95.7 mm.
+* **Flex-zone length.** MCP 10.25 mm, PIP 7.55 mm, DIP 7.3 mm.
+* **Phalanges.** These are the files in `common_phalanges/`. They have:
+  * 1.2 mm socket walls
+  * palmar hard-stop nubs
+  * DIP coupling-wire bosses
+  * a fingertip sensor recess and tendon anchor
+* **Joint-module ends.** Each has a 4 mm tab in its socket with 0.3 mm
+  clearance, two Ø2 retention pins, and a 0.8 mm collar.
+* **MCP flange.** 28 × 14 × 4 mm, with M3 holes at ±11 mm.
+* **Channels.** A Ø3 tendon channel and a Ø1.5 sensor channel. The tendon
+  moment arms are 3.06 / 1.93 / 1.06 mm (MCP / PIP / DIP). Every flexure
+  leaves a clear central corridor so both run through the joint in open air.
+
+Every one of the 55 variants passes all 38 geometric checks in its
+`verification_report.csv`. Nothing about how the flexures bend, how stiff
+they are or how they fail has been tested yet. That needs FEA or a print.
+
+## What changes in each design's variants
+
+The thickness values below are the **PIP** values. In the B1, B3, B5 and B6
+families, the MCP is 1.27× thicker and the DIP 0.82× thinner, the same ratios
+as the original lattice. In B-lattice the scale applies to each joint's own
+strut thickness.
+
+### B-lattice: bow-tie lattice (13 variants)
+
+| Property | Levels | What it does |
+|---|---|---|
+| Strut thickness, as a scale on your original struts | ×0.90, ×1.00, ×1.10, ×1.20 | Bending stiffness goes with t³, so roughly 0.73× to 1.73×. Thicker struts also straighten the dorsal cells. |
+| Criss-cross cells per lattice (palmar / dorsal) | 2 / 1, 3 / 2, 4 / 3 | More cells means shorter, more re-entrant cells (palmar about 35–68°, dorsal about 6–38°). |
+| `B00_baseline` | Your original counts: MCP 3/2, PIP 2/2, DIP 3/2, at ×1.00 | The corrected version of your design. |
+
+Fixed across all lattice variants:
+
+* the four lattice columns
+* the palmar and dorsal band positions
+* the bridge thickness
+* the 3.8 mm tendon corridor
+
+Baseline strut thickness, palmar / dorsal: MCP 0.70 / 1.40, PIP 0.55 / 1.10,
+DIP 0.45 / 0.90 mm.
+
+Naming: `B_T{scale×100}_X{palmar cells}`, e.g. `B_T110_X3`.
+
+### B3: dual leaf (12 variants)
+
+| Property | Levels | What it does |
+|---|---|---|
+| Leaf thickness (PIP) | 1.0, 1.25, 1.5, 2.0 mm | Stiffness ∝ t³ |
+| Leaf width (each leaf) | 2.0, 3.0 mm | Stiffness ∝ width. Wider leaves also add lateral and torsional stability. |
+| Taper, B7 (root ÷ middle thickness) | 1.0 (uniform), plus 1.5 and 2.0 at t = 1.0 and 1.5 mm with w = 3.0 mm | Thicker roots lower the peak strain at the clamped ends, but the joint gets stiffer. |
+
+Fixed: two leaves, one each side of the tendon at the outer edge of the joint,
+on the centre line, running the full flex length.
+
+Naming: `B3_t{t×100}_w{w×10}`, plus `_taper{r×10}`.
+
+### B6: multi-leaf, side by side (10 variants)
+
+| Property | Levels | What it does |
+|---|---|---|
+| Number of leaves | 4 (2 per side, each 1.0 mm wide) or 6 (3 per side, each 0.67 mm wide) | Splits the same material into narrower leaves. This changes twisting and sideways stiffness, not bending. |
+| Leaf thickness (PIP) | 1.0, 1.25, 1.5, 2.0 mm | Stiffness ∝ t³ |
+| Taper, B7 | 1.0, plus 1.5 and 2.0 on `B6_n4_t150` | As for B3 |
+
+Fixed: 2.0 mm of total leaf width per side, with 0.6 mm gaps between leaves.
+This gives each variant the same material and estimated bending stiffness as
+its `B3_t###_w20` twin, for a fair comparison.
+
+Naming: `B6_n{leaves}_t{t×100}`, plus `_taper{r×10}`.
+
+### B5: crossed strips (12 variants)
+
+| Property | Levels | What it does |
+|---|---|---|
+| Strip thickness (PIP, measured across the strip) | 1.0, 1.25, 1.5, 2.0 mm | Stiffness ∝ t³ |
+| Crossing angle between the strips | 45°, 60°, 75° | A wider angle gives longer strips (PIP 8.2 / 8.7 / 9.5 mm), which bend more easily but are a little less stable under compression. The crossing fixes the centre of rotation at mid-joint. |
+
+Fixed: four lanes across the width (A | B ‖ B | A), so the two strip directions
+cross in side view but sit 0.6 mm apart and never fuse. The lanes fill the
+available width: about 2.45 mm at the MCP, 1.95 mm at the PIP and 1.3 to
+1.45 mm at the DIP. At 90° the strips would run into the collar corners, so
+90° wasn't built.
+
+Naming: `B5_t{t×100}_a{angle}`.
+
+### B1: hourglass, the control (8 variants)
+
+| Property | Levels | What it does |
+|---|---|---|
+| Throat thickness (PIP) | 1.0, 1.25, 1.5, 2.0 mm | Stiffness rises steeply with the throat thickness |
+| Notch length | the full flex zone (100 %) or the middle 50 % | A shorter notch concentrates the bending, giving a sharper centre of rotation but higher strain. It is about 2× stiffer. |
+
+Fixed: two webs, each 3.0 mm wide, one each side of the tendon. Each web is
+as tall as the collar allows (MCP 10.9, PIP 8.9, DIP 6.9 mm) and has an
+elliptical notch cut from both faces.
+
+Naming: `B1_t{t×100}_notch{%}`.
+
+### Estimated stiffness ranges
+
+Simple beam-theory estimates at E = 12 MPa, for ranking only. Per-variant
+values are in each folder's CSV and in [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md).
+
+| Design | PIP joint, N·mm/rad (softest to stiffest variant) |
+|---|---|
+| B3 | 0.5 to 6.4 |
+| B6 | 0.5 to 4.2 |
+| B5 | 0.8 to 7.6 |
+| B1 | 2.8 to 29.8 |
+| B-lattice | not estimated. The lattice needs FEA. |
+
+## Regenerating
 
 ```bash
 pip install cadquery
@@ -22,237 +159,10 @@ pip install cadquery
 python "TYPE B/build_finger_type_b.py"
 ```
 
-You can also build named variants only, skip the STLs or the assembly, or write
-the output somewhere else:
-
 ```bash
-python "TYPE B/build_finger_type_b.py" B_T110_X3 --no-stl --out /tmp/typeb
+python "TYPE B/build_flexure_families.py"
 ```
-
-Each build checks that every part is one valid solid, that adjacent parts in
-the assembly don't overlap, and that both retention pins pass clear through
-tab and socket at every joint.
-
-`verify_type_b.py` does a fuller geometric check of every variant and writes
-the results to `verification_report.csv`. All variants pass all 35 checks:
 
 ```bash
 python "TYPE B/verify_type_b.py"
 ```
-
-It checks the following, on the assembled finger in its straight pose:
-
-* **Tendon and sensor-lead routing.** A rod 0.1 mm under the channel diameter
-  is run along the whole path, from the flange to the fingertip anchor,
-  including the bends in the phalanges and the open-air run down the
-  lattice's central corridor. It must not touch anything.
-* **Fit.** Tab-to-socket radial clearance is 0.3 mm. Every socket wall is
-  1.2 mm.
-* **Material in the TPU tabs.** At least 0.8 mm around each channel, and at
-  least 0.3 mm between each pin hole and the tendon channel or the side wall.
-* **Holes.** The retention pins, flange screw holes, M3 head clearance on the
-  flange, anchor-boss holes and fingertip tendon anchor hole are all clear.
-* **Feature side.** Every nub and boss is on the palmar side.
-
-It does not check how the lattice flexes, joint stiffness, or whether the hard
-stops engage at the intended angles. Those need FEA or a test print.
-
-## Folder layout
-
-| Path | Contents |
-|---|---|
-| `build_finger_type_b.py` | The generator: every parameter, variant definition and check |
-| `verify_type_b.py` / `verification_report.csv` | The geometric verification and its results |
-| `previews/` | Rendered images of the assembled finger, the parts, the variant grid and the other flexure families |
-| `build_flexure_families.py`, `B1_hourglass/`, `B3_dual_leaf/`, `B5_crossed_strip/`, `B6_multi_leaf/` | The other Type B flexure families, see [FLEXURE_FAMILIES.md](FLEXURE_FAMILIES.md) |
-| `common_phalanges/` | `02_Phalanx1`, `04_Phalanx2` and `06_Phalanx3` as STEP and STL. The phalanges don't depend on the lattice, so the same files are used for every variant. |
-| `B00_baseline/` | Your original lattice parameters with the errors corrected |
-| `B_T###_X#/` | One folder per variant |
-
-Every variant folder holds `01_MCP_module_with_flange`, `03_PIP_module` and
-`05_DIP_module` as STEP and STL, plus `finger_assembly.step`. The assembly is
-the whole finger, modules and phalanges, in position.
-| `variants_summary.csv` | Cell count, strut thickness, re-entrant angle, cell height, tendon moment arm and module volume for each joint of each variant |
-
-## Variants
-
-Two parameters are varied over a grid:
-
-* **Flexure thickness, `T`.** The in-plane strut thickness, scaled by 0.90,
-  1.00, 1.10 or 1.20 (`T090` … `T120`). Every strut is scaled, so the
-  palmar:dorsal ratio of 1:2 and the MCP > PIP > DIP grading are both kept.
-  Strut bending stiffness goes with t³, so this range spans about 0.73× to
-  1.73× the baseline.
-* **Criss-crosses, `X`.** The number of bow-tie cells in each palmar lattice:
-  2, 3 or 4. Each dorsal lattice gets one fewer, as in the original MCP and
-  DIP designs.
-
-`B00_baseline` keeps your original per-joint cell counts (MCP 3/2, PIP 2/2,
-DIP 3/2) at T = 1.00. `B_T100_X3` differs from it only at the PIP.
-
-| Variant | Joint | Palmar: cells × strut (angle) | Dorsal: cells × strut (angle) | Module volume (mm³) |
-|---|---|---|---|---|
-| `B00_baseline` | MCP | 3 × 0.7 mm (54.2°) | 2 × 1.4 mm (23.5°) | 3054.4 |
-| `B00_baseline` | PIP | 2 × 0.55 mm (45.2°) | 2 × 1.1 mm (22.8°) | 860.7 |
-| `B00_baseline` | DIP | 3 × 0.45 mm (50.7°) | 2 × 0.9 mm (18.5°) | 539.8 |
-| `B_T090_X2` | MCP | 2 × 0.63 mm (42.1°) | 1 × 1.26 mm (13.3°) | 3006.8 |
-| `B_T090_X2` | PIP | 2 × 0.495 mm (46.2°) | 1 × 0.99 mm (12.9°) | 837.8 |
-| `B_T090_X2` | DIP | 2 × 0.405 mm (38.3°) | 1 × 0.81 mm (10.5°) | 517.8 |
-| `B_T090_X3` | MCP | 3 × 0.63 mm (55.2°) | 2 × 1.26 mm (26.5°) | 3039.7 |
-| `B_T090_X3` | PIP | 3 × 0.495 mm (59.3°) | 2 × 0.99 mm (26.1°) | 857.6 |
-| `B_T090_X3` | DIP | 3 × 0.405 mm (51.7°) | 2 × 0.81 mm (21.5°) | 529.2 |
-| `B_T090_X4` | MCP | 4 × 0.63 mm (63.9°) | 3 × 1.26 mm (38.4°) | 3077.3 |
-| `B_T090_X4` | PIP | 4 × 0.495 mm (67.7°) | 3 × 0.99 mm (38.4°) | 879.3 |
-| `B_T090_X4` | DIP | 4 × 0.405 mm (61.2°) | 3 × 0.81 mm (32.3°) | 542.1 |
-| `B_T100_X2` | MCP | 2 × 0.7 mm (41.1°) | 1 × 1.4 mm (11.6°) | 3023.1 |
-| `B_T100_X2` | PIP | 2 × 0.55 mm (45.2°) | 1 × 1.1 mm (11.1°) | 853.9 |
-| `B_T100_X2` | DIP | 2 × 0.45 mm (37.3°) | 1 × 0.9 mm (8.9°) | 528.5 |
-| `B_T100_X3` | MCP | 3 × 0.7 mm (54.2°) | 2 × 1.4 mm (23.5°) | 3054.4 |
-| `B_T100_X3` | PIP | 3 × 0.55 mm (58.4°) | 2 × 1.1 mm (22.8°) | 873.6 |
-| `B_T100_X3` | DIP | 3 × 0.45 mm (50.7°) | 2 × 0.9 mm (18.5°) | 539.8 |
-| `B_T100_X4` | MCP | 4 × 0.7 mm (63.1°) | 3 × 1.4 mm (34.6°) | 3090.0 |
-| `B_T100_X4` | PIP | 4 × 0.55 mm (67.0°) | 3 × 1.1 mm (34.1°) | 894.9 |
-| `B_T100_X4` | DIP | 4 × 0.45 mm (60.3°) | 3 × 0.9 mm (28.2°) | 552.5 |
-| `B_T110_X2` | MCP | 2 × 0.77 mm (40.1°) | 1 × 1.54 mm (9.9°) | 3039.3 |
-| `B_T110_X2` | PIP | 2 × 0.605 mm (44.2°) | 1 × 1.21 mm (9.2°) | 870.4 |
-| `B_T110_X2` | DIP | 2 × 0.495 mm (36.2°) | 1 × 0.99 mm (7.4°) | 540.0 |
-| `B_T110_X3` | MCP | 3 × 0.77 mm (53.2°) | 2 × 1.54 mm (20.3°) | 3068.7 |
-| `B_T110_X3` | PIP | 3 × 0.605 mm (57.5°) | 2 × 1.21 mm (19.2°) | 889.4 |
-| `B_T110_X3` | DIP | 3 × 0.495 mm (49.6°) | 2 × 0.99 mm (15.4°) | 551.0 |
-| `B_T110_X4` | MCP | 4 × 0.77 mm (62.2°) | 3 × 1.54 mm (30.5°) | 3101.8 |
-| `B_T110_X4` | PIP | 4 × 0.605 mm (66.2°) | 3 × 1.21 mm (29.4°) | 909.9 |
-| `B_T110_X4` | DIP | 4 × 0.495 mm (59.3°) | 3 × 0.99 mm (23.8°) | 563.2 |
-| `B_T120_X2` | MCP | 2 × 0.84 mm (39.0°) | 1 × 1.68 mm (8.2°) | 3059.7 |
-| `B_T120_X2` | PIP | 2 × 0.66 mm (43.1°) | 1 × 1.32 mm (7.4°) | 879.5 |
-| `B_T120_X2` | DIP | 2 × 0.54 mm (35.1°) | 1 × 1.08 mm (5.8°) | 552.3 |
-| `B_T120_X3` | MCP | 3 × 0.84 mm (52.2°) | 2 × 1.68 mm (17.0°) | 3087.8 |
-| `B_T120_X3` | PIP | 3 × 0.66 mm (56.5°) | 2 × 1.32 mm (15.5°) | 897.2 |
-| `B_T120_X3` | DIP | 3 × 0.54 mm (48.4°) | 2 × 1.08 mm (12.2°) | 562.8 |
-| `B_T120_X4` | MCP | 4 × 0.84 mm (61.3°) | 3 × 1.68 mm (26.0°) | 3119.1 |
-| `B_T120_X4` | PIP | 4 × 0.66 mm (65.4°) | 3 × 1.32 mm (24.2°) | 915.8 |
-| `B_T120_X4` | DIP | 4 × 0.54 mm (58.2°) | 3 × 1.08 mm (19.2°) | 574.2 |
-
-The angles are measured at the strut centrelines. The original script measured
-the band envelope instead, so its figures were larger.
-
-Why the grid stops where it does:
-
-* Below about 0.90, the DIP palmar strut would be under 0.4 mm, which is
-  thinner than a 0.4 mm nozzle can print.
-* Above about 1.20, the dorsal DIP and PIP bands are too narrow to stay
-  re-entrant. The struts would straighten out to under 0.3 mm of lateral
-  travel.
-
-The script refuses to build a variant that breaks either limit and says why.
-
-## Errors corrected
-
-These were found by running the original script and measuring the parts it
-exported, which are identical to the reference STEPs you shared.
-
-1. **The phalanx sockets cut away the whole end of each phalanx.** Each socket
-   was cut with the phalanx's own outer profile (`rounded_profile(w0, h0)`),
-   so nothing was left to form a wall. Phalanx 1 started at z = 4 instead of
-   z = 0 and ended in a 0.5 mm² knife edge, so the tabs had nothing to sit in.
-   The tab profile also didn't match the socket (r = 2 against r ≈ 5.9), so it
-   wouldn't have fitted even with a wall.
-   *Fix:* the socket is now the outer profile offset inward by a uniform
-   1.2 mm PLA wall. The tab is the socket less 0.3 mm clearance, with a
-   matching corner radius. There is 0.3 mm of axial clearance at the floor.
-2. **Every "palmar" feature was on the dorsal side.** `Workplane("XZ")` has
-   its normal along −Y, so `offset=-h/2` puts the plane at +h/2. This affected
-   the hard-stop nubs, both DIP coupling-wire anchor bosses and the fingertip
-   sensor recess.
-   *Fix:* these features are now built directly at −Y.
-3. **Features didn't attach to the body.** The phalanges taper, so their
-   surfaces fall away from a nub placed at the end-section height. Phalanx 1
-   and Phalanx 2 each exported as two separate solids, with the nub floating.
-   The anchor bosses were extruded into the body, so they added nothing, and
-   their holes were drilled into empty space on the other side.
-   *Fix:* every added feature now starts 0.5 mm inside the local surface. The
-   anchor hole goes through the boss and 0.5 mm into the body.
-4. **The retention pin holes didn't line up.** The MCP tab pin was at 1.5 mm
-   but its socket pin was at 2.5 mm. The PIP pair was at 1.5 and 0.65 mm, and
-   the DIP pair at 1.5 and −0.5 mm. The PIP and DIP tabs (2.15 and 1.0 mm
-   long) were too short for a Ø2 pin: the PIP hole broke out of its tab, and
-   the DIP hole was mostly outside its tab altogether.
-   *Fix:* all tabs are now 4.0 mm long, with the pins at mid-tab. The tabs and
-   sockets take their pin positions from one shared joint layout. Tabs sit
-   inside the sockets, so this doesn't change the visible joint.
-5. **The X-direction pin couldn't share a tab with the channels.** It crossed
-   at Y = 0 between the tendon and sensor channels, which only worked because
-   the tab was oversized. Once the tab is sized for a real socket, there is no
-   room for it (at the DIP, the tendon channel and the pin would intersect).
-   *Fix:* there are now two Ø2 pins along Y at X = ±x, centred between the
-   tendon channel and the tab's side wall.
-6. **The tendon channel jumped at every joint.** The modules cut it at
-   −pulley_r (−5.0 and −3.5 mm), but the phalanges cut it at a fixed −3.0 mm.
-   In the MCP block, a channel at −5 left a 0.2 mm wall.
-   *Fix:* the channels are defined once per joint. Each phalanx runs straight
-   through its sockets and changes offset with smooth bends in between. The
-   offset is capped so at least 0.8 mm of TPU surrounds the channel in the
-   tab, giving **effective moment arms of 3.06 / 1.93 / 1.06 mm (MCP / PIP / DIP)
-   instead of 5.0 / 3.5 / 3.0**. This is the main functional consequence of
-   giving the sockets real walls. A thinner tendon channel would let the arms
-   grow (`CHAN_TENDON_D`; 3.0 mm is large for a Dyneema tendon).
-7. **The lattice geometry had three defects.**
-   * The strut centrelines ended on the band edge, so the struts stuck out of
-     their band by t/2.
-   * The outer columns overhung the joint block's rounded corners by up to
-     0.3 mm.
-   * The square-cut strut ends left a V-notch at every joint.
-
-   *Fix:*
-   * The strut nodes are inset by t/2. The inset comes out of the clear gap at
-     the waist rather than the strut's lateral travel, so the re-entrant
-     angles stay close to the original.
-   * Every node gets a round boss, so the joints are filleted rather than
-     notched.
-   * The bands are clipped to the collar outline less 0.2 mm.
-8. **The flange screw holes were half covered by the MCP block.** The Ø3 holes
-   at ±7 mm sat under a block reaching ±7.7 mm, so screws couldn't pass.
-   *Fix:* the flange is now 28 mm wide with holes at ±11 mm. An M3 head
-   (Ø5.5) then clears the block, which the verification confirms. A first
-   attempt at ±10 mm still clipped the block by 0.45 mm.
-9. **The fingertip fillet always failed** (`BRep_API: command not done`), so
-   the tip was flat.
-   *Fix:* the tip is filleted on the plain loft before any cuts (r = 4 mm).
-10. **The fingertip tendon channel ran past its anchor.** It went to 1 mm short
-    of the tip, past the anchor hole. The anchor hole only lined up because it
-    shared the old fixed −3 mm offset.
-    *Fix:* the channel now ends at the anchor hole, which sits on the DIP
-    tendon line.
-11. **The proximal sockets thinned with the taper.** A phalanx is thinnest at
-    the floor of its proximal socket, so a socket sized to its end face left a
-    0.92 mm wall at the proximal end of Phalanx 2.
-    *Fix:* each proximal socket is sized to the phalanx section at the socket
-    floor, and so is the distal tab of the joint module that fits it. Every
-    wall now measures 1.2 mm.
-12. **Dead code removed.** `socket_cut` and `add_hardstop_nub` were never
-    called, and the latter was also on the wrong side. The `fillet` argument
-    of `tapered_box` was never used.
-
-### Changes made to support the fixes
-
-* **The modules have a 0.8 mm full-section collar between each tab and the
-  lattice.** The lattice is sized to the joint block, not to the tab. The tab
-  is now smaller, because the socket has walls, so the lattice needs a
-  full-size face to attach to. The collar also gives the module a positive
-  axial seat against the phalanx end face.
-* **Each phalanx is 0.8 mm shorter at every end that faces a joint.** This
-  takes up the collars. Phalanx 1 goes from 32.86 to 31.26 mm, Phalanx 2 from
-  17.76 to 16.16 mm and Phalanx 3 from 15.98 to 15.18 mm. Overall finger
-  length (95.70 mm from flange face to tip) and lattice lengths are the same
-  as before.
-* **The DIP has its own `pulley_r` of 3.0 mm.** It was `None`, with the
-  original script hard-coding −3.0 mm at the call site.
-
-## Not checked
-
-* No stiffness or FEA has been run on any variant. The angles and volumes in
-  `variants_summary.csv` are geometry only.
-* The hard stops still aren't sized to a flexion angle. Their side and
-  attachment are fixed, but the 90° / 100° / 80° limits in the comments have
-  not been checked against the assembly. Check them in CAD before printing.
-* Printability of the thinnest struts (0.405 mm at the DIP palmar side of
-  `T090`) depends on your nozzle and TPU grade.
