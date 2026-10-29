@@ -74,9 +74,10 @@ So the code is built around a few non-negotiable rules:
 - **No fabricated output.** If a solver is missing or fails to converge, that is reported as a
   failure. The application never substitutes a simpler model and presents the result as if it
   came from the one you asked for.
-- **No invented material parameters.** "TPU 95A" is a hardness grade, not a constitutive model.
-  Hyperelastic coefficients are never synthesised from it. Without calibrated data the
-  application runs in a clearly marked provisional mode.
+- **No invented material parameters.** "TPU 90A" is a hardness grade, not a constitutive model.
+  Hyperelastic coefficients are never synthesised from it, nor from the filament's datasheet,
+  which carries no modulus. Without calibrated data the application runs in a clearly marked
+  provisional mode.
 - **Convergence is not validity.** A converged solution of the wrong model is a precise answer to
   the wrong question, and the UI does not conflate the two.
 

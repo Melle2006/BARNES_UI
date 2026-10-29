@@ -120,6 +120,19 @@ Measurement notes that matter more than the fit:
 A manufacturer datasheet is accepted and permanently tagged `datasheet_derived` — bulk
 moulded material, not a printed part. Better than provisional, well short of a fit.
 
+### The filament, and what its datasheet settled
+
+The filament in use is **SUNLU TPU 90A, 1.75 mm**. Every reference in this project was
+updated from 95A to 90A accordingly; the arguments were always grade-agnostic, so only the
+grade named changed.
+
+Its published data yields **one usable figure: density 1.23 g/cm³**, for gravity body
+loads via `density_from_g_per_cm3(1.23)`. It supplies **no modulus and no stress–strain
+curve**, and its mechanical rows contradict the manufacturer's own store listing — 10 ± 5 %
+elongation against ≥1000 % for the same filament. Item 7 of
+[06-required-inputs.md](06-required-inputs.md) records the full table and why it cannot be
+used. **The tensile test is still blocking**; the datasheet did not change that.
+
 ---
 
 ## 4. Numbers established, and one correction

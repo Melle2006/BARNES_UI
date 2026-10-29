@@ -55,9 +55,14 @@ answer. See R13.
 
 **Severity: critical. Likelihood: certain, until test data exists.**
 
-"TPU 95A" is a hardness grade. Filaments sold under it differ materially. A printed part differs
+"TPU 90A" is a hardness grade. Filaments sold under it differ materially. A printed part differs
 from bulk material through layer adhesion, orientation and infill, and is anisotropic. Every
 absolute force this tool reports scales directly with the material parameters.
+
+The filament in use, SUNLU TPU 90A 1.75 mm, does not reduce this risk. Its published sheet states
+no modulus and no stress–strain curve, and its mechanical rows contradict both each other and the
+manufacturer's own store listing — see item 7 of [06-required-inputs.md](06-required-inputs.md).
+A datasheet that cannot be trusted on elongation is not evidence about stiffness.
 
 **Mitigation**
 - Refuse to invent coefficients from the hardness label.

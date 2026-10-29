@@ -3,11 +3,19 @@
 What this module refuses to do
 ------------------------------
 
-It will not invent hyperelastic coefficients from a hardness grade. "TPU 95A" names a
+It will not invent hyperelastic coefficients from a hardness grade. "TPU 90A" names a
 Shore A hardness; it does not determine a stress-strain curve. Filaments sold under the
 same grade differ materially, and a printed part differs again from bulk material
 through layer adhesion, print orientation and infill, and is anisotropic along the
 build direction.
+
+The filament in use is SUNLU TPU 90A, 1.75 mm. Its published data does not change any of
+the above: the sheet carries no modulus and no stress-strain curve, and its mechanical
+rows are not self-consistent -- an elongation at break of 10 +/- 5 % for a material the
+same manufacturer's store lists at >=1000 %, a Shore figure of 80 on a product sold as
+90A, and a flexural strength a 90A elastomer does not meaningfully have. The one figure
+taken from it is density, 1.23 g/cm^3, which is a physical property rather than a
+constitutive one. See docs/06-required-inputs.md item 7.
 
 Correlations from Shore hardness to an elastic modulus exist. They carry large scatter
 and they give a *small-strain* modulus, which is not the quantity a Mooney-Rivlin or
@@ -363,15 +371,16 @@ def _initial_guess(
 def provisional_tpu(youngs_modulus_mpa: float = 12.0) -> HyperelasticModel:
     """A deliberately unvalidated placeholder, for exercising the workflow.
 
-    This is **not** a model of TPU 95A. It is a Neo-Hookean solid with a round initial
+    This is **not** a model of TPU 90A. It is a Neo-Hookean solid with a round initial
     modulus, provided so the analysis pipeline can be run end to end before test data
     exists. Its provenance is UNVALIDATED_ASSUMPTION and it carries the assumed-material
     caveat permanently, so every force, stress and torque computed from it is marked
     unvalidated all the way into the exports.
 
     The default 12 MPa is an order-of-magnitude figure for a soft thermoplastic
-    polyurethane and is not derived from the 95A hardness grade, because no defensible
-    derivation exists. Replace it with a fit to a real tensile test; see
+    polyurethane and is not derived from the 90A hardness grade, because no defensible
+    derivation exists. It is also not taken from the SUNLU sheet, which states no
+    modulus at all. Replace it with a fit to a real tensile test; see
     ``docs/06-required-inputs.md`` item 7 for what to measure.
     """
     nu = 0.4995
@@ -386,7 +395,7 @@ def provisional_tpu(youngs_modulus_mpa: float = 12.0) -> HyperelasticModel:
         calibration_strain_range=None,
     )
     model.notes.append(
-        "PROVISIONAL placeholder. Not a characterisation of TPU 95A and not derived "
+        "PROVISIONAL placeholder. Not a characterisation of TPU 90A and not derived "
         "from the hardness grade. Every result computed from it is unvalidated."
     )
     model.notes.append(

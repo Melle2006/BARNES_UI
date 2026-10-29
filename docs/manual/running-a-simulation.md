@@ -469,7 +469,7 @@ submission.
 | Motion | 51 poses, kinematic only |
 
 None of the absolute force or torque values above is a prediction. The material
-is a provisional 12 MPa modulus, not a characterisation of TPU 95A, and no
+is a provisional 12 MPa modulus, not a characterisation of TPU 90A, and no
 defensible derivation of one from a hardness grade exists. Until a tensile test
 on a specimen printed with the same filament, printer, orientation and settings
 as the real part is fitted, only the *ranking* between designs is sound.
