@@ -337,7 +337,12 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
         slave=ContactSurface.from_node_sets(mesh, strip_skin, "strip_skin", SurfaceType.NODE),
         master=ContactSurface.from_node_sets(mesh, knuckle_outer, "knuckle_face",
                                              SurfaceType.ELEMENT),
-        stiffness=ContactPair.suggested_stiffness(TPU90A_MODULUS_MPA, element_size),
+        # A tenth of the usual 10 E / h starting point. At 10 E / h the contact set
+        # flipped between 1 and 8 nodes from one iteration to the next, ten iterations
+        # an increment. The strip presses on the knuckle with hundredths of a newton,
+        # so the softer penalty still leaves the penetration negligible -- and it is
+        # measured rather than assumed: see min_radius_from_axis_mm.
+        stiffness=ContactPair.suggested_stiffness(TPU90A_MODULUS_MPA, element_size) / 10.0,
     )
     settings = DeckSettings(
         nlgeom=True,
