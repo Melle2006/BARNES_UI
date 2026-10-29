@@ -69,13 +69,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from barnes_ui.core.cad.inspect import bounding_box  # noqa: E402
 from barnes_ui.core.cad.registry import load_geometry  # noqa: E402
+from barnes_ui.core.fea.contact import (  # noqa: E402
+    ContactPair,
+    ContactSurface,
+    SurfaceType,
+)
 from barnes_ui.core.fea.deck import (  # noqa: E402
     BoundaryCondition,
     DeckSettings,
     RigidBody,
     write_deck,
 )
-from barnes_ui.core.fea.joint_stiffness import classify_attachment_surfaces  # noqa: E402
 from barnes_ui.core.fea.meshing import MeshSettings, generate_mesh  # noqa: E402
 from barnes_ui.core.fea.results import parse_dat_reaction_history  # noqa: E402
 from barnes_ui.core.fea.runner import run_analysis  # noqa: E402
@@ -103,6 +107,15 @@ TPU90A_POISSON = 0.49
 AXIS_Y_MM = 15.905
 AXIS_Z_MM = 0.0
 
+#: The proximal link's head, which the strip has to ride over in flexion: a rigid
+#: cylinder about the joint axis. The proximal ring's opening is 7.0 mm tall, so the
+#: link is 3.5 mm above its centreline and its rounded head can be no taller; 3.4 mm
+#: allows for the rounding. The 2-turn export clears it by 0.05 mm at rest, so a
+#: radius of exactly 3.5 would have the as-drawn part start in contact.
+KNUCKLE_RADIUS_MM = 3.4
+KNUCKLE_WALL_MM = 0.6
+KNUCKLE_HALF_LENGTH_MM = 7.0
+
 #: Full flexion analysed, degrees. docs/06 gives 0 to 100 as the PIP placeholder;
 #: 90 is reported as the design point and the curve runs to the maximum.
 FLEXION_MAX_DEG = 100.0
@@ -119,10 +132,14 @@ CAP_EXCLUSION_MM = 1.0
 #: 3-turn strip (0.71 mm); the 4-turn strip's 0.56 mm gets its own, smaller size.
 ELEMENT_SIZE_MM = 0.35
 
-#: Spine sagitta levels swept, mm. 0 is a straight spine. The exports sit at 0.75,
-#: 1.14 and 2.17. 3.5 mm puts the strip's top 7.4 mm above the joint axis, around
-#: 2.7 mm above the proximal ring -- about as proud of the finger as is wearable.
-SAGITTA_LEVELS_MM = (0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5)
+#: Spine sagitta levels swept, mm. The exports sit at 0.75, 1.14 and 2.17.
+#:
+#: The lower bound is geometric. Below about 0.70 mm the spine passes inside the
+#: 3.4 mm knuckle at rest -- a straight spine by 0.71 mm -- so 0.0 and 0.5 are kept
+#: in the sweep only to record that verdict, and are not solved. The upper bound is
+#: wearability: 3.5 mm puts the strip's top 7.4 mm above the joint axis, about
+#: 2.7 mm proud of the proximal ring.
+SAGITTA_LEVELS_MM = (0.0, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5)
 
 #: Amplitude of the 4-turn pure-sine plan path, mm. The strip edge then reaches
 #: +/-5.0 mm, the distal ring's own half-width, so the 4-turn part occupies the same
@@ -207,29 +224,105 @@ def _principal_engineering_strain(green: np.ndarray) -> np.ndarray:
 
 # -- one analysis ----------------------------------------------------------------
 
+def knuckle_shell(axis_y: float, axis_z: float, radius: float):
+    """The proximal link's rounded head, as a thin cylindrical sector about the axis.
+
+    Only its outer face matters: it is the master surface the strip rides over. The
+    sector spans from 60 deg below +Y, over the top, to 40 deg past +Z towards -Y --
+    everything the strip can reach on its way round in 0 to 100 deg of flexion -- so
+    the shell carries no more elements than it needs.
+    """
+    from OCP.BRepAlgoAPI import BRepAlgoAPI_Cut
+    from OCP.BRepPrimAPI import BRepPrimAPI_MakeCylinder
+    from OCP.gp import gp_Ax2, gp_Dir, gp_Pnt
+
+    start = math.radians(-60.0)
+    frame = gp_Ax2(gp_Pnt(-KNUCKLE_HALF_LENGTH_MM, axis_y, axis_z), gp_Dir(1.0, 0.0, 0.0),
+                   gp_Dir(0.0, math.cos(start), math.sin(start)))
+    sweep = math.radians(190.0)
+    length = 2.0 * KNUCKLE_HALF_LENGTH_MM
+    outer = BRepPrimAPI_MakeCylinder(frame, radius, length, sweep).Shape()
+    inner = BRepPrimAPI_MakeCylinder(frame, radius - KNUCKLE_WALL_MM, length, sweep).Shape()
+    cut = BRepAlgoAPI_Cut(outer, inner)
+    cut.Build()
+    return cut.Shape()
+
+
+def _compound(*shapes):
+    from OCP.BRep import BRep_Builder
+    from OCP.TopoDS import TopoDS_Compound
+
+    result = TopoDS_Compound()
+    builder = BRep_Builder()
+    builder.MakeCompound(result)
+    for shape in shapes:
+        builder.Add(result, shape)
+    return result
+
+
 def analyse_strip(shape, label: str, archive: Path, element_size: float,
                   axis_y: float, axis_z: float, flexion_deg: float,
-                  timeout: float) -> dict:
+                  timeout: float, knuckle_radius: float | None = None) -> dict:
     """Mesh, solve and post-process one strip. Returns a JSON-serialisable record."""
+    knuckle_radius = KNUCKLE_RADIUS_MM if knuckle_radius is None else knuckle_radius
     solver = probe_solver(find_solver())
     material = tpu_90a()
     box = bounding_box(shape)
+    axis = np.array([axis_y, axis_z])
 
     mesh = generate_mesh(
-        shape, MeshSettings(element_size=element_size, second_order=True),
+        _compound(shape, knuckle_shell(axis_y, axis_z, knuckle_radius)),
+        MeshSettings(element_size=element_size, second_order=True),
         smallest_dimension=element_size * 2.0,
     )
+    # Knuckle nodes are the ones inside its shell wall; everything else is strip.
+    radial0 = np.linalg.norm(mesh.nodes[:, 1:3] - axis, axis=1)
+    in_knuckle = ((radial0 >= knuckle_radius - KNUCKLE_WALL_MM - 1e-4)
+                  & (radial0 <= knuckle_radius + 1e-4)
+                  & (np.abs(mesh.nodes[:, 0]) <= KNUCKLE_HALF_LENGTH_MM + 1e-4))
+    strip_node = ~in_knuckle
+    clearance0 = float(radial0[strip_node].min() - knuckle_radius)
+    if clearance0 < 0.0:
+        # Checked before solving: a strip that starts inside the finger would be
+        # pushed out by the contact penalty and the "restoring torque" would include
+        # that preload. It is a geometric verdict, not an analysis.
+        return {"label": label, "failure": (
+            f"strip starts {-clearance0:.3f} mm inside the {knuckle_radius} mm "
+            "knuckle: the spine is too flat to clear the joint at rest"),
+            "geometric_interference_mm": -clearance0, "reached_deg": 0.0}
+
+    def sets_where(predicate):
+        return sorted(name for name, idx in mesh.node_sets.items()
+                      if predicate(np.asarray(idx)))
+
+    knuckle_sets = sets_where(lambda idx: in_knuckle[idx].all())
+    knuckle_outer = sets_where(
+        lambda idx: in_knuckle[idx].all()
+        and np.allclose(radial0[idx], knuckle_radius, atol=2e-3))
     # End caps only. The strip's long faces run its whole length, so "every node
     # within the depth" selects exactly the caps; 0.12 mm covers the distal cap of
     # the exports, which is cut 0.08 mm out of square.
-    proximal, distal = classify_attachment_surfaces(mesh, 1, box.ymin + 0.12, box.ymax - 0.12)
-    if not proximal or not distal:
-        raise RuntimeError(f"{label}: end caps not found ({proximal}, {distal}).")
+    proximal = sets_where(lambda idx: strip_node[idx].all()
+                          and mesh.nodes[idx, 1].max() <= box.ymin + 0.12)
+    distal = sets_where(lambda idx: strip_node[idx].all()
+                        and mesh.nodes[idx, 1].min() >= box.ymax - 0.12)
+    strip_skin = sets_where(lambda idx: strip_node[idx].all())
+    strip_skin = [n for n in strip_skin if n not in proximal and n not in distal]
+    if not proximal or not distal or not knuckle_outer or not strip_skin:
+        raise RuntimeError(f"{label}: set classification failed "
+                           f"({proximal}, {distal}, {knuckle_outer}, {len(strip_skin)}).")
 
     distal_nodes = np.unique(np.concatenate([mesh.node_sets[s] for s in distal]))
     cap_x = float(mesh.nodes[distal_nodes, 0].mean())
     rigid = RigidBody(node_sets=distal, reference_point=(cap_x, axis_y, axis_z),
                       name="distal", pin_reference=True)
+    contact = ContactPair(
+        name="knuckle",
+        slave=ContactSurface.from_node_sets(mesh, strip_skin, "strip_skin", SurfaceType.NODE),
+        master=ContactSurface.from_node_sets(mesh, knuckle_outer, "knuckle_face",
+                                             SurfaceType.ELEMENT),
+        stiffness=ContactPair.suggested_stiffness(TPU90A_MODULUS_MPA, element_size),
+    )
     settings = DeckSettings(
         nlgeom=True,
         increments=60,
@@ -239,9 +332,12 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
         rigid_bodies=[rigid],
         reaction_sets=[rigid.rotation_set_name],
         field_output_frequency=1,
+        contact_pairs=[contact],
     )
     boundary = [BoundaryCondition(n, (1, 2, 3), 0.0, "proximal ring face held")
                 for n in proximal]
+    boundary += [BoundaryCondition(n, (1, 2, 3), 0.0, "knuckle is part of the proximal link")
+                 for n in knuckle_sets]
     boundary.append(BoundaryCondition(
         rigid.rotation_set_name, (1,), -math.radians(flexion_deg),
         f"PIP flexion {flexion_deg:g} deg about +X, distal ring towards -Z",
@@ -286,7 +382,8 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
 
     # Field post-processing, one increment at a time.
     y0 = mesh.nodes[:, 1]
-    interior = (y0 > box.ymin + CAP_EXCLUSION_MM) & (y0 < box.ymax - CAP_EXCLUSION_MM)
+    interior = ((y0 > box.ymin + CAP_EXCLUSION_MM) & (y0 < box.ymax - CAP_EXCLUSION_MM)
+                & strip_node)
     corner = np.unique(mesh.elements[:, :4])
     axis = np.array([axis_y, axis_z])
     fields: dict[float, dict] = {}
@@ -296,16 +393,17 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
             if t is None:
                 continue
             entry = fields.setdefault(round(t, 6), {})
-            nodes = np.array(sorted(values)) - 1
+            nodes = np.array([n for n in sorted(values) if n <= mesh.node_count]) - 1
             data = np.array([values[n + 1] for n in nodes])
             if name == "DISP":
-                deformed = mesh.nodes[nodes] + data[:, :3]
+                keep = strip_node[nodes]
+                deformed = (mesh.nodes[nodes] + data[:, :3])[keep]
                 radial = np.linalg.norm(deformed[:, 1:3] - axis, axis=1)
                 entry["min_radius_mm"] = float(radial.min())
                 entry["lateral_extent_mm"] = float(deformed[:, 0].max() - deformed[:, 0].min())
             else:
                 strain = _principal_engineering_strain(data[:, :6])
-                mask_corner = np.isin(nodes, corner)
+                mask_corner = np.isin(nodes, corner) & strip_node[nodes]
                 entry["peak_strain_all"] = float(strain[mask_corner].max())
                 entry["peak_strain_interior"] = float(
                     strain[mask_corner & interior[nodes]].max()
@@ -361,6 +459,8 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
         "wall_seconds": round(wall, 1),
         "mesh": {"elements": mesh.element_count, "nodes": mesh.node_count,
                  "element_size_mm": element_size},
+        "knuckle_radius_mm": knuckle_radius,
+        "clearance_at_rest_mm": clearance0,
         "axis_point_mm": [cap_x, axis_y, axis_z],
         "material": material.describe(),
         "k0_n_mm_per_rad": k0,
@@ -423,7 +523,7 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
     if "sweep" in groups:
         for n_turns in (2, 3, 4):
             for sagitta in SAGITTA_LEVELS_MM:
-                runs.append({"label": f"sweep_{n_turns}T_s{sagitta:.1f}", "kind": "sweep",
+                runs.append({"label": f"sweep_{n_turns}T_s{sagitta:.2f}", "kind": "sweep",
                              "n_turns": n_turns, "sagitta": sagitta})
     return runs
 
