@@ -42,11 +42,39 @@ Two things about this are worth carrying forward:
 
 ---
 
-## 2. In flight right now
+## 2. Confirmed: the GUI reproduces the scripted answer exactly
 
-**A GUI FEA run on the real A3 twin strap**, started 29 Oct ~17:52 local, to confirm the
-GUI reproduces the scripted answer. It was still solving when this was written; expect
-roughly 45 minutes, since the scripted equivalent took 2778 s.
+**A GUI FEA run on the real A3 twin strap**, 29 Oct 17:52–18:58 local, to check that the
+`8e687f0` fix holds on real geometry rather than only on a generated meander.
+
+**It reproduces the scripted result to every digit reported.**
+
+| | GUI run | Scripted (`results/a3_mesh_study/mesh_2.json`) |
+|---|---|---|
+| Rotational stiffness | **6.10327 N·mm/rad** | **6.10327 N·mm/rad** |
+| Reaction moment at 2.00 deg | 0.2130442 N·mm | 0.2130442 N·mm |
+| Mesh | 32965 C3D10, 61021 nodes | 32965 C3D10, 61021 nodes |
+| Increments | 48 | 48 |
+| Cutbacks | 285 | 285 |
+| Converged | yes | yes |
+| Wall clock | 3934 s | 2778 s |
+
+Identical element and node counts mean Gmsh was handed the same geometry with the same
+settings and produced the same mesh; identical increments and cutbacks mean CalculiX walked
+the same path through it. The only difference is wall clock, and that is the machine being
+busy rather than anything about the solve.
+
+The run is archived at `%LOCALAPPDATA%\Temp\barnes_ui_runs\c284be4e014d` with its
+`input.inp`, `results.dat`, `results.sta`, `solver.log` and a `manifest.json`. Note that
+temp directories do not survive indefinitely — copy it somewhere permanent if the evidence
+matters.
+
+One thing the manifest records that the panel does not surface: the mesh quality block
+reports **2079 poor elements** and a **maximum edge ratio of 1100**, on a mesh that
+nonetheless converged and matched. Worth knowing before pushing the element size down
+further.
+
+### Reproducing it
 
 Parameters, taken from `scripts/a3_joint_stiffness.py` so the comparison is like for like:
 
@@ -60,14 +88,13 @@ Parameters, taken from `scripts/a3_joint_stiffness.py` so the comparison is like
 | Axis passes through | 6.090, 44.935, 5.440 mm | `AXIS_POINT_MM` |
 | Modulus | 12.0 MPa provisional | default |
 
-**Target: 6.10327 N·mm/rad**, with ~48 increments and ~285 cutbacks. If the GUI lands
-there, GUI and script agree and `8e687f0` is confirmed on real geometry rather than only
-on a generated meander. If it does not, the difference is in how the GUI builds
-`JointStiffnessSetup` versus how the script does, and that is where to look first.
+To redo it from scratch: load `reference_parts/A3_PIP_twin_strap_1.0mm.step`, go to
+`Analyse ▸ Nonlinear FEA`, set the six values above, press **Run FEA**. The axis is the
+only field that is not already correct by default, and it matters — the panel warns that a
+run at the wrong axis height converges perfectly while reporting a different stiffness.
 
-To redo it from scratch: load the STEP, go to `Analyse ▸ Nonlinear FEA`, set the six
-values above, press **Run FEA**. The axis is the only field that is not already correct
-by default.
+Budget about an hour. The reduced-order model on the same part takes seconds and lands
+within 9–20 %, which is what it is for.
 
 ---
 
@@ -217,14 +244,14 @@ Two things that cost time here:
 
 ## 7. Next steps, in the order worth doing them
 
-1. **Read off the in-flight A3 FEA result** and compare against 6.10327 N·mm/rad. If it
-   agrees, `8e687f0` is confirmed on real geometry.
-2. **Correct the manual's 29× framing** in section 5 of
+1. **Correct the manual's 29× framing** in section 5 of
    [manual/running-a-simulation.md](manual/running-a-simulation.md), noting the real part
    sits at 9–20 % and that the meander figure is probably an axis-placement artefact.
-3. **Re-run the meander with a properly centred axis** to test that explanation. Cheap —
+2. **Re-run the meander with a properly centred axis** to test that explanation. Cheap —
    that solve took about two minutes.
-4. **Decide the TPU grade question** in section 3 and build the selector.
-5. **Investigate the ~280 cutbacks** on the A3 solves before quoting 6.103 externally.
-6. **Get the tensile data.** Everything quantitative is blocked behind it, and until it
+3. **Decide the TPU grade question** in section 3 and build the selector.
+4. **Investigate the 285 cutbacks**, now confirmed identical in the GUI and the script, so
+   they are a property of the model rather than of either runner. Worth resolving before
+   6.103 is quoted externally.
+5. **Get the tensile data.** Everything quantitative is blocked behind it, and until it
    arrives only the ranking between designs is sound.
