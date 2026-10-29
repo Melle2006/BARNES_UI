@@ -16,25 +16,33 @@ How "best" is decided
 A spring-back element has to do three things, and the ranking takes them in order of
 how badly failing each would hurt:
 
-1. **Not fail.** Feasible only if the solve reached 90 deg, the torque never falls as
-   flexion increases (a fall is buckling or snap-through, and the finger would stall
-   there), and the peak strain away from the clamps stays at or below
-   ``STRAIN_LIMIT`` at 90 deg. The limit is engineering judgement for millions of
-   cycles of a TPU, not a measured fatigue limit for this filament.
-2. **Return the finger, from any angle.** Measured by restoring torque per unit peak
-   strain at 90 deg, ``T90 / eps90``. That is the score: how much spring the design
-   delivers for the damage it does to the material. It is independent of the modulus
-   -- both terms scale together at these strains -- so the ranking survives the
-   material being wrong, and it is the right figure of merit because absolute torque
-   can then be dialled in by section height (torque goes as h^3, strain as h, so the
-   ratio goes as h^2: a design that is efficient at 1.2 mm stays efficient at 1.5).
-3. **Still push near full extension.** ``T15 / T90`` is reported and breaks ties; a
-   spring that has nothing left near 0 deg leaves the finger hanging a few degrees
-   short.
+1. **Not fail.** Feasible only if
+   * the strip clears the knuckle at rest by at least ``MIN_REST_CLEARANCE_MM`` -- a
+     strip that only just clears in CAD touches once printed, and is then preloaded;
+   * the solve runs through the whole PIP range, ``FULL_RANGE_DEG`` (the 0-100 deg
+     placeholder range in docs/06), and the torque never falls as flexion increases.
+     A fall is the strip snapping into the joint crease; the finger would lose its
+     spring part-way through a movement. Every 2-turn variant does this somewhere
+     between 75 and 91 deg, so passing at 90 is not enough;
+   * the peak strain away from the clamps stays at or below ``STRAIN_LIMIT`` at
+     90 deg -- engineering judgement for millions of cycles of a TPU, not a measured
+     fatigue limit for this filament.
+2. **Return the finger, from any angle.** The score is restoring torque per unit
+   peak strain at 90 deg, ``T90 / eps90``: how much spring the design delivers for
+   the damage it does to the material. It is independent of the modulus -- both
+   terms scale together at these strains -- so the ranking survives the material
+   being wrong, and it is the right figure of merit because absolute torque can then
+   be set by section height (torque goes as h^3, strain as h, so the ratio goes as
+   h^2: a design that is efficient at 1.2 mm stays efficient at 1.5).
+3. **Still push near full extension.** Designs whose score is within
+   ``SCORE_TIE_FRACTION`` of the best are treated as equal -- the export and its
+   parametric rebuild differ by 1.3 %, which is the resolution of the score -- and
+   among those the one with the most torque at 15 deg wins, then the lower profile.
+   A spring that has little left near 0 deg leaves the finger hanging short of full
+   extension.
 
-Printability (narrowest true wall) and the strip's lowest point relative to the
-joint axis are reported and flagged, not scored, because both have fixes outside the
-spring's own geometry.
+Printability (narrowest true wall) is reported and flagged, not scored, because it
+has fixes outside the spring's own geometry.
 """
 
 from __future__ import annotations
@@ -48,6 +56,13 @@ from pathlib import Path
 
 import matplotlib
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from barnes_ui.core.flexure.templates.a8_meander import (  # noqa: E402
+    A8_PLAN_3TURN,
+    A8MeanderParameters,
+)
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
@@ -57,6 +72,12 @@ STRAIN_LIMIT = 0.20
 #: Two 0.4 mm extrusion widths: the narrowest wall a 0.4 mm nozzle prints as a
 #: proper perimeter pair rather than a single bead.
 PRINTABLE_WIDTH_MM = 0.80
+#: Smallest clearance between strip and finger at rest that counts as clear, mm.
+MIN_REST_CLEARANCE_MM = 0.25
+#: The whole PIP range analysed, deg. The torque must not fall anywhere in it.
+FULL_RANGE_DEG = 100.0
+#: Scores within this fraction of the best are treated as tied.
+SCORE_TIE_FRACTION = 0.03
 #: Torque sampled at these angles.
 ANGLES = ("15", "30", "45", "60", "90")
 
@@ -70,6 +91,24 @@ def _get(record: dict, *path, default=None):
     return value
 
 
+def knuckle_clearance(sagitta: float | None, axis_y: float = 15.905,
+                      radius: float = 3.4) -> float | None:
+    """Clearance between the strip's underside and the knuckle at rest, mm.
+
+    Only the spine enters -- the underside is the spine less half the 1.2 mm section,
+    whatever the plan path -- so it is computed from the sagitta. The run's own
+    ``clearance_at_rest_mm`` is the minimum over every finger surface, and the strip's
+    ends rest on the link tops at their rings by design, which makes that number
+    about 0.1 mm for every case and says nothing about the joint.
+    """
+    if sagitta is None:
+        return None
+    p = A8MeanderParameters(plan=A8_PLAN_3TURN, sagitta=sagitta, n_turns=3)
+    y = np.linspace(p.y_start, p.y_end, 4001)
+    underside = p.spine_z(y) - p.height_z / 2.0
+    return float(np.hypot(y - axis_y, underside).min() - radius)
+
+
 def summarise(record: dict) -> dict:
     """The flat row a matrix shows for one run."""
     t90 = _get(record, "torque_n_mm", "90")
@@ -79,15 +118,19 @@ def summarise(record: dict) -> dict:
     reached = record.get("reached_deg") or 0.0
     geometry = record.get("geometry") or {}
     reasons = []
+    clearance = knuckle_clearance(record.get("sagitta"))
     if "geometric_interference_mm" in record:
         reasons.append(f"strip starts {record['geometric_interference_mm']:.2f} mm "
                        "inside the finger (spine too flat)")
     elif "failure" in record:
         reasons.append(f"analysis failed: {record['failure'][:80]}")
-    elif reached < 90.0 - 1e-6:
-        reasons.append(f"solve stopped at {reached:.0f} deg")
-    if drop is not None and drop <= 90.0:
-        reasons.append(f"torque falls from {drop:.0f} deg (instability)")
+    else:
+        if clearance is not None and clearance < MIN_REST_CLEARANCE_MM:
+            reasons.append(f"clears the knuckle by only {clearance:.2f} mm at rest")
+        if drop is not None and drop <= FULL_RANGE_DEG:
+            reasons.append(f"snaps: torque falls at {drop:.0f} deg")
+        elif reached < FULL_RANGE_DEG - 0.5:
+            reasons.append(f"solve stopped at {reached:.0f} deg")
     if e90 is not None and e90 > STRAIN_LIMIT:
         reasons.append(f"strain {e90 * 100:.0f} % > {STRAIN_LIMIT * 100:.0f} %")
     row = {
@@ -103,6 +146,7 @@ def summarise(record: dict) -> dict:
         **{f"T{a}_n_mm": _get(record, "torque_n_mm", a) for a in ANGLES},
         "T_max_n_mm": record.get("torque_max_n_mm"),
         "reached_deg": reached,
+        "knuckle_clearance_mm": knuckle_clearance(record.get("sagitta")),
         "energy_0_90_mJ": record.get("energy_0_90_n_mm"),
         "T15_over_T90": (t15 / t90) if t15 and t90 else None,
         "linearity_T90_over_k0": record.get("linearity_t90_over_k0"),
@@ -126,6 +170,17 @@ def summarise(record: dict) -> dict:
         "wall_s": record.get("wall_seconds"),
     }
     return row
+
+
+def select(candidates: list[dict]) -> str | None:
+    """The selected label: best score, ties broken by torque at 15 deg, then profile."""
+    if not candidates:
+        return None
+    top = max(r["efficiency_T90_per_strain"] for r in candidates)
+    tied = [r for r in candidates
+            if r["efficiency_T90_per_strain"] >= (1.0 - SCORE_TIE_FRACTION) * top]
+    tied.sort(key=lambda r: (-(r["T15_n_mm"] or 0.0), r["apex_top_z_mm"] or 0.0))
+    return tied[0]["label"]
 
 
 def _fmt(value, digits=3):
@@ -169,7 +224,9 @@ MATRIX_COLUMNS = [
     ("min_radius_90_mm", "Closest to axis at 90° (mm)"),
     ("lateral_extent_90_mm", "Width at 90° (mm)"),
     ("min_true_width_mm", "Narrowest wall (mm)"),
+    ("knuckle_clearance_mm", "Knuckle clearance (mm)"),
     ("feasible", "Feasible"),
+    ("why_not", "Why not"),
 ]
 
 
@@ -252,9 +309,7 @@ def main(argv: list[str] | None = None) -> int:
 
     candidates = [r for r in rows if r["kind"] in ("sweep", "export") and r["feasible"]
                   and r["efficiency_T90_per_strain"]]
-    candidates.sort(key=lambda r: (r["efficiency_T90_per_strain"], r["T15_over_T90"] or 0),
-                    reverse=True)
-    best = candidates[0]["label"] if candidates else None
+    best = select(candidates)
 
     ranked = sorted(rows, key=lambda r: (not r["feasible"],
                                          -(r["efficiency_T90_per_strain"] or 0)))
@@ -267,8 +322,9 @@ def main(argv: list[str] | None = None) -> int:
         if not group:
             continue
         write_csv(args.study / f"matrix_{n_turns}turn.csv", group)
-        group_best = max((r for r in group if r["feasible"]),
-                         key=lambda r: r["efficiency_T90_per_strain"] or 0, default=None)
+        group_label = select([r for r in group if r["feasible"]
+                              and r["efficiency_T90_per_strain"]])
+        group_best = next((r for r in group if r["label"] == group_label), None)
         sections.append(f"### {n_turns}-turn\n\n"
                         + (f"Best in group: sagitta {group_best['sagitta_mm']:.1f} mm.\n\n"
                            if group_best else "No feasible variant in this group.\n\n")
