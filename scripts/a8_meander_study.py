@@ -70,6 +70,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from barnes_ui.core.cad.inspect import bounding_box  # noqa: E402
 from barnes_ui.core.cad.registry import load_geometry  # noqa: E402
 from barnes_ui.core.fea.contact import (  # noqa: E402
+    ContactFormulation,
     ContactPair,
     ContactSurface,
     SurfaceType,
@@ -116,6 +117,7 @@ KNUCKLE_RADIUS_MM = 3.4
 KNUCKLE_WALL_MM = 0.6
 KNUCKLE_HALF_LENGTH_MM = 7.0
 KNUCKLE_ELEMENT_MM = 0.6
+CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
 
 #: Full flexion analysed, degrees. docs/06 gives 0 to 100 as the PIP placeholder;
 #: 90 is reported as the design point and the curve runs to the maximum.
@@ -340,7 +342,11 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                       name="distal", pin_reference=True)
     contact = ContactPair(
         name="knuckle",
-        slave=ContactSurface.from_node_sets(mesh, strip_skin, "strip_skin", SurfaceType.NODE),
+        slave=ContactSurface.from_node_sets(
+            mesh, strip_skin, "strip_skin",
+            SurfaceType.ELEMENT if CONTACT_FORMULATION is ContactFormulation.SURFACE_TO_SURFACE
+            else SurfaceType.NODE),
+        formulation=CONTACT_FORMULATION,
         master=ContactSurface.from_node_sets(mesh, knuckle_outer, "knuckle_face",
                                              SurfaceType.ELEMENT),
         # A tenth of the usual 10 E / h starting point. At 10 E / h the contact set
@@ -585,8 +591,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--element-size", type=float, default=ELEMENT_SIZE_MM)
     parser.add_argument("--timeout", type=float, default=7200.0)
     parser.add_argument("--archive", type=Path, default=None)
+    parser.add_argument("--surface-to-surface", action="store_true")
     args = parser.parse_args(argv)
 
+    global CONTACT_FORMULATION
+    if args.surface_to_surface:
+        CONTACT_FORMULATION = ContactFormulation.SURFACE_TO_SURFACE
     runs_dir = args.out / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
     archive = args.archive or Path("/tmp") / "a8_runs"
