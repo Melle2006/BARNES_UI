@@ -105,7 +105,7 @@ as well as bend.
 * **R20:** enough length, but the clamped end angles fold the arch at 25–34°. It snaps
   to a shape that passes within about 1 mm of the axis.
 * **R16 and tighter:** the arch is long enough to reach 105°, but it collapses into the
-  joint (0.3–1.4 mm from the axis) and snaps on the way.
+  joint (0.3–0.4 mm from the axis) and snaps on the way.
 
 Within this model, that is the problem the A6 sliding end solves. Letting one end slide
 takes away the change in end-to-end distance, and with it the over-stretching.
