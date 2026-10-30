@@ -733,7 +733,11 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
     if "printable_2t" in groups:
         # Added once the 2-turn strip turned out not to snap on the real finger
         # (1.70 N.mm at 14 % strain, h 1.8): how far its height and width can go.
-        for width, height, sagitta in ((1.2, 2.4, 2.5), (1.2, 2.4, 3.5), (1.6, 1.8, 2.5)):
+        for width, height, sagitta in ((1.2, 2.4, 2.5), (1.2, 2.4, 3.5), (1.6, 1.8, 2.5),
+                                       # Between 2.5 (clears the real middle phalanx
+                                       # by 0.17 mm) and 3.5 (by 1.02 mm): where the
+                                       # 0.25 mm clearance limit actually falls.
+                                       (1.2, 2.4, 2.75), (1.2, 2.4, 3.0)):
             runs.append({
                 "label": f"print_2T_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}",
                 "kind": "printable", "n_turns": 2, "sagitta": sagitta,
