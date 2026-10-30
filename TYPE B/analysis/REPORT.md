@@ -459,8 +459,8 @@ In every family thickness moves all criteria at once:
   estimate. That is the expected direction, since the collar roots add
   stiffness.
 * **Mesh convergence.** `B3_t150_w30` at the PIP was re-run with 3
-  elements through the thickness instead of 2. See
-  `results/convergence/` and §6.3.
+  elements through the thickness instead of 2 (twice the elements). Every
+  selection metric moved by less than 1 % at 60° (§6.3).
 * **Return-gate calibration.** The A3 benchmark sits at 0.93× on the return
   gate, so the gate is calibrated against the part already in use.
 * **Off-axis parser bug, found and fixed.** The first off-axis results were
@@ -491,22 +491,39 @@ In every family thickness moves all criteria at once:
 
 ### 6.3 Mesh convergence
 
-See [`results/convergence/`](results/convergence/). The B3 winner run with
-3 elements through the thickness is compared with the 2-element run used
-for the selection.
+`B3_t150_w30` at the PIP, with 2 quadratic elements through the leaf (the
+mesh used for every selection run) and with 3
+([`results/convergence/`](results/convergence/)):
+
+| Quantity | 2 through (7 361 elements) | 3 through (14 994 elements) | Change |
+|---|---|---|---|
+| Moment @ 60° | 3.05 N·mm | 3.04 N·mm | −0.4 % |
+| Peak strain @ 60° | 13.5 % | 13.4 % | −0.8 % |
+| Peak strain @ 76° | 17.2 % | 17.3 % | +0.5 % |
+| Peak von Mises @ 60° | 1.65 MPa | 1.62 MPa | −1.7 % |
+| Moment @ 20° (return gate) | 1.025 N·mm | 1.022 N·mm | −0.3 % |
+| Collision angle | 76.60° | 76.53° | −0.1 % |
+| Torsional / lateral / axial stiffness | 17.8 / 387 / 15.7 | 17.7 / 385 / 15.6 | < 1 % |
+
+The selection mesh is converged for every criterion used. The largest
+change is −4 % in peak strain at 20°, where strains are small.
 
 ### 6.4 Run settings that changed during the campaign
 
 * **Flexion target.** The first 20 runs (all B3 and B6 without taper) used
   a PIP target of 100°. All later runs, and the A3, used 90° to save time.
   Every joint's usable range ends below 82°, so this changes no result.
-* **Lattice variants run.** Seven of the 13 lattice variants were run:
-  * the original cells;
-  * thickness 0.9, 1.0, 1.1 and 1.2 at 3 cells;
-  * 2 and 4 cells at thickness 1.0.
+* **Lattice variants run.** Each lattice run takes 1–1.5 hours on the
+  4-core machine used, and two container restarts cut the queue short.
+  Four of the 13 lattice variants were run:
+  * the original cells (`B00_baseline`);
+  * strut thickness 0.9, 1.0 and 1.2 at 3 cells.
 
-  The trends are monotonic and the family is far from viable, so the other
-  six would not change the verdict.
+  Every one is strain-limited at 10–20°, and the trend with thickness is
+  monotonic. The 2- and 4-cell variants were not run. They change cell
+  count, not strut slenderness, so they would not move the family from
+  about 15° to anywhere near the 70–78° of the leaf designs. To run them:
+  `python run_campaign.py PIP B_T100_X2 B_T100_X4`.
 
 ---
 
