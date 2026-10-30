@@ -222,6 +222,38 @@ def joint_layout(cs, spec, cs_d):
                 pulley_clamped=abs(tendon_y) < spec["pulley_r"] - 1e-9)
 
 
+#: Round 2, deep tendon option: over this length past the DP's socket floor the
+#: tendon channel rises from the deep offset back to the tab-limited one, so the
+#: fingertip anchor hole and sensor-pad recess are exactly where they always were.
+DEEP_ANCHOR_RAMP = 1.7
+#: ...starting this far past the socket floor, so the tilted channel never sweeps
+#: back into the end of the DIP module's tab (the rise is 36 deg; r sin 36 = 0.88).
+DEEP_RAMP_START = 1.0
+
+
+def deepen_tendon(layouts, offsets, dip_spec):
+    """Round 2 option: copies of the three joint layouts with the tendon channel
+    at a deeper palmar offset than the tab allows.
+
+    The channel then breaks out of each TPU tab's palmar face as an open groove,
+    and the PLA socket wall around the tab closes it. verify_type_b.py checks that
+    wall instead of the tab wall for these layouts. Inside the distal phalanx the
+    channel ramps back up to the original depth before the anchor. The original
+    layouts are not modified.
+    """
+    out = []
+    for joint, lay in zip(("MCP", "PIP", "DIP"), layouts):
+        lay = dict(lay)
+        lay["tendon_y_tab"] = lay["tendon_y"]
+        lay["tendon_y"] = -float(offsets[joint])
+        lay["tendon_deep"] = True
+        out.append(lay)
+    z0 = dip_spec["end_len"] + AX_CLR
+    out[2]["anchor_y"] = out[2]["tendon_y_tab"]
+    out[2]["anchor_ramp"] = (z0 + DEEP_RAMP_START, z0 + DEEP_RAMP_START + DEEP_ANCHOR_RAMP)
+    return out
+
+
 def pins(pin_x, z):
     return [cyl(PIN_D / 2, 100, (sx * pin_x, -50, z), (0, 1, 0)) for sx in (-1, 1)]
 
@@ -437,8 +469,15 @@ def make_phalanx(length, cs0, cs1, prox, dist, hardstop, tip=False,
         # Fingertip: tendon terminates in a transverse anchor hole on its own
         # channel line; sensor channel stops blind at the same depth.
         anchor_z = length - 3.0
-        cuts.append(cyl(TENDON_ANCHOR_D / 2, 100, (-50, ty0, anchor_z), (1, 0, 0)))
-        cuts.append(cyl(CHAN_TENDON_D / 2, anchor_z + 1, (0, ty0, -1), (0, 0, 1)))
+        ya = prox["layout"].get("anchor_y")
+        if ya is None:
+            cuts.append(cyl(TENDON_ANCHOR_D / 2, 100, (-50, ty0, anchor_z), (1, 0, 0)))
+            cuts.append(cyl(CHAN_TENDON_D / 2, anchor_z + 1, (0, ty0, -1), (0, 0, 1)))
+        else:
+            # round 2 deep-tendon option: ramp back up to the original depth
+            zr0, zr1 = prox["layout"]["anchor_ramp"]
+            cuts.append(cyl(TENDON_ANCHOR_D / 2, 100, (-50, ya, anchor_z), (1, 0, 0)))
+            cuts.append(channel([(ty0, -1), (ty0, zr0), (ya, zr1), (ya, anchor_z)], CHAN_TENDON_D))
         cuts.append(cyl(CHAN_SENSOR_D / 2, anchor_z + 1, (0, sy0, -1), (0, 0, 1)))
         # Sensor-pad recess on the PALMAR face, depth measured from the local surface.
         r = TIP_RECESS
@@ -465,7 +504,11 @@ def variant_specs(t_scale, crossings):
     return out
 
 
-def build_finger(t_scale=1.0, crossings=None, verbose=True, flexure=None):
+def build_finger(t_scale=1.0, crossings=None, verbose=True, flexure=None,
+                 tendon_offsets=None):
+    """tendon_offsets (round 2 option, default None = the original finger):
+    {"MCP": d, "PIP": d, "DIP": d}, palmar depth of the tendon channel in mm,
+    allowed to be deeper than the tab permits. See deepen_tendon()."""
     mcp, pip, dip = variant_specs(t_scale, crossings)
     c = COLLAR_LEN
     L1, L2, L3 = L_PHAL1 - 2 * c, L_PHAL2 - 2 * c, L_PHAL3 - c
@@ -473,6 +516,8 @@ def build_finger(t_scale=1.0, crossings=None, verbose=True, flexure=None):
     lay_m = joint_layout(CS_MCP, mcp, section_at(CS_MCP, CS_PIP, L1, floor(mcp)))
     lay_p = joint_layout(CS_PIP, pip, section_at(CS_PIP, CS_DIP, L2, floor(pip)))
     lay_d = joint_layout(CS_DIP, dip, section_at(CS_DIP, CS_TIP, L3, floor(dip)))
+    if tendon_offsets is not None:
+        lay_m, lay_p, lay_d = deepen_tendon((lay_m, lay_p, lay_d), tendon_offsets, dip)
 
     mcp_mod, mcp_len, _, mcp_lat = make_joint_module(CS_MCP, mcp, "MCP", lay_m, proximal_is_tab=False,
                                                      flexure=flexure)

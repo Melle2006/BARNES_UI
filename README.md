@@ -380,6 +380,8 @@ Full details, including the data model and the fidelity ladder:
 | [manual/running-a-simulation.md](docs/manual/running-a-simulation.md) | A recorded end-to-end run of the GUI — every click, every number, every caveat, with screenshots |
 | [handover.md](docs/handover.md) | Where things stand: recent changes, work in flight, open decisions, and what a second machine needs |
 | [results/a8_meander_study](results/a8_meander_study/README.md) | A8 meander: 2/3/4 turns × spine curvature in TPU 90A, torque–angle by FEA over a modelled finger, and which to build |
+| [10-tendon-pivot-analysis.md](docs/10-tendon-pivot-analysis.md) | Where to anchor the flexor tendon at MCP, PIP and DIP, and why maximising torque alone always picks the upper bound |
+| [11-tendon-routing-type-a-b.md](docs/11-tendon-routing-type-a-b.md) | Where to route the tendon on the Type A hand (full-length sweep from the assembly) and why Type B flexures buckle under tendon load |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---
