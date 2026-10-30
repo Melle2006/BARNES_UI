@@ -1,0 +1,61 @@
+{
+ "variant": "B8_y00_r150",
+ "offset": "as-built",
+ "joint": "PIP",
+ "angle": 60.0,
+ "family": "B8",
+ "params": {
+  "family": "B8",
+  "pad_y": 0.0,
+  "knuckle_r": 1.5
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 1.93,
+ "tendon_dir_yz": [
+  0.4999999999999999,
+  -0.8660254037844386
+ ],
+ "tendon_entry_yz": [
+  -4.234245899286256,
+  4.791070970696034
+ ],
+ "tendon_exit_yz": [
+  -1.93,
+  0.8
+ ],
+ "element_size": 0.375,
+ "elements": 20268,
+ "nodes": 37654,
+ "contact_faces": [
+  442,
+  418
+ ],
+ "info": {
+  "t": 0.75,
+  "w": 1.95,
+  "knuckle_r": 1.5,
+  "pivot_y": 0.0,
+  "seat_rom_deg": 80.48731511472266,
+  "k_over_E": 0.018160182119205302,
+  "bearing_gap": 0.2991742132211759,
+  "bearing": "knuckle",
+  "bearing_w_total": 3.9
+ },
+ "pose_reached": true,
+ "pose_moment": 0.06704607,
+ "pose_ref_u": [
+  0.0,
+  -1.09894,
+  -0.1088674
+ ],
+ "load": [],
+ "load_completed_fraction": 0.0,
+ "frames": [],
+ "ccx_tail": " material and temperature:            4\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n *INFO reading *SURFACE BEHAVIOR: the tension\n       value at large clearances\n       (only relevant for node-to-surface contact)\n       must be strictly positive\n       the following default will be used:   2.8580955571428575E-005\n       the user is advised to analyze the results\n       carefully\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\ndivergence allowed: residual force too large\n no convergence\n\n iteration 14\n\n Number of contact spring elements=18378\n\n Using up to 4 cpu(s) for the stress calculation.\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
+ "stopped": null,
+ "wall_s": 799.0,
+ "capacity_T": 0.0,
+ "limited_by": "no load increment converged"
+}
