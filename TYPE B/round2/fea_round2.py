@@ -231,7 +231,7 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
                 out(f"{el + 1}, {face}")
         out("*SURFACE INTERACTION, NAME=BEARING")
         out("*SURFACE BEHAVIOR, PRESSURE-OVERCLOSURE=LINEAR")
-        out(f"{10.0 * E_MPA / h:.6g}")
+        out(f"{CONTACT_K_FACTOR * E_MPA / h:.6g}")
         out("*CONTACT PAIR, INTERACTION=BEARING, TYPE=SURFACE TO SURFACE")
         out(f"{contact[0][0]}, {contact[1][0]}")
     ctrl = "*CONTROLS, PARAMETERS=TIME INCREMENTATION\n12, 16, 9, 24, 10, 12"
@@ -265,6 +265,9 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
     return "\n".join(buf) + "\n"
 
 
+#: penalty = factor x E / h. 10 is the A8 study's value; the knuckle-in-cup diverged to
+#: NaN with it the moment the 0.3 mm gap closed, so the bearing runs use 1.
+CONTACT_K_FACTOR = float(os.environ.get("R2_CONTACT_K", 10.0))
 DU_STOP = 2.0            # mm of shortening along the tendon after the pose: far past any capacity
 WALL_STOP = 2 * 3600     # s
 
