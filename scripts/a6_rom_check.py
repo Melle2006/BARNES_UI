@@ -8,8 +8,13 @@ A design passes when, at every assumed axis position, it
 3. keeps at least ``JOINT_RADIUS`` from the axis, so it does not cut through the joint;
 4. stays under ``STRAIN_LIMIT`` peak bending strain.
 
+Criteria 1 to 3 are geometric: the leaf's shape does not depend on its stiffness, so
+they hold for any modulus, width or (almost) thickness. Criterion 4 scales with
+thickness, which is why ``--tune`` and ``a6_parameter_sweep.py`` tune travel on 1 to 3
+only and apply the strain limit afterwards.
+
 ``--tune`` searches for the travel each radius needs to pass and prints the table that
-``make_a6_designs.TRAVEL_BY_RADIUS`` holds.
+``make_a6_designs.TRAVEL_BY_RADIUS`` holds. Results go to ``results/a6/``.
 
 What is computed
 ----------------
@@ -304,6 +309,7 @@ def evaluate(radius, travel) -> list[dict]:
             "axis_y_mm": axis[0],
             "axis_z_mm": axis[1],
             "passes": all(checks.values()),
+            "passes_geometry": all(v for k, v in checks.items() if k != "strain_ok"),
             **checks,
             "max_flexion_deg": float(angles.max()),
             "head_on_stop_from_deg": float(stop[0]) if stop.size else "never",
@@ -321,6 +327,9 @@ def evaluate(radius, travel) -> list[dict]:
                 for e in MODULUS_RANGE),
             "_angles": angles,
             "_torque": torque,
+            "_energy_per_ei": float(res["energy"][-1]),
+            "_torque_per_ei": tau,
+            "_kappa_max": float(res["kappa"].max()),
         })
     return rows
 
@@ -334,8 +343,13 @@ def tune(radius) -> float | None:
     leaf go taut or hit the joint, and longer travel lets the tip snap onto its stop.
     Taking the centre leaves the most margin for an axis or a print that is off.
     """
-    passing = [t for t in TUNE_TRAVELS if all(r["passes"] for r in evaluate(radius, t))]
-    print(f"R{radius:g}: passing travels {passing}", flush=True)
+    passing = [t for t in TUNE_TRAVELS
+               if all(r["passes_geometry"] for r in evaluate(radius, t))]
+    return pick_travel(passing)
+
+
+def pick_travel(passing) -> float | None:
+    """Middle of the longest unbroken run of passing travels (0.5 mm apart), or None."""
     if not passing:
         return None
     # Longest unbroken run of passing travels, then its middle.
@@ -399,7 +413,7 @@ def plot(path: Path, axis, angles=(0, 30, 60, 90, 105)) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path,
-                        default=Path(__file__).resolve().parents[1] / "A6 designs")
+                        default=Path(__file__).resolve().parents[1] / "results" / "a6")
     parser.add_argument("--tune", action="store_true",
                         help="search for each radius's travel instead of checking")
     args = parser.parse_args()
@@ -420,11 +434,12 @@ def main() -> None:
             summary.append(row)
             print(row, flush=True)
 
-    with open(args.out / "A6_pip_rom_check.csv", "w", newline="") as fh:
+    args.out.mkdir(parents=True, exist_ok=True)
+    with open(args.out / "rom_check.csv", "w", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=list(summary[0]))
         writer.writeheader()
         writer.writerows(summary)
-    plot(args.out / "A6_pip_rom_shapes.png", AXIS_POSITIONS[1])
+    plot(args.out / "rom_shapes.png", AXIS_POSITIONS[1])
 
     failed = [r for r in summary if not r["passes"]]
     print(f"{len(summary) - len(failed)} of {len(summary)} design/axis cases pass")

@@ -78,9 +78,10 @@ design:
 | R28 | 4.05–4.83 mm | 7.5–12.1% | 49–56° | 0.26–1.20 N·mm | 0.12–0.61 N·mm/rad |
 | R30 | 3.90–4.58 mm | 6.9–11.7% | 50–58° | 0.24–1.11 N·mm | 0.11–0.56 N·mm/rad |
 
-Per-case detail is in `A6_pip_rom_check.csv`.
+Per-case detail is in [`results/a6/rom_check.csv`](../results/a6/rom_check.csv). Every A6
+analysis is logged in [`results/a6/README.md`](../results/a6/README.md).
 
-![Leaf shapes and restoring torque](A6_pip_rom_shapes.png)
+![Leaf shapes and restoring torque](../results/a6/rom_shapes.png)
 
 ## What this does not tell you
 

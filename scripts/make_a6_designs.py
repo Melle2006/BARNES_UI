@@ -127,9 +127,10 @@ CLEARANCE = 0.25
 GUIDE_WALL = 0.8
 #: Length of the narrow neck the leaf slides through, in mm.
 NECK_LENGTH = 1.5
-#: T-head on the leaf tip: width (X) and length along the leaf, in mm. With the guide
-#: walls this makes the guide exactly as wide as the MP cuff.
-HEAD_WIDTH = 8.0
+#: How far the T-head on the leaf tip stands out past the leaf on each side, and its
+#: length along the leaf, in mm. A 6 mm leaf then makes the guide exactly as wide as the
+#: MP cuff, which is why ``MAX_LEAF_WIDTH`` is 6 mm.
+HEAD_OVERHANG = 1.0
 HEAD_LENGTH = 1.2
 #: Travel of the tip away from the PP, in mm. Only flexion is designed for, and the tip
 #: never moves this way in flexion, so this is a printing gap rather than a stroke.
@@ -149,13 +150,25 @@ TRAVEL_BY_RADIUS = {24.0: 12.5, 26.0: 11.5, 28.0: 11.5, 30.0: 11.0}
 #: Leaf radii to generate, in mm.
 RADII = tuple(TRAVEL_BY_RADIUS)
 
-GUIDE_WIDTH = HEAD_WIDTH + 2 * (CLEARANCE + GUIDE_WALL)
-#: Guide half-depth either side of the leaf's mid-plane.
-GUIDE_HALF_DEPTH = LEAF_THICKNESS / 2 + CLEARANCE + GUIDE_WALL
+#: Widest leaf whose guide still fits within the MP cuff's width, in mm.
+MAX_LEAF_WIDTH = MP_OUTER[0] - 2 * (HEAD_OVERHANG + CLEARANCE + GUIDE_WALL)
 
 
-def _v(y: float, z: float) -> tuple[float, float]:
-    return (y, z)
+def set_section(width: float, thickness: float) -> None:
+    """Change the leaf's cross-section, and every size that follows from it.
+
+    The geometry functions read module-level sizes, so a parameter sweep changes the
+    section here rather than threading it through every call.
+    """
+    global LEAF_WIDTH, LEAF_THICKNESS, HEAD_WIDTH, GUIDE_WIDTH, GUIDE_HALF_DEPTH
+    LEAF_WIDTH, LEAF_THICKNESS = width, thickness
+    HEAD_WIDTH = width + 2 * HEAD_OVERHANG
+    GUIDE_WIDTH = HEAD_WIDTH + 2 * (CLEARANCE + GUIDE_WALL)
+    # Guide half-depth either side of the leaf's mid-plane.
+    GUIDE_HALF_DEPTH = thickness / 2 + CLEARANCE + GUIDE_WALL
+
+
+set_section(LEAF_WIDTH, LEAF_THICKNESS)
 
 
 def _add(p, q, k: float = 1.0):

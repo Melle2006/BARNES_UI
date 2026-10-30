@@ -344,6 +344,8 @@ scripts/        Reproducible analysis runs: the A3 stiffness, its mesh study, th
 results/        Evidence those scripts produced, committed so it can be read
                 without re-running anything
 reference_parts/ Generated geometry with analytically known properties
+A6 designs/     A6 sliding-end leaf-spring CAD (STEP, STL), from scripts/make_a6_designs.py;
+                its analyses are in results/a6/
 src/barnes_ui/
     core/       Engineering code — CAD, assemblies, mechanics, FEA, kinematics,
                 optimisation, storage. NO GUI IMPORTS.
