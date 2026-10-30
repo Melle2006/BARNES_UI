@@ -35,6 +35,9 @@ JOBS = [                                # fast leaf joints first, contact joints
     ("B8_y00_r150", "as-built"),        # row 7
     ("B8_y20_r125", "as-built"),        # rows 8, 9
     ("B4_t100_a60", "deep"),            # row 6 (rolling radius depends on the offset)
+    # Not on the shortlist, but the round-1 winner: does it survive tendon load?
+    ("B5_t150_a45", "as-built"),
+    ("B5_t150_a45", "deep"),
 ]
 
 
