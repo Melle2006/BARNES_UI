@@ -48,3 +48,6 @@ results/**/*.log
 # edit for evidence nobody can diff. The JSON summaries elsewhere under results/
 # are kept because re-running a mesh study costs hours; re-running this does not.
 results/visual/
+
+# In-progress claim files written by the A8 study runner
+results/**/*.claim

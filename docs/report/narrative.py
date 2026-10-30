@@ -263,21 +263,201 @@ def round2_findings(c):
 SUMMARY_INTRO = "TO BE WRITTEN"
 PRINT_SUMMARY_ROWS = []
 DECISION_SENTENCES = []
-CONCEPTS = "TO BE WRITTEN"
-MATERIAL_TEXT = "TO BE WRITTEN {lo} {hi}"
-TYPE_A_INTRO = "TO BE WRITTEN"
-A3_POINTS = []
-A6_POINTS = []
-A8_POINTS = []
-TYPE_A_TENDON = []
-R1_INTRO = "TO BE WRITTEN"
-R1_TABLE = []
-R1_GAP = "TO BE WRITTEN"
-R2_INTRO = "TO BE WRITTEN"
-R2_METHOD = []
+CONCEPTS = (
+    "The project carries two ways of making a finger joint. <b>Type A</b> keeps the "
+    "existing hand: a PLA pin is the hinge, and a TPU part beside it only has to return "
+    "the finger to straight. <b>Type B</b> removes the pin: the TPU flexure is the hinge, "
+    "the return spring, and the only thing between the two phalanges when the tendon pulls. "
+    "The difference decides what each design has to survive. A Type A spring is judged on "
+    "range, strain and return torque. A Type B joint is also judged on twist, sideways "
+    "stiffness, and above all on whether it can carry the tendon's compression without "
+    "buckling, because a tendon that bends a joint also pushes its two halves together.")
+MATERIAL_TEXT = (
+    "You asked for every result to use SUNLU TPU 90A, the filament in use. SUNLU publishes "
+    "a density (1.23 g/cm³) and a tensile strength (40 ± 6 MPa), but <b>no stiffness</b>: "
+    "neither its product page nor its store listing gives a modulus or a stress–strain curve, "
+    "and the linked data-sheet PDF could not be retrieved from this environment (sunlu.com "
+    "is outside its network allow-list). A modulus therefore cannot honestly be attributed to "
+    "SUNLU. What this report does instead: every stiffness-dependent number (torques, "
+    "forces, capacities, return margins) is quoted at a working 12 MPa and across a bracket "
+    "of {lo} MPa (a <i>printed</i> TPU 90A, Bambu Lab's data sheet) to {hi} MPa (a bulk TPU "
+    "90A, Jabil's data sheet). Everything else (strains, ranges, collision angles, which "
+    "variant ranks first) does not depend on the modulus at all, because every model here "
+    "is a Neo-Hookean or linear solid loaded by an imposed motion or by a load whose effect "
+    "scales with load/E. Where a pass/fail gate depends on the modulus, the verdict is shown "
+    "at both ends of the bracket. The tensile specimens in the print list measure the real "
+    "value; replacing one constant in scripts/sunlu_rescale.py then updates every number.")
+TYPE_A_INTRO = (
+    "All three Type A springs replace the A3 strap on the same index-finger PIP of the "
+    "existing hand (the fit-check assembly): ends at the A3 collar positions, axis at the "
+    "PLA pin. They differ in how they cope with the one geometric fact that dominates this "
+    "joint: the straps sit about 4.4 mm above the pin, so as the finger bends the distance "
+    "between the two attachment points first <i>grows</i> by about 1.3 mm (to about 34°) "
+    "and only later shrinks.")
+A3_POINTS = [
+    "<b>FEA is solid.</b> 6.103 N·mm/rad at neutral, converged to 0.94 % between the two finest "
+    "meshes, reproduced to every digit from the GUI, and 9–20 % below the reduced-order model.",
+    "<b>But the A3's layout cannot follow the finger.</b> A strap clamped at both ends has to "
+    "stretch through the 0–60° window where the attachment points move apart. The planar "
+    "elastica sweep of 480 curvature × thickness × width variants found <b>none</b> that reaches "
+    "105° without snapping, touching the joint or over-stretching, at any strain limit from 10 "
+    "to 30 %. The as-built A3 has an equilibrium only to about 7°.",
+    "<b>Caveat that a print settles in minutes:</b> the model's collars are rigid; the real A3 "
+    "clips are C-shaped and may slide, which would act like the A6's sliding end. The existing "
+    "printed A3 on the fit-check finger answers it: does it click or bottom out at 10–35°?",
+    "<b>Decision:</b> the A3 is kept as the <i>benchmark</i> every other design is compared "
+    "against, not developed further. No new A3 print is needed beyond the one you have.",
+]
+A6_POINTS = [
+    "<b>Why it exists:</b> one end of the leaf slides in a guide, which removes the change in "
+    "end-to-end distance that defeats the A3. That is the fix for the A3's problem, by construction.",
+    "<b>Sweep:</b> 8 curvatures × 8 thicknesses × 4 widths, each with the guide travel re-tuned, "
+    "every cell judged at the worst of four assumed axis positions. The optimum, R32 / 1.8 mm / "
+    "6 mm, sits at 19.8 % strain against the 20 % limit; R28 / 1.4 mm / 6 mm has 3.2 points of "
+    "strain margin and the widest travel window.",
+    "<b>All 24 as-built checks pass</b> (six designs × four axis positions).",
+    "<b>Weakness:</b> even the best A6 returns with about a fifth of the A3's neutral stiffness, "
+    "and the valid region is patchy (0.5–1 mm travel windows), so print and axis tolerance matter. "
+    "A6 FEA was <b>deliberately skipped</b> in this round: its biggest unknown is the real axis "
+    "position, which a quick print settles and a simulation cannot.",
+]
+A8_POINTS = [
+    "<b>Why it exists:</b> a serpentine can lengthen and shorten in plan, so it accommodates the "
+    "attachment points moving apart, which the A3 arch cannot.",
+    "<b>Part 1</b> (your three SolidWorks exports, finger inferred from the A8 rings): 2/3/4 turns × "
+    "spine curvature by contact FEA. It found the drawn section too weak (under 0.5 N·mm) and "
+    "unprintable with a 0.4 mm nozzle: the 3-turn plan's lobe tips are 0.62 mm in radius.",
+    "<b>Part 2</b> (the real index PIP from the fit-check assembly, printable 1.2 mm true width): "
+    "2 turns beats 3 at every height; strain, not stiffness, is the limit, because wrapping the "
+    "R 5.2 cams costs about h/2R by itself; the best curvature is the flattest arch that still "
+    "clears the real middle phalanx by 0.25 mm. Selected: 2 turns, 1.2 × 2.4 mm, sagitta 2.75 mm.",
+    "<b>The one weak spot:</b> 26 % strain where the strip enters the collar at 90°, against 16.5 % "
+    "in the strip. Partly the model's rigid tie, but it is where a print will crack first: blend "
+    "the junction with a 1–2 mm fillet.",
+]
+TYPE_A_TENDON = [
+    "From the hand assembly: the finger holds <b>3.0–3.4 N</b> at the fingertip with guides flush "
+    "to the palmar face, <b>4.3–6.2 N</b> with guides standing proud, limited by servo stroke "
+    "(placeholder MG995 at half stall, 47 N, 31.4 mm).",
+    "How far below the joint axis the tendon runs decides almost everything; where along the "
+    "phalanx the guide sits changes force by at most 20 %.",
+    "<b>The DIP only flexes to 40–51°</b> in the CAD (human: 80–90°), confirmed by an exact solid "
+    "intersection. If that is not intended it is the first thing to change in the Type A hand.",
+    "The pin carries the tendon's compression, so none of the Type B buckling problem applies.",
+]
+R1_INTRO = (
+    "Five families, 55 variants, each simulated as a whole flex zone bolted between the "
+    "phalanges with a full nonlinear flexion sweep and three off-axis load cases (twist, "
+    "sideways bend, axial). 42 leaf variants and 4 of 13 lattice variants were run at the PIP; "
+    "the winners were checked at the MCP and DIP. A mesh check (2 vs 3 elements through) moved "
+    "every selection metric by under 1 %. The 9 remaining lattice runs were <b>deliberately "
+    "skipped</b> this round: the four run all reach 20 % strain by 10–20°, the trend with strut "
+    "thickness is monotonic, and the missing variants change cell count, not slenderness.")
+R1_TABLE = [
+    ("B5 crossed", ["B5_t150_a45", "B5_t150_a60", "B5_t150_a75", "B5_t200_a45", "B5_t125_a45"]),
+    ("B3 dual leaf", ["B3_t150_w30", "B3_t200_w20", "B3_t200_w30", "B3_t150_w20"]),
+    ("B6 multi-leaf", ["B6_n4_t150_taper15", "B6_n4_t200"]),
+    ("B1 hourglass", ["B1_t100_notch100", "B1_t200_notch050"]),
+    ("Lattice", ["B_T090_X3", "B00_baseline"]),
+]
+R1_GAP = (
+    "Round 1 bends each joint with a pure moment and lets it translate freely, which is the "
+    "right test of a spring and the wrong test of a joint that has to carry a tendon. At the "
+    "MCP none of the winners passes the return gate at 12 MPa (0.38–0.63×), so the MCP needs "
+    "the thicker grading of REPORT.md §5.2 whatever else is chosen. At the DIP all pass "
+    "(3.5–4.0×). The tendon-routing study (docs/11) then estimated, by Euler buckling, that "
+    "every round-1 leaf buckles at a fraction of the servo's tension, which is why round 2 "
+    "exists and why section 5 measures that compression directly.")
+R2_INTRO = (
+    "Round 2 adds three ways of carrying the tendon's compression so the TPU only has to spring "
+    "the joint back: <b>B4</b> rolling lobes, <b>B8</b> a knuckle in a cup (central or 2 mm "
+    "dorsal), <b>B9</b> a stocky compression strut with one neck; and a <b>deep tendon</b> option "
+    "that moves the tendon channel as far palmar as the section allows (PIP 1.93 → 3.40 mm), so "
+    "the same fingertip force needs less tension. Until now these had only hand estimates. "
+    "This round simulated the TEST_PLAN shortlist (rows 1–11) by nonlinear FEA.")
+R2_METHOD = [
+    "Same flex zone and attachment as round 1 (proximal collar fixed, distal collar a rigid body).",
+    "<b>Bend</b> the joint to the pose (0° and 60°) with its translations free, then <b>hold the "
+    "angle</b> and ramp a force along the tendon's line, from its distal entry towards its proximal "
+    "exit, plus a 1 % sideways push so a symmetric joint can find its buckling mode.",
+    "Bearing faces (B4 lobes, B8 knuckle and cup, 0.3 mm apart as printed) carry a surface-to-surface "
+    "contact pair, penalty 10 E/h.",
+    "Capacity is the first of: the solver finds no equilibrium (collapse), the axial stiffness "
+    "falls below 10 % of its initial value (buckling), or peak strain reaches 20 %.",
+    "Graded meshes (two quadratic elements through each leaf, 0.5 mm in bearings, 0.8 mm in the "
+    "collars): a uniform leaf-size mesh needed over 12 GB in SPOOLES and was killed.",
+    "Verified first: a committed round-1 run (B3_t200_w30) re-run here reproduced its moments to "
+    "five figures and its collision angle to 0.02°.",
+]
 R2_FINDINGS_STATIC = []
 RATIONALE = []
 UNKNOWNS = []
-LINKS_INTRO = "TO BE WRITTEN"
-PRINT_LINKS = []
-APPENDIX = []
+LINKS_INTRO = (
+    "Every link points at the file on branch claude/modest-cray-kbb75b of Melle2006/BARNES_UI "
+    "(GitHub: open, then <i>Download raw file</i>). STL is for the slicer; STEP is the same part "
+    "for CAD or slicers that accept it. Print every TPU part of one batch from the same dried "
+    "spool in one session, at 100 % infill, 0.4 mm line width, 0.2 mm layers, with leaves lying "
+    "lengthwise in the XY plane (modules on their side), as TEST_PLAN.md §2 sets out; measure "
+    "every leaf, strip or neck at three points before testing and reject parts more than ±10 % "
+    "off nominal.")
+_A8M = "results/a8_index_pip_printable/model/"
+_A6 = "A6 designs/"
+_RIG = "TYPE B/round2/test_rig/"
+PRINT_LINKS_COMMON = [
+    ("Batch 0 — measure the material first (TPU, same spool as everything else)", [
+        ("Tensile dog-bone 1BA, 1.0 mm and 2.0 mm, printed flat", "TPU ×3 each",
+         [_RIG + "tensile_1BA_t1.0_flat.stl", _RIG + "tensile_1BA_t2.0_flat.stl"]),
+        ("Tensile strip, 1.0 and 2.0 mm, standing on its edge (laid down as a leaf is)", "TPU ×3 each",
+         [_RIG + "tensile_strip_t1.0_edge.stl", _RIG + "tensile_strip_t2.0_edge.stl"]),
+        ("Compression cylinder Ø10 × 10 mm", "TPU ×3, on its flat end",
+         [_RIG + "compression_d10_h10.stl"]),
+    ]),
+    ("Test rig (PLA)", [
+        ("Rig base (clamps to a table edge; protractor)", "PLA, on its side plate, 4 perimeters",
+         [_RIG + "rig_base.stl", _RIG + "rig_assembly.step"]),
+        ("Load adapter (hook arm at 30 / 37.5 / 44.8 mm)", "PLA, 3+ perimeters", [_RIG + "load_adapter.stl"]),
+        ("Tendon pulley (623ZZ bearing on an M3 bolt)", "PLA", [_RIG + "pulley.stl"]),
+        ("Type B phalanges (as-built tendon)", "PLA, one set per as-built module tested",
+         ["TYPE B/common_phalanges/02_Phalanx1.stl", "TYPE B/common_phalanges/04_Phalanx2.stl",
+          "TYPE B/common_phalanges/06_Phalanx3.stl"]),
+        ("Type B phalanges (deep tendon)", "PLA, one set per deep module tested",
+         ["TYPE B/round2/deep_offset/deep_phalanges/02_Phalanx1.stl",
+          "TYPE B/round2/deep_offset/deep_phalanges/04_Phalanx2.stl",
+          "TYPE B/round2/deep_offset/deep_phalanges/06_Phalanx3.stl"]),
+    ]),
+]
+PRINT_LINKS_TYPE_A = [
+    ("Type A springs for the existing hand (index PIP)", [
+        ("A8 2-turn strip, sagitta 2.75 mm (selected)", "TPU ×2; fillet the collar junction",
+         [_A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_IndexPP_frame.stl",
+          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_IndexPP_frame.step",
+          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_Assem3_frame.step"]),
+        ("A8 2-turn strip, sagitta 3.00 mm (fallback if prints come out proud)", "TPU ×1",
+         [_A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_IndexPP_frame.stl",
+          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_IndexPP_frame.step"]),
+        ("A6 sliding leaf R28 / 1.4 / 6 mm (print first: strain margin)", "TPU, both bodies printed in place (0.25 mm sliding clearance), ×2",
+         [_A6 + "A6_PIP_SlidingLeaf_R28_t1.4_w6.STL", _A6 + "A6_PIP_SlidingLeaf_R28_t1.4_w6.STEP"]),
+        ("A6 sliding leaf R32 / 1.8 / 6 mm (sweep optimum, at the strain limit)", "TPU, both bodies in place, ×1",
+         [_A6 + "A6_PIP_SlidingLeaf_R32_t1.8_w6.STL", _A6 + "A6_PIP_SlidingLeaf_R32_t1.8_w6.STEP"]),
+        ("A3 twin strap (benchmark: test the print you already have)", "no new print needed",
+         ["reference_parts/A3_PIP_twin_strap_1.0mm.step"]),
+    ]),
+]
+PRINT_LINKS = []          # assembled in finalise() once the Type B list is settled
+APPENDIX = [
+    ("A3 FEA, mesh study", "results/a3_mesh_study/", "scripts/a3_mesh_study.py"),
+    ("A3 reduced-order vs FEA", "results/a3_rom_vs_fea.json", "scripts/a3_rom_vs_fea.py"),
+    ("A3 parameter sweep", "results/a3_parameter_sweep/", "scripts/a3_parameter_sweep.py"),
+    ("A3 GUI run", "results/a3_gui_run/", "docs/manual/running-a-simulation.md"),
+    ("A6 sweep and checks", "results/a6/", "scripts/a6_parameter_sweep.py"),
+    ("A8 meander study (part 1)", "results/a8_meander_study/", "scripts/a8_meander_study.py"),
+    ("A8 printable study (part 2)", "results/a8_index_pip_printable/", "scripts/a8_printable_report.py"),
+    ("A8 mesh convergence (new)", "results/a8_mesh_convergence/", "scripts/a8_meander_study.py"),
+    ("Type A tendon routing", "results/tendon_routing/", "scripts/tendon_routing_analysis.py"),
+    ("Tendon pivot", "results/tendon_pivot/", "scripts/tendon_pivot_optimizer.py"),
+    ("Type B round-1 FEA", "TYPE B/analysis/results/", "TYPE B/analysis/fea_typeb.py"),
+    ("Type B round-1 report", "TYPE B/analysis/REPORT.md", "TYPE B/analysis/analyse_results.py"),
+    ("Type B round-2 FEA (new)", "TYPE B/round2/fea/results/", "TYPE B/round2/fea_round2.py"),
+    ("Type B round-2 test plan", "TYPE B/round2/TEST_PLAN.md", "TYPE B/round2/predict_round2.py"),
+    ("Material basis (new)", "results/sunlu_rescale/", "scripts/sunlu_rescale.py"),
+]

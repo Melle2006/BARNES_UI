@@ -1,0 +1,9 @@
+=== B3_t200_w30 as-built 0 deg
+    capacity 9.981000000000007 N at 12 MPa (axial stiffness fell below 10 % of its initial value), 116.1 s
+=== B3_t200_w30 as-built 60 deg
+    capacity 0.0 N at 12 MPa (no load increment converged), 83.3 s
+=== B5_t200_a45 deep 0 deg
+    capacity 30.20382876775884 N at 12 MPa (peak strain reached 20 %), 141.3 s
+=== B5_t200_a45 deep 60 deg
+=== B3_t200_w30 as-built 60 deg
+=== B3_t200_w30 as-built 60 deg
