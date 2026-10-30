@@ -67,3 +67,12 @@ Winner under each weighting: balanced: `B5_t150_a45`, range-first: `B5_t150_a45`
 | `B6_n6_t150` | 76.7 | collision | 12.6 % | 16.1 % | 2.02 | 1.84 | 2.38 | 1.26 | 10.7 | 31.8 | 0.84 | 0.8× | not eligible: too weak to return the finger |
 
 Winner under each weighting: balanced: `B6_n4_t150_taper15`, range-first: `B6_n4_t150_taper15`, durability-first: `B6_n4_t150_taper15`, equal: `B6_n4_t150_taper20`
+
+### B-lattice (bow-tie)
+
+| Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `B00_baseline` **(selected)** | 20.2 | strain 20 % | – | 20.0 % | 2.86 | 38.36 | 9.69 | 2.09 | 10.4 | 21.7 | 0.05 | 12.1× | 0.490 |
+| `B_T100_X3` | 13.0 | strain 20 % | – | 20.0 % | 2.75 | 47.74 | 7.76 | 1.72 | 10.1 | 21.0 | 0.05 | 12.1× | 0.450 |
+
+Winner under each weighting: balanced: `B00_baseline`, range-first: `B00_baseline`, durability-first: `B00_baseline`, equal: `B_T100_X3`

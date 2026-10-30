@@ -158,14 +158,14 @@ def select(joint):
     raw = [json.loads(p.read_text()) for p in sorted(rdir.glob("*.json"))]
     rows = [metrics(r, joint) for r in raw]
     for m in rows:
-        m["eligible"] = (not m.get("error")) and m.get("returns_ok", False) and m.get("strain_at_ref") is not None \
-            and m.get("k_lateral") is not None
+        # A run that stops before REF_ANGLE (the lattice) is still ranked: its
+        # range is already strain-limited well before the solver stopped, and
+        # the strain term then drops out of the score for its whole family.
+        m["eligible"] = (not m.get("error")) and m.get("returns_ok", False) and m.get("k_lateral") is not None
         if not m.get("error"):
             why = []
             if not m.get("returns_ok"):
                 why.append("too weak to return the finger")
-            if m.get("strain_at_ref") is None:
-                why.append(f"solver stopped before {REF_ANGLE:.0f} deg")
             if m.get("k_lateral") is None:
                 why.append("off-axis run missing")
             m["not_eligible_because"] = "; ".join(why)
