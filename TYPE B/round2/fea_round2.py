@@ -253,7 +253,7 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
     out("*STEP, NLGEOM, INC=4000")
     out(ctrl)
     out("*STATIC")
-    out("0.004, 1.0, 1e-7, 0.01")
+    out("0.0005, 1.0, 1e-5, 0.01")   # 0.075 N first (0.6 N diverged to NaN on a bent leaf); 0.0015 N floor
     out("*CLOAD")
     out(f"REF, 2, {T_MAX * (fy + SIDE_PUSH):.6f}")
     out(f"REF, 3, {T_MAX * fz:.6f}")

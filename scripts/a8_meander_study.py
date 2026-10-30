@@ -774,6 +774,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="Rerun one label at shifted axes: LABEL:dy1/dz1,dy2/dz2,...")
     parser.add_argument("--flexion", type=float, default=FLEXION_MAX_DEG)
     parser.add_argument("--element-size", type=float, default=ELEMENT_SIZE_MM)
+    parser.add_argument("--printable-element-size", type=float, default=None,
+                        help="Override the printable strips' element size (mesh-convergence runs).")
     parser.add_argument("--timeout", type=float, default=7200.0)
     parser.add_argument("--archive", type=Path, default=None)
     parser.add_argument("--keep-frd", action="store_true",
@@ -837,6 +839,8 @@ def main(argv: list[str] | None = None) -> int:
         if run["kind"] == "printable":
             # Three quadratic elements across the true width.
             size = round(min(PRINTABLE_ELEMENT_MM, run["true_width"] / 3.0), 3)
+            if args.printable_element_size:
+                size = args.printable_element_size
         elif geometry and geometry["min_true_width_mm"] < 2.0 * size:
             size = round(geometry["min_true_width_mm"] / 2.0, 3)
         print(f"run   {run['label']}  (element size {size} mm)", flush=True)
