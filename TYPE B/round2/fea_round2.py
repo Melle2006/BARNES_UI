@@ -429,6 +429,12 @@ def postprocess(res):
             cands.append((T[j], "axial stiffness fell below 10 % of its initial value"))
     fr = res["frames"]
     over = [f for f in fr if f["strain_max"] >= STRAIN_LIMIT]
+    if fr and fr[0]["strain_max"] >= STRAIN_LIMIT and fr[0]["T"] <= 0.01 * res["T_max"]:
+        # The first snapshot comes after a sliver of load: the pose alone already
+        # breaks the strain limit, so the joint cannot reach this angle at all.
+        return dict(capacity_T=0.0, axial_k0=float(k0), peak_strain_at_cap=fr[0]["strain_max"],
+                    limited_by=f"already {100 * fr[0]['strain_max']:.0f} % strain from bending "
+                               "to the pose, before any tendon load")
     if over:
         prev = [f for f in fr if f["T"] < over[0]["T"]]
         if prev:
