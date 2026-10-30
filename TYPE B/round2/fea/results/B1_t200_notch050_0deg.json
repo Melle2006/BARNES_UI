@@ -1,0 +1,265 @@
+{
+ "variant": "B1_t200_notch050",
+ "offset": "as-built",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B1_hourglass",
+ "params": {
+  "throat": 2.0,
+  "notch_frac": 0.5
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 1.93,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -1.93,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -1.93,
+  0.8
+ ],
+ "element_size": 1.0,
+ "elements": 10164,
+ "nodes": 18545,
+ "contact_faces": null,
+ "info": {
+  "t": 2.0,
+  "w": 3.0,
+  "notch_len": 3.775,
+  "web_h": 8.907130750570548,
+  "k_over_E": 2.484099555190866
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "load": [
+  {
+   "T": 0.43124999999999414,
+   "hold_moment": 0.01610558,
+   "du_y": 0.0004649987,
+   "du_z": -0.01212229,
+   "du_along": 0.01212229
+  },
+  {
+   "T": 2.4878999999999984,
+   "hold_moment": 0.09502856,
+   "du_y": 0.002698514,
+   "du_z": -0.06932099,
+   "du_along": 0.06932099
+  },
+  {
+   "T": 8.269349999999998,
+   "hold_moment": 0.3365082,
+   "du_y": 0.009129074,
+   "du_z": -0.2248676,
+   "du_along": 0.2248676
+  },
+  {
+   "T": 14.269350000000003,
+   "hold_moment": 0.6202475,
+   "du_y": 0.01607131,
+   "du_z": -0.3785749,
+   "du_along": 0.3785749
+  },
+  {
+   "T": 20.26935000000001,
+   "hold_moment": 0.9415132,
+   "du_y": 0.02333608,
+   "du_z": -0.5250038,
+   "du_along": 0.5250038
+  },
+  {
+   "T": 26.269350000000014,
+   "hold_moment": 1.304856,
+   "du_y": 0.03098559,
+   "du_z": -0.664716,
+   "du_along": 0.664716
+  },
+  {
+   "T": 32.26934999999999,
+   "hold_moment": 1.715753,
+   "du_y": 0.03909949,
+   "du_z": -0.7982442,
+   "du_along": 0.7982442
+  },
+  {
+   "T": 38.26934999999999,
+   "hold_moment": 2.180944,
+   "du_y": 0.04777569,
+   "du_z": -0.9260928,
+   "du_along": 0.9260928
+  },
+  {
+   "T": 44.269349999999996,
+   "hold_moment": 2.709039,
+   "du_y": 0.05714481,
+   "du_z": -1.048742,
+   "du_along": 1.048742
+  },
+  {
+   "T": 50.26935,
+   "hold_moment": 3.311242,
+   "du_y": 0.06739552,
+   "du_z": -1.166658,
+   "du_along": 1.166658
+  },
+  {
+   "T": 56.26935000000001,
+   "hold_moment": 4.002642,
+   "du_y": 0.07880934,
+   "du_z": -1.280305,
+   "du_along": 1.280305
+  },
+  {
+   "T": 62.26935000000001,
+   "hold_moment": 4.804555,
+   "du_y": 0.09182982,
+   "du_z": -1.390169,
+   "du_along": 1.390169
+  },
+  {
+   "T": 68.26934999999999,
+   "hold_moment": 5.748031,
+   "du_y": 0.1071894,
+   "du_z": -1.496802,
+   "du_along": 1.496802
+  },
+  {
+   "T": 74.26934999999999,
+   "hold_moment": 6.898206,
+   "du_y": 0.1264049,
+   "du_z": -1.600862,
+   "du_along": 1.600862
+  },
+  {
+   "T": 78.01935,
+   "hold_moment": 7.821971,
+   "du_y": 0.1427089,
+   "du_z": -1.66504,
+   "du_along": 1.66504
+  },
+  {
+   "T": 78.2061,
+   "hold_moment": 7.894826,
+   "du_y": 0.1440476,
+   "du_z": -1.668269,
+   "du_along": 1.668269
+  }
+ ],
+ "load_completed_fraction": 0.521374,
+ "frames": [
+  {
+   "T": 0.43124999999999414,
+   "strain_max": 0.0032760529824651385,
+   "strain_p99": 0.0024696285984586613,
+   "strain_min": -0.005119734298303591
+  },
+  {
+   "T": 2.487890550000016,
+   "strain_max": 0.019017643390601968,
+   "strain_p99": 0.014308254872627319,
+   "strain_min": -0.02923618811918849
+  },
+  {
+   "T": 8.269335899999996,
+   "strain_max": 0.0642349296707827,
+   "strain_p99": 0.04803475555013346,
+   "strain_min": -0.09443297181820964
+  },
+  {
+   "T": 14.269335900000002,
+   "strain_max": 0.11244188471321603,
+   "strain_p99": 0.08310742659292611,
+   "strain_min": -0.15820538674184925
+  },
+  {
+   "T": 20.26933590000001,
+   "strain_max": 0.16163798736497914,
+   "strain_p99": 0.1185579934971307,
+   "strain_min": -0.21826975784615987
+  },
+  {
+   "T": 26.269335900000012,
+   "strain_max": 0.21149569439337634,
+   "strain_p99": 0.15366322758476725,
+   "strain_min": -0.2749551987003631
+  },
+  {
+   "T": 32.26933589999999,
+   "strain_max": 0.2617045080823728,
+   "strain_p99": 0.19049765527380622,
+   "strain_min": -0.32867839595042037
+  },
+  {
+   "T": 38.26933589999999,
+   "strain_max": 0.3119707221446706,
+   "strain_p99": 0.22574163801515484,
+   "strain_min": -0.37996890972390795
+  },
+  {
+   "T": 44.269335899999994,
+   "strain_max": 0.3620094266659868,
+   "strain_p99": 0.2593627974757388,
+   "strain_min": -0.42947725148380145
+  },
+  {
+   "T": 50.2693359,
+   "strain_max": 0.41150193211078556,
+   "strain_p99": 0.29583345012790996,
+   "strain_min": -0.4780072008189583
+  },
+  {
+   "T": 56.26933590000001,
+   "strain_max": 0.4600283916152319,
+   "strain_p99": 0.32990168489050636,
+   "strain_min": -0.5265559381487581
+  },
+  {
+   "T": 62.26933590000001,
+   "strain_max": 0.5085082201131479,
+   "strain_p99": 0.3616692223965398,
+   "strain_min": -0.5804728627563012
+  },
+  {
+   "T": 68.26933590000002,
+   "strain_max": 0.5575342069561138,
+   "strain_p99": 0.3934013666469003,
+   "strain_min": -0.6481243110287653
+  },
+  {
+   "T": 74.26933589999999,
+   "strain_max": 0.6056743508308946,
+   "strain_p99": 0.42586219640911693,
+   "strain_min": -0.7331293989633334
+  },
+  {
+   "T": 78.01933590000002,
+   "strain_max": 0.6332600548658733,
+   "strain_p99": 0.44776509063746145,
+   "strain_min": -0.8059088054690239
+  },
+  {
+   "T": 78.20610344999999,
+   "strain_max": 0.6342670016496608,
+   "strain_p99": 0.44880948012278593,
+   "strain_min": -0.8104560411527262
+  }
+ ],
+ "ccx_tail": "  constants per material and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n divergence; the increment size is decreased to 8.239746e-06\n the increment is reattempted\n\n\n *ERROR: increment size smaller than minimum\n best solution and residuals are in the frd file\n\n",
+ "stopped": null,
+ "wall_s": 558.7,
+ "capacity_T": 24.885915552951708,
+ "limited_by": "peak strain reached 20 %",
+ "axial_k0": 35.76559913208368,
+ "peak_strain_at_cap": 0.2
+}
