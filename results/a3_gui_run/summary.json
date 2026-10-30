@@ -1,0 +1,59 @@
+{
+  "what": "A3 joint rotational stiffness, solved through the GUI rather than a script",
+  "why": "8e687f0 made the GUI able to mesh at all. This run checks that the GUI and scripts/a3_joint_stiffness.py produce the same answer on the real part, which nothing had ever verified: every other committed result came from the script.",
+  "run_id": "c284be4e014d",
+  "run_date": "2026-10-29",
+  "source_part": "reference_parts/A3_PIP_twin_strap_1.0mm.step",
+  "driven_through": "GUI, Analyse > Nonlinear FEA",
+  "inputs": {
+    "smallest_feature_mm": 1.0,
+    "elements_through_thickness": 2,
+    "element_size_mm": 0.5,
+    "second_order": true,
+    "rotation_deg": 2.0,
+    "attachment_depth_mm": 3.2,
+    "axis_point_mm": [
+      6.09,
+      44.935,
+      5.44
+    ],
+    "provisional_modulus_mpa": 12.0
+  },
+  "result": {
+    "torque_n_mm": 0.2130442,
+    "stiffness_n_mm_per_rad": 6.103266754870506,
+    "converged": true,
+    "increments_completed": 48,
+    "cutbacks": 285,
+    "element_count": 32965,
+    "node_count": 61021,
+    "element_type": "C3D10",
+    "wall_seconds": 3934.186
+  },
+  "comparison_with_script": {
+    "scripted_source": "results/a3_mesh_study/mesh_2.json",
+    "scripted_stiffness_n_mm_per_rad": 6.103266754870506,
+    "gui_stiffness_n_mm_per_rad": 6.103266754870506,
+    "relative_difference": 0.0,
+    "mesh_identical": true,
+    "increments_identical": true,
+    "cutbacks_identical": true,
+    "verdict": "Identical to every digit reported. Same element and node counts, so Gmsh received the same geometry with the same settings; same increments and cutbacks, so CalculiX walked the same path through it. Only wall clock differs (3934 s here against 2778 s scripted), which is the machine being busy rather than anything about the solve."
+  },
+  "caveats": [
+    "Material parameters are assumed, not calibrated. The 12 MPa modulus is a placeholder and the absolute torque is not a validated prediction.",
+    "285 cutbacks across 48 increments. Identical in both runners, so this is a property of the model rather than of either runner. A cutback count far above the increment count has previously been the only visible symptom of a badly posed boundary condition on this project; resolve it before quoting 6.103.",
+    "Mesh quality: 2079 poor elements and a maximum edge ratio of 1100, on a mesh that nonetheless converged and matched the script."
+  ],
+  "files_here": {
+    "manifest.json": "Written by the runner: solver, mesh and material provenance.",
+    "results.dat": "CalculiX reactions per increment. The final DISTAL_ROT total force at time 1.0 is the reported moment.",
+    "results.sta": "Per-increment convergence record.",
+    "results.cvg": "Per-iteration residuals."
+  },
+  "files_not_here": {
+    "input.inp": "5.0 MB, regenerated from the STEP and the inputs above.",
+    "results.frd": "7.4 MB field output; not needed for the stiffness.",
+    "solver.log": "2.6 MB CalculiX output; increments and cutbacks above were parsed from it with core.fea.results.parse_convergence."
+  }
+}

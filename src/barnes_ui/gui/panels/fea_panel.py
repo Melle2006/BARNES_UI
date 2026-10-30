@@ -242,6 +242,20 @@ class FeaPanel(QWidget):
             self._solver_help.hide()
             self._run_button.setEnabled(True)
 
+    @property
+    def solver_available(self) -> bool:
+        """Whether a CalculiX executable was found by the last ``refresh_solver``.
+
+        Public so that the workflow indicator reports solver availability from the
+        same discovery this panel ran, rather than probing the filesystem again and
+        possibly disagreeing with what is on screen.
+        """
+        return self._solver is not None
+
+    @property
+    def solver_description(self) -> str | None:
+        return self._solver.describe() if self._solver is not None else None
+
     def reload_capabilities(self) -> None:
         self._registry = CapabilityRegistry.load()
         self._populate_capabilities()

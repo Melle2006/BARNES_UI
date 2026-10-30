@@ -26,7 +26,7 @@ A fourth level — fully coupled nonlinear contact simulation of the whole hand 
 target. The staged approach in [05-development-plan.md](05-development-plan.md) substitutes a
 reduced-order joint model extracted from L3 instead.
 
-The single largest risk is not computational. It is that **TPU 95A is a hardness grade, not a
+The single largest risk is not computational. It is that **TPU 90A is a hardness grade, not a
 material model**, and that every force the application reports is only as good as the material
 characterisation behind it. This is addressed in section 6 and in
 [07-risk-register.md](07-risk-register.md).
@@ -197,8 +197,8 @@ interacts with another deformable part. Those caveats are displayed alongside th
 
 This deserves its own section because it dominates the accuracy of everything downstream.
 
-"TPU 95A" names a Shore A hardness. It does not determine a stress–strain curve. Two filaments
-both sold as 95A can differ considerably in modulus. On top of that, a 3D-printed part is not the
+"TPU 90A" names a Shore A hardness. It does not determine a stress–strain curve. Two filaments
+both sold as 90A can differ considerably in modulus. On top of that, a 3D-printed part is not the
 bulk material: layer adhesion, print orientation, extrusion temperature, and whether the part is
 solid or infilled all change the effective response, and the part is mechanically anisotropic
 along the build direction.

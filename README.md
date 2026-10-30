@@ -74,9 +74,10 @@ So the code is built around a few non-negotiable rules:
 - **No fabricated output.** If a solver is missing or fails to converge, that is reported as a
   failure. The application never substitutes a simpler model and presents the result as if it
   came from the one you asked for.
-- **No invented material parameters.** "TPU 95A" is a hardness grade, not a constitutive model.
-  Hyperelastic coefficients are never synthesised from it. Without calibrated data the
-  application runs in a clearly marked provisional mode.
+- **No invented material parameters.** "TPU 90A" is a hardness grade, not a constitutive model.
+  Hyperelastic coefficients are never synthesised from it, nor from the filament's datasheet,
+  which carries no modulus. Without calibrated data the application runs in a clearly marked
+  provisional mode.
 - **Convergence is not validity.** A converged solution of the wrong model is a precise answer to
   the wrong question, and the UI does not conflate the two.
 
@@ -204,7 +205,7 @@ back, and it needs different machinery throughout — so the project carries bot
 | Capability | Notes |
 |---|---|
 | Parametric meander template | Generates a serpentine from parameters; volume exact against `width × thickness × centreline_length` |
-| Reference parts | `reference_parts/*.step` — a turn-count sweep with analytically known properties |
+| Reference parts | `reference_parts/meander_*.step` — a turn-count sweep with analytically known properties, plus `A3_PIP_twin_strap_1.0mm.step`, the real part the committed results were measured on |
 | Path-following tracing | Marches along the member instead of sweeping across it |
 | Spatial beam model | Torsion plus both bending axes, for members that twist |
 
@@ -343,7 +344,8 @@ scripts/        Reproducible analysis runs: the A3 stiffness, its mesh study, th
                 Phase 6 solver benchmarks, the reference assembly generator
 results/        Evidence those scripts produced, committed so it can be read
                 without re-running anything
-reference_parts/ Generated geometry with analytically known properties
+reference_parts/ Generated geometry with analytically known properties, plus the
+                real A3 twin strap the committed results were measured on
 src/barnes_ui/
     core/       Engineering code — CAD, assemblies, mechanics, FEA, kinematics,
                 optimisation, storage. NO GUI IMPORTS.
@@ -373,6 +375,8 @@ Full details, including the data model and the fidelity ladder:
 | [07-risk-register.md](docs/07-risk-register.md) | What could make the results wrong, and what is done about each |
 | [08-calculix-installation.md](docs/08-calculix-installation.md) | What was installed, why, and the four defects checking it exposed |
 | [09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md) | Which advanced solver capabilities work here, measured rather than assumed |
+| [manual/running-a-simulation.md](docs/manual/running-a-simulation.md) | A recorded end-to-end run of the GUI — every click, every number, every caveat, with screenshots |
+| [handover.md](docs/handover.md) | Where things stand: recent changes, work in flight, open decisions, and what a second machine needs |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---

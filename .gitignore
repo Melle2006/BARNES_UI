@@ -41,3 +41,10 @@ desktop.ini
 # Solver run logs: the per-mesh JSON summaries are the evidence worth keeping;
 # the console transcript is reproducible from the archived run directory.
 results/**/*.log
+
+# Screenshots from scripts/visual_check.py. Regenerated in about ninety seconds by
+# one command, several megabytes a set, and they change whenever Qt, the system
+# theme or any panel does -- so committing them means binary churn on every UI
+# edit for evidence nobody can diff. The JSON summaries elsewhere under results/
+# are kept because re-running a mesh study costs hours; re-running this does not.
+results/visual/
