@@ -1,0 +1,270 @@
+{
+ "variant": "B3_t200_w30",
+ "offset": "as-built",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B3_dual_leaf",
+ "params": {
+  "t": 2.0,
+  "w": 3.0,
+  "taper": 1.0
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 1.93,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -1.93,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -1.93,
+  0.8
+ ],
+ "element_size": 1.0,
+ "elements": 4606,
+ "nodes": 8870,
+ "contact_faces": null,
+ "info": {
+  "t": 2.0,
+  "t_root": 2.0,
+  "w": 3.0,
+  "n": 2,
+  "taper": 1.0,
+  "k_over_E": 0.5298013245033113,
+  "x_span": [
+   3.4000000000000004,
+   6.4
+  ]
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "load": [
+  {
+   "T": 3.4499999999999864,
+   "hold_moment": 0.1858251,
+   "du_y": 0.03561358,
+   "du_z": -0.1569555,
+   "du_along": 0.1569555
+  },
+  {
+   "T": 8.325000000000015,
+   "hold_moment": 1.392344,
+   "du_y": 0.2633986,
+   "du_z": -0.3719229,
+   "du_along": 0.3719229
+  },
+  {
+   "T": 9.68444999999999,
+   "hold_moment": 4.065984,
+   "du_y": 0.7678491,
+   "du_z": -0.4657149,
+   "du_along": 0.4657149
+  },
+  {
+   "T": 9.981000000000007,
+   "hold_moment": 6.134862,
+   "du_y": 1.1568,
+   "du_z": -0.5325192,
+   "du_along": 0.5325192
+  },
+  {
+   "T": 10.12845,
+   "hold_moment": 7.872582,
+   "du_y": 1.481796,
+   "du_z": -0.6018868,
+   "du_along": 0.6018868
+  },
+  {
+   "T": 10.306649999999994,
+   "hold_moment": 10.9092,
+   "du_y": 2.044253,
+   "du_z": -0.7585226,
+   "du_along": 0.7585226
+  },
+  {
+   "T": 10.397849999999986,
+   "hold_moment": 12.77854,
+   "du_y": 2.38567,
+   "du_z": -0.8788751,
+   "du_along": 0.8788751
+  },
+  {
+   "T": 10.474649999999997,
+   "hold_moment": 14.40313,
+   "du_y": 2.678379,
+   "du_z": -0.998729,
+   "du_along": 0.998729
+  },
+  {
+   "T": 10.539449999999995,
+   "hold_moment": 15.74923,
+   "du_y": 2.917476,
+   "du_z": -1.108879,
+   "du_along": 1.108879
+  },
+  {
+   "T": 10.64535000000001,
+   "hold_moment": 17.82666,
+   "du_y": 3.279132,
+   "du_z": -1.298145,
+   "du_along": 1.298145
+  },
+  {
+   "T": 10.732199999999992,
+   "hold_moment": 19.39042,
+   "du_y": 3.544355,
+   "du_z": -1.455873,
+   "du_along": 1.455873
+  },
+  {
+   "T": 10.810200000000004,
+   "hold_moment": 20.68192,
+   "du_y": 3.758129,
+   "du_z": -1.595823,
+   "du_along": 1.595823
+  },
+  {
+   "T": 10.97594999999999,
+   "hold_moment": 23.13632,
+   "du_y": 4.149366,
+   "du_z": -1.885179,
+   "du_along": 1.885179
+  },
+  {
+   "T": 11.103600000000014,
+   "hold_moment": 24.80657,
+   "du_y": 4.402956,
+   "du_z": -2.098903,
+   "du_along": 2.098903
+  },
+  {
+   "T": 11.258250000000015,
+   "hold_moment": 26.6314,
+   "du_y": 4.667144,
+   "du_z": -2.347248,
+   "du_along": 2.347248
+  },
+  {
+   "T": 11.457299999999993,
+   "hold_moment": 28.74634,
+   "du_y": 4.955614,
+   "du_z": -2.653839,
+   "du_along": 2.653839
+  }
+ ],
+ "load_completed_fraction": 0.07638199999999995,
+ "frames": [
+  {
+   "T": 3.4499999999999864,
+   "strain_max": 0.01936713443246818,
+   "strain_p99": 0.017313864802617308,
+   "strain_min": -0.02926313572851813
+  },
+  {
+   "T": 8.325000000000015,
+   "strain_max": 0.058502913297991954,
+   "strain_p99": 0.050542203159239685,
+   "strain_min": -0.08466208750069115
+  },
+  {
+   "T": 9.684375000000012,
+   "strain_max": 0.09955552017872504,
+   "strain_p99": 0.08883272614819661,
+   "strain_min": -0.13812546038360807
+  },
+  {
+   "T": 9.981005849999992,
+   "strain_max": 0.12786344012561512,
+   "strain_p99": 0.11671628189799621,
+   "strain_min": -0.17223518577589636
+  },
+  {
+   "T": 10.128394349999992,
+   "strain_max": 0.15125946602371387,
+   "strain_p99": 0.13963733312725388,
+   "strain_min": -0.20123796716317333
+  },
+  {
+   "T": 10.306720499999999,
+   "strain_max": 0.1967396296356636,
+   "strain_p99": 0.17741316160635182,
+   "strain_min": -0.25121035019012705
+  },
+  {
+   "T": 10.397789999999985,
+   "strain_max": 0.2254546529994017,
+   "strain_p99": 0.2020800668222582,
+   "strain_min": -0.2812557998356814
+  },
+  {
+   "T": 10.474629899999998,
+   "strain_max": 0.25022640540800456,
+   "strain_p99": 0.22387467714322154,
+   "strain_min": -0.30696871092503775
+  },
+  {
+   "T": 10.539463500000013,
+   "strain_max": 0.270500283587203,
+   "strain_p99": 0.24525443874204605,
+   "strain_min": -0.32799023100457947
+  },
+  {
+   "T": 10.645302749999995,
+   "strain_max": 0.3010741908084542,
+   "strain_p99": 0.28091160889673644,
+   "strain_min": -0.3598899421055912
+  },
+  {
+   "T": 10.7322633,
+   "strain_max": 0.3266085909872203,
+   "strain_p99": 0.3062076605852113,
+   "strain_min": -0.38342897230484274
+  },
+  {
+   "T": 10.810151549999992,
+   "strain_max": 0.35553227494433126,
+   "strain_p99": 0.3277051299829665,
+   "strain_min": -0.40252695703194674
+  },
+  {
+   "T": 10.975875750000007,
+   "strain_max": 0.41152325164139936,
+   "strain_p99": 0.36956377588516265,
+   "strain_min": -0.4385595659049064
+  },
+  {
+   "T": 11.103651150000015,
+   "strain_max": 0.45006939523593004,
+   "strain_p99": 0.39799156686764714,
+   "strain_min": -0.4664368505941682
+  },
+  {
+   "T": 11.258247450000002,
+   "strain_max": 0.4923881569345243,
+   "strain_p99": 0.43549623706655693,
+   "strain_min": -0.49764664670312597
+  },
+  {
+   "T": 11.457341099999995,
+   "strain_max": 0.5415165185852657,
+   "strain_p99": 0.48020587760417655,
+   "strain_min": -0.5373935885409998
+  }
+ ],
+ "ccx_tail": "Using up to 4 cpu(s) for the stress calculation.\n\n average force= 126398760297.705215\n time avg. forc= 1858805298.517542\n largest residual force= 448896861579875.500000 in node 8348 and dof 1\n largest increment of disp= 6.972644e+02\n largest correction to disp= 1.461652e+02 in node 3243 and dof 3\n\n no convergence\n\n iteration 14\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n Using up to 4 cpu(s) for the stress calculation.\n\n average force= 41500137638.784904\n time avg. forc= 610296141.768714\n largest residual force= 147094352577798.968750 in node 8348 and dof 1\n largest increment of disp= 6.972644e+02\n largest correction to disp= 3.965785e+01 in node 3101 and dof 1\n\n no convergence\n\n iteration 15\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n Using up to 4 cpu(s) for the stress calculation.\n\n average force= nan\n time avg. forc= 0.022204\n largest residual force= 4671297533561906.000000 in node 2964 and dof 2\n largest increment of disp= 6.972644e+02\n largest correction to disp= 5.890523e+02 in node 3031 and dof 3\n\n no convergence\n\n iteration 16\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
+ "wall_s": 116.1,
+ "capacity_T": 9.981000000000007,
+ "limited_by": "axial stiffness fell below 10 % of its initial value",
+ "axial_k0": 22.329304853478448,
+ "peak_strain_at_cap": 0.12786288185147993
+}
