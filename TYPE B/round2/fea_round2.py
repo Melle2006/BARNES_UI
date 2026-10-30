@@ -220,7 +220,8 @@ def graded_mesh(shape, field, h_min):
     return mesh
 
 
-def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose_only=False):
+def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose_only=False,
+         guided_u0=None):
     buf, out = R1._lines()
     out(f"** Round-2 tendon load: pose {math.degrees(theta):.1f} deg, then up to {T_MAX} N")
     R1._common(out, mesh, material, prox, dist, ref_xyz)
@@ -254,9 +255,16 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
     out(ctrl)
     out("*STATIC")
     out("0.0005, 1.0, 1e-5, 0.01")   # 0.075 N first (0.6 N diverged to NaN on a bent leaf); 0.0015 N floor
-    out("*CLOAD")
-    out(f"REF, 2, {T_MAX * (fy + SIDE_PUSH):.6f}")
-    out(f"REF, 3, {T_MAX * fz:.6f}")
+    if guided_u0 is None:
+        out("*CLOAD")
+        out(f"REF, 2, {T_MAX * (fy + SIDE_PUSH):.6f}")
+        out(f"REF, 3, {T_MAX * fz:.6f}")
+    else:
+        # Displacement control straight along the tendon line, from the pose.
+        out("*BOUNDARY")
+        out(f"REF, 2, 2, {guided_u0[1] + S_MAX * fy:.6f}")
+        out(f"REF, 3, 3, {guided_u0[2] + S_MAX * fz:.6f}")
+        out("*NODE PRINT, NSET=REF, TOTALS=NO, FREQUENCY=1\nRF")
     out("*NODE PRINT, NSET=ROT, TOTALS=NO, FREQUENCY=1\nRF")
     out("*NODE PRINT, NSET=REF, FREQUENCY=1\nU")
     out(f"*NODE FILE, FREQUENCY={FIELD_EVERY}\nU")
@@ -264,6 +272,16 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
     out("*END STEP")
     return "\n".join(buf) + "\n"
 
+
+#: Guided runs (bearings): the distal body is driven S_MAX along the tendon line.
+#: B8's 0.75 mm return leaves buckle sideways at about 0.3 N (Euler, guided), so
+#: under a force the joint snaps 0.3 mm sideways before the knuckle seats in its cup,
+#: and CalculiX cannot follow the snap (it diverged to NaN at 1.2 N whatever the
+#: contact penalty). Driving the body along the tendon line skips that sway and
+#: measures what the bearing carries once seated; the sideways reaction the guide
+#: needs is reported, so the help it gives is visible.
+S_MAX = 1.5
+GUIDED_FAMILIES = ("B4", "B8")
 
 #: penalty = factor x E / h. 10 is the A8 study's value; the knuckle-in-cup diverged to
 #: NaN with it the moment the 0.3 mm gap closed, so the bearing runs use 1.
@@ -342,9 +360,24 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
 
     work = Path(workdir or tempfile.mkdtemp(prefix=f"r2_{name}_{angle}_"))
     work.mkdir(parents=True, exist_ok=True)
-    (work / "job.inp").write_text(deck(mesh, provisional_tpu(E_MPA), prox, dist, ref_xyz,
-                                       theta, direction, contact, h, pose_only))
     env = dict(os.environ, OMP_NUM_THREADS=str(threads), CCX_NPROC_EQUATION_SOLVER=str(threads))
+    guided = (not pose_only) and v["family"] in GUIDED_FAMILIES
+    guided_u0 = None
+    if guided:
+        guided_u0 = np.zeros(3)
+        if angle != 0.0:
+            # The guided path starts from the pose, so find the pose first.
+            pw = work / "pose"
+            pw.mkdir(parents=True, exist_ok=True)
+            (pw / "job.inp").write_text(deck(mesh, provisional_tpu(E_MPA), prox, dist, ref_xyz,
+                                             theta, direction, contact, h, True))
+            solve_watched(pw, env, direction)
+            pu = R1.parse_dat(pw / "job.dat").get(("displacements", "REF"), []) if (pw / "job.dat").exists() else []
+            if not pu or pu[-1][0] < 0.999:
+                raise RuntimeError(f"{name}: pose {angle} deg not reached")
+            guided_u0 = np.array(pu[-1][1])
+    (work / "job.inp").write_text(deck(mesh, provisional_tpu(E_MPA), prox, dist, ref_xyz,
+                                       theta, direction, contact, h, pose_only, guided_u0))
     stopped = solve_watched(work, env, direction)
     p = subprocess.CompletedProcess([], 0, (work / "job.log").read_text(), "")
 
@@ -353,6 +386,7 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
     ures = hist.get(("displacements", "REF"), [])
     # step 1 ends at total time 1 (or is absent at 0 deg pose, which still runs it)
     load = [(t - 1.0, m[0], u) for (t, m), (_, u) in zip(mom, ures) if t > 1.0 + 1e-9]
+    ref_rf = {round(t, 9): f for t, f in hist.get(("forces", "REF"), [])}
     pose_u = [u for (t, u) in ures if t <= 1.0 + 1e-9]
     u0 = np.array(pose_u[-1]) if pose_u else np.zeros(3)
     pose_moment = [m for (t, m) in mom if t <= 1.0 + 1e-9]
@@ -366,13 +400,23 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
                      if not isinstance(x, dict)},
                pose_reached=bool(pose_moment) or angle == 0.0,
                pose_moment=pose_moment[-1][0] if pose_moment else None,
-               pose_ref_u=list(u0))
+               pose_ref_u=list(u0), guided=guided)
     res["load"] = []
+    tmap = [(0.0, 0.0)]
     for frac, m, u in load:
         du = np.array(u) - u0
-        res["load"].append(dict(T=frac * T_MAX, hold_moment=m,
-                                du_y=float(du[1]), du_z=float(du[2]),
-                                du_along=float(du[1] * direction[0] + du[2] * direction[1])))
+        row = dict(hold_moment=m, du_y=float(du[1]), du_z=float(du[2]),
+                   du_along=float(du[1] * direction[0] + du[2] * direction[1]))
+        if guided:
+            f = ref_rf.get(round(frac + 1.0, 9))
+            if f is None:
+                continue
+            row["T"] = float(f[1] * direction[0] + f[2] * direction[1])
+            row["side_force"] = float(-f[1] * direction[1] + f[2] * direction[0])
+        else:
+            row["T"] = frac * T_MAX
+        res["load"].append(row)
+        tmap.append((frac, row["T"]))
     res["load_completed_fraction"] = load[-1][0] if load else 0.0
 
     frames = []
@@ -387,7 +431,7 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
             lam = R1.principal(E[ok])
             smax = np.sqrt(np.clip(1 + 2 * lam[:, 2], 1e-9, None)) - 1
             smin = np.sqrt(np.clip(1 + 2 * lam[:, 0], 1e-9, None)) - 1
-            frames.append(dict(T=(t - 1.0) * T_MAX, strain_max=float(smax.max()),
+            frames.append(dict(T=float(np.interp(t - 1.0, *zip(*tmap))), strain_max=float(smax.max()),
                                strain_p99=float(np.percentile(smax, 99.5)),
                                strain_min=float(smin.min())))
     res["frames"] = frames
@@ -415,7 +459,15 @@ def postprocess(res):
     k = np.diff(T) / np.maximum(np.diff(du), 1e-12)
     k0 = np.median(k[: max(2, len(k) // 20)])
     cands = []
-    if res.get("stopped"):
+    if res.get("guided"):
+        i = int(np.argmax(T))
+        if i < len(T) - 1 and T[-1] < 0.98 * T[i]:
+            cands.append((T[i], "peak tendon force: the bearing gives way past it (guided)"))
+        elif res["load_completed_fraction"] < 0.999:
+            cands.append((T.max(), "solver stopped (guided); largest force reached"))
+        else:
+            cands.append((T.max(), f"held to {S_MAX} mm of shortening (guided)"))
+    elif res.get("stopped"):
         cands.append((T[-1], res["stopped"]))
     elif res["load_completed_fraction"] < 0.999:
         cands.append((T[-1], "limit point: no equilibrium beyond this tension (buckling/collapse)"))
