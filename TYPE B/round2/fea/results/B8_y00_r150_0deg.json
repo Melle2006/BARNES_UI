@@ -1,0 +1,104 @@
+{
+ "variant": "B8_y00_r150",
+ "offset": "as-built",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B8",
+ "params": {
+  "family": "B8",
+  "pad_y": 0.0,
+  "knuckle_r": 1.5
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 1.93,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -1.93,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -1.93,
+  0.8
+ ],
+ "element_size": 0.375,
+ "elements": 20268,
+ "nodes": 37654,
+ "contact_faces": [
+  442,
+  418
+ ],
+ "info": {
+  "t": 0.75,
+  "w": 1.95,
+  "knuckle_r": 1.5,
+  "pivot_y": 0.0,
+  "seat_rom_deg": 80.48731511472266,
+  "k_over_E": 0.018160182119205302,
+  "bearing_gap": 0.2991742132211759,
+  "bearing": "knuckle",
+  "bearing_w_total": 3.9
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "load": [
+  {
+   "T": 0.3046499999999841,
+   "hold_moment": 0.05712963,
+   "du_y": 0.3008132,
+   "du_z": -0.06928582,
+   "du_along": 0.06928582
+  },
+  {
+   "T": 0.647399999999998,
+   "hold_moment": 0.1194304,
+   "du_y": 0.2931029,
+   "du_z": -0.1358033,
+   "du_along": 0.1358033
+  },
+  {
+   "T": 1.2413999999999925,
+   "hold_moment": 0.1934174,
+   "du_y": 0.2395134,
+   "du_z": -0.2404758,
+   "du_along": 0.2404758
+  }
+ ],
+ "load_completed_fraction": 0.00827599999999995,
+ "frames": [
+  {
+   "T": 0.30468749999998934,
+   "strain_max": 0.01481685106845565,
+   "strain_p99": 0.01033904520178265,
+   "strain_min": -0.02056553587998433
+  },
+  {
+   "T": 0.6474609000000076,
+   "strain_max": 0.01927433614416807,
+   "strain_p99": 0.014921118775743878,
+   "strain_min": -0.028458921339269305
+  },
+  {
+   "T": 1.2414642000000087,
+   "strain_max": 0.025371607769105298,
+   "strain_p99": 0.02270774158932383,
+   "strain_min": -0.043807490556245
+  }
+ ],
+ "ccx_tail": "st residual force= 15573336350.550535 in node 9072 and dof 1\n largest increment of disp= 6.693702e+01\n largest correction to disp= 6.693702e+01 in node 1012 and dof 2\n\n no convergence\n\n iteration 5\n\n Number of contact spring elements=17123\n\n Using up to 4 cpu(s) for the stress calculation.\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n Using up to 4 cpu(s) for the stress calculation.\n\nline search factor=0.250000\n\n Using up to 4 cpu(s) for the stress calculation.\n\n average force= 96986979763103.046875\n time avg. forc= 6061686235193.940430\n largest residual force= 6274000513972806656.000000 in node 18017 and dof 3\n largest increment of disp= 2.761630e+03\n largest correction to disp= 2.761630e+03 in node 18019 and dof 1\n\n no convergence\n\n iteration 6\n\n Number of contact spring elements=24505\n\n Using up to 4 cpu(s) for the stress calculation.\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n Using up to 4 cpu(s) for the stress calculation.\n\nline search factor=-nan\n\n Using up to 4 cpu(s) for the stress calculation.\n\n average force= nan\n time avg. forc= 0.000189\n largest residual force= 0.000000 in node 18017 and dof 3\n largest increment of disp= 1.456219e+06\n largest correction to disp= 1.456219e+06 in node 10277 and dof 1\n\n",
+ "stopped": null,
+ "wall_s": 786.0,
+ "capacity_T": 1.2413999999999925,
+ "limited_by": "limit point: no equilibrium beyond this tension (buckling/collapse)",
+ "axial_k0": 4.774892246765318,
+ "peak_strain_at_cap": 0.0253709487747219
+}
