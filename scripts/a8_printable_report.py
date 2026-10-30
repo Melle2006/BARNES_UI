@@ -53,7 +53,7 @@ def _get(record, *path):
     return value
 
 
-def summarise(r: dict) -> dict:
+def summarise(r: dict, cad: dict | None = None) -> dict:
     g = r.get("geometry") or {}
     t90 = _get(r, "torque_n_mm", "90")
     e90 = _get(r, "peak_strain_interior", "90")
@@ -67,6 +67,12 @@ def summarise(r: dict) -> dict:
     else:
         if (r.get("clearance_at_rest_mm") or 0.0) < MIN_REST_CLEARANCE_MM - MESH_TOLERANCE_MM:
             reasons.append(f"clears the cams by only {r.get('clearance_at_rest_mm', 0):.2f} mm")
+        # The cams are an idealisation. The real middle phalanx base stands about
+        # 0.05 mm proud of its R 5.195 arc, so clearance is checked again against the
+        # actual phalanx solids from the assembly, and that check decides.
+        if cad and min(cad.values()) < MIN_REST_CLEARANCE_MM:
+            reasons.append(f"clears the real {min(cad, key=cad.get)} by only "
+                           f"{min(cad.values()):.2f} mm")
         if drop is not None and drop <= FULL_RANGE_DEG:
             reasons.append(f"snaps: torque falls at {drop:.0f} deg")
         elif reached < FULL_RANGE_DEG - 0.5:
@@ -81,6 +87,8 @@ def summarise(r: dict) -> dict:
         "centreline_mm": g.get("centreline_length_mm"),
         "volume_mm3": g.get("volume_mm3"),
         "clearance_at_rest_mm": r.get("clearance_at_rest_mm"),
+        "cad_clearance_pp_mm": (cad or {}).get("Index_PP"),
+        "cad_clearance_mp_mm": (cad or {}).get("Index_MP"),
         "k0_n_mm_per_rad": r.get("k0_n_mm_per_rad"),
         **{f"T{a}_n_mm": _get(r, "torque_n_mm", a) for a in ANGLES},
         "T100_n_mm": r.get("torque_max_n_mm") if reached >= 99.5 else None,
@@ -124,7 +132,8 @@ COLUMNS = [
     ("T60_n_mm", "T60°"), ("T90_n_mm", "T90° (N·mm)"), ("T100_n_mm", "T100°"),
     ("energy_0_90_mJ", "Energy 0–90° (mJ)"), ("strain_60_pct", "ε60° (%)"),
     ("strain_90_pct", "ε90° (%)"), ("strain_90_at_clamp_pct", "ε90° at clamp (%)"),
-    ("T90_per_strain_n_mm", "T90/ε90 (N·mm)"), ("clearance_at_rest_mm", "Rest clearance (mm)"),
+    ("T90_per_strain_n_mm", "T90/ε90 (N·mm)"), ("clearance_at_rest_mm", "Cam clearance (mm)"),
+    ("cad_clearance_mp_mm", "Real-CAD clearance, MP (mm)"),
     ("width_at_90_mm", "Width at 90° (mm)"), ("feasible", "Feasible"), ("why_not", "Why not"),
 ]
 
@@ -154,7 +163,9 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     records = [json.loads(p.read_text(encoding="utf-8"))
                for p in sorted((args.study / "cases").glob("*.json"))]
-    rows = [summarise(r) for r in records]
+    cad_path = args.study / "cad_clearance.json"
+    cad = json.loads(cad_path.read_text(encoding="utf-8")) if cad_path.is_file() else {}
+    rows = [summarise(r, cad.get(r["label"])) for r in records]
     best = select(rows)
     write_csv(args.study / "ranking.csv",
               sorted(rows, key=lambda r: (not r["feasible"], -(r["T90_n_mm"] or 0))))
