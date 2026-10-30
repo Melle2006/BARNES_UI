@@ -17,12 +17,32 @@
 
 Winner under each weighting: balanced: `B3_t150_w30`, range-first: `B3_t150_w30`, durability-first: `B3_t150_w30`, equal: `B3_t150_w30_taper20`
 
+### B5 crossed strip
+
+| Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `B5_t150_a45` **(selected)** | 77.8 | strain 20 % | 14.7 % | 20.0 % | 2.46 | 3.51 | 4.93 | 2.61 | 8.4 | 4.8 | 0.89 | 1.5× | 0.853 |
+| `B5_t150_a60` | 74.6 | strain 20 % | 15.3 % | 20.0 % | 2.43 | 3.31 | 4.62 | 2.44 | 10.0 | 3.3 | 0.97 | 1.5× | 0.763 |
+| `B5_t150_a75` | 75.4 | strain 20 % | 15.1 % | 20.0 % | 2.45 | 3.08 | 4.58 | 2.43 | 12.8 | 2.5 | 1.10 | 1.4× | 0.706 |
+| `B5_t200_a60` | 62.1 | strain 20 % | 19.2 % | 20.0 % | 2.45 | 8.05 | 9.11 | 4.83 | 7.1 | 2.4 | 0.74 | 3.5× | 0.316 |
+| `B5_t200_a45` | 59.1 | strain 20 % | 20.3 % | 20.0 % | 2.46 | 8.51 | 8.91 | 4.72 | 6.0 | 3.2 | 0.67 | 3.7× | 0.263 |
+| `B5_t100_a45` | 77.8 | collision | 10.1 % | 13.7 % | 1.66 | 1.02 | 1.45 | 0.77 | 12.9 | 7.9 | 0.91 | 0.4× | not eligible: too weak to return the finger |
+| `B5_t100_a60` | 79.3 | collision | 9.5 % | 13.4 % | 1.62 | 0.96 | 1.45 | 0.77 | 15.6 | 5.2 | 1.05 | 0.4× | not eligible: too weak to return the finger |
+| `B5_t100_a75` | 81.6 | collision | 9.2 % | 13.3 % | 1.62 | 0.89 | 1.47 | 0.78 | 20.2 | 3.9 | 1.23 | 0.4× | not eligible: too weak to return the finger |
+| `B5_t125_a45` | 77.9 | collision | 12.8 % | 17.6 % | 2.12 | 2.00 | 2.83 | 1.50 | 10.3 | 6.1 | 0.89 | 0.9× | not eligible: too weak to return the finger |
+| `B5_t125_a60` | 79.2 | collision | 11.7 % | 16.4 % | 2.00 | 1.90 | 2.85 | 1.51 | 12.3 | 4.1 | 1.00 | 0.8× | not eligible: too weak to return the finger |
+| `B5_t125_a75` | 81.5 | collision | 12.5 % | 18.3 % | 2.24 | 1.75 | 2.88 | 1.53 | 15.9 | 3.1 | 1.21 | 0.8× | not eligible: too weak to return the finger |
+
+Winner under each weighting: balanced: `B5_t150_a45`, range-first: `B5_t150_a45`, durability-first: `B5_t150_a45`, equal: `B5_t150_a45`
+
 ### B6 multi-leaf
 
 | Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `B6_n6_t200` **(selected)** | 55.2 | self-contact | 16.5 % | 15.4 % | 2.41 | 4.38 | 3.49 | 1.85 | 8.0 | 14.9 | 0.51 | 1.9× | 0.560 |
-| `B6_n4_t200` | 64.2 | strain 20 % | 18.6 % | 20.0 % | 2.41 | 4.43 | 4.88 | 2.59 | 7.1 | 12.7 | 0.69 | 1.9× | 0.458 |
+| `B6_n4_t150_taper15` **(selected)** | 72.5 | strain 20 % | 16.4 % | 20.0 % | 2.43 | 2.63 | 3.27 | 1.72 | 8.4 | 15.0 | 0.67 | 1.2× | 0.742 |
+| `B6_n6_t200` | 55.2 | self-contact | 16.5 % | 15.4 % | 2.41 | 4.38 | 3.49 | 1.85 | 8.0 | 14.9 | 0.51 | 1.9× | 0.519 |
+| `B6_n4_t150_taper20` | 58.2 | strain 20 % | 20.7 % | 20.0 % | 2.43 | 3.25 | 3.24 | 1.70 | 7.6 | 10.0 | 0.46 | 1.4× | 0.463 |
+| `B6_n4_t200` | 64.2 | strain 20 % | 18.6 % | 20.0 % | 2.41 | 4.43 | 4.88 | 2.59 | 7.1 | 12.7 | 0.69 | 1.9× | 0.397 |
 | `B6_n4_t100` | 76.4 | collision | 7.7 % | 9.9 % | 1.20 | 0.55 | 0.73 | 0.39 | 14.5 | 82.7 | 0.80 | 0.2× | not eligible: too weak to return the finger |
 | `B6_n4_t125` | 76.6 | collision | 9.8 % | 12.6 % | 1.53 | 1.08 | 1.42 | 0.75 | 11.5 | 44.9 | 0.79 | 0.5× | not eligible: too weak to return the finger |
 | `B6_n4_t150` | 76.7 | collision | 12.3 % | 15.8 % | 1.92 | 1.87 | 2.47 | 1.31 | 9.5 | 26.9 | 0.81 | 0.8× | not eligible: too weak to return the finger |
@@ -30,4 +50,4 @@ Winner under each weighting: balanced: `B3_t150_w30`, range-first: `B3_t150_w30`
 | `B6_n6_t125` | 76.7 | collision | 10.1 % | 13.0 % | 1.57 | 1.07 | 1.41 | 0.75 | 12.9 | 52.1 | 0.82 | 0.5× | not eligible: too weak to return the finger |
 | `B6_n6_t150` | 76.7 | collision | 12.6 % | 16.1 % | 2.02 | 1.84 | 2.38 | 1.26 | 10.7 | 31.8 | 0.84 | 0.8× | not eligible: too weak to return the finger |
 
-Winner under each weighting: balanced: `B6_n6_t200`, range-first: `B6_n4_t200`, durability-first: `B6_n6_t200`, equal: `B6_n6_t200`
+Winner under each weighting: balanced: `B6_n4_t150_taper15`, range-first: `B6_n4_t150_taper15`, durability-first: `B6_n4_t150_taper15`, equal: `B6_n4_t150_taper20`
