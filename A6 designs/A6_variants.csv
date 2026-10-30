@@ -1,0 +1,7 @@
+file,radius_mm,leaf_thickness_mm,leaf_width_mm,travel_mm,guide_length_mm,mp_cuff_length_mm,free_arc_length_mm,chord_mm,anchor_angle_deg,guide_angle_deg,bend_angle_deg,top_of_leaf_z_mm,height_above_pp_cuff_mm,leaf_guide_interference_mm3,pp_body_volume_mm3,mp_body_volume_mm3
+A6_PIP_SlidingLeaf_R24,24,1.0,6.0,12.5,16.5,19.0,30.77,28.71,43.6,-29.8,73.5,16.36,11.66,0.0,521.6,1537.0
+A6_PIP_SlidingLeaf_R26,26,1.0,6.0,11.5,15.5,18.5,30.35,28.66,39.4,-27.5,66.9,15.11,10.41,0.0,501.4,1404.5
+A6_PIP_SlidingLeaf_R28,28,1.0,6.0,11.5,15.5,18.5,30.06,28.64,36.4,-25.1,61.5,14.3,9.6,0.0,492.2,1375.4
+A6_PIP_SlidingLeaf_R30,30,1.0,6.0,11.0,15.0,18.5,29.83,28.61,33.6,-23.4,57.0,13.53,8.83,0.0,481.4,1313.1
+A6_PIP_SlidingLeaf_R32_t1.8_w6,32,1.8,6.0,11.5,15.5,19.0,29.65,28.6,31.4,-21.7,53.1,13.88,9.18,0.0,716.6,1369.3
+A6_PIP_SlidingLeaf_R28_t1.4_w6,28,1.4,6.0,12.0,16.0,19.0,30.07,28.65,36.6,-25.0,61.5,14.81,10.11,0.0,617.9,1443.8

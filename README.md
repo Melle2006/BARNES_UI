@@ -346,6 +346,8 @@ results/        Evidence those scripts produced, committed so it can be read
                 without re-running anything
 reference_parts/ Generated geometry with analytically known properties, plus the
                 real A3 twin strap the committed results were measured on
+A6 designs/     A6 sliding-end leaf-spring CAD (STEP, STL), from scripts/make_a6_designs.py;
+                its analyses are in results/a6/
 src/barnes_ui/
     core/       Engineering code — CAD, assemblies, mechanics, FEA, kinematics,
                 optimisation, storage. NO GUI IMPORTS.

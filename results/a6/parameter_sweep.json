@@ -1,0 +1,1097 @@
+{
+  "figure_of_merit": "worst-case (over assumed PIP axis positions) mean restoring torque over 0-105 deg flexion = stored energy / angle",
+  "modulus_MPa": 13.0,
+  "strain_limit_pct": 20.0,
+  "axis_positions_mm": [
+    [
+      10.0,
+      0.0
+    ],
+    [
+      15.0,
+      0.0
+    ],
+    [
+      20.0,
+      0.0
+    ],
+    [
+      24.0,
+      0.0
+    ]
+  ],
+  "max_leaf_width_mm": 6.0,
+  "best": {
+    "radius_mm": 32.0,
+    "thickness_mm": 1.8,
+    "width_mm": 6.0,
+    "travel_mm": 11.5,
+    "peak_strain_pct": 19.8,
+    "mean_torque_Nmm": 1.306,
+    "torque_at_105_Nmm": 2.276,
+    "travel_window_mm": 1.0,
+    "closest_to_axis_mm": 4.18,
+    "height_above_pp_cuff_mm": 9.18,
+    "mp_cuff_length_mm": 19.0,
+    "valid": true,
+    "reason": ""
+  },
+  "best_by_strain_limit": {
+    "10": {
+      "radius_mm": 30.0,
+      "thickness_mm": 0.8,
+      "width_mm": 6.0,
+      "travel_mm": 11.0,
+      "mean_torque_Nmm": 0.121,
+      "torque_at_105_Nmm": 0.211,
+      "peak_strain_pct": 9.1
+    },
+    "15": {
+      "radius_mm": 30.0,
+      "thickness_mm": 1.2,
+      "width_mm": 6.0,
+      "travel_mm": 11.5,
+      "mean_torque_Nmm": 0.409,
+      "torque_at_105_Nmm": 0.735,
+      "peak_strain_pct": 13.4
+    },
+    "20": {
+      "radius_mm": 32.0,
+      "thickness_mm": 1.8,
+      "width_mm": 6.0,
+      "travel_mm": 11.5,
+      "mean_torque_Nmm": 1.306,
+      "torque_at_105_Nmm": 2.276,
+      "peak_strain_pct": 19.8
+    },
+    "25": {
+      "radius_mm": 26.0,
+      "thickness_mm": 2.0,
+      "width_mm": 6.0,
+      "travel_mm": 13.5,
+      "mean_torque_Nmm": 2.513,
+      "torque_at_105_Nmm": 4.324,
+      "peak_strain_pct": 24.9
+    },
+    "30": {
+      "radius_mm": 24.0,
+      "thickness_mm": 2.0,
+      "width_mm": 6.0,
+      "travel_mm": 13.5,
+      "mean_torque_Nmm": 3.336,
+      "torque_at_105_Nmm": 5.151,
+      "peak_strain_pct": 29.5
+    }
+  },
+  "a3_stiffness_Nmm_per_rad": 6.103,
+  "simulations": [
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [
+        13.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 22.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "goes taut before 105 deg"
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [
+        11.5,
+        12.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [
+        12.0,
+        12.5,
+        13.0,
+        13.5,
+        14.0
+      ],
+      "travel_mm": 13.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 2.0,
+      "energy_per_ei_worst": 0.10082227378572266,
+      "torque_105_per_ei_worst": 0.08599977475682433,
+      "kappa_max_worst": 0.2683219227667571,
+      "closest_to_axis_mm": 4.61,
+      "head_on_stop_from_deg": [
+        46.0,
+        49.0,
+        53.0,
+        55.0
+      ],
+      "height_above_pp_cuff_mm": 11.56,
+      "mp_cuff_length_mm": 19.5
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [
+        12.0,
+        12.5,
+        13.0
+      ],
+      "travel_mm": 12.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.1109047060993843,
+      "torque_105_per_ei_worst": 0.08705265830361218,
+      "kappa_max_worst": 0.2882853111203339,
+      "closest_to_axis_mm": 4.13,
+      "head_on_stop_from_deg": [
+        44.0,
+        47.0,
+        50.0,
+        51.0
+      ],
+      "height_above_pp_cuff_mm": 11.66,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [
+        12.0,
+        12.5,
+        13.0,
+        13.5
+      ],
+      "travel_mm": 12.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.5,
+      "energy_per_ei_worst": 0.11500225265244066,
+      "torque_105_per_ei_worst": 0.0889086531874072,
+      "kappa_max_worst": 0.2955220604826316,
+      "closest_to_axis_mm": 4.03,
+      "head_on_stop_from_deg": [
+        44.0,
+        47.0,
+        49.0,
+        51.0
+      ],
+      "height_above_pp_cuff_mm": 11.87,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [
+        12.5,
+        13.0,
+        13.5
+      ],
+      "travel_mm": 13.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.11215218273285923,
+      "torque_105_per_ei_worst": 0.09186275632517922,
+      "kappa_max_worst": 0.2882143857953807,
+      "closest_to_axis_mm": 4.31,
+      "head_on_stop_from_deg": [
+        45.0,
+        48.0,
+        51.0,
+        52.0
+      ],
+      "height_above_pp_cuff_mm": 12.21,
+      "mp_cuff_length_mm": 19.5
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [
+        13.0,
+        13.5
+      ],
+      "travel_mm": 13.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.11628929958739269,
+      "torque_105_per_ei_worst": 0.0939467150493926,
+      "kappa_max_worst": 0.29549146358198675,
+      "closest_to_axis_mm": 4.2,
+      "head_on_stop_from_deg": [
+        44.0,
+        48.0,
+        50.0,
+        52.0
+      ],
+      "height_above_pp_cuff_mm": 12.42,
+      "mp_cuff_length_mm": 19.5
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [
+        13.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 24.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [
+        13.5,
+        14.0
+      ],
+      "travel_mm": 13.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.1175656370827308,
+      "torque_105_per_ei_worst": 0.09905976613826278,
+      "kappa_max_worst": 0.2954770074222853,
+      "closest_to_axis_mm": 4.38,
+      "head_on_stop_from_deg": [
+        45.0,
+        48.0,
+        51.0,
+        53.0
+      ],
+      "height_above_pp_cuff_mm": 12.97,
+      "mp_cuff_length_mm": 20.0
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [
+        11.0,
+        12.0
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [
+        11.5,
+        12.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        13.0
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.0960752246298529,
+      "torque_105_per_ei_worst": 0.07287391071869485,
+      "kappa_max_worst": 0.27547926187916927,
+      "closest_to_axis_mm": 3.74,
+      "head_on_stop_from_deg": [
+        45.0,
+        48.0,
+        51.0,
+        51.0
+      ],
+      "height_above_pp_cuff_mm": 10.41,
+      "mp_cuff_length_mm": 18.5
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        12.5
+      ],
+      "travel_mm": 12.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.09329457774373473,
+      "torque_105_per_ei_worst": 0.07545523250155649,
+      "kappa_max_worst": 0.26527395173354873,
+      "closest_to_axis_mm": 4.04,
+      "head_on_stop_from_deg": [
+        46.0,
+        50.0,
+        52.0,
+        53.0
+      ],
+      "height_above_pp_cuff_mm": 10.73,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        13.0
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.10333849964709611,
+      "torque_105_per_ei_worst": 0.07536945496339932,
+      "kappa_max_worst": 0.29215965327462323,
+      "closest_to_axis_mm": 3.54,
+      "head_on_stop_from_deg": [
+        44.0,
+        47.0,
+        49.0,
+        50.0
+      ],
+      "height_above_pp_cuff_mm": 10.83,
+      "mp_cuff_length_mm": 18.5
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [
+        12.0,
+        13.0,
+        13.5,
+        14.0
+      ],
+      "travel_mm": 13.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.0827543878706461,
+      "torque_105_per_ei_worst": 0.07964572643046217,
+      "kappa_max_worst": 0.23775299349150608,
+      "closest_to_axis_mm": 5.02,
+      "head_on_stop_from_deg": [
+        50.0,
+        54.0,
+        58.0,
+        61.0
+      ],
+      "height_above_pp_cuff_mm": 11.46,
+      "mp_cuff_length_mm": 20.5
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [
+        12.0,
+        13.0
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 26.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [
+        12.0,
+        13.5,
+        14.0
+      ],
+      "travel_mm": 13.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.08856140206248048,
+      "torque_105_per_ei_worst": 0.08314907248039374,
+      "kappa_max_worst": 0.24878357213699304,
+      "closest_to_axis_mm": 4.83,
+      "head_on_stop_from_deg": [
+        49.0,
+        53.0,
+        57.0,
+        58.0
+      ],
+      "height_above_pp_cuff_mm": 11.89,
+      "mp_cuff_length_mm": 20.5
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [
+        11.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [
+        11.0,
+        12.0
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [
+        11.0,
+        11.5,
+        12.0
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.07718775009819201,
+      "torque_105_per_ei_worst": 0.0657531744712189,
+      "kappa_max_worst": 0.24258038632582982,
+      "closest_to_axis_mm": 4.05,
+      "head_on_stop_from_deg": [
+        49.0,
+        53.0,
+        56.0,
+        56.0
+      ],
+      "height_above_pp_cuff_mm": 9.6,
+      "mp_cuff_length_mm": 18.5
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [
+        11.0,
+        11.5,
+        12.5
+      ],
+      "travel_mm": 11.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.08538998639149506,
+      "torque_105_per_ei_worst": 0.06553421193819278,
+      "kappa_max_worst": 0.26729535017577705,
+      "closest_to_axis_mm": 3.56,
+      "head_on_stop_from_deg": [
+        46.0,
+        50.0,
+        52.0,
+        52.0
+      ],
+      "height_above_pp_cuff_mm": 9.71,
+      "mp_cuff_length_mm": 18.0
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        12.5,
+        13.0
+      ],
+      "travel_mm": 12.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.5,
+      "energy_per_ei_worst": 0.07733535017773578,
+      "torque_105_per_ei_worst": 0.039604839163249576,
+      "kappa_max_worst": 0.23948666646017738,
+      "closest_to_axis_mm": 4.26,
+      "head_on_stop_from_deg": [
+        50.0,
+        54.0,
+        57.0,
+        58.0
+      ],
+      "height_above_pp_cuff_mm": 10.11,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        12.5
+      ],
+      "travel_mm": 12.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.07999340113363798,
+      "torque_105_per_ei_worst": 0.06979738643788515,
+      "kappa_max_worst": 0.2460978783146126,
+      "closest_to_axis_mm": 4.17,
+      "head_on_stop_from_deg": [
+        49.0,
+        53.0,
+        56.0,
+        57.0
+      ],
+      "height_above_pp_cuff_mm": 10.32,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        12.5,
+        13.0
+      ],
+      "travel_mm": 12.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.5,
+      "energy_per_ei_worst": 0.0827896457582325,
+      "torque_105_per_ei_worst": 0.07102019881867772,
+      "kappa_max_worst": 0.2530230217462093,
+      "closest_to_axis_mm": 4.08,
+      "head_on_stop_from_deg": [
+        49.0,
+        53.0,
+        55.0,
+        56.0
+      ],
+      "height_above_pp_cuff_mm": 10.53,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 28.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        12.5,
+        13.0,
+        13.5
+      ],
+      "travel_mm": 12.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 2.0,
+      "energy_per_ei_worst": 0.08010321054215608,
+      "torque_105_per_ei_worst": 0.07277915133660308,
+      "kappa_max_worst": 0.24304882489721805,
+      "closest_to_axis_mm": 4.39,
+      "head_on_stop_from_deg": [
+        50.0,
+        54.0,
+        57.0,
+        58.0
+      ],
+      "height_above_pp_cuff_mm": 10.83,
+      "mp_cuff_length_mm": 19.5
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [
+        10.5,
+        11.0
+      ],
+      "travel_mm": 10.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.06903831942469518,
+      "torque_105_per_ei_worst": 0.06218142682928586,
+      "kappa_max_worst": 0.23703701244028857,
+      "closest_to_axis_mm": 3.67,
+      "head_on_stop_from_deg": [
+        49.0,
+        54.0,
+        57.0,
+        56.0
+      ],
+      "height_above_pp_cuff_mm": 8.33,
+      "mp_cuff_length_mm": 17.5
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [
+        10.5,
+        11.0,
+        11.5
+      ],
+      "travel_mm": 11.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.06681932509789207,
+      "torque_105_per_ei_worst": 0.06342626296562735,
+      "kappa_max_worst": 0.2270240993555122,
+      "closest_to_axis_mm": 3.98,
+      "head_on_stop_from_deg": [
+        51.0,
+        56.0,
+        59.0,
+        59.0
+      ],
+      "height_above_pp_cuff_mm": 8.63,
+      "mp_cuff_length_mm": 18.0
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [
+        10.5,
+        11.0,
+        11.5
+      ],
+      "travel_mm": 11.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.0689595460932732,
+      "torque_105_per_ei_worst": 0.060091457989243695,
+      "kappa_max_worst": 0.23317143181912608,
+      "closest_to_axis_mm": 3.9,
+      "head_on_stop_from_deg": [
+        50.0,
+        55.0,
+        58.0,
+        58.0
+      ],
+      "height_above_pp_cuff_mm": 8.83,
+      "mp_cuff_length_mm": 18.5
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [
+        11.0,
+        11.5,
+        12.0
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.06670529960955243,
+      "torque_105_per_ei_worst": 0.06547629309585204,
+      "kappa_max_worst": 0.223447729752197,
+      "closest_to_axis_mm": 4.21,
+      "head_on_stop_from_deg": [
+        52.0,
+        57.0,
+        60.0,
+        61.0
+      ],
+      "height_above_pp_cuff_mm": 9.13,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [
+        11.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [
+        11.0,
+        11.5,
+        12.0
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.0710996428111466,
+      "torque_105_per_ei_worst": 0.06333980741259636,
+      "kappa_max_worst": 0.23576500312100196,
+      "closest_to_axis_mm": 4.05,
+      "head_on_stop_from_deg": [
+        51.0,
+        55.0,
+        58.0,
+        58.0
+      ],
+      "height_above_pp_cuff_mm": 9.54,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [
+        11.0,
+        11.5,
+        12.0,
+        13.5
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.07348297859144556,
+      "torque_105_per_ei_worst": 0.06429091926975936,
+      "kappa_max_worst": 0.24234907077036358,
+      "closest_to_axis_mm": 3.96,
+      "head_on_stop_from_deg": [
+        50.0,
+        55.0,
+        57.0,
+        57.0
+      ],
+      "height_above_pp_cuff_mm": 9.75,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 30.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [
+        11.5,
+        12.0,
+        12.5
+      ],
+      "travel_mm": 12.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.07099789167339604,
+      "torque_105_per_ei_worst": 0.06580910872276984,
+      "kappa_max_worst": 0.23204947953112873,
+      "closest_to_axis_mm": 4.27,
+      "head_on_stop_from_deg": [
+        52.0,
+        56.0,
+        59.0,
+        60.0
+      ],
+      "height_above_pp_cuff_mm": 10.05,
+      "mp_cuff_length_mm": 19.5
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [
+        10.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [
+        10.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [
+        10.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [
+        11.0,
+        11.5
+      ],
+      "travel_mm": 11.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.06537011916739345,
+      "torque_105_per_ei_worst": 0.05880548234308969,
+      "kappa_max_worst": 0.22996988909711982,
+      "closest_to_axis_mm": 3.87,
+      "head_on_stop_from_deg": [
+        52.0,
+        57.0,
+        60.0,
+        60.0
+      ],
+      "height_above_pp_cuff_mm": 8.89,
+      "mp_cuff_length_mm": 18.5
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [
+        11.0,
+        11.5,
+        12.0
+      ],
+      "travel_mm": 11.5,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 1.0,
+      "energy_per_ei_worst": 0.06312334901193095,
+      "torque_105_per_ei_worst": 0.06002920995257422,
+      "kappa_max_worst": 0.21970539327436214,
+      "closest_to_axis_mm": 4.18,
+      "head_on_stop_from_deg": [
+        53.0,
+        59.0,
+        62.0,
+        62.0
+      ],
+      "height_above_pp_cuff_mm": 9.18,
+      "mp_cuff_length_mm": 19.0
+    },
+    {
+      "radius_mm": 32.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [
+        11.0,
+        11.5
+      ],
+      "travel_mm": 11.0,
+      "valid_geometry": true,
+      "reason": "",
+      "travel_window_mm": 0.5,
+      "energy_per_ei_worst": 0.06967830411925548,
+      "torque_105_per_ei_worst": 0.06028445543616692,
+      "kappa_max_worst": 0.24317583206001456,
+      "closest_to_axis_mm": 3.7,
+      "head_on_stop_from_deg": [
+        51.0,
+        55.0,
+        58.0,
+        57.0
+      ],
+      "height_above_pp_cuff_mm": 9.3,
+      "mp_cuff_length_mm": 18.5
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [
+        10.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [
+        10.5
+      ],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "only one travel passes"
+    },
+    {
+      "radius_mm": 35.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 0.6,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 0.8,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 1.0,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 1.2,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 1.4,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 1.6,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 1.8,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    },
+    {
+      "radius_mm": 40.0,
+      "thickness_mm": 2.0,
+      "passing_travels_mm": [],
+      "travel_mm": null,
+      "valid_geometry": false,
+      "reason": "snaps onto its stop"
+    }
+  ]
+}
