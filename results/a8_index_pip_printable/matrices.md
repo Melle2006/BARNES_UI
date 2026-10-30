@@ -1,13 +1,25 @@
 # Printable A8 strip on the index PIP — matrices
 
-Selected: **print_2T_w1.2_h1.8_s2.50**
+Selected: **print_2T_w1.2_h2.4_s2.50**
 
 ## 2 turns, true width 1.2 mm, height 1.8 mm
 
 | Sagitta (mm) | Spine R (mm) | Top above bone axis (mm) | k0 (N·mm/rad) | T15° | T30° | T60° | T90° (N·mm) | T100° | Energy 0–90° (mJ) | ε60° (%) | ε90° (%) | ε90° at clamp (%) | T90/ε90 (N·mm) | Rest clearance (mm) | Width at 90° (mm) | Feasible | Why not |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **★ 2.5** | **43.3** | **7.83** | **0.697** | **0.226** | **0.519** | **1.15** | **1.7** | **1.81** | **1.31** | **9.74** | **14.2** | **18.6** | **11.9** | **0.247** | **5.92** | **yes** | **** |
+| 2.5 | 43.3 | 7.83 | 0.697 | 0.226 | 0.519 | 1.15 | 1.7 | 1.81 | 1.31 | 9.74 | 14.2 | 18.6 | 11.9 | 0.247 | 5.92 | yes |  |
 | 3.5 | 31.8 | 8.83 | 0.783 | 0.178 | 0.388 | 0.993 | 1.55 | 1.68 | 1.12 | 8.79 | 12.9 | 20 | 12 | 0.99 | 5.99 | yes |  |
+
+## 2 turns, true width 1.2 mm, height 2.4 mm
+
+| Sagitta (mm) | Spine R (mm) | Top above bone axis (mm) | k0 (N·mm/rad) | T15° | T30° | T60° | T90° (N·mm) | T100° | Energy 0–90° (mJ) | ε60° (%) | ε90° (%) | ε90° at clamp (%) | T90/ε90 (N·mm) | Rest clearance (mm) | Width at 90° (mm) | Feasible | Why not |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **★ 2.5** | **43.3** | **8.43** | **1.11** | **0.36** | **0.868** | **2.1** | **3.28** | **3.54** | **2.39** | **11.2** | **16.3** | **23.6** | **20.1** | **0.242** | **5.89** | **yes** | **** |
+
+## 2 turns, true width 1.6 mm, height 1.8 mm
+
+| Sagitta (mm) | Spine R (mm) | Top above bone axis (mm) | k0 (N·mm/rad) | T15° | T30° | T60° | T90° (N·mm) | T100° | Energy 0–90° (mJ) | ε60° (%) | ε90° (%) | ε90° at clamp (%) | T90/ε90 (N·mm) | Rest clearance (mm) | Width at 90° (mm) | Feasible | Why not |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2.5 | 43.3 | 7.83 | - | - | - | - | - | - | - | - | - | - | - | - | - | NO | analysis failed: ValueError: zero-size array to reduction operation maximum which has n |
 
 ## 2 turns, true width 2.4 mm, height 1.2 mm
 
@@ -33,4 +45,10 @@ Selected: **print_2T_w1.2_h1.8_s2.50**
 | 3 | 36.5 | 8.33 | 0.872 | 0.198 | 0.423 | 0.841 | 1.22 | 1.37 | 0.982 | 11.8 | 18.4 | 18.4 | 6.64 | 0.622 | 6.95 | yes |  |
 | 3.5 | 31.8 | 8.83 | 0.92 | 0.198 | 0.379 | 0.791 | 1.16 | 1.31 | 0.921 | 10.8 | 17.2 | 17.2 | 6.77 | 0.987 | 7.03 | yes |  |
 | 4.5 | 25.6 | 9.83 | 1 | 0.217 | 0.323 | 0.685 | 1.04 | 1.18 | 0.813 | 9.7 | 15.8 | 15.8 | 6.62 | 1.68 | 7.19 | yes |  |
+
+## 3 turns, true width 2.0 mm, height 1.2 mm
+
+| Sagitta (mm) | Spine R (mm) | Top above bone axis (mm) | k0 (N·mm/rad) | T15° | T30° | T60° | T90° (N·mm) | T100° | Energy 0–90° (mJ) | ε60° (%) | ε90° (%) | ε90° at clamp (%) | T90/ε90 (N·mm) | Rest clearance (mm) | Width at 90° (mm) | Feasible | Why not |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2.5 | 43.3 | 7.23 | 2.97 | 1.06 | 2.16 | 3.82 | 4.3 | - | 4.38 | 32.8 | 44.8 | 44.8 | 9.59 | 0.251 | 5.33 | NO | solve stopped at 96 deg; strain 45 % > 20 % |
 

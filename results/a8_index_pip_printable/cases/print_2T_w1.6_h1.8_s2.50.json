@@ -1,0 +1,22 @@
+{
+  "label": "print_2T_w1.6_h1.8_s2.50",
+  "failure": "ValueError: zero-size array to reduction operation maximum which has no identity",
+  "kind": "printable",
+  "n_turns": 2,
+  "sagitta": 2.5,
+  "height": 1.8,
+  "true_width": 1.6,
+  "geometry": {
+    "centreline_length_mm": 40.958567019009024,
+    "max_path_angle_deg": 55.034245297112946,
+    "min_true_width_mm": 1.6,
+    "mean_true_width_mm": 1.6,
+    "lateral_extent_mm": 10.399999147464282,
+    "x_min_mm": -5.2,
+    "x_max_mm": 5.199999147464281,
+    "min_plan_radius_mm": 2.1517963422767026,
+    "spine_apex_top_z_mm": 7.827971580532429,
+    "spine_radius_mm": 43.306125,
+    "volume_mm3": 117.96068247020052
+  }
+}
