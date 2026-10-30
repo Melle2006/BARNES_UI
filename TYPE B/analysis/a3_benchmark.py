@@ -28,7 +28,7 @@ import cadquery as cq  # noqa: E402
 
 REF = Path(__file__).resolve().parent / "a3_reference"
 COLLAR = 3.2
-TARGET = 100.0
+TARGET = float(T.os.environ.get("TYPEB_TARGET_PIP", 100.0))
 
 
 def hinge_frame():
@@ -124,7 +124,8 @@ def main(work, out_json, threads=4, size=0.4):
 
 
 if __name__ == "__main__":
-    r = main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 4)
+    r = main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 4,
+             float(sys.argv[4]) if len(sys.argv) > 4 else 0.4)
     print(r["elements"], r["completed_fraction"])
     for f in r["frames"]:
         print({k: round(v, 4) for k, v in f.items()})

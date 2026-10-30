@@ -518,8 +518,8 @@
   "first_contact": "collar edges"
  },
  "k_torsion": 15.354713140444787,
- "k_lateral": 78.9726636636053,
- "k_axial": 4.7292425e-07,
+ "k_lateral": 316.79168808304394,
+ "k_axial": 12.84326,
  "wall_s": 1038.7,
  "ccx_tail": {
   "flex": "Using up to 2 cpu(s) for the stress calculation.\n\n average force= 0.002731\n time avg. forc= 0.001447\n largest residual force= 0.000000 in node 37252 and dof 2\n largest increment of disp= 8.348649e-03\n largest correction to disp= 4.274991e-06 in node 11686 and dof 1\n\n convergence; the increment size is increased to 2.072754e-03\n\n the increment size exceeds the remainder of the step and is decreased to 0.000000e+00\n\n Using up to 2 cpu(s) for the stress calculation.\n\n\n Job finished\n\n________________________________________\n\nTotal CalculiX Time: 948.287039\n________________________________________\n",

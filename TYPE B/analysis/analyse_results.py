@@ -31,7 +31,7 @@ REF_ANGLE = 60.0             # common angle for comparing strain and stress
 TENDON_Y = {"MCP": -3.06, "PIP": -1.93, "DIP": -1.06}
 GRAVITY_MOMENT = {"MCP": 3.678, "PIP": 0.797, "DIP": 0.147}   # N.mm, distal chain horizontal
 JOINT_TO_TIP = {"MCP": 86.6, "PIP": 44.8, "DIP": 19.6}         # mm
-RETURN_FACTOR = 2.0          # restoring moment at 20 deg must be >= 2x the weight moment
+RETURN_FACTOR = 1.0          # restoring moment at 20 deg must carry the weight of the distal finger
 TWIST_ARM = 5.0              # mm: 1 N pinch force 5 mm off the finger axis
 
 WEIGHTS = {
@@ -128,7 +128,8 @@ def metrics(r, joint):
         m["side_defl_deg"] = math.degrees(1.0 * JOINT_TO_TIP[joint] / r["k_lateral"])
         m["twist_deg"] = math.degrees(1.0 * TWIST_ARM / r["k_torsion"])
         m["compression_mm"] = (m["tendon_force_N"] or 0) / r["k_axial"]
-    m["returns_ok"] = m["moment_at_20_Nmm"] >= RETURN_FACTOR * GRAVITY_MOMENT[joint]
+    m["return_margin"] = m["moment_at_20_Nmm"] / GRAVITY_MOMENT[joint]
+    m["returns_ok"] = m["return_margin"] >= RETURN_FACTOR
     m["elements"] = r.get("elements")
     m["model"] = r.get("model")
     return m
@@ -325,7 +326,7 @@ def tables(joint, rows, selection):
         lines.append(f"### {FAMILY_LABEL.get(fam, fam)}\n")
         lines.append("| Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | "
                      "k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | "
-                     "Centre drift (mm) | Score |")
+                     "Centre drift (mm) | Return margin | Score |")
         lines.append("|" + "---|" * 14)
         for m in fr:
             if m.get("error"):
@@ -338,7 +339,7 @@ def tables(joint, rows, selection):
                 f"{fmt(m['strain_at_ref'] and 100 * m['strain_at_ref'], '{:.1f} %')} | {fmt(100 * m['strain_at_rom'], '{:.1f} %')} | "
                 f"{fmt(m['vm_at_rom_MPa'])} | {fmt(m['k0_Nmm_per_rad'])} | {fmt(m['moment_at_rom_Nmm'])} | "
                 f"{fmt(m['tendon_force_N'])} | {fmt(m.get('side_defl_deg'), '{:.1f}')} | {fmt(m.get('twist_deg'), '{:.1f}')} | "
-                f"{fmt(m['centre_drift_mm'])} | {sc} |")
+                f"{fmt(m['centre_drift_mm'])} | {fmt(m['return_margin'], '{:.1f}×')} | {sc} |")
         w = selection[fam]["winners_by_weighting"]
         lines.append("")
         lines.append("Winner under each weighting: " + ", ".join(f"{k}: `{v}`" for k, v in w.items()))

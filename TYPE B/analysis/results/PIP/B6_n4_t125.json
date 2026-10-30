@@ -419,8 +419,8 @@
   "first_contact": "collar edges"
  },
  "k_torsion": 6.377707809160219,
- "k_lateral": 55.49847393511439,
- "k_axial": 7.857295e-07,
+ "k_lateral": 222.57404988549524,
+ "k_axial": 8.356215,
  "wall_s": 423.6,
  "ccx_tail": {
   "flex": "oles solver\n Using up to 2 cpu(s) for spooles.\n\n Using up to 2 cpu(s) for the stress calculation.\n\n average force= 0.001606\n time avg. forc= 0.000765\n largest residual force= 0.000003 in node 31521 and dof 2\n largest increment of disp= 1.349815e-02\n largest correction to disp= 1.912622e-05 in node 28471 and dof 3\n\n convergence\n\n the increment size exceeds the remainder of the step and is decreased to 0.000000e+00\n\n Using up to 2 cpu(s) for the stress calculation.\n\n\n Job finished\n\n________________________________________\n\nTotal CalculiX Time: 370.749931\n________________________________________\n",

@@ -76,6 +76,10 @@ _repo_export.write_brep = _write_brep
 
 E_MPA = 12.0
 TARGET_DEG = {"MCP": 90.0, "PIP": 100.0, "DIP": 80.0}
+# Every PIP joint meets the collar hard stop near 76 deg (85 deg with relieved
+# collars), so later runs may stop short of the anatomical target to save time.
+for _j in TARGET_DEG:
+    TARGET_DEG[_j] = float(os.environ.get(f"TYPEB_TARGET_{_j}", TARGET_DEG[_j]))
 LATTICE_ELEMENTS_THROUGH = 1.5   # see the mesh check in the report
 FIELD_EVERY = 3           # increments between strain/stress field snapshots
 ROOT_EXCLUSION = 0.4      # mm: peak metrics ignore the sharp collar/flexure corner
@@ -200,6 +204,20 @@ def offaxis_deck(mesh, material, prox, dist, ref_xyz):
         out("*NODE PRINT, NSET=REF, TOTALS=NO\nRF")
         out("*END STEP")
     return "\n".join(buf) + "\n"
+
+
+def offaxis_stiffness(rot_rf, ref_rf):
+    """Stiffnesses from the off-axis prints. Steps end at total time 1, 2 and 3;
+    a step that cuts back prints at every increment, so pick by time, not index."""
+    def at(hist, t):
+        hit = [v for tt, v in hist if abs(tt - t) < 1e-6]
+        return hit[-1] if hit else None
+    small = math.radians(1.0)
+    tor, lat, ax = at(rot_rf, 1.0), at(rot_rf, 2.0), at(ref_rf, 3.0)
+    out = {}
+    if tor is not None and lat is not None and ax is not None:
+        out = dict(k_torsion=abs(tor[2]) / small, k_lateral=abs(lat[1]) / small, k_axial=abs(ax[2]) / 0.02)
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -481,11 +499,7 @@ def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", t
     off = parse_dat(work / "offaxis.dat") if (work / "offaxis.dat").exists() else {}
     rot_rf = off.get(("forces", "ROT"), [])
     ref_rf = off.get(("forces", "REF"), [])
-    small = math.radians(1.0)
-    if len(rot_rf) >= 3 and len(ref_rf) >= 3:
-        res["k_torsion"] = abs(rot_rf[0][1][2]) / small
-        res["k_lateral"] = abs(rot_rf[1][1][1]) / small
-        res["k_axial"] = abs(ref_rf[2][1][2]) / 0.02
+    res.update(offaxis_stiffness(rot_rf, ref_rf))
     res["wall_s"] = round(time.time() - started, 1)
     res["ccx_tail"] = {k: v[-600:] for k, v in logs.items()}
     if not keep:
