@@ -81,7 +81,15 @@ def verify(name, cfg, built=None):
             # straight through the module and on into the distal phalanx's socket
             pts.append((y, z[dist_ph] + e + B.AX_CLR))
         anchor = z["06_Phalanx3"] + L3 - 3.0
-        pts.append((lays["DIP"][key], anchor))
+        anchor_y = lays["DIP"].get("anchor_y") if key == "tendon_y" else None
+        if anchor_y is None:
+            pts.append((lays["DIP"][key], anchor))
+        else:
+            # round 2 deep-tendon option: the channel ramps back up in the DP
+            zr0, zr1 = lays["DIP"]["anchor_ramp"]
+            pts.append((lays["DIP"][key], z["06_Phalanx3"] + zr0))
+            pts.append((anchor_y, z["06_Phalanx3"] + zr1))
+            pts.append((anchor_y, anchor))
         return pts
 
     for key, d, label in (("tendon_y", B.CHAN_TENDON_D, "tendon"), ("sensor_y", B.CHAN_SENSOR_D, "sensor lead")):
@@ -90,7 +98,7 @@ def verify(name, cfg, built=None):
         rec(f"{label} path clear, flange to fingertip", v, f"<= {TOL}", v <= TOL, "mm^3")
 
     # fingertip anchor hole is clear and actually meets the tendon channel
-    ty = lays["DIP"]["tendon_y"]
+    ty = lays["DIP"].get("anchor_y", lays["DIP"]["tendon_y"])
     az = z["06_Phalanx3"] + L3 - 3.0
     anchor_rod = B.cyl((B.TENDON_ANCHOR_D - ROD_UNDER) / 2, 100, (-50, ty, az), (1, 0, 0))
     v = clear(placed["06_Phalanx3"], anchor_rod)
@@ -128,6 +136,13 @@ def verify(name, cfg, built=None):
             sock = B.prism(sw, sh, sr, sock_z0, e + B.AX_CLR)
             wall = dist(sock, exterior(loft, sock_z0, sock_z0 + e + B.AX_CLR))
             rec(f"{j} {side} socket wall ({ph})", wall, ">= 1.0", wall >= 1.0)
+            if lay.get("tendon_deep"):
+                # round 2 deep tendon: the channel is a groove in the tab, closed
+                # by the PLA socket wall, so that wall is what must hold it
+                ch = B.cyl(B.CHAN_TENDON_D / 2, e + B.AX_CLR, (0, lay["tendon_y"], sock_z0), (0, 0, 1))
+                w_pla = dist(ch, exterior(loft, sock_z0, sock_z0 + e + B.AX_CLR))
+                rec(f"{j} {side} PLA wall outside grooved tendon channel ({ph})", w_pla,
+                    f">= {B.MIN_WALL}", w_pla >= B.MIN_WALL - 1e-6)
 
         # material inside the TPU tab around channels and pin holes
         # the distal tab is the smaller of the two, so it is the one checked
@@ -137,7 +152,23 @@ def verify(name, cfg, built=None):
         ch_t = B.cyl(B.CHAN_TENDON_D / 2, e, (0, lay["tendon_y"], 0), (0, 0, 1))
         ch_s = B.cyl(B.CHAN_SENSOR_D / 2, e, (0, lay["sensor_y"], 0), (0, 0, 1))
         pin_r = B.fuse(B.pins(lay["pin_x"], e / 2))
-        rec(f"{j} tab wall around tendon channel", dist(ch_t, out), f">= {B.MIN_WALL}", dist(ch_t, out) >= B.MIN_WALL - 1e-6)
+        if not lay.get("tendon_deep"):
+            rec(f"{j} tab wall around tendon channel", dist(ch_t, out), f">= {B.MIN_WALL}", dist(ch_t, out) >= B.MIN_WALL - 1e-6)
+        else:
+            # round 2 deep tendon: the tab is grooved by design (checked above
+            # against the PLA socket wall); the TPU collar still surrounds it
+            cw, ch_, cr = B.collar_dims(cs)
+            col = B.prism(cw, ch_, cr, 0, c)
+            ch_c = B.cyl(B.CHAN_TENDON_D / 2, c, (0, lay["tendon_y"], 0), (0, 0, 1))
+            w_col = dist(ch_c, exterior(col, 0, c))
+            rec(f"{j} collar wall around deep tendon channel", w_col, f">= {B.MIN_WALL}",
+                w_col >= B.MIN_WALL - 1e-6)
+        info = rep["lattice"][j]
+        if isinstance(info, dict) and "bearing_gap" in info:
+            # round 2 compression-carrying joints: the two bearing surfaces must
+            # not be fused as printed, or the joint cannot rotate
+            rec(f"{j} bearing surfaces clear as printed", info["bearing_gap"], ">= 0.25",
+                info["bearing_gap"] >= 0.25)
         rec(f"{j} tab wall around sensor channel", dist(ch_s, out), f">= {B.MIN_WALL}", dist(ch_s, out) >= B.MIN_WALL - 1e-6)
         rec(f"{j} tab material tendon channel to pin hole", dist(ch_t, pin_r), ">= 0.3", dist(ch_t, pin_r) >= 0.3)
         rec(f"{j} tab material tendon to sensor channel", dist(ch_t, ch_s), ">= 0.5", dist(ch_t, ch_s) >= 0.5)
@@ -163,6 +194,18 @@ def verify(name, cfg, built=None):
                     (0, y_s - b["boss_h"] - 1, bz), (0, 1, 0))
         v = clear(parts[ph], rod)
         rec(f"anchor boss hole open ({ph})", v, f"<= {TOL}", v <= TOL, "mm^3")
+
+    if lays["DIP"].get("tendon_deep"):
+        # round 2 deep tendon: coupling-wire boss holes keep material to the channel
+        rod = B.channel(path("tendon_y"), B.CHAN_TENDON_D)
+        for ph, bz in (("04_Phalanx2", L2 - b["offset_from_joint"]), ("06_Phalanx3", b["offset_from_joint"])):
+            cs0 = {"04_Phalanx2": B.CS_PIP, "06_Phalanx3": B.CS_DIP}[ph]
+            cs1 = {"04_Phalanx2": B.CS_DIP, "06_Phalanx3": B.CS_TIP}[ph]
+            y_s = -B.section_h(cs0[1], cs1[1], lengths[ph], bz + b["boss_wd"] / 2) / 2
+            hole = B.cyl(b["hole_d"] / 2, b["boss_h"] + 1 + b["hole_into_body"],
+                         (0, y_s - b["boss_h"] - 1, z[ph] + bz), (0, 1, 0))
+            g = dist(hole, rod)
+            rec(f"anchor boss hole to deep tendon channel ({ph})", g, ">= 0.5", g >= 0.5)
 
     # every palmar feature is on the palmar side
     for ph in lengths:
