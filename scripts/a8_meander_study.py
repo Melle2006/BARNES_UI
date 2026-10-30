@@ -127,6 +127,37 @@ KEEP_FRD = False
 #: to face, both ran through at one degree per increment with one cutback.
 CONTACT_FORMULATION = ContactFormulation.SURFACE_TO_SURFACE
 
+#: Which finger the strip is analysed on: "a8_rings" (inferred from the A8 exports'
+#: rings) or "index_pip" (measured from the hand assembly). Set by --finger.
+FINGER = "a8_rings"
+
+#: The index finger PIP, from Assem3_A3_0.8_PIP_FitCheck.STEP, in the proximal
+#: phalanx's frame with the back of the finger towards +Z. The strip's ends are where
+#: the A3 strap leaves its collars: y = 24.0 on the proximal phalanx and 53.0 on the
+#: middle phalanx, underside 3.70 and 3.35 mm above the bone axis (the mean of the
+#: A3's two straps there).
+INDEX_PIP = {
+    "axis_y": 41.875,
+    "span": (24.0, 53.0),
+    "underside": (3.70, 3.35),
+    "cam_radius": 5.195,
+    "cams": {
+        "ppcheek_l": (39.185, (-5.36, -3.0), "proximal"),
+        "ppcheek_r": (39.185, (3.0, 5.36), "proximal"),
+        "mptongue": (44.565, (-3.0, 3.0), "distal"),
+    },
+}
+
+#: The printable family: section drawn square to the path, true width at least two
+#: 0.4 mm extrusion lines. Clean-sine plan paths with the exports' dominant lobe
+#: amplitudes -- the 3-turn export's own plan has a lobe tip of 0.62 mm centreline
+#: radius, which a 1.2 mm-wide strip cannot follow without its inner edge folding.
+PRINTABLE_TRUE_WIDTH_MM = 1.2
+PRINTABLE_AMPLITUDE_MM = {2: 4.4, 3: 3.5}
+PRINTABLE_HEIGHTS_MM = (1.2, 1.8, 2.4)
+PRINTABLE_SAGITTAS_MM = (2.5, 3.0, 3.5, 4.5)
+PRINTABLE_ELEMENT_MM = 0.4
+
 #: Full flexion analysed, degrees. docs/06 gives 0 to 100 as the PIP placeholder;
 #: 90 is reported as the design point and the curve runs to the maximum.
 FLEXION_MAX_DEG = 100.0
@@ -235,8 +266,9 @@ def _principal_engineering_strain(green: np.ndarray) -> np.ndarray:
 
 # -- one analysis ----------------------------------------------------------------
 
-def knuckle_shell(axis_y: float, axis_z: float, radius: float):
-    """The proximal link's rounded head, as a thin cylindrical sector about the axis.
+def knuckle_shell(axis_y: float, axis_z: float, radius: float,
+                  x_range: tuple[float, float] | None = None):
+    """A rounded link end, as a thin cylindrical sector about (axis_y, axis_z) along X.
 
     Only its outer face matters: it is a master surface the strip rides over. The
     sector spans from 60 deg below +Y, over the top, to 40 deg past +Z towards -Y.
@@ -245,13 +277,13 @@ def knuckle_shell(axis_y: float, axis_z: float, radius: float):
     from OCP.BRepPrimAPI import BRepPrimAPI_MakeCylinder
     from OCP.gp import gp_Ax2, gp_Dir, gp_Pnt
 
+    x0, x1 = x_range or (-KNUCKLE_HALF_LENGTH_MM, KNUCKLE_HALF_LENGTH_MM)
     start = math.radians(-60.0)
-    frame = gp_Ax2(gp_Pnt(-KNUCKLE_HALF_LENGTH_MM, axis_y, axis_z), gp_Dir(1.0, 0.0, 0.0),
+    frame = gp_Ax2(gp_Pnt(x0, axis_y, axis_z), gp_Dir(1.0, 0.0, 0.0),
                    gp_Dir(0.0, math.cos(start), math.sin(start)))
     sweep = math.radians(190.0)
-    length = 2.0 * KNUCKLE_HALF_LENGTH_MM
-    outer = BRepPrimAPI_MakeCylinder(frame, radius, length, sweep).Shape()
-    inner = BRepPrimAPI_MakeCylinder(frame, radius - KNUCKLE_WALL_MM, length, sweep).Shape()
+    outer = BRepPrimAPI_MakeCylinder(frame, radius, x1 - x0, sweep).Shape()
+    inner = BRepPrimAPI_MakeCylinder(frame, radius - KNUCKLE_WALL_MM, x1 - x0, sweep).Shape()
     cut = BRepAlgoAPI_Cut(outer, inner)
     cut.Build()
     return cut.Shape()
@@ -268,26 +300,51 @@ def _plate(x_half: float, y0: float, y1: float, top: float):
 def finger_bodies(axis_y: float, axis_z: float, knuckle_radius: float) -> list[dict]:
     """The rigid finger surfaces the strip can rest on, with which link each moves with.
 
-    Without them the strip has nothing beneath it and, past about 35 deg, folds
-    straight through the joint. With the knuckle alone, the 2-turn strip -- shorter
-    and stiffer than the 3-turn -- slid off the knuckle's distal side at 69 deg and
-    fell to within 0.5 mm of the axis, because the distal link it would really have
-    landed on was missing. So all three dorsal surfaces are modelled:
+    Two fingers are available, selected by ``FINGER``.
 
-    * the proximal link's top, z = 3.4 mm (the 3.5 mm link less the same 0.1 mm
-      allowance as the knuckle), 11.4 mm wide, from the proximal ring to the axis,
-      where it meets the knuckle tangentially; fixed;
+    ``a8_rings`` -- inferred from the rings in the A8 exports, before any hand CAD
+    existed. Without finger surfaces the strip has nothing beneath it and, past about
+    35 deg, folds straight through the joint. With the knuckle alone, the 2-turn
+    strip slid off the knuckle's distal side at 69 deg. So three dorsal surfaces:
+
+    * the proximal link's top, z = 3.4 mm, 11.4 mm wide, from the proximal ring to
+      the axis, where it meets the knuckle tangentially; fixed;
     * the knuckle, radius 3.4 mm about the joint axis; fixed;
-    * the distal link's top, z = 1.8 mm (its ring opening is 3.8 mm tall), 7.7 mm
-      wide, from 1 mm beyond the axis to the distal ring; rotates with the distal
-      ring, by being tied into the same rigid body.
+    * the distal link's top, z = 1.8 mm, 7.7 mm wide, from 1 mm beyond the axis to
+      the distal ring; rotates with the distal ring.
+
+    ``index_pip`` -- measured from the hand assembly (Assem3_A3_0.8_PIP_FitCheck),
+    in the proximal phalanx's own frame turned so the back of the finger is +Z. The
+    joint is a 3.2 mm pin at y = 41.875. The surfaces the strip can meet over the
+    joint are two cams of radius 5.195 mm, measured by sectioning the phalanges:
+
+    * the proximal phalanx head: two clevis cheeks at |x| 3.0 to 5.36 mm, rounded
+      about a line 2.69 mm *behind* the pin (y = 39.18); fixed;
+    * the middle phalanx tongue between them, |x| < 3.0 mm, rounded about a line
+      2.69 mm *ahead* of the pin (y = 44.57); turns with the middle phalanx.
+
+    Both shafts sit well below the strip (2 to 4.4 mm against a strip underside of
+    3.4 mm and more), so only the two cams can carry it.
 
     Positions are relative to the joint axis, so moving the axis moves the finger.
     """
     dz = axis_z - AXIS_Z_MM
+    if FINGER == "index_pip":
+        dy = axis_y - INDEX_PIP["axis_y"]
+        bodies = []
+        for name, (cy, x_range, moves) in INDEX_PIP["cams"].items():
+            bodies.append({
+                "name": name, "moves_with": moves, "kind": "cylinder",
+                "radius": INDEX_PIP["cam_radius"], "centre": (cy + dy, axis_z),
+                "x_range": x_range,
+                "shape": knuckle_shell(cy + dy, axis_z, INDEX_PIP["cam_radius"], x_range),
+            })
+        return bodies
     return [
         {"name": "knuckle", "shape": knuckle_shell(axis_y, axis_z, knuckle_radius),
-         "moves_with": "proximal", "kind": "cylinder", "radius": knuckle_radius},
+         "moves_with": "proximal", "kind": "cylinder", "radius": knuckle_radius,
+         "centre": (axis_y, axis_z),
+         "x_range": (-KNUCKLE_HALF_LENGTH_MM, KNUCKLE_HALF_LENGTH_MM)},
         {"name": "proxlink",
          "shape": _plate(5.7, A8_SPAN_START_Y + 0.3, axis_y, knuckle_radius + axis_z),
          "moves_with": "proximal", "kind": "plate", "top": knuckle_radius + axis_z,
@@ -344,9 +401,14 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     # starts inside the finger would be pushed out by the contact penalty and the
     # "restoring torque" would include that preload. A geometric verdict.
     sp = mesh.nodes[strip_node]
-    gaps = [float(np.linalg.norm(sp[:, 1:3] - axis, axis=1).min() - knuckle_radius)]
+    gaps = []
     for body in bodies:
-        if body["kind"] != "plate":
+        if body["kind"] == "cylinder":
+            x0, x1 = body["x_range"]
+            over = (sp[:, 0] >= x0) & (sp[:, 0] <= x1)
+            if over.any():
+                gaps.append(float(np.linalg.norm(
+                    sp[over, 1:3] - np.array(body["centre"]), axis=1).min() - body["radius"]))
             continue
         over = ((np.abs(sp[:, 0]) <= body["x_half"])
                 & (sp[:, 1] >= body["y"][0]) & (sp[:, 1] <= body["y"][1]))
@@ -355,8 +417,8 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     clearance0 = min(gaps)
     if clearance0 < 0.0:
         return {"label": label, "failure": (
-            f"strip starts {-clearance0:.3f} mm inside the finger (knuckle radius "
-            f"{knuckle_radius} mm): the spine is too flat to clear the joint at rest"),
+            f"strip starts {-clearance0:.3f} mm inside the finger: the spine is too "
+            "flat to clear the joint at rest"),
             "geometric_interference_mm": -clearance0, "reached_deg": 0.0}
 
     def sets_where(predicate):
@@ -368,8 +430,9 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
         mine = sets_where(lambda idx, i=index: (owner[idx] == i).all())
         (moving_sets if body["moves_with"] == "distal" else fixed_sets).extend(mine)
         if body["kind"] == "cylinder":
+            from_centre = np.linalg.norm(mesh.nodes[:, 1:3] - np.array(body["centre"]), axis=1)
             face = [n for n in mine
-                    if np.allclose(radial0[mesh.node_sets[n]], body["radius"], atol=1e-2)]
+                    if np.allclose(from_centre[mesh.node_sets[n]], body["radius"], atol=1e-2)]
         else:
             face = [n for n in mine
                     if np.allclose(mesh.nodes[mesh.node_sets[n], 2], body["top"], atol=1e-3)]
@@ -601,6 +664,18 @@ def _variant(n_turns: int, sagitta: float, label: str) -> A8MeanderParameters:
                                stations_per_lobe=per_lobe, label=label)
 
 
+def _printable(n_turns: int, sagitta: float, height: float, true_width: float,
+               label: str) -> A8MeanderParameters:
+    """A printable strip on the index PIP: section square to the path, ends on the
+    A3's collar positions, underside on the collars whatever the height."""
+    (y0, y1), (u0, u1) = INDEX_PIP["span"], INDEX_PIP["underside"]
+    return A8MeanderParameters(
+        plan=sine_plan(n_turns, PRINTABLE_AMPLITUDE_MM[n_turns]), sagitta=sagitta,
+        n_turns=n_turns, height_z=height, true_width=true_width,
+        y_start=y0, y_end=y1, z_start=u0 + height / 2.0, z_end=u1 + height / 2.0,
+        stations_per_lobe=40, label=label)
+
+
 def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
     runs: list[dict] = []
     if "exports" in groups and steps_dir is not None:
@@ -621,6 +696,22 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
             for sagitta in SAGITTA_LEVELS_MM:
                 runs.append({"label": f"sweep_{n_turns}T_s{sagitta:.2f}", "kind": "sweep",
                              "n_turns": n_turns, "sagitta": sagitta})
+    if "printable" in groups:
+        # 3 turns across height and sagitta; 2 turns at the middle height only, to
+        # see whether the snap found on the A8 rings survives on the real finger.
+        for n_turns, heights in ((3, PRINTABLE_HEIGHTS_MM), (2, (1.8,))):
+            for height in heights:
+                for sagitta in PRINTABLE_SAGITTAS_MM:
+                    if n_turns == 2 and sagitta not in (2.5, 3.5):
+                        continue
+                    runs.append({
+                        "label": (f"print_{n_turns}T_w{PRINTABLE_TRUE_WIDTH_MM:.1f}"
+                                  f"_h{height:.1f}_s{sagitta:.2f}"),
+                        "kind": "printable", "n_turns": n_turns, "sagitta": sagitta,
+                        "height": height, "true_width": PRINTABLE_TRUE_WIDTH_MM})
+        # Width sensitivity: the narrowest printable wall, at the middle case.
+        runs.append({"label": "print_3T_w0.8_h1.8_s3.00", "kind": "printable",
+                     "n_turns": 3, "sagitta": 3.0, "height": 1.8, "true_width": 0.8})
     return runs
 
 
@@ -645,7 +736,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--groups", default="exports,replicas,sweep")
     parser.add_argument("--only", default=None, help="Comma-separated labels to run.")
-    parser.add_argument("--axis-y", type=float, default=AXIS_Y_MM)
+    parser.add_argument("--finger", choices=("a8_rings", "index_pip"), default="a8_rings")
+    parser.add_argument("--axis-y", type=float, default=None,
+                        help="Joint axis y; defaults to the chosen finger's.")
     parser.add_argument("--axis-z", type=float, default=AXIS_Z_MM)
     parser.add_argument("--axis-variants", default=None,
                         help="Rerun one label at shifted axes: LABEL:dy1/dz1,dy2/dz2,...")
@@ -659,8 +752,11 @@ def main(argv: list[str] | None = None) -> int:
                         help="Use the node-to-surface formulation instead (comparison).")
     args = parser.parse_args(argv)
 
-    global CONTACT_FORMULATION, KEEP_FRD
+    global CONTACT_FORMULATION, KEEP_FRD, FINGER
     KEEP_FRD = args.keep_frd
+    FINGER = args.finger
+    if args.axis_y is None:
+        args.axis_y = INDEX_PIP["axis_y"] if FINGER == "index_pip" else AXIS_Y_MM
     if args.node_to_surface:
         CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
     runs_dir = args.out / "cases"
@@ -698,12 +794,20 @@ def main(argv: list[str] | None = None) -> int:
         if run["kind"] == "export":
             shape = strip_from_export(run["step"])
             geometry = None
+        elif run["kind"] == "printable":
+            params = _printable(run["n_turns"], run["sagitta"], run["height"],
+                                run["true_width"], run["label"])
+            shape = build_a8_meander(params)
+            geometry = params.path_metrics()
         else:
             params = _variant(run["n_turns"], run["sagitta"], run["label"])
             shape = build_a8_meander(params)
             geometry = params.path_metrics()
         size = args.element_size
-        if geometry and geometry["min_true_width_mm"] < 2.0 * size:
+        if run["kind"] == "printable":
+            # Three quadratic elements across the true width.
+            size = round(min(PRINTABLE_ELEMENT_MM, run["true_width"] / 3.0), 3)
+        elif geometry and geometry["min_true_width_mm"] < 2.0 * size:
             size = round(geometry["min_true_width_mm"] / 2.0, 3)
         print(f"run   {run['label']}  (element size {size} mm)", flush=True)
         try:

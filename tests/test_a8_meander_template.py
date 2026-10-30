@@ -118,3 +118,56 @@ class TestReactionHistory:
 
     def test_missing_file_is_empty(self, tmp_path) -> None:
         assert parse_dat_reaction_history(tmp_path / "absent.dat") == {}
+
+
+class TestPathNormalSection:
+    """The printable variant: constant true width, drawn square to the path."""
+
+    def _p(self, **overrides) -> A8MeanderParameters:
+        base = dict(plan=sine_plan(3, 3.5), sagitta=3.0, n_turns=3, true_width=1.2,
+                    height_z=1.8, y_start=24.0, y_end=53.0, z_start=4.6, z_end=4.25,
+                    stations_per_lobe=40)
+        base.update(overrides)
+        return A8MeanderParameters(**base)
+
+    def test_true_width_is_constant(self) -> None:
+        metrics = self._p().path_metrics()
+        assert metrics["min_true_width_mm"] == pytest.approx(1.2)
+        assert metrics["mean_true_width_mm"] == pytest.approx(1.2)
+
+    def test_refuses_a_width_the_lobe_tip_cannot_hold(self) -> None:
+        """A sine of amplitude A over n lobes has tip radius (L / n pi)^2 / A."""
+        tip = (29.0 / (5 * math.pi)) ** 2 / 3.5
+        with pytest.raises(A8MeanderError, match="fold over itself"):
+            self._p(true_width=2.0 * tip + 0.05)
+
+    @requires_kernel
+    def test_volume_is_width_times_height_times_length(self) -> None:
+        from barnes_ui.core.cad.inspect import volume_properties
+
+        p = self._p(plan=sine_plan(2, 4.4), n_turns=2)
+        volume = volume_properties(build_a8_meander(p))[0]
+        assert volume == pytest.approx(p.expected_volume, rel=2e-3)
+
+    @requires_kernel
+    def test_section_normal_to_the_path_is_the_true_rectangle(self) -> None:
+        from barnes_ui.core.flexure.section import section_solid
+
+        p = self._p()
+        shape = build_a8_meander(p)
+        for y in (30.0, 38.5, 47.0):
+            yy = np.array([y])
+            tangent = np.array([float(p.plan_slope(yy)[0]), 1.0, float(p.spine_slope(yy)[0])])
+            tangent /= np.linalg.norm(tangent)
+            centre = np.array([float(p.plan_x(yy)[0]), y, float(p.spine_z(yy)[0])])
+            sections = section_solid(shape, tuple(centre), tuple(tangent))
+            nearest = min(sections, key=lambda c: np.linalg.norm(np.array(c.centroid) - centre))
+            assert nearest.area == pytest.approx(1.2 * 1.8, rel=5e-3)
+
+    @requires_kernel
+    def test_end_caps_lie_in_the_collar_planes(self) -> None:
+        from barnes_ui.core.cad.inspect import bounding_box
+
+        box = bounding_box(build_a8_meander(self._p()))
+        assert box.ymin == pytest.approx(24.0, abs=1e-6)
+        assert box.ymax == pytest.approx(53.0, abs=1e-6)

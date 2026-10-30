@@ -139,6 +139,12 @@ class A8MeanderParameters:
     #: Loft stations per lobe. Twenty-four keeps the loft within 2 microns of the
     #: analytical path on the 7-lobe case.
     stations_per_lobe: int = 24
+    #: When set, the section is drawn square to the path with this true width, instead
+    #: of ``width_x`` across the finger. See :func:`build_a8_meander`.
+    true_width: float | None = None
+    #: Length over which a path-normal section turns to face the span axis at each end,
+    #: so the end caps stay flat against the collars (mm).
+    end_blend: float = 1.5
     label: str = ""
     notes: list[str] = field(default_factory=list, compare=False)
 
@@ -147,6 +153,15 @@ class A8MeanderParameters:
             raise A8MeanderError("plan needs at least (a, b, c_1).")
         if self.width_x <= 0 or self.height_z <= 0:
             raise A8MeanderError("width_x and height_z must be positive.")
+        if self.true_width is not None:
+            if self.true_width <= 0:
+                raise A8MeanderError("true_width must be positive.")
+            tightest = self.min_plan_radius()
+            if self.true_width / 2.0 >= tightest:
+                raise A8MeanderError(
+                    f"A {self.true_width} mm strip cannot follow a lobe whose centreline "
+                    f"radius is {tightest:.3f} mm: its inner edge would fold over itself."
+                )
         if self.y_end <= self.y_start:
             raise A8MeanderError("y_end must exceed y_start.")
         if self.sagitta < 0:
@@ -214,6 +229,25 @@ class A8MeanderParameters:
         centre = mid + normal * (self.sagitta - radius)
         return centre[1] + np.sqrt(radius ** 2 - (y - centre[0]) ** 2)
 
+    @property
+    def path_normal(self) -> bool:
+        return self.true_width is not None
+
+    def min_plan_radius(self, samples: int = 8001) -> float:
+        """Smallest radius of curvature of the plan path (mm)."""
+        y = np.linspace(self.y_start, self.y_end, samples)
+        slope = self.plan_slope(y)
+        curvature = np.abs(np.gradient(slope, y)) / (1.0 + slope ** 2) ** 1.5
+        return float(1.0 / max(curvature.max(), 1e-12))
+
+    def spine_slope(self, y: np.ndarray) -> np.ndarray:
+        y = np.asarray(y, dtype=float)
+        step = 1e-4
+        return (self.spine_z(np.clip(y + step, self.y_start, self.y_end))
+                - self.spine_z(np.clip(y - step, self.y_start, self.y_end))) / (
+            np.clip(y + step, self.y_start, self.y_end)
+            - np.clip(y - step, self.y_start, self.y_end))
+
     def stations(self) -> np.ndarray:
         """Loft station y-coordinates."""
         lobes = max(1, 2 * self.n_turns - 1)
@@ -224,7 +258,18 @@ class A8MeanderParameters:
 
     @property
     def expected_volume(self) -> float:
-        """Exact volume (mm^3): every y-plane cuts one width_x by height_z rectangle."""
+        """Volume (mm^3).
+
+        Drawn across the finger, exact: every y-plane cuts one width_x by height_z
+        rectangle. Drawn square to the path, true_width * height_z * centreline length,
+        which is exact for a constant section swept without twist and is what the
+        loft is checked against.
+        """
+        if self.path_normal:
+            y = np.linspace(self.y_start, self.y_end, 8001)
+            pts = np.column_stack([self.plan_x(y), y, self.spine_z(y)])
+            length = float(np.sum(np.linalg.norm(np.diff(pts, axis=0), axis=1)))
+            return self.true_width * self.height_z * length
         return self.width_x * self.height_z * self.span
 
     def path_metrics(self, samples: int = 4001) -> dict[str, float]:
@@ -241,14 +286,21 @@ class A8MeanderParameters:
         phi = np.arctan(np.abs(slope))
         points = np.column_stack([x, y, z])
         length = float(np.sum(np.linalg.norm(np.diff(points, axis=0), axis=1)))
+        if self.path_normal:
+            true = np.full_like(y, self.true_width)
+            half_x = self.true_width / 2.0 / np.cos(phi)
+        else:
+            true = self.width_x * np.cos(phi)
+            half_x = np.full_like(y, self.width_x / 2.0)
         return {
             "centreline_length_mm": length,
             "max_path_angle_deg": float(np.degrees(phi.max())),
-            "min_true_width_mm": float(self.width_x * np.cos(phi.max())),
-            "mean_true_width_mm": float(np.mean(self.width_x * np.cos(phi))),
-            "lateral_extent_mm": float((x.max() + self.width_x / 2.0) - (x.min() - self.width_x / 2.0)),
-            "x_min_mm": float(x.min() - self.width_x / 2.0),
-            "x_max_mm": float(x.max() + self.width_x / 2.0),
+            "min_true_width_mm": float(true.min()),
+            "mean_true_width_mm": float(true.mean()),
+            "lateral_extent_mm": float((x + half_x).max() - (x - half_x).min()),
+            "x_min_mm": float((x - half_x).min()),
+            "x_max_mm": float((x + half_x).max()),
+            "min_plan_radius_mm": self.min_plan_radius(),
             "spine_apex_top_z_mm": float((z + self.height_z / 2.0).max()),
             "spine_radius_mm": self.spine_radius,
             "volume_mm3": self.expected_volume,
@@ -287,10 +339,10 @@ def build_a8_meander(parameters: A8MeanderParameters) -> Any:
 
     loft = BRepOffsetAPI_ThruSections(True, False, 1.0e-6)
     loft.CheckCompatibility(False)
-    for x, y, z in zip(xs, ys, zs):
+    for x, y, z, corners in zip(xs, ys, zs, _section_corners(p, xs, ys, zs, hw, hh)):
         polygon = BRepBuilderAPI_MakePolygon()
-        for dx, dz in ((-hw, -hh), (hw, -hh), (hw, hh), (-hw, hh)):
-            polygon.Add(gp_Pnt(float(x + dx), float(y), float(z + dz)))
+        for corner in corners:
+            polygon.Add(gp_Pnt(*(float(c) for c in corner)))
         polygon.Close()
         loft.AddWire(polygon.Wire())
     loft.Build()
@@ -300,6 +352,45 @@ def build_a8_meander(parameters: A8MeanderParameters) -> Any:
     if not BRepCheck_Analyzer(shape).IsValid():
         raise A8MeanderError("The lofted strip is not a valid solid.")
     return shape
+
+
+def _section_corners(p: A8MeanderParameters, xs, ys, zs, hw, hh):
+    """The four corners of each loft section.
+
+    Drawn across the finger: an axis-aligned rectangle in the plane y = const.
+
+    Drawn square to the path: a rectangle of the true width, in the plane normal to
+    the centreline, with its height along the spine's own normal. Near each end the
+    section plane turns smoothly (over ``end_blend``) until it faces the span axis, so
+    the end caps are flat against the collar faces and can be tied there; the width
+    in a tilted plane is the true width over the cosine of the tilt, so the strip's
+    true width stays constant through the turn.
+    """
+    if not p.path_normal:
+        return [[(x - hw, y, z - hh), (x + hw, y, z - hh), (x + hw, y, z + hh),
+                 (x - hw, y, z + hh)] for x, y, z in zip(xs, ys, zs)]
+    dxdy = p.plan_slope(ys)
+    dzdy = p.spine_slope(ys)
+    from_end = np.minimum(ys - p.y_start, p.y_end - ys)
+    ramp = np.clip(from_end / p.end_blend, 0.0, 1.0)
+    beta = 1.0 - ramp * ramp * (3.0 - 2.0 * ramp)   # 1 at the ends, 0 inside
+    sections = []
+    for x, y, z, sx, sz, b in zip(xs, ys, zs, dxdy, dzdy, beta):
+        tangent = np.array([sx, 1.0, sz])
+        tangent /= np.linalg.norm(tangent)
+        up = np.array([0.0, -sz, 1.0])
+        up /= np.linalg.norm(up)
+        normal = (1.0 - b) * tangent + b * np.array([0.0, 1.0, 0.0])
+        normal /= np.linalg.norm(normal)
+        across = np.cross(up, normal)
+        across /= np.linalg.norm(across)
+        height = np.cross(normal, across)
+        height /= np.linalg.norm(height)
+        half_w = p.true_width / 2.0 / float(np.dot(normal, tangent))
+        c = np.array([x, y, z])
+        sections.append([c - half_w * across - hh * height, c + half_w * across - hh * height,
+                         c + half_w * across + hh * height, c - half_w * across + hh * height])
+    return sections
 
 
 def sample_sections(
