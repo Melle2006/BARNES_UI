@@ -372,7 +372,13 @@ def _section_corners(p: A8MeanderParameters, xs, ys, zs, hw, hh):
     dxdy = p.plan_slope(ys)
     dzdy = p.spine_slope(ys)
     from_end = np.minimum(ys - p.y_start, p.y_end - ys)
-    ramp = np.clip(from_end / p.end_blend, 0.0, 1.0)
+    # A wide section turning through the path angle sweeps its outer corner backwards
+    # by about half its width; over too short a run it passes through the section
+    # before it and the solid intersects itself. 2.4 mm strips did exactly that over
+    # 1.5 mm (gmsh: "a segment and a facet intersect"), so the turn is at least 1.25
+    # widths long -- which leaves strips up to 1.2 mm on the original 1.5 mm.
+    blend = max(p.end_blend, 1.25 * p.true_width)
+    ramp = np.clip(from_end / blend, 0.0, 1.0)
     beta = 1.0 - ramp * ramp * (3.0 - 2.0 * ramp)   # 1 at the ends, 0 inside
     sections = []
     for x, y, z, sx, sz, b in zip(xs, ys, zs, dxdy, dzdy, beta):
