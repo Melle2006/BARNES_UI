@@ -25,6 +25,51 @@ Common to every entry:
 
 ---
 
+## 2026-10-30: the two sweep picks, generated and checked
+
+The two picks from the sweep below are now CAD:
+
+| Design | Links | Leaf | Travel |
+|---|---|---|---|
+| **Best**: R32 / 1.8 mm / 6 mm | [STEP](../../A6%20designs/A6_PIP_SlidingLeaf_R32_t1.8_w6.STEP) · [STL](../../A6%20designs/A6_PIP_SlidingLeaf_R32_t1.8_w6.STL) | R32, 1.8 × 6 mm | 11.5 mm |
+| **Best with margin**: R28 / 1.4 mm / 6 mm | [STEP](../../A6%20designs/A6_PIP_SlidingLeaf_R28_t1.4_w6.STEP) · [STL](../../A6%20designs/A6_PIP_SlidingLeaf_R28_t1.4_w6.STL) | R28, 1.4 × 6 mm | 12.0 mm |
+
+`python scripts/make_a6_designs.py` built them, from `SWEEP_PICKS` in that script. Each one
+is two valid solids that do not overlap.
+
+Then `python scripts/a6_rom_check.py` checked them as built, alongside the four earlier
+designs. **24 of 24 cases pass**: six designs at four axis positions. Per-case detail is
+in `rom_check.csv`, and the curves are in `rom_shapes.png`.
+
+The figures below are per design, across the four axis positions:
+
+| | Closest to axis | Peak strain | Head reaches stop at | Torque at 105° (E 8–18 MPa) | Stiffness near 0° (E 8–18 MPa) |
+|---|---|---|---|---|---|
+| R32 / 1.8 mm | 4.18–4.81 mm | 11.6–19.8% | 53–62° | 1.40–6.29 N·mm | 0.68–3.12 N·mm/rad |
+| R28 / 1.4 mm | 4.26–5.07 mm | 10.5–16.8% | 50–58° | 0.43–3.35 N·mm | 0.32–1.66 N·mm/rad |
+| *R28 / 1.0 mm, for comparison* | 4.05–4.83 mm | 7.5–12.1% | 49–56° | 0.26–1.20 N·mm | 0.12–0.61 N·mm/rad |
+
+The check agrees with the sweep. Worst-case peak strain is 19.8% and 16.8%, exactly as the
+sweep predicted. Worst-case torque at 105° at E = 13 MPa is 2.28 and 0.71 N·mm.
+
+### Conclusion
+
+* **Within the A6 mechanism, R32 / 1.8 mm / 6 mm gives the most spring-back.** It reaches
+  105° at every assumed axis position and always pushes back toward straight. It stores
+  about 5 times the return energy of the 1 mm R28 design.
+* **Print R28 / 1.4 mm / 6 mm first.** The R32 / 1.8 mm design is right at the 20%
+  placeholder strain limit. The R28 / 1.4 mm design has 3.2 percentage points of strain
+  margin and the widest travel window (1.5 mm), so it is the one most likely to work on
+  the first print. If it holds up, move to R32 / 1.8 mm.
+* **Even the best A6 is weaker than the A3.** Its worst-case average to 105° is about
+  1.2 N·mm/rad, a fifth of the A3's 6.1 N·mm/rad. Inside this mechanism, the only way to
+  close that gap is a thicker leaf, and that needs a higher strain limit than 20%.
+* **The filament's tensile test is the deciding input.** It sets the strain limit, and the
+  strain limit sets the best design (see the strain-limit table below). The real PIP axis
+  position comes second: every result here is a worst case over four guesses.
+
+---
+
 ## 2026-10-30: curvature × thickness × width sweep
 
 `python scripts/a6_parameter_sweep.py`. It took about 40 minutes on 4 cores.

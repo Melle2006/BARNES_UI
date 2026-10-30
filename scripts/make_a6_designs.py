@@ -147,8 +147,17 @@ GUIDE_MOUTH_Y = 32.5
 #: ``python scripts/a6_rom_check.py --tune``. Only radii with a passing travel are listed.
 TRAVEL_BY_RADIUS = {24.0: 12.5, 26.0: 11.5, 28.0: 11.5, 30.0: 11.0}
 
-#: Leaf radii to generate, in mm.
+#: Leaf radii generated at the default 6 x 1 mm section, in mm.
 RADII = tuple(TRAVEL_BY_RADIUS)
+
+#: Combinations picked by ``scripts/a6_parameter_sweep.py``, generated with their own
+#: section: name -> (radius, thickness, width, travel), in mm. "best" has the highest
+#: worst-case mean restoring torque at the 20% strain limit. "margin" gives up some
+#: torque for strain headroom and a wider travel window. See results/a6/README.md.
+SWEEP_PICKS = {
+    "best": (32.0, 1.8, 6.0, 11.5),
+    "margin": (28.0, 1.4, 6.0, 12.0),
+}
 
 #: Widest leaf whose guide still fits within the MP cuff's width, in mm.
 MAX_LEAF_WIDTH = MP_OUTER[0] - 2 * (HEAD_OVERHANG + CLEARANCE + GUIDE_WALL)
@@ -169,6 +178,18 @@ def set_section(width: float, thickness: float) -> None:
 
 
 set_section(LEAF_WIDTH, LEAF_THICKNESS)
+DEFAULT_SECTION = (LEAF_WIDTH, LEAF_THICKNESS)
+
+
+def designs() -> list[tuple[str, float, float, float, float]]:
+    """Every design to generate: (file name, radius, travel, width, thickness)."""
+    width, thickness = DEFAULT_SECTION
+    out = [(f"A6_PIP_SlidingLeaf_R{r:g}", r, TRAVEL_BY_RADIUS[r], width, thickness)
+           for r in RADII]
+    for radius, thickness, width, travel in SWEEP_PICKS.values():
+        out.append((f"A6_PIP_SlidingLeaf_R{radius:g}_t{thickness:g}_w{width:g}",
+                    radius, travel, width, thickness))
+    return out
 
 
 def _add(p, q, k: float = 1.0):
@@ -390,6 +411,8 @@ def summary(arc: Arc, travel: float, proximal, distal) -> dict:
         distal).solids().size() else 0.0
     return {
         "radius_mm": "flat" if arc.radius is None else f"{arc.radius:g}",
+        "leaf_thickness_mm": LEAF_THICKNESS,
+        "leaf_width_mm": LEAF_WIDTH,
         "travel_mm": travel,
         "guide_length_mm": guide_length(travel),
         "mp_cuff_length_mm": mp_cuff_length(arc, travel),
@@ -414,11 +437,9 @@ def main() -> None:
     args.out.mkdir(parents=True, exist_ok=True)
 
     rows = []
-    for radius in RADII:
-        travel = TRAVEL_BY_RADIUS[radius]
+    for name, radius, travel, width, thickness in designs():
+        set_section(width, thickness)
         arc, proximal, distal = build(radius, travel)
-        tag = "flat" if radius is None else f"R{radius:g}"
-        name = f"A6_PIP_SlidingLeaf_{tag}"
         both = cq.Compound.makeCompound([proximal.val(), distal.val()])
         cq.exporters.export(cq.Workplane().add(both), str(args.out / f"{name}.STEP"))
         cq.exporters.export(cq.Workplane().add(both), str(args.out / f"{name}.STL"),

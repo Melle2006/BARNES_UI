@@ -374,11 +374,12 @@ def plot(path: Path, axis, angles=(0, 30, 60, 90, 105)) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    fig, axes = plt.subplots(len(a6.RADII), 2, figsize=(10, 2.8 * len(a6.RADII)),
+    designs = a6.designs()
+    fig, axes = plt.subplots(len(designs), 2, figsize=(10, 2.8 * len(designs)),
                              gridspec_kw={"width_ratios": [1.3, 1]}, squeeze=False)
     colours = plt.cm.viridis(np.linspace(0, 0.9, len(angles)))
-    for (ax, tax), radius in zip(axes, a6.RADII):
-        travel = a6.TRAVEL_BY_RADIUS[radius]
+    for (ax, tax), (name, radius, travel, width, thickness) in zip(axes, designs):
+        a6.set_section(width, thickness)
         leaf = Leaf(radius, travel)
         rows = sweep(leaf, axis)
         for deg, colour in zip(angles, colours):
@@ -394,7 +395,7 @@ def plot(path: Path, axis, angles=(0, 30, 60, 90, 105)) -> None:
         ax.set_aspect("equal")
         ax.set_xlim(-2, 38)
         ax.set_ylim(-28, 14)
-        ax.set_title(f"A6 R{radius:g}, travel {travel:g} mm: shapes, PIP axis at "
+        ax.set_title(f"{name}, travel {travel:g} mm: shapes, PIP axis at "
                      f"y={axis[0]:g} (grey: {JOINT_RADIUS} mm finger proxy)", fontsize=8)
         ax.legend(fontsize=6, loc="lower left")
         ei = a6.LEAF_WIDTH * a6.LEAF_THICKNESS ** 3 / 12 * np.mean(MODULUS_RANGE)
@@ -428,9 +429,11 @@ def main() -> None:
         return
 
     summary = []
-    for radius in a6.RADII:
-        for row in evaluate(radius, a6.TRAVEL_BY_RADIUS[radius]):
-            row = {k: v for k, v in row.items() if not k.startswith("_")}
+    for name, radius, travel, width, thickness in a6.designs():
+        a6.set_section(width, thickness)
+        for row in evaluate(radius, travel):
+            row = {"design": name, "leaf_thickness_mm": thickness, "leaf_width_mm": width,
+                   **{k: v for k, v in row.items() if not k.startswith("_")}}
             summary.append(row)
             print(row, flush=True)
 

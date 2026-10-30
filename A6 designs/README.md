@@ -16,20 +16,26 @@ y = 28.86.
 
 ## The designs
 
-| File | Leaf R | Travel | Guide | MP cuff length | Leaf top above PP cuff |
-|---|---|---|---|---|---|
-| `A6_PIP_SlidingLeaf_R24` | 24 mm | 12.5 mm | 16.5 mm | 19.0 mm | 11.7 mm |
-| `A6_PIP_SlidingLeaf_R26` | 26 mm | 11.5 mm | 15.5 mm | 18.5 mm | 10.4 mm |
-| `A6_PIP_SlidingLeaf_R28` | 28 mm | 11.5 mm | 15.5 mm | 18.5 mm |  9.6 mm |
-| `A6_PIP_SlidingLeaf_R30` | 30 mm | 11.0 mm | 15.0 mm | 18.5 mm |  8.8 mm |
+| File | Leaf R | Leaf section (t × w) | Travel | Guide | MP cuff length | Leaf top above PP cuff |
+|---|---|---|---|---|---|---|
+| **`A6_PIP_SlidingLeaf_R32_t1.8_w6`** — best from the sweep | 32 mm | **1.8 × 6 mm** | 11.5 mm | 15.5 mm | 19.0 mm |  9.2 mm |
+| **`A6_PIP_SlidingLeaf_R28_t1.4_w6`** — best with margin | 28 mm | **1.4 × 6 mm** | 12.0 mm | 16.0 mm | 19.0 mm | 10.1 mm |
+| `A6_PIP_SlidingLeaf_R24` | 24 mm | 1.0 × 6 mm | 12.5 mm | 16.5 mm | 19.0 mm | 11.7 mm |
+| `A6_PIP_SlidingLeaf_R26` | 26 mm | 1.0 × 6 mm | 11.5 mm | 15.5 mm | 18.5 mm | 10.4 mm |
+| `A6_PIP_SlidingLeaf_R28` | 28 mm | 1.0 × 6 mm | 11.5 mm | 15.5 mm | 18.5 mm |  9.6 mm |
+| `A6_PIP_SlidingLeaf_R30` | 30 mm | 1.0 × 6 mm | 11.0 mm | 15.0 mm | 18.5 mm |  8.8 mm |
 
-These dimensions are shared by all four designs:
+The first two are the picks from the curvature × thickness × width sweep
+([results](../results/a6/README.md)). Print those first. The other four are the earlier
+1 mm designs, kept for comparison.
+
+These dimensions are shared by all six designs:
 
 | Feature | Value |
 |---|---|
 | PP cuff | 13.8 × 9.4 mm outside, corner R 3.55, 1.2 wall, 3 mm long (A8's) |
 | MP cuff | 10.1 × 6.2 mm outside, corner R 2.10, 1.2 wall (A8's section), run the length of the guide |
-| Leaf | 6.0 mm wide × 1.0 mm thick |
+| Leaf | 6.0 mm wide; 1.0 mm thick unless the file name says otherwise |
 | Guide | mouth at y = 32.5, then a 1.5 mm neck and a pocket for an 8.0 × 1.2 mm T-head |
 | Sliding clearance | 0.25 mm per side on every face, so both bodies can be printed in place |
 
@@ -60,7 +66,7 @@ The first set had a 2.5 mm stroke and a 4 × 1 mm leaf on a short guide. It stop
 6. **The leaf is 6 mm wide instead of 4.** Width adds stiffness without adding strain.
    Thickness stays at 1 mm, because strain is the limiting quantity.
 
-## Test result: 16 of 16 cases pass
+## Test result: 24 of 24 cases pass
 
 The PIP axis is not in any file I have, so each design is tested with the axis at y = 10, 15,
 20 and 24 mm, all at z = 0. That spans the gap between the cuffs. A case passes when the
@@ -77,6 +83,8 @@ design:
 | R26 | 3.74–4.61 mm | 8.8–13.8% | 45–51° | 0.29–1.36 N·mm | 0.11–0.64 N·mm/rad |
 | R28 | 4.05–4.83 mm | 7.5–12.1% | 49–56° | 0.26–1.20 N·mm | 0.12–0.61 N·mm/rad |
 | R30 | 3.90–4.58 mm | 6.9–11.7% | 50–58° | 0.24–1.11 N·mm | 0.11–0.56 N·mm/rad |
+| **R32, 1.8 mm** | 4.18–4.81 mm | 11.6–19.8% | 53–62° | **1.40–6.29 N·mm** | **0.68–3.12 N·mm/rad** |
+| **R28, 1.4 mm** | 4.26–5.07 mm | 10.5–16.8% | 50–58° | 0.43–3.35 N·mm | 0.32–1.66 N·mm/rad |
 
 Per-case detail is in [`results/a6/rom_check.csv`](../results/a6/rom_check.csv). Every A6
 analysis is logged in [`results/a6/README.md`](../results/a6/README.md).
@@ -85,10 +93,11 @@ analysis is logged in [`results/a6/README.md`](../results/a6/README.md).
 
 ## Which thickness and curvature are best
 
-These four files all use a 1.0 × 6 mm leaf. A sweep of curvature, thickness and width found
-a stronger valid combination, R32 / 1.8 mm / 6 mm with 11.5 mm of travel. It has about 3 to
-5 times the mean restoring torque, but sits right at the 20% strain limit. A safer
-alternative is R28 / 1.4 mm / 6 mm. Neither has been generated as CAD yet. See
+A sweep of curvature, thickness and width picked **R32 / 1.8 mm / 6 mm** as the strongest
+valid combination. It has 3 to 5 times the restoring torque of the 1 mm designs, but its
+peak strain is 19.8% against the 20% limit. **R28 / 1.4 mm / 6 mm** keeps 3.2 percentage
+points of strain margin and has the widest travel window. Both are generated above, and
+both pass the full check. The matrix and reasoning are in
 [`results/a6/README.md`](../results/a6/README.md).
 
 ## What this does not tell you
@@ -99,10 +108,10 @@ alternative is R28 / 1.4 mm / 6 mm. Neither has been generated as CAD yet. See
 * **The MP cuff is now 18.5–19 mm long.** Whether that fits the MP without reaching the DIP
   hasn't been checked.
 * **The devices are bulky.** The leaf stands 8.8–11.7 mm above the PP cuff.
-* **The restoring torque is weak.** It is roughly 10 to 25 times below the A3's 6.1 N·mm/rad.
-  A thicker leaf raises torque with the cube of thickness but raises strain linearly.
-  Without a stiffness target and a strain limit from the filament test, that trade can't
-  be set.
+* **The restoring torque is still below the A3.** The 1 mm designs are 10 to 25 times below
+  its 6.1 N·mm/rad. The R32 / 1.8 mm pick averages about 1.2 N·mm/rad to 105° at the
+  worst-case axis and E = 13 MPa, about a fifth of the A3. Going further needs a higher
+  strain limit, which only the filament's tensile test can justify.
 * **The 20% strain limit is a placeholder**, not a TPU property. Nothing here is
   experimentally validated: the modulus is uncalibrated, and friction in the guide and
   contact with the finger aren't modelled.
