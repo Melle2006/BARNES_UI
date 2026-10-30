@@ -1,0 +1,22 @@
+{
+ "density_g_cm3": 1.23,
+ "E_sunlu_mpa": null,
+ "E_work_mpa": 12.0,
+ "E_bracket_mpa": [
+  5.3,
+  19.3
+ ],
+ "E_as_run": {
+  "A3": 12.0,
+  "A6": 13.0,
+  "A8": 19.3,
+  "TypeB_r1": 12.0,
+  "TypeB_r2": 12.0
+ },
+ "servo_tension_N": 47.0,
+ "sources": {
+  "density": "SUNLU TPU 90A product page (docs/06-required-inputs.md item 7)",
+  "E_low": "Bambu Lab TPU 90A technical data sheet, printed XY, 5.3 +/- 0.7 MPa",
+  "E_high": "Jabil TPU 90A datasheet, 19.3 MPa (used by the A8 study)"
+ }
+}

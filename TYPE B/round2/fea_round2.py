@@ -265,6 +265,46 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
     return "\n".join(buf) + "\n"
 
 
+DU_STOP = 2.0            # mm of shortening along the tendon after the pose: far past any capacity
+WALL_STOP = 2 * 3600     # s
+
+
+def solve_watched(work, env, direction):
+    """Run CalculiX, and stop it once the answer is in.
+
+    Under load control a joint that has buckled keeps finding equilibria on its
+    post-buckling path, each a sliver of load higher, and B3 at 60 deg crawled like
+    that for an hour. Once the distal body has moved DU_STOP along the tendon every
+    capacity criterion has long since fired, so the run is stopped there (or at
+    WALL_STOP) and the increments already written are used."""
+    with open(work / "job.log", "w") as log:
+        proc = subprocess.Popen(["ccx", "job"], cwd=work, env=env, stdout=log, stderr=subprocess.STDOUT)
+        t0, why = time.time(), None
+        while proc.poll() is None:
+            time.sleep(15)
+            if time.time() - t0 > WALL_STOP:
+                why = f"stopped at the {WALL_STOP} s wall-clock limit"
+            elif (work / "job.dat").exists():
+                try:     # the file may end mid-block while the solver writes it
+                    ures = R1.parse_dat(work / "job.dat").get(("displacements", "REF"), [])
+                except (ValueError, IndexError):
+                    continue
+                pose = [u for t, u in ures if t <= 1.0 + 1e-9]
+                load = [u for t, u in ures if t > 1.0 + 1e-9]
+                if pose and load:
+                    du = np.array(load[-1]) - np.array(pose[-1])
+                    if du[1] * direction[0] + du[2] * direction[1] > DU_STOP:
+                        why = f"stopped after {DU_STOP} mm of shortening along the tendon"
+            if why:
+                proc.terminate()
+                try:
+                    proc.wait(30)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                break
+    return why
+
+
 def run(name, angle, offset="as-built", workdir=None, elements_through=2, threads=4, keep=False,
         use_contact=True, pose_only=False):
     started = time.time()
@@ -302,9 +342,8 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
     (work / "job.inp").write_text(deck(mesh, provisional_tpu(E_MPA), prox, dist, ref_xyz,
                                        theta, direction, contact, h, pose_only))
     env = dict(os.environ, OMP_NUM_THREADS=str(threads), CCX_NPROC_EQUATION_SOLVER=str(threads))
-    p = subprocess.run(["ccx", "job"], cwd=work, env=env, capture_output=True, text=True,
-                       timeout=8 * 3600)
-    (work / "job.log").write_text(p.stdout + p.stderr)
+    stopped = solve_watched(work, env, direction)
+    p = subprocess.CompletedProcess([], 0, (work / "job.log").read_text(), "")
 
     hist = R1.parse_dat(work / "job.dat") if (work / "job.dat").exists() else {}
     mom = hist.get(("forces", "ROT"), [])
@@ -350,6 +389,7 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
                                strain_min=float(smin.min())))
     res["frames"] = frames
     res["ccx_tail"] = p.stdout[-1500:]
+    res["stopped"] = stopped
     res["wall_s"] = round(time.time() - started, 1)
     res.update(postprocess(res))
     if not keep:
@@ -372,7 +412,9 @@ def postprocess(res):
     k = np.diff(T) / np.maximum(np.diff(du), 1e-12)
     k0 = np.median(k[: max(2, len(k) // 20)])
     cands = []
-    if res["load_completed_fraction"] < 0.999:
+    if res.get("stopped"):
+        cands.append((T[-1], res["stopped"]))
+    elif res["load_completed_fraction"] < 0.999:
         cands.append((T[-1], "limit point: no equilibrium beyond this tension (buckling/collapse)"))
     else:
         cands.append((T[-1], f"held the full {res['T_max']:.0f} N"))
