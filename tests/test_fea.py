@@ -558,6 +558,58 @@ class TestRigidBodyDriving:
                 ),
             )
 
+    @staticmethod
+    def _joint_stiffness_deck(shape, monkeypatch, joint_direction) -> str:
+        """The deck measure_joint_stiffness would submit, captured before the solve."""
+        from barnes_ui.core.fea import joint_stiffness
+        from barnes_ui.core.fea.joint_stiffness import JointStiffnessSetup
+
+        captured: list[str] = []
+
+        class _Captured(Exception):
+            pass
+
+        def fake_run_analysis(deck, *args, **kwargs):
+            captured.append(deck)
+            raise _Captured
+
+        monkeypatch.setattr(joint_stiffness, "run_analysis", fake_run_analysis)
+        setup = JointStiffnessSetup(
+            attachment_depth=5.0,
+            axis_point=(20.0, 2.0, 1.0),
+            span_axis=0,
+            joint_direction=joint_direction,
+            elements_through_thickness=2,
+        )
+        with pytest.raises(_Captured):
+            joint_stiffness.measure_joint_stiffness(
+                shape, provisional_tpu(), setup, solver=None
+            )
+        return captured[0]
+
+    def test_joint_stiffness_holds_off_axis_rotations(
+        self, cantilever_shape, monkeypatch
+    ) -> None:
+        """A PIP joint is a hinge, so the rotation node turns about one axis only.
+
+        Leaving the two off-axis rotations free cut the A8 meander strip's first
+        increment back to ~0.01 deg, with the largest residual on the free DOF 3.
+        """
+        pytest.importorskip("gmsh")
+        deck = self._joint_stiffness_deck(cantilever_shape, monkeypatch, (0.0, 0.0, 1.0))
+        assert "distal_rot, 3, 3, 0.034906585" in deck
+        assert "** hinge: off-axis rotations held" in deck
+        assert "distal_rot, 1, 1, 0\n" in deck
+        assert "distal_rot, 2, 2, 0\n" in deck
+
+    def test_joint_stiffness_skips_hinge_for_an_oblique_axis(
+        self, cantilever_shape, monkeypatch
+    ) -> None:
+        """Per-DOF zeros cannot express a hinge about an oblique axis."""
+        pytest.importorskip("gmsh")
+        deck = self._joint_stiffness_deck(cantilever_shape, monkeypatch, (0.0, 0.6, 0.8))
+        assert "hinge" not in deck
+
 
 # ---------------------------------------------------------------------------
 # Result handling -- Phase 3 criterion 5
