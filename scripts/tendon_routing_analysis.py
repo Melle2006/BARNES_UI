@@ -266,7 +266,9 @@ def type_a_joint_grid(geo, joint, theta_max, loads_per_N, force_n, n_ax=28, n_h=
 #: Radius of the joint head around each pin (mm): the clevis cams measured on the
 #: index finger (PIP 5.195, DIP 5.0). The MCP uses each finger's measured ball.
 PIN_HEAD_RADIUS_MM = {"PIP": 5.195, "DIP": 5.0}
-MC_GUIDE_RANGE_MM = 40.0   # how far back along the metacarpal a guide is considered
+#: Upper limit on flexion from straight, used where the CAD has no earlier stop.
+ANATOMICAL_MAX_DEG = {"MCP": 90.0, "PIP": 110.0, "DIP": 90.0}
+MC_GUIDE_RANGE_MM = 40.0  # how far back along the metacarpal a guide is considered
 TIP_MARGIN_MM = 2.0
 
 
@@ -292,7 +294,9 @@ def run_type_a(geom_path: Path) -> list[dict]:
         theta_max = {j: math.radians(geo["rest_angles_deg"][j]
                                      + geo["rom_from_rest_deg"][j])
                      for j in ("MCP", "PIP", "DIP")}
-        theta_max = {j: min(max(t, math.radians(30)), math.radians(110))
+        # The CAD stop where there is one; the MCP ball has none, so it and any stop
+        # beyond the anatomical range fall back to that range.
+        theta_max = {j: min(t, math.radians(ANATOMICAL_MAX_DEG[j]))
                      for j, t in theta_max.items()}
         # Grasp poses for all three joints together, for the chain statics.
         poses = np.stack([grasp_angles(theta_max[j]) for j in ("MCP", "PIP", "DIP")], 1)
