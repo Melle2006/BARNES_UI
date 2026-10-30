@@ -1,0 +1,14 @@
+check,value,limit,result
+rig_base is one valid solid,1,== 1,pass
+load_adapter is one valid solid,1,== 1,pass
+rig_base clear of Phalanx 1,0.0,<= 0.001,pass
+dummy MCP tab clearance in Phalanx 1 socket,0.3,0.3 +/- 0.02,pass
+load_adapter clear of Phalanx 2,0.0,<= 0.001,pass
+dummy DIP tab clearance in Phalanx 2 socket,0.3,0.3 +/- 0.02,pass
+"Phalanx 2 + adapter clear of rig_base, 0-115 deg",0.0,<= 0.001,pass
+PIP module clear of rig_base,0.0,<= 0.001,pass
+tendon path through post clear (as-built depth),0.0,<= 0.001,pass
+tendon path through post clear (deep depth),0.0,<= 0.001,pass
+tendon path into adapter clear (as-built depth),0.0,<= 0.001,pass
+tendon path into adapter clear (deep depth),0.0,<= 0.001,pass
+pulley clear of rig_base,0.0,<= 0.001,pass

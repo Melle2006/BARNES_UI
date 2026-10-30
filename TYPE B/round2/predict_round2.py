@@ -57,6 +57,7 @@ def rows(path):
 
 
 def lever(model, theta, d, extra):
+    theta = max(theta, 1e-3)   # the bent-joint derivative is one-sided at exactly 0
     if model == "arc":
         return float(T.arc_moment_arm(theta, FLEX, d))
     if model == "rolling":
