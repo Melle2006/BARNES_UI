@@ -5,9 +5,8 @@ the number of turns and on the curvature of the strip's spine, and which combina
 build. Every number here is from nonlinear FEA (CalculiX, `*NLGEOM`, Neo-Hookean) driven
 through 0–100° of flexion, with the strip riding over a rigid model of the finger.
 
-> **Status: 2-turn and 3-turn complete; 4-turn running.** The 4-turn strip narrows to
-> 0.56 mm, needs 0.28 mm elements and three times the mesh, and is being added as its
-> runs finish. `matrix_4turn.csv` is incomplete until then.
+33 cases: the three supplied exports, their parametric rebuilds, and 2-, 3- and 4-turn
+strips each at nine spine sagittas from 0 to 3.5 mm.
 
 **Nothing here is experimentally validated.** The material is a datasheet modulus, the
 joint axis and finger surfaces are inferred from the ring geometry, and no physical
@@ -33,16 +32,22 @@ order-of-magnitude until a tensile test and a bench measurement exist.
    arch gives more torque at 90° (0.446 vs 0.363 N·mm) and a lower profile; higher arch
    gives slightly more stiffness right at full extension and less strain. 1.0 mm wins
    the tie-break on torque at 15° *and* on profile.
-4. **Do not go flatter than ≈ 1.0 mm.** Below 0.70 mm sagitta the strip starts inside the
+4. **Do not go to 4 turns.** Every 4-turn variant is smooth to 100°, but it gives only
+   0.13–0.16 N·mm at 90° — about a third of the 3-turn — and its torque per unit strain
+   is 3.3 against 5.3. Its path is 64 mm long against 48, and its true section narrows
+   to 0.56 mm at the crossings. More turns make the spring softer and thinner, not
+   better; if anything is to change in the count, it is 3 → 2 with the snap designed
+   out, not 3 → 4.
+5. **Do not go flatter than ≈ 1.0 mm.** Below 0.70 mm sagitta the strip starts inside the
    knuckle; at 0.75 mm it clears by 0.04 mm, which a printed part will not hold. 1.0 mm
    clears by 0.29 mm.
-5. **The spring is weak, and the fix is section height, not turns.** At 90° the 3-turn
+6. **The spring is weak, and the fix is section height, not turns.** At 90° the 3-turn
    strip gives ~0.45 N·mm; the strip itself is only 7–8 % strained, so there is a great
    deal of headroom. Torque scales with the cube of the 1.2 mm section height and strain
    only linearly: **1.8 mm → ≈ 3.4× torque at ≈ 1.5× strain; 2.4 mm → ≈ 8× torque at
    ≈ 2× strain (~17 %)**. Raising height also widens the narrowest wall problem below.
    This scaling is from beam theory, not yet from a run — it is the obvious next case.
-6. **Print the narrow crossings deliberately.** The "2 mm" in the file names is measured
+7. **Print the narrow crossings deliberately.** The "2 mm" in the file names is measured
    *across the finger*; the strip's true width is 2.0·cos φ, so where the path crosses
    steeply the 3-turn strip is only **0.71 mm** wide — under two 0.4 mm extrusion widths.
    The 2-turn is 0.93 mm, a 4-turn of the same style 0.56 mm. Either print with a
@@ -81,6 +86,23 @@ order-of-magnitude until a tensile test and a bench measurement exist.
 | 2.50 | 35 | 0.24 | 0.048 | 0.084 | 0.219 | 0.403 | 0.262 | 7.5 | 5.36 | 1.79 | 6.46 |
 | 3.00 | 29 | 0.26 | 0.052 | 0.075 | 0.203 | 0.384 | 0.246 | 7.2 | 5.32 | 2.29 | 6.95 |
 | 3.50 | 26 | 0.27 | 0.054 | 0.070 | 0.186 | 0.363 | 0.230 | 6.9 | 5.29 | 2.79 | 7.44 |
+
+### 4-turn (all smooth to 100°, but a third of the torque)
+
+| Sagitta (mm) | Bend R (mm) | k0 (N·mm/rad) | T15 | T30 | T60 | T90 (N·mm) | Energy 0–90° (mJ) | ε90 (%) | T90/ε90 | Knuckle clearance (mm) | Top height (mm) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.00 | ∞ | — | — | — | — | — | — | — | — | −0.70 (inside) | 4.70 |
+| 0.50 | 167 | — | — | — | — | — | — | — | — | −0.20 (inside) | 4.72 |
+| 0.75 | 112 | 0.089 | 0.022 | 0.046 | 0.102 | 0.160 | 0.118 | 5.0 | 3.23 | 0.04 ✗ | 4.86 |
+| 1.00 | 84 | 0.061 | 0.021 | 0.044 | 0.100 | 0.159 | 0.116 | 4.7 | 3.34 | 0.29 | 5.06 |
+| 1.50 | 57 | 0.068 | 0.017 | 0.040 | 0.095 | 0.154 | 0.110 | 4.6 | 3.33 | 0.79 | 5.51 |
+| 2.00 | 43 | 0.075 | 0.014 | 0.036 | 0.091 | 0.150 | 0.104 | 4.6 | 3.28 | 1.29 | 5.98 |
+| 2.50 | 35 | 0.080 | 0.016 | 0.032 | 0.085 | 0.145 | 0.098 | 4.3 | 3.34 | 1.79 | 6.46 |
+| 3.00 | 29 | 0.085 | 0.017 | 0.028 | 0.079 | 0.139 | 0.092 | 4.0 | 3.43 | 2.29 | 6.95 |
+| 3.50 | 26 | 0.089 | 0.018 | 0.024 | 0.073 | 0.132 | 0.086 | 4.0 | 3.30 | 2.79 | 7.44 |
+
+The 4-turn plan is a pure sine of amplitude 4.0 mm (seven lobes) — there is no 4-turn
+export, so this is an extrapolation of the family at the same lateral envelope.
 
 ### Supplied exports, and the check that the parametric rebuilds are faithful
 
@@ -166,7 +188,7 @@ commit history in full.
 | `ranking.csv` | Every case, feasibility verdict and reason, score |
 | `exports_vs_replicas.csv` | Supplied parts against their parametric rebuilds |
 | `fig_torque_angle_*.png` | Torque–angle curves per group, and for the exports |
-| `fig_design_space.png` | T90, ε90 and the score against sagitta, all turn counts |
+| `fig_design_space.png` | T90, ε90 and the score against sagitta, all turn counts; values read after a snap are hollow |
 | `cases/*.json` | One record per case: full torque–angle curve, per-increment strain, clearance, spread, convergence, mesh |
 | `input_step/` | The three supplied STEP exports |
 
@@ -191,7 +213,6 @@ threaded; about 35 minutes a case for 2 and 3 turns, 1.5–2 hours for 4.
 
 ## Open
 
-- 4-turn results (running).
 - A run at 1.8 and 2.4 mm section height, to replace the beam-theory scaling in the
   recommendation with an FEA number.
 - The real PIP axis and finger profile from the hand CAD, and the torque the hand needs

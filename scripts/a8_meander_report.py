@@ -279,11 +279,23 @@ def plot_maps(rows: list[dict], path: Path) -> None:
          "T90 / ε90 (N·mm) — the score"),
     ):
         for n_turns, marker in ((2, "o"), (3, "s"), (4, "^")):
-            pts = sorted((r["sagitta_mm"], r[key]) for r in sweep
-                         if r["n_turns"] == n_turns and r[key] is not None
-                         and not (isinstance(r[key], float) and math.isnan(r[key])))
-            if pts:
-                ax.plot(*zip(*pts), marker=marker, label=f"{n_turns}-turn")
+            rows_n = [r for r in sweep if r["n_turns"] == n_turns and r[key] is not None
+                      and not (isinstance(r[key], float) and math.isnan(r[key]))]
+            # A value at 90 deg read after the strip has snapped is not a spring
+            # characteristic: it is shown hollow and unjoined, not on the curve.
+            clean = sorted((r["sagitta_mm"], r[key]) for r in rows_n
+                           if not (r["first_torque_drop_deg"] is not None
+                                   and r["first_torque_drop_deg"] <= 90.0))
+            snapped = sorted((r["sagitta_mm"], r[key]) for r in rows_n
+                             if r["first_torque_drop_deg"] is not None
+                             and r["first_torque_drop_deg"] <= 90.0)
+            line = None
+            if clean:
+                (line,) = ax.plot(*zip(*clean), marker=marker, label=f"{n_turns}-turn")
+            if snapped:
+                ax.plot(*zip(*snapped), marker=marker, ls="none", mfc="none",
+                        color=line.get_color() if line else None,
+                        label=f"{n_turns}-turn, after snapping")
         if key == "strain_90_pct":
             ax.axhline(STRAIN_LIMIT * 100, color="#a33", ls="--", lw=1, label="limit")
         ax.set_xlabel("Spine sagitta (mm)")

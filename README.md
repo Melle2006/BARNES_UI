@@ -373,6 +373,7 @@ Full details, including the data model and the fidelity ladder:
 | [07-risk-register.md](docs/07-risk-register.md) | What could make the results wrong, and what is done about each |
 | [08-calculix-installation.md](docs/08-calculix-installation.md) | What was installed, why, and the four defects checking it exposed |
 | [09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md) | Which advanced solver capabilities work here, measured rather than assumed |
+| [results/a8_meander_study](results/a8_meander_study/README.md) | A8 meander: 2/3/4 turns × spine curvature in TPU 90A, torque–angle by FEA over a modelled finger, and which to build |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---
