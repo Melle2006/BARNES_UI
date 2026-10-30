@@ -51,3 +51,4 @@ results/visual/
 
 # In-progress claim files written by the A8 study runner
 results/**/*.claim
+TYPE B/round2/fea/campaign.log
