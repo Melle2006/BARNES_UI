@@ -1,6 +1,8 @@
 # A6 results
 
 Analysis results for the A6 sliding-end leaf spring. The CAD is in [`A6 designs/`](../../A6%20designs/).
+For the same analysis of the A3 twin strap, see
+[`results/a3_parameter_sweep/`](../a3_parameter_sweep/README.md).
 Each entry below records what was run, the script that produced it, and what it found.
 Newest first.
 
