@@ -51,8 +51,21 @@ alone:
   leaves a clear central corridor so both run through the joint in open air.
 
 Every one of the 55 variants passes all 38 geometric checks in its
-`verification_report.csv`. Nothing about how the flexures bend, how stiff
-they are or how they fail has been tested yet. That needs FEA or a print.
+`verification_report.csv`.
+
+## FEA selection: the best variant of each design
+
+All variants were simulated at the PIP, attached the way the A3 fit check
+attaches its strap. The full method, criteria, stress-strain graphs and
+results are in **[analysis/REPORT.md](analysis/REPORT.md)**.
+
+| Design | Selected variant | Usable PIP range | Notes |
+|---|---|---|---|
+| B5 crossed strip | `B5_t150_a45` | 77.8° | best overall; stiffest in twist |
+| B3 dual leaf | `B3_t150_w30` | 76.6° | lowest strain; soft in twist |
+| B6 multi-leaf | `B6_n4_t150_taper15` | 72.5° | no advantage over B3 |
+| B1 hourglass | `B1_t100_notch100` | 46.0° | strain-limited |
+| B-lattice | `B_T090_X3` | 16.2° | struts buckle; not viable as drawn |
 
 ## What changes in each design's variants
 

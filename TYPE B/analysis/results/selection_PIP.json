@@ -368,62 +368,86 @@
   }
  },
  "B_lattice": {
-  "winner": "B00_baseline",
+  "winner": "B_T090_X3",
   "ranking_balanced": [
    [
+    "B_T090_X3",
+    0.683
+   ],
+   [
     "B00_baseline",
-    0.49
+    0.54
    ],
    [
     "B_T100_X3",
-    0.45
+    0.414
+   ],
+   [
+    "B_T120_X3",
+    0.271
    ]
   ],
   "winners_by_weighting": {
-   "balanced": "B00_baseline",
+   "balanced": "B_T090_X3",
    "range-first": "B00_baseline",
-   "durability-first": "B00_baseline",
+   "durability-first": "B_T090_X3",
    "equal": "B_T100_X3"
   },
   "top3_by_weighting": {
    "balanced": [
     [
+     "B_T090_X3",
+     0.683
+    ],
+    [
      "B00_baseline",
-     0.49
+     0.54
     ],
     [
      "B_T100_X3",
-     0.45
+     0.414
     ]
    ],
    "range-first": [
     [
      "B00_baseline",
-     0.652
+     0.683
+    ],
+    [
+     "B_T090_X3",
+     0.634
     ],
     [
      "B_T100_X3",
-     0.35
+     0.394
     ]
    ],
    "durability-first": [
     [
+     "B_T090_X3",
+     0.756
+    ],
+    [
      "B00_baseline",
-     0.352
+     0.383
     ],
     [
      "B_T100_X3",
-     0.35
+     0.315
     ]
    ],
    "equal": [
     [
      "B_T100_X3",
-     0.714
+     0.565
     ],
     [
-     "B00_baseline",
-     0.438
+     "B_T090_X3",
+     0.545
+    ],
+    [
+     "B_T120_X3",
+     0.531
     ]
    ]
   }

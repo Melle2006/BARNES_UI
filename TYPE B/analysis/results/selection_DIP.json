@@ -80,5 +80,46 @@
     ]
    ]
   }
+ },
+ "B6_multi_leaf": {
+  "winner": "B6_n4_t150_taper15",
+  "ranking_balanced": [
+   [
+    "B6_n4_t150_taper15",
+    1.0
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B6_n4_t150_taper15",
+   "range-first": "B6_n4_t150_taper15",
+   "durability-first": "B6_n4_t150_taper15",
+   "equal": "B6_n4_t150_taper15"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B6_n4_t150_taper15",
+     1.0
+    ]
+   ],
+   "range-first": [
+    [
+     "B6_n4_t150_taper15",
+     1.0
+    ]
+   ],
+   "durability-first": [
+    [
+     "B6_n4_t150_taper15",
+     1.0
+    ]
+   ],
+   "equal": [
+    [
+     "B6_n4_t150_taper15",
+     1.0
+    ]
+   ]
+  }
  }
 }

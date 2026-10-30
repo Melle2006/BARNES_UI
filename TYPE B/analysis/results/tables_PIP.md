@@ -72,7 +72,9 @@ Winner under each weighting: balanced: `B6_n4_t150_taper15`, range-first: `B6_n4
 
 | Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `B00_baseline` **(selected)** | 20.2 | strain 20 % | – | 20.0 % | 2.86 | 38.36 | 9.69 | 2.09 | 10.4 | 21.7 | 0.05 | 12.1× | 0.490 |
-| `B_T100_X3` | 13.0 | strain 20 % | – | 20.0 % | 2.75 | 47.74 | 7.76 | 1.72 | 10.1 | 21.0 | 0.05 | 12.1× | 0.450 |
+| `B_T090_X3` **(selected)** | 16.2 | strain 20 % | 45.7 % | 20.0 % | 3.51 | 31.90 | 6.25 | 1.38 | 14.4 | 30.6 | 0.07 | 8.7× | 0.683 |
+| `B00_baseline` | 20.2 | strain 20 % | – | 20.0 % | 2.86 | 38.36 | 9.69 | 2.09 | 10.4 | 21.7 | 0.05 | 12.1× | 0.540 |
+| `B_T100_X3` | 13.0 | strain 20 % | – | 20.0 % | 2.75 | 47.74 | 7.76 | 1.72 | 10.1 | 21.0 | 0.05 | 12.1× | 0.414 |
+| `B_T120_X3` | 10.4 | strain 20 % | – | 20.0 % | 2.82 | 93.56 | 11.51 | 2.64 | 6.4 | 11.9 | 0.11 | 19.6× | 0.271 |
 
-Winner under each weighting: balanced: `B00_baseline`, range-first: `B00_baseline`, durability-first: `B00_baseline`, equal: `B_T100_X3`
+Winner under each weighting: balanced: `B_T090_X3`, range-first: `B00_baseline`, durability-first: `B_T090_X3`, equal: `B_T100_X3`

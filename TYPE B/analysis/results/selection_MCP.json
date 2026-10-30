@@ -1,4 +1,20 @@
 {
+ "B1_hourglass": {
+  "winner": null,
+  "ranking_balanced": [],
+  "winners_by_weighting": {
+   "balanced": null,
+   "range-first": null,
+   "durability-first": null,
+   "equal": null
+  },
+  "top3_by_weighting": {
+   "balanced": [],
+   "range-first": [],
+   "durability-first": [],
+   "equal": []
+  }
+ },
  "B3_dual_leaf": {
   "winner": null,
   "ranking_balanced": [],
@@ -16,6 +32,22 @@
   }
  },
  "B5_crossed_strip": {
+  "winner": null,
+  "ranking_balanced": [],
+  "winners_by_weighting": {
+   "balanced": null,
+   "range-first": null,
+   "durability-first": null,
+   "equal": null
+  },
+  "top3_by_weighting": {
+   "balanced": [],
+   "range-first": [],
+   "durability-first": [],
+   "equal": []
+  }
+ },
+ "B6_multi_leaf": {
   "winner": null,
   "ranking_balanced": [],
   "winners_by_weighting": {

@@ -13,3 +13,11 @@ Winner under each weighting: balanced: `B3_t150_w30`, range-first: `B3_t150_w30`
 | `B5_t150_a45` **(selected)** | 80.0 | target | 12.5 % | 17.7 % | 2.17 | 1.45 | 2.11 | 2.06 | 7.8 | 10.6 | 0.94 | 3.5× | 1.000 |
 
 Winner under each weighting: balanced: `B5_t150_a45`, range-first: `B5_t150_a45`, durability-first: `B5_t150_a45`, equal: `B5_t150_a45`
+
+### B6 multi-leaf
+
+| Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `B6_n4_t150_taper15` **(selected)** | 80.0 | target | 13.7 % | 18.6 % | 2.26 | 1.49 | 2.05 | 1.98 | 6.6 | 34.9 | 0.72 | 3.5× | 1.000 |
+
+Winner under each weighting: balanced: `B6_n4_t150_taper15`, range-first: `B6_n4_t150_taper15`, durability-first: `B6_n4_t150_taper15`, equal: `B6_n4_t150_taper15`
