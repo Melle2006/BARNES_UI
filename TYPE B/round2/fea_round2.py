@@ -58,6 +58,7 @@ import argparse
 import json
 import math
 import os
+import resource
 import subprocess
 import sys
 import tempfile
@@ -288,6 +289,7 @@ GUIDED_FAMILIES = ("B4", "B8")
 CONTACT_K_FACTOR = float(os.environ.get("R2_CONTACT_K", 10.0))
 DU_STOP = 2.0            # mm of shortening along the tendon after the pose: far past any capacity
 WALL_STOP = 2 * 3600     # s
+MEM_CAP = 8 * 1024 ** 3  # bytes of address space per solver run
 
 
 def solve_watched(work, env, direction):
@@ -299,7 +301,13 @@ def solve_watched(work, env, direction):
     capacity criterion has long since fired, so the run is stopped there (or at
     WALL_STOP) and the increments already written are used."""
     with open(work / "job.log", "w") as log:
-        proc = subprocess.Popen(["ccx", "job"], cwd=work, env=env, stdout=log, stderr=subprocess.STDOUT)
+        # A diverging contact iteration can drive SPOOLES past 12 GB, and the kernel
+        # then kills whatever is largest -- possibly another job. Capping the address
+        # space makes the runaway fail on its own; the increments already written
+        # are kept.
+        cap = lambda: resource.setrlimit(resource.RLIMIT_AS, (MEM_CAP, MEM_CAP))  # noqa: E731
+        proc = subprocess.Popen(["ccx", "job"], cwd=work, env=env, stdout=log, stderr=subprocess.STDOUT,
+                                preexec_fn=cap)
         t0, why = time.time(), None
         while proc.poll() is None:
             time.sleep(15)
@@ -464,7 +472,7 @@ def postprocess(res):
         if i < len(T) - 1 and T[-1] < 0.98 * T[i]:
             cands.append((T[i], "peak tendon force: the bearing gives way past it (guided)"))
         elif res["load_completed_fraction"] < 0.999:
-            cands.append((T.max(), "solver stopped (guided); largest force reached"))
+            cands.append((T.max(), "solver stopped (guided) before the bearing gave way: a lower bound"))
         else:
             cands.append((T.max(), f"held to {S_MAX} mm of shortening (guided)"))
     elif res.get("stopped"):
