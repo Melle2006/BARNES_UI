@@ -1,0 +1,99 @@
+{
+ "B3_dual_leaf": {
+  "winner": "B3_t200_w20",
+  "ranking_balanced": [
+   [
+    "B3_t200_w20",
+    0.656
+   ],
+   [
+    "B3_t200_w30",
+    0.566
+   ],
+   [
+    "B3_t150_w30_taper20",
+    0.412
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B3_t200_w20",
+   "range-first": "B3_t200_w20",
+   "durability-first": "B3_t200_w20",
+   "equal": "B3_t150_w30_taper20"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B3_t200_w20",
+     0.656
+    ],
+    [
+     "B3_t200_w30",
+     0.566
+    ],
+    [
+     "B3_t150_w30_taper20",
+     0.412
+    ]
+   ],
+   "range-first": [
+    [
+     "B3_t200_w20",
+     0.721
+    ],
+    [
+     "B3_t200_w30",
+     0.602
+    ],
+    [
+     "B3_t150_w30_taper20",
+     0.319
+    ]
+   ],
+   "durability-first": [
+    [
+     "B3_t200_w20",
+     0.721
+    ],
+    [
+     "B3_t200_w30",
+     0.617
+    ],
+    [
+     "B3_t150_w30_taper20",
+     0.319
+    ]
+   ],
+   "equal": [
+    [
+     "B3_t150_w30_taper20",
+     0.66
+    ],
+    [
+     "B3_t200_w30",
+     0.505
+    ],
+    [
+     "B3_t200_w20",
+     0.387
+    ]
+   ]
+  }
+ },
+ "B6_multi_leaf": {
+  "winner": null,
+  "ranking_balanced": [],
+  "winners_by_weighting": {
+   "balanced": null,
+   "range-first": null,
+   "durability-first": null,
+   "equal": null
+  },
+  "top3_by_weighting": {
+   "balanced": [],
+   "range-first": [],
+   "durability-first": [],
+   "equal": []
+  }
+ }
+}
