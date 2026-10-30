@@ -1,0 +1,455 @@
+{
+ "B1_hourglass": {
+  "winner": "B1_t100_notch100",
+  "ranking_balanced": [
+   [
+    "B1_t100_notch100",
+    0.762
+   ],
+   [
+    "B1_t125_notch100",
+    0.714
+   ],
+   [
+    "B1_t150_notch100",
+    0.647
+   ],
+   [
+    "B1_t100_notch050",
+    0.606
+   ],
+   [
+    "B1_t125_notch050",
+    0.509
+   ],
+   [
+    "B1_t200_notch100",
+    0.495
+   ],
+   [
+    "B1_t150_notch050",
+    0.443
+   ],
+   [
+    "B1_t200_notch050",
+    0.303
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B1_t100_notch100",
+   "range-first": "B1_t100_notch100",
+   "durability-first": "B1_t100_notch100",
+   "equal": "B1_t100_notch050"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B1_t100_notch100",
+     0.762
+    ],
+    [
+     "B1_t125_notch100",
+     0.714
+    ],
+    [
+     "B1_t150_notch100",
+     0.647
+    ]
+   ],
+   "range-first": [
+    [
+     "B1_t100_notch100",
+     0.808
+    ],
+    [
+     "B1_t125_notch100",
+     0.741
+    ],
+    [
+     "B1_t150_notch100",
+     0.661
+    ]
+   ],
+   "durability-first": [
+    [
+     "B1_t100_notch100",
+     0.808
+    ],
+    [
+     "B1_t125_notch100",
+     0.763
+    ],
+    [
+     "B1_t150_notch100",
+     0.701
+    ]
+   ],
+   "equal": [
+    [
+     "B1_t100_notch050",
+     0.724
+    ],
+    [
+     "B1_t125_notch050",
+     0.667
+    ],
+    [
+     "B1_t150_notch050",
+     0.617
+    ]
+   ]
+  }
+ },
+ "B3_dual_leaf": {
+  "winner": "B3_t150_w30",
+  "ranking_balanced": [
+   [
+    "B3_t150_w30",
+    0.75
+   ],
+   [
+    "B3_t150_w30_taper15",
+    0.586
+   ],
+   [
+    "B3_t200_w20",
+    0.555
+   ],
+   [
+    "B3_t200_w30",
+    0.47
+   ],
+   [
+    "B3_t150_w30_taper20",
+    0.392
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B3_t150_w30",
+   "range-first": "B3_t150_w30",
+   "durability-first": "B3_t150_w30",
+   "equal": "B3_t150_w30_taper20"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B3_t150_w30",
+     0.75
+    ],
+    [
+     "B3_t150_w30_taper15",
+     0.586
+    ],
+    [
+     "B3_t200_w20",
+     0.555
+    ]
+   ],
+   "range-first": [
+    [
+     "B3_t150_w30",
+     0.8
+    ],
+    [
+     "B3_t200_w20",
+     0.61
+    ],
+    [
+     "B3_t150_w30_taper15",
+     0.585
+    ]
+   ],
+   "durability-first": [
+    [
+     "B3_t150_w30",
+     0.8
+    ],
+    [
+     "B3_t150_w30_taper15",
+     0.568
+    ],
+    [
+     "B3_t200_w20",
+     0.567
+    ]
+   ],
+   "equal": [
+    [
+     "B3_t150_w30_taper20",
+     0.646
+    ],
+    [
+     "B3_t150_w30_taper15",
+     0.612
+    ],
+    [
+     "B3_t150_w30",
+     0.57
+    ]
+   ]
+  }
+ },
+ "B5_crossed_strip": {
+  "winner": "B5_t150_a45",
+  "ranking_balanced": [
+   [
+    "B5_t150_a45",
+    0.853
+   ],
+   [
+    "B5_t150_a60",
+    0.761
+   ],
+   [
+    "B5_t150_a75",
+    0.711
+   ],
+   [
+    "B5_t200_a60",
+    0.325
+   ],
+   [
+    "B5_t200_a45",
+    0.266
+   ],
+   [
+    "B5_t200_a75",
+    0.234
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B5_t150_a45",
+   "range-first": "B5_t150_a45",
+   "durability-first": "B5_t150_a45",
+   "equal": "B5_t150_a45"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B5_t150_a45",
+     0.853
+    ],
+    [
+     "B5_t150_a60",
+     0.761
+    ],
+    [
+     "B5_t150_a75",
+     0.711
+    ]
+   ],
+   "range-first": [
+    [
+     "B5_t150_a45",
+     0.884
+    ],
+    [
+     "B5_t150_a60",
+     0.77
+    ],
+    [
+     "B5_t150_a75",
+     0.734
+    ]
+   ],
+   "durability-first": [
+    [
+     "B5_t150_a45",
+     0.884
+    ],
+    [
+     "B5_t150_a60",
+     0.787
+    ],
+    [
+     "B5_t150_a75",
+     0.754
+    ]
+   ],
+   "equal": [
+    [
+     "B5_t150_a45",
+     0.724
+    ],
+    [
+     "B5_t150_a60",
+     0.684
+    ],
+    [
+     "B5_t150_a75",
+     0.585
+    ]
+   ]
+  }
+ },
+ "B6_multi_leaf": {
+  "winner": "B6_n4_t150_taper15",
+  "ranking_balanced": [
+   [
+    "B6_n4_t150_taper15",
+    0.742
+   ],
+   [
+    "B6_n6_t200",
+    0.519
+   ],
+   [
+    "B6_n4_t150_taper20",
+    0.463
+   ],
+   [
+    "B6_n4_t200",
+    0.397
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B6_n4_t150_taper15",
+   "range-first": "B6_n4_t150_taper15",
+   "durability-first": "B6_n4_t150_taper15",
+   "equal": "B6_n4_t150_taper20"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B6_n4_t150_taper15",
+     0.742
+    ],
+    [
+     "B6_n6_t200",
+     0.519
+    ],
+    [
+     "B6_n4_t150_taper20",
+     0.463
+    ]
+   ],
+   "range-first": [
+    [
+     "B6_n4_t150_taper15",
+     0.792
+    ],
+    [
+     "B6_n4_t200",
+     0.43
+    ],
+    [
+     "B6_n4_t150_taper20",
+     0.406
+    ]
+   ],
+   "durability-first": [
+    [
+     "B6_n4_t150_taper15",
+     0.792
+    ],
+    [
+     "B6_n6_t200",
+     0.649
+    ],
+    [
+     "B6_n4_t200",
+     0.415
+    ]
+   ],
+   "equal": [
+    [
+     "B6_n4_t150_taper20",
+     0.683
+    ],
+    [
+     "B6_n6_t200",
+     0.544
+    ],
+    [
+     "B6_n4_t150_taper15",
+     0.543
+    ]
+   ]
+  }
+ },
+ "B_lattice": {
+  "winner": "B_T090_X3",
+  "ranking_balanced": [
+   [
+    "B_T090_X3",
+    0.683
+   ],
+   [
+    "B00_baseline",
+    0.54
+   ],
+   [
+    "B_T100_X3",
+    0.414
+   ],
+   [
+    "B_T120_X3",
+    0.271
+   ]
+  ],
+  "winners_by_weighting": {
+   "balanced": "B_T090_X3",
+   "range-first": "B00_baseline",
+   "durability-first": "B_T090_X3",
+   "equal": "B_T100_X3"
+  },
+  "top3_by_weighting": {
+   "balanced": [
+    [
+     "B_T090_X3",
+     0.683
+    ],
+    [
+     "B00_baseline",
+     0.54
+    ],
+    [
+     "B_T100_X3",
+     0.414
+    ]
+   ],
+   "range-first": [
+    [
+     "B00_baseline",
+     0.683
+    ],
+    [
+     "B_T090_X3",
+     0.634
+    ],
+    [
+     "B_T100_X3",
+     0.394
+    ]
+   ],
+   "durability-first": [
+    [
+     "B_T090_X3",
+     0.756
+    ],
+    [
+     "B00_baseline",
+     0.383
+    ],
+    [
+     "B_T100_X3",
+     0.315
+    ]
+   ],
+   "equal": [
+    [
+     "B_T100_X3",
+     0.565
+    ],
+    [
+     "B_T090_X3",
+     0.545
+    ],
+    [
+     "B_T120_X3",
+     0.531
+    ]
+   ]
+  }
+ }
+}

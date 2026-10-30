@@ -1,0 +1,26 @@
+{
+ "B1_t100_notch100": {
+  "relief_rom_deg": 79.62890625,
+  "reached_deg": 90.0
+ },
+ "B3_t100_w20": {
+  "relief_rom_deg": 85.000791796875,
+  "reached_deg": 100.0
+ },
+ "B3_t150_w30": {
+  "relief_rom_deg": 85.36261117187499,
+  "reached_deg": 100.0
+ },
+ "B5_t100_a75": {
+  "relief_rom_deg": null,
+  "reached_deg": 90.0
+ },
+ "B5_t150_a45": {
+  "relief_rom_deg": 86.78474212500001,
+  "reached_deg": 90.0
+ },
+ "B6_n4_t150_taper15": {
+  "relief_rom_deg": 83.70703125000001,
+  "reached_deg": 90.0
+ }
+}
