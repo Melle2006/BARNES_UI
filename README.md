@@ -379,6 +379,7 @@ Full details, including the data model and the fidelity ladder:
 | [09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md) | Which advanced solver capabilities work here, measured rather than assumed |
 | [manual/running-a-simulation.md](docs/manual/running-a-simulation.md) | A recorded end-to-end run of the GUI — every click, every number, every caveat, with screenshots |
 | [handover.md](docs/handover.md) | Where things stand: recent changes, work in flight, open decisions, and what a second machine needs |
+| [results/a8_meander_study](results/a8_meander_study/README.md) | A8 meander: 2/3/4 turns × spine curvature in TPU 90A, torque–angle by FEA over a modelled finger, and which to build |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---

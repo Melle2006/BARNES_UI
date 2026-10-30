@@ -1,0 +1,21 @@
+{
+  "label": "sweep_3T_s0.00",
+  "failure": "strip starts 0.705 mm inside the finger (knuckle radius 3.4 mm): the spine is too flat to clear the joint at rest",
+  "geometric_interference_mm": 0.7051722796992874,
+  "reached_deg": 0.0,
+  "kind": "sweep",
+  "n_turns": 3,
+  "sagitta": 0.0,
+  "geometry": {
+    "centreline_length_mm": 47.72356996605504,
+    "max_path_angle_deg": 69.19610205272599,
+    "min_true_width_mm": 0.7103411193196244,
+    "mean_true_width_mm": 1.2157775171068987,
+    "lateral_extent_mm": 10.095239463484596,
+    "x_min_mm": -5.6329350912043115,
+    "x_max_mm": 4.462304372280285,
+    "spine_apex_top_z_mm": 4.699999999999999,
+    "spine_radius_mm": Infinity,
+    "volume_mm3": 61.943999999999996
+  }
+}
