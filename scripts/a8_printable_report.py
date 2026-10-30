@@ -184,10 +184,14 @@ def main(argv=None) -> int:
     # Torque-angle curves: one panel per height for 3 turns, plus the 2-turn check.
     by_label = {r["label"]: r for r in records}
     panels = [k for k in groups]
-    fig, axes = plt.subplots(1, len(panels), figsize=(4.6 * len(panels), 4.2), sharey=True,
+    ncols = min(4, len(panels))
+    nrows = math.ceil(len(panels) / ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(4.4 * ncols, 3.7 * nrows), sharey=True,
                              squeeze=False)
+    for ax in axes.flat[len(panels):]:
+        ax.set_visible(False)
     cmap = plt.get_cmap("viridis")
-    for ax, (n_turns, width, height) in zip(axes[0], panels):
+    for ax, (n_turns, width, height) in zip(axes.flat, panels):
         g = sorted((r for r in rows if (r["n_turns"], r["true_width_mm"], r["height_mm"])
                     == (n_turns, width, height)), key=lambda r: r["sagitta_mm"])
         for i, row in enumerate(g):
@@ -196,12 +200,13 @@ def main(argv=None) -> int:
                 ax.plot([0] + curve["angle_deg"], [0] + curve["torque_n_mm"],
                         color=cmap(i / max(1, len(g) - 1)),
                         lw=2.4 if row["label"] == best else 1.4,
-                        label=f"s {row['sagitta_mm']:.1f} mm")
+                        label=f"s {row['sagitta_mm']:g} mm")
         ax.set_title(f"{n_turns} turns, w {width}, h {height} mm", fontsize=10)
         ax.set_xlabel("PIP flexion (deg)")
         ax.grid(alpha=0.3)
         ax.legend(fontsize=8)
-    axes[0][0].set_ylabel("Restoring torque (N·mm)")
+    for row_axes in axes:
+        row_axes[0].set_ylabel("Restoring torque (N·mm)")
     fig.text(0.01, 0.01, "TPU 90A, Neo-Hookean E = 19.3 MPa (datasheet). Index PIP from "
              "the hand assembly. Not experimentally validated.", fontsize=7, color="#a33")
     fig.tight_layout(rect=(0, 0.03, 1, 1))
