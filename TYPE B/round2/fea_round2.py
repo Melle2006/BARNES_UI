@@ -222,7 +222,7 @@ def graded_mesh(shape, field, h_min):
 
 
 def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose_only=False,
-         guided_u0=None):
+         guided_u0=None, pose_u=None):
     buf, out = R1._lines()
     out(f"** Round-2 tendon load: pose {math.degrees(theta):.1f} deg, then up to {T_MAX} N")
     R1._common(out, mesh, material, prox, dist, ref_xyz)
@@ -244,6 +244,10 @@ def deck(mesh, material, prox, dist, ref_xyz, theta, direction, contact, h, pose
     out("*BOUNDARY")
     out("PROX, 1, 3, 0.0")
     out("REF, 1, 1, 0.0")
+    if pose_u is not None:
+        # Bearing joints bend along their bearing's own path (see bearing_pose).
+        out(f"REF, 2, 2, {pose_u[1]:.6f}")
+        out(f"REF, 3, 3, {pose_u[2]:.6f}")
     out("ROT, 2, 3, 0.0")
     out(f"ROT, 1, 1, {theta:.9f}")
     out("*NODE PRINT, NSET=ROT, TOTALS=NO\nRF")
@@ -334,6 +338,33 @@ def solve_watched(work, env, direction):
     return why
 
 
+def bearing_pose(info, c, F, theta):
+    """Translation of the distal reference node when a bearing joint is at theta,
+    with its 0.3 mm gap held open.
+
+    Bent freely, B8's thin return leaves let the joint sway sideways across the
+    gap, the cup meets the knuckle off-centre at about 17 deg, and the contact
+    chatter exhausted memory. A real knuckle in a cup turns about the knuckle's
+    centre, and two equal lobes roll so that the distal lobe's centre orbits the
+    proximal one by theta/2 while the body turns by theta, so the pose step drives
+    the reference node along that path. The displacement is ramped linearly with
+    the rotation, which strays from the arc by at most about 0.1 mm at 60 deg
+    mid-step, inside the gap."""
+    def rot(v, a):
+        return np.array([v[0] * math.cos(a) - v[1] * math.sin(a), v[0] * math.sin(a) + v[1] * math.cos(a)])
+    ref0 = np.array([0.0, c + F])
+    zm = c + F / 2
+    if info["bearing"] == "knuckle":
+        ctr = np.array([info["pivot_y"], zm])
+        new = ctr + rot(ref0 - ctr, theta)
+    else:
+        R = info["roll_r"]
+        cp, cd = np.array([0.0, zm - R2.GAP / 2 - R]), np.array([0.0, zm + R2.GAP / 2 + R])
+        cd_new = cp + rot(cd - cp, theta / 2)
+        new = cd_new + rot(ref0 - cd, theta)
+    return np.array([0.0, *(new - ref0)])
+
+
 def run(name, angle, offset="as-built", workdir=None, elements_through=2, threads=4, keep=False,
         use_contact=True, pose_only=False):
     started = time.time()
@@ -370,22 +401,13 @@ def run(name, angle, offset="as-built", workdir=None, elements_through=2, thread
     work.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, OMP_NUM_THREADS=str(threads), CCX_NPROC_EQUATION_SOLVER=str(threads))
     guided = (not pose_only) and v["family"] in GUIDED_FAMILIES
-    guided_u0 = None
+    guided_u0 = pose_u = None
     if guided:
-        guided_u0 = np.zeros(3)
-        if angle != 0.0:
-            # The guided path starts from the pose, so find the pose first.
-            pw = work / "pose"
-            pw.mkdir(parents=True, exist_ok=True)
-            (pw / "job.inp").write_text(deck(mesh, provisional_tpu(E_MPA), prox, dist, ref_xyz,
-                                             theta, direction, contact, h, True))
-            solve_watched(pw, env, direction)
-            pu = R1.parse_dat(pw / "job.dat").get(("displacements", "REF"), []) if (pw / "job.dat").exists() else []
-            if not pu or pu[-1][0] < 0.999:
-                raise RuntimeError(f"{name}: pose {angle} deg not reached")
-            guided_u0 = np.array(pu[-1][1])
+        pose_u = bearing_pose(info, c, F, theta)
+        guided_u0 = pose_u
     (work / "job.inp").write_text(deck(mesh, provisional_tpu(E_MPA), prox, dist, ref_xyz,
-                                       theta, direction, contact, h, pose_only, guided_u0))
+                                       theta, direction, contact, h, pose_only, guided_u0,
+                                       pose_u if guided else None))
     stopped = solve_watched(work, env, direction)
     p = subprocess.CompletedProcess([], 0, (work / "job.log").read_text(), "")
 
