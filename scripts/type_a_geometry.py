@@ -156,6 +156,75 @@ def ray_extent(shape, origin, direction, max_len=30.0):
     return max(hit.WParameter(i) for i in range(1, hit.NbPnt() + 1))
 
 
+#: Rays are cast this far either side of the centreline as well as on it, so a
+#: station that falls on a 3.2 mm prototyping hole still reads the material beside
+#: the hole rather than the empty bore.
+LATERAL_PROBES_MM = (-2.0, 0.0, 2.0)
+
+
+def section_envelopes(frames, shapes, lengths, lateral, n_st=60):
+    """Palmar and dorsal depth of each link's surface from its axis, along the link."""
+    out = {}
+    for key, shape in shapes.items():
+        p0, u, n = frames[key]
+        length = 45.0 if key == "MC" else lengths[key]
+        s_all = np.linspace(0.05 * length, 0.95 * length, n_st)
+        pal = [max(ray_extent(shape, p0 + u * s + lateral * y, n) for y in LATERAL_PROBES_MM)
+               for s in s_all]
+        dor = [max(ray_extent(shape, p0 + u * s + lateral * y, -n) for y in LATERAL_PROBES_MM)
+               for s in s_all]
+        out[key] = {"s": s_all.round(3).tolist(), "palmar": np.round(pal, 3).tolist(),
+                    "dorsal": np.round(dor, 3).tolist()}
+    return out
+
+
+def refresh_envelopes() -> None:
+    """Recompute only the section envelopes in an existing geometry file.
+
+    The range-of-motion search dominates the run time (tens of minutes); the
+    envelopes take seconds. Frames are rebuilt from the stored pivots.
+    """
+    data = json.loads(OUT.read_text())
+    names = product_names(STEP.read_text(errors="replace"))
+    parts = {names[c.name]: c.shape for c in load_step_assembly(STEP).parts()}
+    palm = parts["Palm base assembly as part"]
+    palm_holes = cylinders(palm, PIN_R)
+    for finger, f in data["fingers"].items():
+        a = np.array(f["lateral_axis"])
+        mcp, pip_p, dip_p = (np.array(f[k]) for k in
+                             ("mcp_centre", "pip_axis_point", "dip_axis_point"))
+        onto = lambda p: p - a * (p - pip_p) @ a  # noqa: E731
+        L = f["link_lengths"]
+        u_pp = onto(pip_p) - onto(mcp)
+        u_pp /= np.linalg.norm(u_pp)
+        u_mp = onto(dip_p) - pip_p
+        u_mp /= np.linalg.norm(u_mp)
+        dv = np.asarray(tessellate_shape(parts[f"{finger}_DP"],
+                                         linear_deflection=0.1).vertices)
+        tip = onto(dv[np.argmax(np.linalg.norm(
+            (dv - dip_p) - np.outer((dv - dip_p) @ a, a), axis=1))])
+        u_dp = tip - onto(dip_p)
+        u_dp /= np.linalg.norm(u_dp)
+        sign = 1.0 if u_dp @ np.cross(a, u_mp) >= 0 else -1.0
+        n_mp = sign * np.cross(a, u_mp)
+        frames = {"PP": (onto(mcp), u_pp, sign * np.cross(a, u_pp)),
+                  "MP": (pip_p, u_mp, n_mp),
+                  "DP": (onto(dip_p), u_dp, sign * np.cross(a, u_dp))}
+        row = [h for h in palm_holes if abs((h[0] - mcp) @ a) < 3.0
+               and (h[0] - mcp) @ u_pp < -3.0]
+        pts = np.array([h[0] for h in row])
+        u_mc = np.linalg.svd(pts - pts.mean(0))[2][0]
+        u_mc = u_mc if u_mc @ (mcp - pts.mean(0)) > 0 else -u_mc
+        u_mc -= a * (u_mc @ a)
+        u_mc /= np.linalg.norm(u_mc)
+        frames["MC"] = (mcp, -u_mc, sign * np.cross(a, u_mc))
+        f["section_envelope"] = section_envelopes(
+            frames, {"PP": parts[f"{finger}_PP"], "MP": parts[f"{finger}_MP"],
+                     "DP": parts[f"{finger}_DP"], "MC": palm}, L, a)
+        print(finger, {k: max(v["palmar"]) for k, v in f["section_envelope"].items()})
+    OUT.write_text(json.dumps(data, indent=1))
+
+
 def rot(axis, angle):
     a = axis / np.linalg.norm(axis)
     k = np.array([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]])
@@ -280,18 +349,8 @@ def main() -> None:
             "DP": stations(dp_c, dip_q, frames["DP"][1], 0, lengths["DP"]),
         }
 
-        def envelope(shape, key, length, n_st=60):
-            p0, u, n = frames[key]
-            s_all = np.linspace(0.05 * length, 0.95 * length, n_st)
-            pal = [ray_extent(shape, p0 + u * s, n) for s in s_all]
-            dor = [ray_extent(shape, p0 + u * s, -n) for s in s_all]
-            return {"s": s_all.round(3).tolist(), "palmar": np.round(pal, 3).tolist(),
-                    "dorsal": np.round(dor, 3).tolist()}
-
-        env = {"PP": envelope(pp, "PP", lengths["PP"]),
-               "MP": envelope(mp, "MP", lengths["MP"]),
-               "DP": envelope(dp, "DP", lengths["DP"])}
-        env["MC"] = envelope(palm, "MC", 45.0)
+        env = section_envelopes(frames, {"PP": pp, "MP": mp, "DP": dp, "MC": palm},
+                                lengths, a)
 
         # Range of motion from the CAD: rotate the distal part until it hits.
         def surface_pts(shape, step):
@@ -312,6 +371,7 @@ def main() -> None:
             "pip_axis_point": pip_p.round(4).tolist(),
             "dip_axis_point": dip_p.round(4).tolist(),
             "lateral_axis": a.round(5).tolist(),
+            "palmar_sign": sign,
             "pin_axes_parallel_deg": float(np.degrees(np.arccos(min(1, abs(a @ a_dip))))),
             "link_lengths": {k: round(v, 3) for k, v in lengths.items()},
             "rest_angles_deg": {
@@ -333,4 +393,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if "--envelopes-only" in sys.argv:
+        refresh_envelopes()
+    else:
+        main()

@@ -16,7 +16,10 @@ this sweeps every station along the full length of each link:
 * ``a`` -- station of the last guide on the proximal link, measured back from the joint;
 * ``x`` -- station of the first guide (or the anchor) on the distal link;
 * ``h`` -- palmar offset of the tendon from the link centreline at both guides,
-  limited at each station by the measured palmar surface plus ``STANDOFF_MM``.
+  measured from the line through the pivots. Two scenarios: ``flush``, where the
+  offset is limited at each station by the measured palmar surface, and
+  ``standoff``, where a screw or guide may stand proud of it up to
+  ``FREE_OFFSET_MAX_MM`` (how the prototype's screws are meant to be used).
 
 For every combination it computes the worst torque margin over the grasp and the
 tendon excursion over the CAD range of motion. Each joint's Pareto front (margin up,
@@ -86,13 +89,19 @@ HORN_RADIUS_M = 0.010
 TYPE_A_COVER_K_NM_PER_RAD = 6.10336e-3
 MODULUS_MPA = 12.0             # provisional; 8-18 MPa is the project's stated range
 
-#: How far a guide may stand proud of the palmar surface, in mm. 0 = flush: nothing
-#: catches on the object being gripped. Raise it to see what a standoff buys.
-STANDOFF_MM = 0.0
+#: Smallest lever allowed anywhere in the range (mm): below this the tendon is
+#: crossing to the dorsal side and would extend the joint instead.
+MIN_LEVER_MM = 0.5
+#: Closest the two guides of a joint may come as it flexes (mm): two 3.2 mm posts.
+MIN_GUIDE_GAP_MM = 3.5
+#: Offset limit when guides may stand proud of the palmar surface, in mm.
+FREE_OFFSET_MAX_MM = 12.0
+SCENARIOS = ("flush", "standoff")
 #: Material kept between a guide hole and the joint head (cam, ball socket), in mm.
 HEAD_CLEARANCE_MM = 2.4        # hole radius 1.6 + 0.8 wall
 
 N_POSE = 61
+MAX_FRONT = 150
 
 
 def actuator(horn_radius_m: float = HORN_RADIUS_M) -> tuple[float, float]:
@@ -187,6 +196,8 @@ def couple(fronts, stroke_mm):
     ``fronts`` holds (margin, excursion) arrays. Ties within 0.1 % go to the least
     total excursion. Returns indices into each front, or None if nothing fits.
     """
+    if any(len(f[0]) == 0 for f in fronts):
+        return None
     m = reduce(np.minimum, np.ix_(*[f[0] for f in fronts]))
     e = reduce(np.add, np.ix_(*[f[1] for f in fronts]))
     m = np.where(e <= stroke_mm, m, -np.inf)
@@ -220,7 +231,8 @@ def _envelope(geo, key):
     return palmar_at
 
 
-def type_a_joint_grid(geo, joint, theta_max, loads_per_N, force_n, n_ax=28, n_h=18):
+def type_a_joint_grid(geo, joint, theta_max, loads_per_N, force_n, scenario,
+                      n_ax=28, n_h=25):
     """Every (a, x, h) for one joint: margin over the grasp and excursion over the ROM.
 
     Stations measured from this joint's pivot. ``loads_per_N`` is the fingertip-load
@@ -243,10 +255,14 @@ def type_a_joint_grid(geo, joint, theta_max, loads_per_N, force_n, n_ax=28, n_h=
     # frame already runs back from the MCP.
     pal_a = pal_p(a) if prox == "MC" else pal_p(lengths[prox] - a)
     pal_x = pal_d(x)
-    h_cap = float(min(pal_a.max(), pal_x.max())) + STANDOFF_MM
-    h = np.linspace(0.0, h_cap, n_h)
+    surface = np.minimum(pal_a[:, None], pal_x[None, :])
+    if scenario == "flush":
+        h = np.linspace(0.0, float(surface.max()), n_h)
+    else:
+        h = np.linspace(0.0, FREE_OFFSET_MAX_MM, n_h)
     A, X, H = np.meshgrid(a, x, h, indexing="ij")
-    allowed = H <= np.minimum(pal_a[:, None, None], pal_x[None, :, None]) + STANDOFF_MM
+    allowed = (H <= surface[..., None] + 1e-9) if scenario == "flush" \
+        else np.ones_like(H, bool)
 
     angles = grasp_angles(theta_max)                     # (N_POSE,)
     k = TYPE_A_COVER_K_NM_PER_RAD * 1e3                  # N.mm/rad
@@ -257,6 +273,14 @@ def type_a_joint_grid(geo, joint, theta_max, loads_per_N, force_n, n_ax=28, n_h=
     ratio = np.where(req > 0, tension * r / np.where(req > 0, req, 1.0), np.inf)
     margin = ratio.min(axis=-1)
     exc = pin_tendon_length(0.0, A, X, H) - pin_tendon_length(theta_max, A, X, H)
+    # The tendon must flex the joint at every angle it reaches, not only across the
+    # grasp window, and the two guides must not run into each other as it closes.
+    th_full = np.linspace(np.radians(CONTACT_START_DEG), theta_max, 46)
+    lever = pin_moment_arm(th_full[None, None, None, :], A[..., None], X[..., None],
+                           H[..., None])
+    span = pin_tendon_length(th_full[None, None, None, :], A[..., None], X[..., None],
+                             H[..., None])
+    allowed &= (lever.min(axis=-1) >= MIN_LEVER_MM) & (span.min(axis=-1) >= MIN_GUIDE_GAP_MM)
     margin = np.where(allowed, margin, -np.inf)
     bow = pin_moment_arm(theta_max, A, X, H)             # lever at full flexion
     return dict(a=a, x=x, h=h, A=A, X=X, H=H, margin=margin, excursion=exc,
@@ -284,10 +308,12 @@ def _next(joint):
     return {"MCP": "PIP", "PIP": "DIP"}[joint]
 
 
-def run_type_a(geom_path: Path) -> list[dict]:
+def run_type_a(geom_path: Path, scenario: str) -> list[dict]:
+    out = OUT / f"type_a_{scenario}"
+    out.mkdir(exist_ok=True)
     data = json.loads(geom_path.read_text())
     tension, stroke = actuator()
-    summary, all_slices, hole_rows = [], [], []
+    summary, all_slices, hole_rows, hole_best = [], [], [], []
     figs = {}
     for finger, geo in data["fingers"].items():
         L = geo["link_lengths"]
@@ -305,10 +331,12 @@ def run_type_a(geom_path: Path) -> list[dict]:
         grids, fronts = {}, []
         for j, joint in enumerate(("MCP", "PIP", "DIP")):
             g = type_a_joint_grid(geo, joint, theta_max[joint], loads[:, j],
-                                  FINGERTIP_FORCE_N)
+                                  FINGERTIP_FORCE_N, scenario)
             flat_m, flat_e = g["margin"].ravel(), g["excursion"].ravel()
             ok = np.isfinite(flat_m)
             idx = np.nonzero(ok)[0][pareto(flat_m[ok], flat_e[ok])]
+            if len(idx) > MAX_FRONT:     # the coupled search is cubic in front size
+                idx = idx[np.unique(np.linspace(0, len(idx) - 1, MAX_FRONT).astype(int))]
             g["front"] = idx
             grids[joint] = g
             fronts.append((flat_m[idx], flat_e[idx]))
@@ -349,37 +377,75 @@ def run_type_a(geom_path: Path) -> list[dict]:
                         "holdable_fingertip_force_N":
                             round(float(mm) * FINGERTIP_FORCE_N, 3) if np.isfinite(mm) else "",
                         "excursion_mm": round(float(ee), 3)})
-            # The prototype's own holes, with the tendon at the chosen offset.
+            # The prototype's own holes: every drilled pair, at every offset on the
+            # grid the scenario allows, kept only where it passes the same checks
+            # (positive lever through the range, guides clear of each other).
             prox, dist = JOINT_LINKS[joint]
             ph = geo["hole_stations"].get(prox, [])
             ph = ph if prox == "MC" else [L[prox] - s for s in ph]
-            dh = geo["hole_stations"].get(dist, [])
+            ph = [v for v in ph if v >= g["a"][0] - 1e-9]       # clear of the joint head
+            dh = [v for v in geo["hole_stations"].get(dist, []) if v >= g["x"][0] - 1e-9]
             th = grasp_angles(theta_max[joint])
-            req = TYPE_A_COVER_K_NM_PER_RAD * 1e3 * th + loads[:, ("MCP", "PIP", "DIP").index(joint)] * FINGERTIP_FORCE_N
+            th_full = np.linspace(np.radians(CONTACT_START_DEG), theta_max[joint], 46)
+            jj = ("MCP", "PIP", "DIP").index(joint)
+            req = TYPE_A_COVER_K_NM_PER_RAD * 1e3 * th + loads[:, jj] * FINGERTIP_FORCE_N
             for sa in ph:
                 for sx in dh:
-                    hh = float(min(g["h"][ih], np.interp(sa, g["a"], g["pal_a"]),
-                                   np.interp(sx, g["x"], g["pal_x"])))
-                    r = pin_moment_arm(th, sa, sx, hh)
-                    mm = float(np.min(np.where(req > 0, tension * r / req, np.inf)))
-                    hole_rows.append({
-                        "finger": finger, "joint": joint,
-                        "proximal_hole_mm_from_pivot": round(sa, 2),
-                        "distal_hole_mm_from_pivot": round(sx, 2),
-                        "palmar_offset_mm": round(hh, 2),
-                        "worst_margin": round(mm, 3),
-                        "holdable_fingertip_force_N": round(mm * FINGERTIP_FORCE_N, 2),
-                        "excursion_mm": round(float(pin_tendon_length(0, sa, sx, hh)
-                                                    - pin_tendon_length(theta_max[joint], sa, sx, hh)), 2)})
+                    surface = min(np.interp(sa, g["a"], g["pal_a"]),
+                                  np.interp(sx, g["x"], g["pal_x"]))
+                    for hh in g["h"]:
+                        if scenario == "flush" and hh > surface + 1e-9:
+                            continue
+                        if (pin_moment_arm(th_full, sa, sx, hh).min() < MIN_LEVER_MM or
+                                pin_tendon_length(th_full, sa, sx, hh).min() < MIN_GUIDE_GAP_MM):
+                            continue
+                        r = pin_moment_arm(th, sa, sx, hh)
+                        mm = float(np.min(np.where(req > 0, tension * r / req, np.inf)))
+                        hole_rows.append({
+                            "finger": finger, "joint": joint,
+                            "proximal_hole_mm_from_pivot": round(sa, 2),
+                            "distal_hole_mm_from_pivot": round(sx, 2),
+                            "palmar_offset_mm": round(float(hh), 2),
+                            "worst_margin": round(mm, 3),
+                            "holdable_fingertip_force_N": round(mm * FINGERTIP_FORCE_N, 2),
+                            "excursion_mm": round(float(
+                                pin_tendon_length(0, sa, sx, hh)
+                                - pin_tendon_length(theta_max[joint], sa, sx, hh)), 2)})
         print(f"Type A {finger}: total excursion {total:.1f} of {stroke:.1f} mm")
-    write_csv(OUT / "type_a_optimum.csv", summary)
-    write_csv(OUT / "type_a_sweeps.csv", all_slices)
-    write_csv(OUT / "type_a_existing_holes.csv", hole_rows)
-    _plot_type_a(figs, data)
+        hole_best.extend(_best_existing_holes(finger, hole_rows, stroke))
+    write_csv(out / "optimum.csv", summary)
+    write_csv(out / "sweeps.csv", all_slices)
+    write_csv(out / "existing_holes_best.csv", hole_best)
+    _plot_type_a(figs, data, out, scenario)
     return summary
 
 
-def _plot_type_a(figs, data) -> None:
+def _best_existing_holes(finger, hole_rows, stroke):
+    """One hole pair per joint, chosen together: the prototype's own answer.
+
+    Same coupled rule as the continuous optimum -- maximise the weakest joint's
+    holdable fingertip force with the three excursions inside the stroke -- but over
+    the drilled holes only, at the offset the continuous optimum chose.
+    """
+    per_joint = [[r for r in hole_rows if r["finger"] == finger and r["joint"] == j]
+                 for j in ("MCP", "PIP", "DIP")]
+    pruned = []
+    for rows in per_joint:
+        m = np.array([r["worst_margin"] for r in rows], float)
+        e = np.array([r["excursion_mm"] for r in rows], float)
+        pruned.append([rows[i] for i in pareto(m, e)] if rows else [])
+    per_joint = pruned
+    fronts = [(np.array([r["worst_margin"] for r in rows], float),
+               np.array([r["excursion_mm"] for r in rows], float)) for rows in per_joint]
+    pick = couple(fronts, stroke)
+    if pick is None:
+        return []
+    return [dict(rows[i], total_excursion_mm=round(sum(f[1][k] for f, k in
+                                                      zip(fronts, pick)), 2))
+            for rows, i in zip(per_joint, pick)]
+
+
+def _plot_type_a(figs, data, out, scenario) -> None:
     try:
         import matplotlib
         matplotlib.use("Agg")
@@ -421,10 +487,10 @@ def _plot_type_a(figs, data) -> None:
                 ax.set_title(f"{finger} {joint}")
                 if row == 0 and col == 0:
                     ax.legend(loc="upper left", fontsize=8)
-        fig.suptitle(f"Type A {finger}: sweeps through the coupled optimum "
+        fig.suptitle(f"Type A {finger}, {scenario} guides: sweeps through the coupled optimum "
                      f"(grey lines: the prototype's holes; {FINGERTIP_FORCE_N} N "
                      "reference load, placeholder actuator)")
-        fig.savefig(OUT / f"type_a_{finger.lower()}.png", dpi=120)
+        fig.savefig(out / f"{finger.lower()}.png", dpi=120)
         plt.close(fig)
 
 
@@ -640,8 +706,10 @@ def main() -> None:
     tension, stroke = actuator()
     print(f"Servo: {tension:.0f} N, {stroke:.1f} mm stroke. Reference fingertip load "
           f"{FINGERTIP_FORCE_N} N.\n")
-    for r in run_type_a(OUT / "type_a_geometry.json"):
-        print("  " + ", ".join(f"{k}={v}" for k, v in r.items()))
+    for scenario in SCENARIOS:
+        print(f"Type A, {scenario} guides:")
+        for r in run_type_a(OUT / "type_a_geometry.json", scenario):
+            print("  " + ", ".join(f"{k}={v}" for k, v in r.items()))
     print()
     rows = run_type_b()
     for r in sorted(rows, key=lambda r: -(r["fingertip_N_buckling_limit"] or 0))[:12]:

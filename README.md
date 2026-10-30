@@ -374,6 +374,7 @@ Full details, including the data model and the fidelity ladder:
 | [08-calculix-installation.md](docs/08-calculix-installation.md) | What was installed, why, and the four defects checking it exposed |
 | [09-phase6-capability-findings.md](docs/09-phase6-capability-findings.md) | Which advanced solver capabilities work here, measured rather than assumed |
 | [10-tendon-pivot-analysis.md](docs/10-tendon-pivot-analysis.md) | Where to anchor the flexor tendon at MCP, PIP and DIP, and why maximising torque alone always picks the upper bound |
+| [11-tendon-routing-type-a-b.md](docs/11-tendon-routing-type-a-b.md) | Where to route the tendon on the Type A hand (full-length sweep from the assembly) and why Type B flexures buckle under tendon load |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Commit conventions, code standards, review checklist |
 
 ---
