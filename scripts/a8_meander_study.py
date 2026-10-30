@@ -665,12 +665,13 @@ def _variant(n_turns: int, sagitta: float, label: str) -> A8MeanderParameters:
 
 
 def _printable(n_turns: int, sagitta: float, height: float, true_width: float,
-               label: str) -> A8MeanderParameters:
+               label: str, amplitude: float | None = None) -> A8MeanderParameters:
     """A printable strip on the index PIP: section square to the path, ends on the
     A3's collar positions, underside on the collars whatever the height."""
     (y0, y1), (u0, u1) = INDEX_PIP["span"], INDEX_PIP["underside"]
     return A8MeanderParameters(
-        plan=sine_plan(n_turns, PRINTABLE_AMPLITUDE_MM[n_turns]), sagitta=sagitta,
+        plan=sine_plan(n_turns, amplitude or PRINTABLE_AMPLITUDE_MM[n_turns]),
+        sagitta=sagitta,
         n_turns=n_turns, height_z=height, true_width=true_width,
         y_start=y0, y_end=y1, z_start=u0 + height / 2.0, z_end=u1 + height / 2.0,
         stations_per_lobe=40, label=label)
@@ -712,6 +713,23 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
         # Width sensitivity: the narrowest printable wall, at the middle case.
         runs.append({"label": "print_3T_w0.8_h1.8_s3.00", "kind": "printable",
                      "n_turns": 3, "sagitta": 3.0, "height": 1.8, "true_width": 0.8})
+    if "printable_wide" in groups:
+        # On the real finger the strip wraps cams of 5.2 mm radius, which by itself
+        # costs a bending strain of about h / 2R: 11.5 % at 1.2 mm, 23 % at 2.4. So
+        # height cannot buy torque. Width can -- torque goes with it and strain does
+        # not -- but a strip of width w can only follow a lobe whose centreline radius
+        # exceeds w / 2 by a printable inner radius (taken as 0.4 mm). The 3-turn
+        # sine's 0.97 mm tips stop at about 1.2 mm; the 2-turn's 2.15 mm tips allow
+        # 3.2 mm; a 3-turn of 2.5 mm amplitude has 1.36 mm tips and allows 2.0 mm.
+        for n_turns, width, amplitude, sagittas in (
+                (2, 2.4, None, (2.5, 3.5)), (2, 3.2, None, (2.5,)),
+                (3, 2.0, 2.5, (2.5,))):
+            for sagitta in sagittas:
+                runs.append({
+                    "label": (f"print_{n_turns}T_w{width:.1f}_h1.2_s{sagitta:.2f}"
+                              + (f"_a{amplitude:.1f}" if amplitude else "")),
+                    "kind": "printable", "n_turns": n_turns, "sagitta": sagitta,
+                    "height": 1.2, "true_width": width, "amplitude": amplitude})
     return runs
 
 
@@ -796,7 +814,7 @@ def main(argv: list[str] | None = None) -> int:
             geometry = None
         elif run["kind"] == "printable":
             params = _printable(run["n_turns"], run["sagitta"], run["height"],
-                                run["true_width"], run["label"])
+                                run["true_width"], run["label"], run.get("amplitude"))
             shape = build_a8_meander(params)
             geometry = params.path_metrics()
         else:
