@@ -83,6 +83,14 @@ analysis is logged in [`results/a6/README.md`](../results/a6/README.md).
 
 ![Leaf shapes and restoring torque](../results/a6/rom_shapes.png)
 
+## Which thickness and curvature are best
+
+These four files all use a 1.0 × 6 mm leaf. A sweep of curvature, thickness and width found
+a stronger valid combination, R32 / 1.8 mm / 6 mm with 11.5 mm of travel. It has about 3 to
+5 times the mean restoring torque, but sits right at the 20% strain limit. A safer
+alternative is R28 / 1.4 mm / 6 mm. Neither has been generated as CAD yet. See
+[`results/a6/README.md`](../results/a6/README.md).
+
 ## What this does not tell you
 
 * **The joint axis is assumed.** Each design passes at four guessed axis positions, not at a

@@ -36,7 +36,8 @@ best combination is also reported at other strain limits.
 Nothing here is calibrated. Torque is shown at the middle of the 8 to 18 MPa modulus
 bracket, and the ranking does not depend on the modulus.
 
-    python scripts/a6_parameter_sweep.py          # about 30 minutes on 4 cores
+    python scripts/a6_parameter_sweep.py              # about 40 minutes on 4 cores
+    python scripts/a6_parameter_sweep.py --from-json  # redraw from the saved results
 """
 
 from __future__ import annotations
@@ -167,6 +168,17 @@ def best(rows) -> dict | None:
                                      -r["height_above_pp_cuff_mm"]))
 
 
+#: Short labels for why a cell is invalid, for the matrix and the figure.
+SHORT = {"goes taut before 105 deg": "taut", "snaps onto its stop": "snaps",
+         "cuts through the joint": "hits joint", "only one travel passes": "fragile"}
+
+
+def label(row) -> str:
+    if "strain" in row["reason"]:
+        return f"strain {row['peak_strain_pct']:.0f}%"
+    return SHORT.get(row["reason"], row["reason"])
+
+
 def matrix_markdown(sims, rows, winner) -> str:
     """Curvature x thickness at the widest leaf: mean torque, or why it is invalid."""
     width = max(WIDTHS)
@@ -181,13 +193,8 @@ def matrix_markdown(sims, rows, winner) -> str:
                 text = f"{r['mean_torque_Nmm']:.2f}"
                 if winner and (radius, t) == (winner["radius_mm"], winner["thickness_mm"]):
                     text = f"**{text} ★**"
-            elif "strain" in r["reason"]:
-                text = f"✗ strain {r['peak_strain_pct']:.0f}%"
             else:
-                text = "✗ " + {"goes taut before 105 deg": "taut",
-                               "snaps onto its stop": "snaps",
-                               "cuts through the joint": "hits joint",
-                               "only one travel passes": "fragile"}[r["reason"]]
+                text = "✗ " + label(r)
             out.append(text)
         lines.append(f"| R{radius:g} | " + " | ".join(out) + " |")
     return "\n".join(lines)
@@ -217,11 +224,9 @@ def plot(path, sims, rows, winner) -> None:
         i, j = RADII.index(r["radius_mm"]), THICKNESSES.index(r["thickness_mm"])
         if r["valid"]:
             text = f"{r['mean_torque_Nmm']:.2f}"
-        elif "strain" in r["reason"]:
-            text = f"strain\n{r['peak_strain_pct']:.0f}%"
         else:
-            text = r["reason"].replace(" ", "\n", 1)
-        ax.text(j, i, text, ha="center", va="center", fontsize=6.5,
+            text = label(r).replace(" ", "\n")
+        ax.text(j, i, text, ha="center", va="center", fontsize=7,
                 color="w" if r["valid"] else "0.35")
     if winner:
         i, j = RADII.index(winner["radius_mm"]), THICKNESSES.index(winner["thickness_mm"])
@@ -264,12 +269,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=OUT)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--from-json", action="store_true",
+                        help="rebuild the tables and figure from parameter_sweep.json "
+                             "without re-simulating, e.g. after changing STRAIN_LIMIT")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
-    jobs = [(r, t) for r in RADII for t in THICKNESSES]
-    with Pool(args.workers) as pool:
-        sims = pool.map(simulate, jobs, chunksize=1)
+    if args.from_json:
+        sims = json.loads((args.out / "parameter_sweep.json").read_text())["simulations"]
+    else:
+        jobs = [(r, t) for r in RADII for t in THICKNESSES]
+        with Pool(args.workers) as pool:
+            sims = pool.map(simulate, jobs, chunksize=1)
 
     rows = [combine(s, w, rom.STRAIN_LIMIT) for s in sims for w in WIDTHS]
     winner = best(rows)
