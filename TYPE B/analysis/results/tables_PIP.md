@@ -1,3 +1,18 @@
+### B1 hourglass
+
+| Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `B1_t100_notch100` **(selected)** | 46.0 | strain 20 % | 27.0 % | 20.0 % | 2.43 | 2.74 | 2.19 | 1.14 | 5.9 | 5.4 | 0.24 | 1.2× | 0.762 |
+| `B1_t125_notch100` | 42.5 | strain 20 % | 29.2 % | 20.0 % | 2.43 | 4.64 | 3.40 | 1.78 | 5.1 | 4.1 | 0.23 | 2.0× | 0.714 |
+| `B1_t150_notch100` | 39.0 | strain 20 % | 31.9 % | 20.0 % | 2.43 | 7.20 | 4.83 | 2.53 | 4.4 | 3.1 | 0.23 | 3.1× | 0.647 |
+| `B1_t100_notch050` | 26.7 | strain 20 % | 47.0 % | 20.0 % | 2.52 | 4.87 | 2.25 | 1.17 | 4.5 | 1.9 | 0.08 | 2.1× | 0.606 |
+| `B1_t125_notch050` | 23.5 | strain 20 % | 55.6 % | 20.0 % | 2.43 | 8.00 | 3.25 | 1.70 | 4.0 | 1.6 | 0.08 | 3.5× | 0.509 |
+| `B1_t200_notch100` | 33.0 | strain 20 % | 36.7 % | 20.0 % | 2.44 | 14.45 | 8.18 | 4.28 | 3.5 | 2.1 | 0.23 | 6.3× | 0.495 |
+| `B1_t150_notch050` | 21.8 | strain 20 % | 59.0 % | 20.0 % | 2.45 | 11.93 | 4.50 | 2.35 | 3.5 | 1.3 | 0.09 | 5.2× | 0.443 |
+| `B1_t200_notch050` | 17.9 | strain 20 % | 68.7 % | 20.0 % | 2.49 | 22.43 | 6.97 | 3.64 | 2.9 | 1.1 | 0.08 | 9.7× | 0.303 |
+
+Winner under each weighting: balanced: `B1_t100_notch100`, range-first: `B1_t100_notch100`, durability-first: `B1_t100_notch100`, equal: `B1_t100_notch050`
+
 ### B3 dual leaf
 
 | Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
@@ -22,10 +37,11 @@ Winner under each weighting: balanced: `B3_t150_w30`, range-first: `B3_t150_w30`
 | Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `B5_t150_a45` **(selected)** | 77.8 | strain 20 % | 14.7 % | 20.0 % | 2.46 | 3.51 | 4.93 | 2.61 | 8.4 | 4.8 | 0.89 | 1.5× | 0.853 |
-| `B5_t150_a60` | 74.6 | strain 20 % | 15.3 % | 20.0 % | 2.43 | 3.31 | 4.62 | 2.44 | 10.0 | 3.3 | 0.97 | 1.5× | 0.763 |
-| `B5_t150_a75` | 75.4 | strain 20 % | 15.1 % | 20.0 % | 2.45 | 3.08 | 4.58 | 2.43 | 12.8 | 2.5 | 1.10 | 1.4× | 0.706 |
-| `B5_t200_a60` | 62.1 | strain 20 % | 19.2 % | 20.0 % | 2.45 | 8.05 | 9.11 | 4.83 | 7.1 | 2.4 | 0.74 | 3.5× | 0.316 |
-| `B5_t200_a45` | 59.1 | strain 20 % | 20.3 % | 20.0 % | 2.46 | 8.51 | 8.91 | 4.72 | 6.0 | 3.2 | 0.67 | 3.7× | 0.263 |
+| `B5_t150_a60` | 74.6 | strain 20 % | 15.3 % | 20.0 % | 2.43 | 3.31 | 4.62 | 2.44 | 10.0 | 3.3 | 0.97 | 1.5× | 0.761 |
+| `B5_t150_a75` | 75.4 | strain 20 % | 15.1 % | 20.0 % | 2.45 | 3.08 | 4.58 | 2.43 | 12.8 | 2.5 | 1.10 | 1.4× | 0.711 |
+| `B5_t200_a60` | 62.1 | strain 20 % | 19.2 % | 20.0 % | 2.45 | 8.05 | 9.11 | 4.83 | 7.1 | 2.4 | 0.74 | 3.5× | 0.325 |
+| `B5_t200_a45` | 59.1 | strain 20 % | 20.3 % | 20.0 % | 2.46 | 8.51 | 8.91 | 4.72 | 6.0 | 3.2 | 0.67 | 3.7× | 0.266 |
+| `B5_t200_a75` | 60.7 | strain 20 % | 19.7 % | 20.0 % | 2.43 | 7.60 | 8.69 | 4.60 | 8.9 | 1.8 | 0.85 | 3.4× | 0.234 |
 | `B5_t100_a45` | 77.8 | collision | 10.1 % | 13.7 % | 1.66 | 1.02 | 1.45 | 0.77 | 12.9 | 7.9 | 0.91 | 0.4× | not eligible: too weak to return the finger |
 | `B5_t100_a60` | 79.3 | collision | 9.5 % | 13.4 % | 1.62 | 0.96 | 1.45 | 0.77 | 15.6 | 5.2 | 1.05 | 0.4× | not eligible: too weak to return the finger |
 | `B5_t100_a75` | 81.6 | collision | 9.2 % | 13.3 % | 1.62 | 0.89 | 1.47 | 0.78 | 20.2 | 3.9 | 1.23 | 0.4× | not eligible: too weak to return the finger |
