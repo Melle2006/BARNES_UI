@@ -38,6 +38,10 @@ JOBS = [                                # fast leaf joints first, contact joints
     # Not on the shortlist, but the round-1 winner: does it survive tendon load?
     ("B5_t150_a45", "as-built"),
     ("B5_t150_a45", "deep"),
+    # The B1 round-1 winner, run with --only B1_t100_notch100 --angles 0 30: its
+    # range is 46 deg, so 60 deg would only report the bend's own strain.
+    ("B1_t100_notch100", "as-built"),
+    ("B1_t100_notch100", "deep"),
 ]
 
 
