@@ -371,7 +371,8 @@ PRINT_SUMMARY_ROWS = [
      "mesh-converged (0.45 %). With the collars as TPU: 2.81 N·mm at 90° at 19.3 MPa (1.75 at 12), "
      "13 % below the rigid-end figure; fillet the foot–collar junction (21.5 % strain at 90°)."],
     ["1", "Type A spring", "A8 same with collars, sagitta 3.00 mm (×1)",
-     "Fallback if the print stands proud: 0.60 mm clearance instead of 0.39 mm, −3 % torque."],
+     "Fallback if the print stands proud: 0.60 mm clearance instead of 0.39 mm. With collars: "
+     "2.74 N·mm at 90° (−2.5 %), and the only collared A8 inside the 20 % limit at the junction (19.9 %)."],
     ["1", "Type A spring", "A6 sliding leaf R28 / 1.4 / 6 mm (×2)",
      "The only Type A layout that removes the A3's stretch problem by construction; 3.2 points "
      "of strain margin; the print locates the real joint axis, A6's largest unknown."],
@@ -477,7 +478,8 @@ A8_POINTS = [
     "clears the real middle phalanx by 0.25 mm. Selected: 2 turns, 1.2 × 2.4 mm, sagitta 2.75 mm.",
     "<b>The one weak spot:</b> 26 % strain where the strip enters the collar at 90° with rigid ends, "
     "against 16.5 % in the strip. With real (TPU) collars it falls to 21.5 % (next subsection), "
-    "still just over the limit at 90° and 12.8 % at 60°. It is where a print will crack first: "
+    "still just over the limit at 90° and 12.8 % at 60°; the flatter sagitta 3.00 mm arch brings it "
+    "to 19.9 % at 90°, just inside. It is where a print will crack first: "
     "blend the junction with a 1–2 mm fillet.",
 ]
 TYPE_A_TENDON = [
@@ -585,7 +587,8 @@ RATIONALE = [
         "0.4 to 0.3 mm elements. Print two, because one will be used up in a destructive test.",
         "<b>A8 sagitta 3.00 mm as well.</b> The 2.75 mm arch clears the real middle phalanx by "
         "0.39 mm; a print that stands proud by 0.2 mm would touch. The 3.0 mm arch keeps 0.60 mm "
-        "for 3 % less torque. Printing both in the same session settles it at once.",
+        "for 2.5 % less torque with collars (2.74 against 2.81 N·mm at 90°), and its collar "
+        "junction stays inside the strain limit (19.9 % against 21.5 %). Printing both in the same session settles it at once.",
         "<b>A6 R28 / 1.4 mm before R32 / 1.8 mm.</b> The A6 exists because the A3 cannot work as "
         "laid out: the elastica sweep found none of 480 A3 variants valid, because a strap "
         "clamped at both ends must stretch while the attachment points move apart. A sliding end "

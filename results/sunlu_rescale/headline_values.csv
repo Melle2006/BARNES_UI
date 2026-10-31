@@ -10,6 +10,9 @@ A8 2-turn printable s3.00,restoring torque at 90 deg,N.mm,19.3,3.1513,0.8654,1.9
 A8 2-turn with collars s2.75,restoring torque at 30 deg,N.mm,19.3,0.7709,0.2117,0.4793,0.7709,A3 fit-check collars as TPU
 A8 2-turn with collars s2.75,restoring torque at 60 deg,N.mm,19.3,1.8333,0.5034,1.1399,1.8333,A3 fit-check collars as TPU
 A8 2-turn with collars s2.75,restoring torque at 90 deg,N.mm,19.3,2.8093,0.7715,1.7467,2.8093,A3 fit-check collars as TPU
+A8 2-turn with collars s3.00,restoring torque at 30 deg,N.mm,19.3,0.7141,0.1961,0.444,0.7141,A3 fit-check collars as TPU
+A8 2-turn with collars s3.00,restoring torque at 60 deg,N.mm,19.3,1.7694,0.4859,1.1001,1.7694,A3 fit-check collars as TPU
+A8 2-turn with collars s3.00,restoring torque at 90 deg,N.mm,19.3,2.7399,0.7524,1.7036,2.7399,A3 fit-check collars as TPU
 B00_baseline,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0707,5.3312,12.0707,19.4138,passes when >= 1
 B00_baseline,tendon force at end of range,N,12.0,2.0893,0.9228,2.0893,3.3603,
 B1_t100_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,2.1238,0.938,2.1238,3.4158,passes when >= 1
