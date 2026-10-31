@@ -103,8 +103,9 @@
  "ccx_tail": "rial and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n no convergence\n\n iteration 4\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
  "stopped": null,
  "wall_s": 349.6,
- "capacity_T": 9.16365,
- "limited_by": "limit point: no equilibrium beyond this tension (buckling/collapse)",
+ "capacity_T": 9.89862727300894,
+ "limited_by": "20 % strain at 9.9 N, taken from B1_t100_notch100_0deg.json: at 0 deg the deep and as-built decks are identical; this run stopped at the minimum increment at 9.2 N on the same path",
  "axial_k0": 17.672226527660847,
- "peak_strain_at_cap": 0.10749268351876617
+ "peak_strain_at_cap": 0.20000000000000004,
+ "solver_stop_T": 9.16365
 }

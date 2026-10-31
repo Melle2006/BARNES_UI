@@ -187,6 +187,8 @@ def story(c):
         why = (rr.get(0.0) or {}).get("limited_by", "not run yet")
         if why.startswith("limit point at 16.8 N, taken from"):
             why = "limit point (collapse); same deck as the as-built run"
+        if why.startswith("20 % strain at 9.9 N, taken from"):
+            why = "20 % strain; same deck as the as-built run"
         why = why.replace("limit point: no equilibrium beyond this tension (buckling/collapse)", "limit point (collapse)") \
                  .replace("axial stiffness fell below 10 % of its initial value", "stiffness loss (buckling)") \
                  .replace("peak strain reached 20 %", "20 % strain") \
@@ -209,6 +211,10 @@ def story(c):
         c60s = ("≥ " + f1(c60)) if c60r.get("guided") and c60 is not None and "lower bound" in c60r.get("limited_by", "") else f1(c60)
         if c60r and str(c60r.get("limited_by", "")).startswith("already"):
             c60s = "0 (over 20 % from the bend)"
+            inside = [a for a in rr if a not in (0.0, 60.0)]
+            if inside:
+                a_in = max(inside)
+                c60s += f"; {f1(rr[a_in].get('capacity_T'))} at {a_in:g}°"
         if c60r and c60r.get("angle") not in (None, 60.0) and c60 is not None:
             c60s = f"{f1(c60)} at {c60r['angle']:g}°"
         rows.append([str(num), label, run, c0s, c60s, why, p.get("compression_capacity_N", "–") or "–",
@@ -539,6 +545,10 @@ R2_FINDINGS_STATIC = [
     "the strips braces the joint against the sideways sway that defeats parallel leaves. "
     "The thinner round-1 winner, B5_t150_a45, buckles at 17 N at 0° and reaches 20 % strain "
     "at 6.4 N at 60°: thickness buys compression capacity and costs range.",
+    "<b>B1 hourglass, both variants, is strain-limited throughout.</b> The B1 round-1 winner "
+    "B1_t100_notch100 reaches 20 % strain at 9.9 N of tendon tension at 0° and at 5.3 N at 30°, "
+    "as built and with the deep tendon alike (at 30° the bend's own strain dominates). "
+    "B1_t200_notch050 carries 24.9 N at 0° but only 7.4 N at 15°, inside its 18° range.",
     "<b>Bending uses up the strain budget.</b> At 60° B1_t200_notch050 is already at 68 % strain "
     "and B9_n150 at 37 % from the bend alone, before any tendon load, so neither can be a "
     "finger joint over that range. B5 and B3 lose about two thirds of their capacity between 0° "
@@ -607,9 +617,11 @@ RATIONALE = [
         "tendon lever of anything designed (5.4 mm at 0°).",
     ]),
     ("What is set aside, and why", [
-        "<b>B1 hourglass:</b> the notch concentrates bending; t2.0 / notch 0.5 reaches 20 % strain "
-        "by 18° and 68 % at 60°, and the softest B1 only reaches 46°. High tendon capacity "
-        "at 0° (25 N) does not help a joint that cannot bend.",
+        "<b>B1 hourglass:</b> the notch concentrates bending. The round-1 winner, t1.0 / full notch, "
+        "is strain-limited at 46° (PIP), 50.5° (MCP) and 52.7° (DIP), and under tendon load carries "
+        "9.9 N at 0° and 5.3 N at 30°, against B5 deep's 30 N and 10 N. The t2.0 / half notch "
+        "reaches 20 % strain by 18° from the bend alone; its 25 N at 0° drops to 7.4 N at 15°. "
+        "High capacity at 0° does not help a joint that cannot bend.",
         "<b>B9 compression strut:</b> 12.7 N at 0°, close to its estimate, but 37 % strain at 60° "
         "from the bend alone; the neck cannot take the joint through a finger's range.",
         "<b>B3 dual leaf:</b> buckles sideways at about 10 N even at 2 mm, and is the softest in "
