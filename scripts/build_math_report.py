@@ -81,6 +81,21 @@ def example(title, lines):
     return [Spacer(1, 3), t, Spacer(1, 6)]
 
 
+def theory(*items):
+    """A shaded 'Theory' box: plain strings become paragraphs, strings starting with $ become equations."""
+    from reportlab.lib import colors
+    from reportlab.platypus import Table, TableStyle
+    cell = [P("<b>Theory: where this comes from</b>", "body")]
+    for it in items:
+        cell += eq(it[1:], size=12) if it.startswith("$") else [P(it, "body")]
+    t = Table([[cell]], colWidths=[W])
+    t.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fbf8f1")),
+                           ("LINEBEFORE", (0, 0), (0, -1), 2.2, colors.HexColor("#c2571a")),
+                           ("LEFTPADDING", (0, 0), (-1, -1), 8), ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+                           ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 3)]))
+    return [Spacer(1, 2), t, Spacer(1, 7)]
+
+
 def h1(t):
     return P(t, "h1")
 
@@ -206,6 +221,7 @@ def story():
     s += [h1("0. How to read this")]
     s += bullets([
         "Each section answers one question (how stiff, how far, how much tendon force, when does it buckle, which one wins). "
+        "Shaded <b>Theory</b> boxes explain where each formula comes from and when it stops being valid. "
         "It gives the equations, then a <b>worked example</b> with real inputs, then <b>where in the code</b> it is, then what "
         "decision it feeds.",
         "The order is the order you would use them on a new design: material first, then hand models (beams, tendon, "
@@ -228,6 +244,12 @@ def story():
             "uniaxial pull with stretch λ = 1 + ε the engineering stress is")]
     s += eq(r"\sigma_{eng} = 2C_{10}\,(\lambda - \lambda^{-2})")
     s += [P("which is E·ε for small ε and softens gently above about 20 %. " + code("src/barnes_ui/core/material/models.py"))]
+    s += theory(
+        'A <i>hyperelastic</i> material has no memory and loses no energy: the work you put in by deforming it is stored, like in a spring, as an energy density W (N·mm per mm³). Stress is simply how fast that energy changes with deformation:',
+        '$P = \\frac{\\partial W}{\\partial F}\\qquad(\\mathrm{first\\ Piola\\ stress:\\ force\\ per\\ undeformed\\ area})',
+        'W must not change if the part is only rotated, so it can only depend on quantities that ignore rotation. F<sup>T</sup>F (the stretch tensor squared) is one; its trace I<sub>1</sub> = λ<sub>1</sub>² + λ<sub>2</sub>² + λ<sub>3</sub>² sums the squared principal stretches and equals 3 when undeformed. That is why W contains I<sub>1</sub> − 3. J = λ<sub>1</sub>λ<sub>2</sub>λ<sub>3</sub> is the volume ratio. Rubber-like solids resist volume change about a thousand times more than shape change (bulk modulus K ≫ shear modulus μ, which is what ν → 0.5 means), so the (J − 1)² term acts as a stiff penalty that keeps the volume almost constant.',
+        "Linearising for small strain recovers Hooke's law with E = 2μ(1 + ν) ≈ 3μ. Neo-Hookean has a single constant, so it can only be as good as one number can be; it is accurate to roughly 30–50 % strain for most elastomers, which covers everything here."
+    )
 
     s += [h2("1.2 Why every force and torque scales exactly with E")]
     s += [P("Every stress term in W is proportional to E (C<sub>10</sub> ∝ E and 1/D<sub>1</sub> ∝ E at fixed ν). Write the stress "
@@ -245,6 +267,11 @@ def story():
     s += [P("Different studies were run at different E (A3 and Type B at 12, A6 at 13, A8 at 19.3 MPa), so they were all brought "
             "to one basis with this formula. SUNLU publishes no modulus, so the working value is 12 MPa, bracketed by 5.3 MPa "
             "(printed TPU 90A, Bambu datasheet, XY) and 19.3 MPa (bulk TPU 90A, Jabil). " + code("scripts/sunlu_rescale.py"))]
+    s += theory(
+        'This is an argument from <i>homogeneity</i>. Suppose a displacement field u solves the problem for modulus E. Multiply E by a factor λ. Every stress at the same deformation is multiplied by λ, and equilibrium is a sum of stresses equal to zero, so it still holds; u is still the solution and every reaction is λ times larger. Written compactly:',
+        '$\\nabla\\cdot\\left(\\lambda E\\,f(F)\\right) = \\lambda\\,\\nabla\\cdot\\left(E\\,f(F)\\right) = 0',
+        'Three things would break this, and none matters here: (1) a change of ν (it is fixed at 0.4995); (2) a load that does not scale with E, such as gravity on the part itself (the TPU parts weigh under a gram); (3) a real material whose curve has a different <i>shape</i>, not just a different height, from Neo-Hookean. Point 3 is the honest limit: if the printed TPU softens or stiffens earlier than Neo-Hookean does, scaling is only approximate above about 20 % strain.'
+    )
     t90 = a8["torque_n_mm"]["90"]
     cap = fea[("B5_t200_a45", "deep", 0.0)]["capacity_T"]
     s += example("rescaling two headline numbers", [
@@ -265,6 +292,12 @@ def story():
             "converge to a real number. A real print has a small radius there. That is why a fillet is recommended wherever a "
             "strip meets a collar. The 20 % limit is a placeholder for fatigue (10 % and 30 % are drawn for reference) until the "
             "printed filament has been cycled. " + code("scripts/a8_meander_study.py", "TYPE B/analysis/fea_typeb.py"))]
+    s += theory(
+        'Why not the school-book strain ε = Δl/l = ∂u/∂x? Because it is not zero for a pure rotation. Turn a bar by θ without stretching it and ∂u/∂x reports a strain of cos θ − 1 (−13 % at 30°). A joint that rotates through 100° would show large fake strains everywhere. Green–Lagrange strain is built from the change in <i>squared</i> length of a material fibre dX:',
+        '$|dx|^2 - |dX|^2 = 2\\,dX^T\\,\\mathbf{E}_{GL}\\,dX',
+        "A rigid rotation does not change any length, so it gives exactly zero. The eigenvectors of the strain tensor are the directions of extreme stretch (principal directions); the largest one is the direction in which the material is pulled apart most, which is where a crack would open, hence 'peak maximum principal strain'.",
+        'At a sharp inside corner, linear elasticity predicts stresses that grow like r<sup>λ−1</sup> with λ &lt; 1 as the distance r to the corner shrinks: infinite at the corner itself. Refining the mesh just samples closer to infinity. Ignoring a small band is standard practice; the remedy in the part is a radius, which turns the infinity into a finite stress concentration.'
+    )
 
     # 2 -------------------------------------------------------------------
     s += [PageBreak(), h1("2. Beam models: the minutes-long screening tools")]
@@ -275,6 +308,11 @@ def story():
             "doubling thickness buys 8× the torque at 2× the strain. Width scales torque linearly and leaves strain alone, as "
             "long as the strip does not start bending sideways (which is what happened to wide A8 strips). This is the main "
             "sizing rule for every spring here: <b>choose t from the strain limit, then w for the torque</b>.")]
+    s += theory(
+        'This is Euler–Bernoulli beam theory. Its one assumption: a cross-section that was flat and perpendicular to the beam stays flat and perpendicular after bending (true when the beam is long compared with its thickness). Then a fibre at distance y from the middle (the neutral axis) is stretched in proportion to y and to the change in curvature:',
+        '$\\varepsilon(y) = -y\\,(\\kappa-\\kappa_0),\\qquad \\sigma = E\\varepsilon,\\qquad M = -\\int_A \\sigma\\,y\\,dA = E\\,(\\kappa-\\kappa_0)\\int_A y^2\\,dA = EI\\,(\\kappa-\\kappa_0)',
+        'For a rectangle, I = ∫y² dA = w t³/12. The largest strain is at the surface y = ±t/2, which gives ε = (t/2)|Δκ|. Combining both lines, ε<sub>max</sub> = M t / (2EI): for the same moment, a thinner strip is more strained; for the same <i>shape change</i> (which is what a joint imposes), a thinner strip is less strained. The stored energy follows from integrating ½σε over the volume: U = ∫ M²/(2EI) ds.'
+    )
 
     s += [h2("2.2 The planar elastica (A6 sliding leaf)")]
     s += [P("A leaf that bends through large angles but does not stretch. Along arc length s, with tangent angle θ(s), internal "
@@ -292,6 +330,12 @@ def story():
             "<i>worst</i> of four assumed axis positions, because the real PIP axis relative to the cuffs is not known. Pass "
             "rules: reaches 105°, restoring (τ &gt; 0) at every angle, at least 3.5 mm from the axis, peak strain ≤ 20 %. "
             + code("scripts/a6_rom_check.py", "scripts/a6_parameter_sweep.py"))]
+    s += theory(
+        "<b>Where the four equations come from.</b> The first two are just geometry: moving ds along a curve at angle θ moves you by (cos θ, sin θ) ds. The third is Euler–Bernoulli (M = EI(κ − κ<sub>0</sub>), with κ = dθ/ds). The fourth is moment balance on a short piece of leaf: with no load applied along its length, the internal force n is the same everywhere, and the moment changes only because that force acts across the piece's length, dM = −(t × n) ds, where t is the unit tangent.",
+        '<b>Why shooting.</b> The conditions are split between the two ends (known position and angle at the anchor; position, angle and a force condition at the guide). An ODE solver needs everything at one end, so we guess the unknowns at the anchor and correct them until the far end is satisfied: a boundary-value problem turned into root finding.',
+        "<b>Why τ = dU/dφ.</b> If the joint turns by dφ slowly and nothing is lost to friction, the work the finger does, τ dφ, must all go into the leaf's stored energy dU (Castigliano's first theorem). This holds for any elastic system, however nonlinear.",
+        '<b>Why continuation.</b> Large-deflection problems can have several equilibrium shapes at the same angle (straight, buckled one way, buckled the other). Starting each angle from the previous answer follows the shape the real leaf would follow. If no nearby solution exists, the leaf would snap, which is itself a result.'
+    )
 
     s += [h2("2.3 The extensible elastica (A3 twin strap) and why A3 cannot work as laid out")]
     s += [P("A3's straps are clamped at both ends and the distal clamp swings around the joint axis, so the distance between the "
@@ -301,6 +345,9 @@ def story():
     s += [P("For t = 1 mm, EA/EI = 12 mm⁻²: stretching is 12× stiffer than bending per unit, so a strap forced to stretch becomes "
             "very stiff and very strained. That is why the sweep of 480 A3 variants found none that passes. A sliding end (A6) "
             "or a meander (A8) removes the stretch. " + code("scripts/a3_parameter_sweep.py"))]
+    s += theory(
+        "Bending stiffness is EI and stretching stiffness is EA. Their ratio is purely geometric, EA/EI = A/I = (wt)/(wt³/12) = 12/t². A strap clamped at both ends has a fixed length, so if the clamps move apart by more than the slack (arc − chord), the only way to comply is to stretch. A strap pulled taut behaves like a cable: its resistance jumps from bending (soft) to stretching (stiff). That is why the A3's torque and strain climb steeply after a few degrees, and why the fix is mechanical (let one end slide, as A6 does, or store spare length in turns, as A8 does), not a matter of thickness."
+    )
 
     s += [h2("2.4 Linear curved beam (Castigliano), and its check against FEA")]
     s += [P("For a quick stiffness at 0°: treat each strap as a curved beam clamped at both ends (3 unknown end actions in plane), "
@@ -309,6 +356,11 @@ def story():
     s += [P("d is the end displacement imposed by rotating the distal clamp about the joint axis; x are the end forces and moment; "
             "the restoring moment is their moment about the axis. The 3D version for meanders adds torsion (GJ) and the second "
             "bending axis, a 6×6 matrix, because a meander's runs parallel to the axis <i>twist</i> rather than bend.")]
+    s += theory(
+        "A beam clamped at both ends has more unknown support reactions (6 in plane) than equilibrium equations (3): it is <i>statically indeterminate</i>. The extra equations come from compatibility: the beam must actually fit between its supports. Castigliano's second theorem supplies them. The complementary energy of the beam is",
+        '$U^* = \\int\\left(\\frac{M^2}{2EI} + \\frac{N^2}{2EA} + \\frac{kV^2}{2GA}\\right)ds,\\qquad \\delta_i = \\frac{\\partial U^*}{\\partial X_i}',
+        'so the displacement at a released support in the direction of redundant X<sub>i</sub> is the derivative of U* with respect to X<sub>i</sub>. Because M, N and V are linear in the redundants, this gives the matrix equation d = C x. k = 6/5 is the shear correction for a rectangle. The model is <i>linear</i>: it uses the undeformed shape, so it is a good tangent stiffness at 0° and increasingly wrong at large angles, which is exactly why FEA was used for the final numbers.'
+    )
     s += example("how sensitive a beam model is to its inputs (A3)", [
         "FEA joint stiffness of A3 1.0 mm: 6.103 N·mm/rad (mesh-converged to 0.94 %).",
         "Beam model at the FEA's own axis and clamp line: 8.96 % to 20.2 % stiffer, depending on where exactly the strap is taken to be clamped.",
@@ -323,6 +375,9 @@ def story():
     s += eq(r"T_{avail} = \frac{\eta\,\tau_{stall}}{r_{horn}} = \frac{0.5\times 0.94\ \mathrm{N\,m}}{0.010\ \mathrm{m}} = 47\ \mathrm{N},\qquad \mathrm{stroke} = r_{horn}\,\phi_{servo} = 10\pi = 31.4\ \mathrm{mm}")
     s += [P("η = 0.5 derates the MG995 to half stall (it overheats at stall). The tendon is shared by MCP, PIP and DIP, so the "
             "three joints share one tension and their excursions add up against one stroke.")]
+    s += theory(
+        'A servo produces torque about its shaft. A string wound on a horn of radius r turns that into force, T = τ/r (torque = force × radius), and into travel, the arc length r·φ. The trade-off is fixed: a bigger horn gives more stroke and less force in exact proportion. The derating η accounts for the motor heating and losing torque if held near stall.'
+    )
 
     s += [h2("3.2 The lever, from virtual work")]
     s += [P("The cleanest definition of the tendon's moment arm: if the joint closes by dθ, the tendon path shortens by dl, and the "
@@ -330,6 +385,11 @@ def story():
     s += eq(r"r(\theta) = -\frac{dl}{d\theta},\qquad M_{tendon} = T\,r(\theta)")
     s += [P("This works for any joint (pin, bending, rolling) as long as you can write the tendon length l(θ). It also says that "
             "lever and stroke are the same thing: a longer lever costs proportionally more tendon travel.")]
+    s += theory(
+        'This is the <b>principle of virtual work</b> (conservation of energy for an infinitesimal motion). A frictionless tendon and a rigid frame lose no energy, so the power the tendon delivers equals the power the joint absorbs:',
+        '$T\\cdot\\left(-\\frac{dl}{dt}\\right) = M\\cdot\\frac{d\\theta}{dt}\\quad\\Longrightarrow\\quad M = T\\left(-\\frac{dl}{d\\theta}\\right)',
+        "For a pin this reproduces the familiar 'perpendicular distance from the pivot to the line of the tendon': r = |p × u|, where p is any point on the tendon measured from the pivot and u is the tendon's unit direction. The pin formula below is that cross product written out. The advantage of the virtual-work form is that it also works where there is no fixed pivot (bending and rolling joints), where 'perpendicular distance to what?' has no simple answer. Integrating it gives the excursion: Δl = ∫ r dθ."
+    )
     s += [P("<b>Pin joint</b> (Type A; also used for fixed-centre Type B). Guide at (−a, h) on the proximal link, anchor at (x, h) on "
             "the distal link rotated by θ, with b = (x cos θ − h sin θ, x sin θ + h cos θ):")]
     s += eq(r"l = \|\mathbf{b} - (-a, h)\|,\qquad r = \frac{b_x h + b_y a}{l}")
@@ -341,6 +401,12 @@ def story():
     s += [P("This is why B4's roll radius was kept small: with the as-built d = 1.93 mm and a large R the lever goes negative "
             "part-way through flexion and the tendon would start <i>straightening</i> the joint. R was set so r ≥ 0.3 mm at the "
             "target flexion. " + code("scripts/tendon_routing_analysis.py", "scripts/tendon_pivot_optimizer.py", "TYPE B/round2/predict_round2.py"))]
+    s += theory(
+        '<b>Bending joint.</b> If the flex zone bends to a circular arc and its middle line does not stretch, an arc of length L through angle θ has radius ρ = L/θ. A line offset d toward the palm sits on the concentric arc of radius ρ − d, and the straight tendon between its ends is the chord, 2(ρ − d) sin(θ/2). Expanding for small θ:',
+        '$l(\\theta) \\approx L - d\\,\\theta - \\frac{L\\,\\theta^2}{24}\\quad\\Longrightarrow\\quad r(\\theta) \\approx d + \\frac{L\\,\\theta}{12}',
+        'so the lever starts equal to the offset d and grows slowly as the joint closes (the solid blue line in figure 2).',
+        "<b>Rolling joint.</b> Two equal circles rolling without slipping turn about their contact point, which is therefore the instantaneous centre of rotation. When the distal body has turned by θ, each circle has rolled through θ/2, so the contact point has moved R sin(θ/2) along the circle, toward the palm. The tendon's lever is its distance from that moving point."
+    )
     s += figure(fig_levers(), "Figure 2. Lever against flexion for the joint models at the PIP (flex zone 7.55 mm), up to 85° (the collars meet at about 76°). A fixed centre gains lever as it closes; rolling loses it.", max_h=70 * mm)
 
     s += [h2("3.3 Tension to hold a load")]
@@ -350,6 +416,10 @@ def story():
     s += [P("For the whole finger, a fingertip force F normal to the distal phalanx loads joint j by the lengths of all links "
             "beyond it, projected (φ<sub>i</sub> is the cumulative angle of link i):")]
     s += eq(r"\tau_j = F\sum_{i\geq j} L_i\cos(\phi_{tip} - \phi_i)")
+    s += theory(
+        "Both are <b>moment equilibrium</b> of a free body cut out at the joint (quasi-static: slow enough that inertia does not matter). On the rig, the hook load W acts vertically; its moment arm about the joint is the horizontal distance L<sub>hook</sub> cos θ. The joint's own spring adds kθ (a straight-line stand-in for the FEA torque curve). The tendon must balance the sum.",
+        "For the finger, cut everything distal to joint j free. The fingertip force F is perpendicular to the last link, so its moment about joint j is F times the component of the joint-to-fingertip vector along the last link's direction. That vector is the sum of the link vectors beyond j, each contributing L<sub>i</sub> cos(φ<sub>tip</sub> − φ<sub>i</sub>). Proximal joints carry longer arms, which is why the MCP needs the most torque."
+    )
     s += example("why the deep tendon offset matters", [
         "At 0° the lever equals the offset d. Tension per newton on the hook: 44.8 / 1.93 = <b>23.2 N/N</b> as built; 44.8 / 3.40 = <b>13.2 N/N</b> with the deep tendon.",
         "So the same 1 N at the fingertip squeezes the joint with 23 N (as built) or 13 N (deep). Halving the squeeze for the same grip "
@@ -372,6 +442,13 @@ def story():
     s += [h2("4.1 Thin leaves and strips: Euler buckling")]
     s += [P("A leaf held square at both ends (collars) buckles at")]
     s += eq(r"P_{cr} = \frac{4\pi^2 E I}{L^2},\qquad I = \frac{w t^3}{12}")
+    s += theory(
+        "<b>Derivation.</b> Imagine the leaf already slightly bent sideways by v(x). The compressive load P now has a lever v about every section, so it adds a bending moment P·v that bends it further. Balancing that against the leaf's bending stiffness gives",
+        "$EI\\,v'''' + P\\,v'' = 0,\\qquad k^2 = \\frac{P}{EI}",
+        "whose solutions are sines, cosines and a straight line. For most P the only solution meeting the end conditions is v = 0 (straight). At special values a bent shape also satisfies them: the leaf can stay bent with no extra push. That is buckling, a <i>bifurcation</i>. With both ends clamped (v = v' = 0) the first such shape is v ∝ 1 − cos(2πx/L), at kL = 2π, i.e. P = 4π²EI/L².",
+        "<b>End conditions change everything.</b> The general form is P = π²EI/(KL)² with an effective-length factor K: clamped–clamped 0.5; clamped at one end and free to slide sideways but not rotate at the other ('sway') 1.0, i.e. four times weaker; pinned–pinned 1.0; clamped–free 2.0. In the round-2 FEA the distal collar was free to move sideways, which permits the sway mode. That, plus the next point, is why B3 failed at a third of the clamped–clamped estimate.",
+        '<b>Imperfections.</b> A real leaf is never perfectly straight and the tendon never pushes exactly down its centre. Then it bends from the first newton, and the bending is amplified roughly by 1/(1 − P/P<sub>cr</sub>). The strain limit is reached well before P<sub>cr</sub>. Treat Euler as an upper bound and expect real capacity at a fraction of it for single leaves.'
+    )
     s += [P("For n leaves in parallel multiply by n. A B5 crossed strip of length L<sub>s</sub> at ±α/2 to the axis carries the "
             "axial load at an angle, adding a cos(α/2) factor; B5 has 4 lanes. B1's notch is two webs of notch length L<sub>n</sub>.")]
     e3, e5 = euler_b3(), euler_b5()
@@ -390,6 +467,11 @@ def story():
 
     s += [h2("4.2 Stocky struts and knuckles: 20 % strain over an area")]
     s += eq(r"T_{cap} = 0.2\,E\,A,\qquad A_{strut} = \mathrm{neck\ area},\qquad A_{knuckle} = 2r\,w_{bearing}")
+    s += theory(
+        'Short, thick members crush before they buckle. The crossover is where the Euler stress equals the allowed stress. With the radius of gyration ρ = √(I/A) (= t/√12 for a rectangle):',
+        '$\\sigma_{Euler} = \\frac{\\pi^2 E}{(KL/\\rho)^2} = 0.2\\,E\\quad\\Longrightarrow\\quad \\frac{KL}{\\rho} = \\frac{\\pi}{\\sqrt{0.2}} \\approx 7',
+        'Below a slenderness of about 7, use the strain (crush) formula; above it, use buckling. The B9 neck is 0.8 mm long and 1.5 mm thick: ρ = 0.43 mm, L/ρ ≈ 1.9, firmly in the crush regime. For a knuckle the contact area is curved, so the projected area 2r·w is used: the average pressure on a pin in a hole is P/(2rw) by the same argument used for bolt bearing stress.'
+    )
     b9, b8 = r2["B9_n150"], r2["B8_y00_r150"]
     s += example("B9_n150 and B8_y00_r150", [
         f"B9: neck area {b9['neck_area_mm2']} mm² → 0.2×12×{b9['neck_area_mm2']} = <b>{0.2 * 12 * float(b9['neck_area_mm2']):.1f} N</b>. "
@@ -402,6 +484,11 @@ def story():
             "modulus for two identical materials E* = E / (2(1 − ν²)). Hertz gives the peak pressure p<sub>0</sub> for a load P; "
             "set p<sub>0</sub> = 0.2E (about 20 % local strain) and solve for P:")]
     s += eq(r"p_0 = \sqrt{\frac{P\,E^*}{\pi\,w\,R'}}\quad\Rightarrow\quad T_{cap} = \frac{\pi\,w\,R'\,p_0^{2}}{E^*}")
+    s += theory(
+        'Hertz (1882) solved the contact of two curved elastic bodies. Assumptions: the contact patch is small compared with the radii, the bodies behave like elastic half-spaces beneath it, and there is no friction. For two cylinders along their length, the patch is a strip of half-width b and the pressure across it is a half-ellipse:',
+        "$p(x) = p_0\\sqrt{1 - x^2/b^2},\\qquad b = \\sqrt{\\frac{4P'R'}{\\pi E^*}},\\qquad p_0 = \\frac{2P'}{\\pi b},\\qquad P' = \\frac{P}{w}",
+        "Two bodies curve away from each other, so the combined radius is 1/R' = 1/R<sub>1</sub> + 1/R<sub>2</sub> (= R/2 for equal radii); both deform, so 1/E* = (1−ν<sub>1</sub>²)/E<sub>1</sub> + (1−ν<sub>2</sub>²)/E<sub>2</sub>. Peak pressure grows only with √P: doubling the load raises it by 41 %, because the patch widens. For soft TPU the patch is not small compared with R, so the result is an estimate, which is why it was checked by FEA."
+    )
     Rd, wb = float(r2d["B4_t100_a60_deep"]["roll_r_mm"]), float(r2d["B4_t100_a60_deep"]["bearing_w_total"])
     es = E12 / (2 * (1 - 0.45 ** 2))
     s += example("B4_t100_a60_deep", [
@@ -424,6 +511,14 @@ def story():
         "element size h = min(t, w)/2, floor 0.2 mm. Round-2 joints use a <i>graded</i> mesh (fine in the thin spring lane, "
         "0.5 mm in bulky bearings, 0.8 mm in collars) to keep memory under 8 GB.",
     ])
+    s += theory(
+        "<b>What FEA actually solves.</b> Equilibrium is written in its 'weak' or virtual-work form: for every small admissible motion δu, the internal work equals the external work.",
+        '$\\int_V \\sigma : \\delta\\varepsilon\\ dV = \\int_{S} t\\cdot\\delta u\\ dS\\qquad\\forall\\ \\delta u',
+        "The displacement inside each element is interpolated from its nodes, u ≈ Σ N<sub>a</sub>(x) u<sub>a</sub>. Quadratic tetrahedra have 10 nodes (corners plus edge midpoints), so strain can vary linearly inside each element. That matters for bending, where strain varies linearly through the thickness. Linear tetrahedra cannot represent it and are far too stiff ('locking'), worse still for nearly incompressible material. Two quadratic elements through the thickness are the minimum.",
+        'The result is a set of nonlinear equations R(u) = f<sub>int</sub>(u) − f<sub>ext</sub> = 0. Newton–Raphson solves them by repeated linearisation:',
+        '$K_t\\,\\Delta u = -R(u),\\qquad K_t = \\frac{\\partial f_{int}}{\\partial u}\\qquad(\\mathrm{repeat\\ until\\ }|R|\\ \\mathrm{is\\ tiny})',
+        'Newton converges only from a nearby starting point, so the load is applied in increments, each starting from the last converged state, and halved automatically when an increment fails. NLGEOM means equilibrium is written on the deformed shape, which is essential for large rotations.'
+    )
     s += [h2("5.2 Boundary conditions: the part that decides whether the answer is right")]
     s += bullets([
         "Proximal collar: every node fixed. Distal collar: <b>every</b> surface inside the attachment tied to one rigid reference "
@@ -435,6 +530,9 @@ def story():
         "Joint angle is applied in increments up to the target (A8 to 100°, Type B PIP to 105°); each increment records the "
         "reaction moment, so the output is a torque–angle curve.",
     ])
+    s += theory(
+        "A 'rigid body' tie forces all its nodes to move as one solid: three translations and three rotations of a reference node. Whatever you prescribe on that node, the solver returns the matching reaction: prescribe a rotation and you get the moment needed for it (the 'work-conjugate' quantity). Fixing the translations adds reaction forces that act like a pin. Leaving them free means the net force on the distal body is zero, so the only thing applied is a pure couple, and the body rotates about wherever the flexure's own stiffness puts its centre. The choice therefore states the physics: 'a pin exists' (Type A) or 'there is no pin' (Type B)."
+    )
     s += [h2("5.3 What is extracted from a torque–angle curve")]
     s += eq(r"k_0 = \mathrm{slope\ of\ a\ line\ fit\ of\ }M(\phi)\ \mathrm{for}\ \phi\leq 3^\circ,\qquad U_{0\to90} = \int_0^{\pi/2} M\,d\phi,\qquad \mathrm{linearity} = \frac{M_{90}}{k_0\,\pi/2}")
     s += example("A8 with collars, sagitta 2.75 (E = 19.3 MPa)", [
@@ -452,6 +550,9 @@ def story():
     s += [P("Where two surfaces may touch (A8 strip on the bone, B4 lobes, B8 knuckle in cup) a surface-to-surface penalty "
             "contact is used, with penalty stiffness ∝ E so the E-scaling rule still holds:")]
     s += eq(r"k_{penalty} = 10\,\frac{E}{h}")
+    s += theory(
+        "Exact contact is a switch: the gap g must be ≥ 0, the contact pressure p ≥ 0, and at least one of them is zero (g·p = 0). That 'either-or' is not smooth, which Newton's method dislikes. The penalty method replaces it with a stiff one-way spring: p = k·(−g) when the surfaces overlap and 0 otherwise. A small overlap is allowed. If k is too low, the overlap is visible and the contact is too soft; if too high, K<sub>t</sub> becomes badly conditioned and increments fail. E/h is roughly the stiffness of one element of material, so 10E/h makes contact about ten times stiffer than the material beside it."
+    )
     s += [P("h is the local element size. The bone surface is sampled and searched with a KD-tree to find the A8 clearance "
             "(smallest distance from the strip's underside to the phalanx), which set the sagitta trade-off: 2.75 mm keeps 0.39 mm "
             "clearance; 3.00 mm keeps 0.60 mm.")]
@@ -471,9 +572,18 @@ def story():
             "the axial tangent stiffness; k<sub>t,0</sub> is the median over the first 5 % of increments. If bending to the pose "
             "already exceeds 20 %, the capacity is 0 (the joint cannot reach that angle). A guided run that stops before any of "
             "these is reported as a <b>lower bound</b> (≥). " + code("TYPE B/round2/fea_round2.py"))]
+    s += theory(
+        'Along a loading path the solver repeatedly solves K<sub>t</sub> Δu = ΔF. As a structure approaches collapse, K<sub>t</sub> becomes singular (its determinant goes to zero): some combination of motion costs no extra force. The force–displacement curve flattens to zero slope. That is a <b>limit point</b>, and beyond it a higher load has no equilibrium at all, so a load-controlled solver stops. The tangent stiffness dropping to 10 % of its starting value is the early warning of that.',
+        'A perfectly symmetric structure meets a <b>bifurcation</b> instead (a second path branches off), which a solver can step straight past without noticing. The 1 % side push breaks the symmetry and turns the bifurcation into a limit point the solver cannot miss. Displacement control (guided runs) can pass limit points, because a displacement is always reachable even when the force falls.'
+    )
     s += [h2("5.7 Mesh convergence")]
     s += [P("Run the same case at three element sizes and compare the quantity you will use:")]
     s += eq(r"\mathrm{spread} = \frac{\max_h X_h - \min_h X_h}{X_{h_{ref}}}")
+    s += theory(
+        'For a well-behaved problem the discretisation error falls like a power of the element size, X<sub>h</sub> ≈ X<sub>∞</sub> + C h<sup>p</sup>, with p ≈ 2 or more for quadratic elements on integral quantities (torque, stiffness, energy), and lower for local maxima (peak strain), which depend on a few elements. With three meshes, p and the limit X<sub>∞</sub> can be estimated by Richardson extrapolation:',
+        '$X_\\infty \\approx X_{h_1} + \\frac{X_{h_1} - X_{h_2}}{(h_2/h_1)^p - 1}',
+        'With unstructured tetrahedra the convergence is not perfectly monotonic (each mesh lays its elements differently), which is why the A8 peak strain wobbled. A spread well under the uncertainty in the material (here ±60 % in E) is good enough.'
+    )
     if len(a8conv) == 2:
         x5, x3 = a8conv["0.5"]["torque_n_mm"]["90"], a8conv["0.3"]["torque_n_mm"]["90"]
         x4 = a8base["torque_n_mm"]["90"]
@@ -496,10 +606,16 @@ def story():
         ["Fit (Type A)", "clearance to the bone, axis distance", "&gt; 0.25 mm; ≥ 3.5 mm", "it must not rub or cut through the joint"],
     ], widths=[26 * mm, 62 * mm, 32 * mm, W - 120 * mm])]
     s += eq(r"M_{gravity} = \sum_i m_i\,g\,x_i\qquad (\mathrm{distal\ chain\ horizontal:\ MCP\ 3.68,\ PIP\ 0.80,\ DIP\ 0.15\ N\,mm})")
+    s += theory(
+        "The return gate is moment equilibrium at a nearly straight pose. The distal finger's weight pulls it toward flexion with a moment Σ m<sub>i</sub> g x<sub>i</sub> (mass of each part times its horizontal distance from the joint); the spring must push back harder. 20° is the critical pose: the spring's torque is still small (it grows with angle) while gravity's is almost at its maximum (cos 20° = 0.94). The margin is a safety factor on that balance, so 1.0 means 'just returns' and 3.7 means 3.7×."
+    )
     s += [h2("6.2 Ranking within a family (round 1)")]
     s += [P("Each criterion is normalised so the family's best = 1 and worst = 0, with a minimum spread so tiny differences count "
             "as ties (3° of range, 2 points of strain, 0.3 N, 1°, 1°, 0.2 mm, 0.03 mm), then combined with weights:")]
     s += eq(r"s_c(v) = \max\!\left(0,\ 1 - \frac{|x_{best} - x_v|}{\max(|x_{best}-x_{worst}|,\ \mathrm{floor}_c)}\right),\qquad S(v) = \sum_c w_c\,s_c(v)")
+    s += theory(
+        "This is a weighted-sum multi-criteria decision. Criteria have different units (degrees, %, N, mm), so each is first mapped onto 0–1 relative to the family's own best and worst. The floors stop a meaningless difference, say 0.4° of range, from being stretched to the full 0–1 scale and deciding the winner. A weighted sum always trades criteria off against each other, so the weights express judgement. Testing four very different weightings checks that the answer is a property of the designs, not of that judgement."
+    )
     s += [P("Balanced weights: range 0.30, strain 0.25, tendon force 0.15, sideways 0.10, drift 0.10, twist 0.05, compression 0.05. "
             "The winner was re-checked under three other weightings (range-first, durability-first, equal). A choice that holds "
             "under all four does not depend on the weights. " + code("TYPE B/analysis/analyse_results.py"))]
@@ -520,6 +636,9 @@ def story():
     s += [P("To place the A3 collars on the A8 strip, the same strip vertices were found in both frames and the best rotation R and "
             "translation t computed:")]
     s += eq(r"H = \sum_i (p_i-\bar p)(q_i-\bar q)^T = U\Sigma V^T,\qquad R = V\,\mathrm{diag}(1,1,\det VU^T)\,U^T,\qquad t = \bar q - R\bar p")
+    s += theory(
+        'Kabsch solves the least-squares problem min Σ|R p<sub>i</sub> + t − q<sub>i</sub>|² over rotations R. Setting the derivative with respect to t to zero shows the best translation matches the centroids, which separates the problem. What remains is to maximise trace(R H), and the singular value decomposition gives the maximiser directly. The determinant term flips the last axis if needed, so that R is a true rotation and not a mirror image.'
+    )
     s += [P("Residual 4.6 × 10⁻¹² mm: an exact fit. " + code("scripts/a8_collared_geometry.py"))]
     s += [h2("7.2 Instantaneous centre of rotation")]
     s += [P("For a body point P moving with velocity v at unit rotation rate, the centre is c = P + (−v<sub>y</sub>, v<sub>x</sub>). "
