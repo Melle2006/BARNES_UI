@@ -83,6 +83,14 @@ def rows():
         a = json.loads(s3.read_text())
         add("A8 2-turn printable s3.00", "restoring torque at 90 deg", "N.mm", a["torque_n_mm"]["90"], "A8")
 
+    for p in sorted((REPO / "results/a8_collared/cases").glob("collared_*.json")):
+        r = json.loads(p.read_text())
+        if "failure" in r or not r.get("torque_n_mm"):
+            continue
+        for ang in ("30", "60", "90"):
+            add(f"A8 2-turn with collars s{r['sagitta']:.2f}", f"restoring torque at {ang} deg", "N.mm",
+                r["torque_n_mm"][ang], "A8", "A3 fit-check collars as TPU")
+
     summ = list(csv.DictReader(open(REPO / "TYPE B/analysis/results/summary_PIP.csv")))
     for r in summ:
         if r["eligible"] != "True" and float(r["return_margin"] or 0) < 0.5:

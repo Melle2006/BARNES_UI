@@ -7,6 +7,9 @@ A8 2-turn printable s2.75,restoring torque at 60 deg,N.mm,19.3,2.0201,0.5548,1.2
 A8 2-turn printable s2.75,restoring torque at 90 deg,N.mm,19.3,3.2359,0.8886,2.012,3.2359,
 A8 2-turn printable s2.75,initial stiffness,N.mm/rad,19.3,1.1409,0.3133,0.7093,1.1409,
 A8 2-turn printable s3.00,restoring torque at 90 deg,N.mm,19.3,3.1513,0.8654,1.9593,3.1513,
+A8 2-turn with collars s2.75,restoring torque at 30 deg,N.mm,19.3,0.7709,0.2117,0.4793,0.7709,A3 fit-check collars as TPU
+A8 2-turn with collars s2.75,restoring torque at 60 deg,N.mm,19.3,1.8333,0.5034,1.1399,1.8333,A3 fit-check collars as TPU
+A8 2-turn with collars s2.75,restoring torque at 90 deg,N.mm,19.3,2.8093,0.7715,1.7467,2.8093,A3 fit-check collars as TPU
 B00_baseline,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0707,5.3312,12.0707,19.4138,passes when >= 1
 B00_baseline,tendon force at end of range,N,12.0,2.0893,0.9228,2.0893,3.3603,
 B1_t100_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,2.1238,0.938,2.1238,3.4158,passes when >= 1
@@ -79,7 +82,12 @@ B_T100_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0954
 B_T100_X3,tendon force at end of range,N,12.0,1.7177,0.7587,1.7177,2.7627,
 B_T120_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,19.5662,8.6417,19.5662,31.469,passes when >= 1
 B_T120_X3,tendon force at end of range,N,12.0,2.6425,1.1671,2.6425,4.25,
+B1_t100_notch100,tendon capacity at 0 deg,N,12.0,9.8986,4.3719,9.8986,15.9203,peak strain reached 20 %
+B1_t100_notch100,tendon capacity at 30 deg,N,12.0,5.3068,2.3438,5.3068,8.5351,peak strain reached 20 %
+B1_t100_notch100_deep,tendon capacity at 0 deg,N,12.0,9.8986,4.3719,9.8986,15.9203,"20 % strain at 9.9 N, taken from B1_t100_notch100_0deg.json: at 0 deg the deep and as-built decks are identical; this run stopped at the minimum increment at 9.2 N on the same path"
+B1_t100_notch100_deep,tendon capacity at 30 deg,N,12.0,5.3068,2.3438,5.3068,8.5351,peak strain reached 20 %
 B1_t200_notch050,tendon capacity at 0 deg,N,12.0,24.8859,10.9913,24.8859,40.0248,peak strain reached 20 %
+B1_t200_notch050,tendon capacity at 15 deg,N,12.0,7.4248,3.2793,7.4248,11.9415,peak strain reached 20 %
 B1_t200_notch050,tendon capacity at 60 deg,N,12.0,0.0,0.0,0.0,0.0,"already 68 % strain from bending to the pose, before any tendon load"
 B3_t200_w30,tendon capacity at 0 deg,N,12.0,9.981,4.4083,9.981,16.0528,axial stiffness fell below 10 % of its initial value
 B3_t200_w30,tendon capacity at 30 deg,N,12.0,10.1172,4.4684,10.1172,16.2718,axial stiffness fell below 10 % of its initial value

@@ -367,8 +367,9 @@ PRINT_SUMMARY_ROWS = [
      "SUNLU publishes no modulus. Every torque, force and return margin here scales with it; "
      "the specimens turn the 5.3–19.3 MPa bracket into one number."],
     ["1", "Type A spring", "A8 2-turn strip, 1.2 × 2.4 mm, sagitta 2.75 mm, with the A3 fit-check collars fused on (×2)",
-     "Strongest Type A spring inside the 20 % strain limit on the real index PIP (3.24 N·mm at "
-     "90° at 19.3 MPa); smooth to 100°; mesh-converged (0.45 %)."],
+     "Strongest Type A spring inside the 20 % strain limit on the real index PIP; smooth to 100°; "
+     "mesh-converged (0.45 %). With the collars as TPU: 2.81 N·mm at 90° at 19.3 MPa (1.75 at 12), "
+     "13 % below the rigid-end figure; fillet the foot–collar junction (21.5 % strain at 90°)."],
     ["1", "Type A spring", "A8 same with collars, sagitta 3.00 mm (×1)",
      "Fallback if the print stands proud: 0.60 mm clearance instead of 0.39 mm, −3 % torque."],
     ["1", "Type A spring", "A6 sliding leaf R28 / 1.4 / 6 mm (×2)",
@@ -474,9 +475,10 @@ A8_POINTS = [
     "2 turns beats 3 at every height; strain, not stiffness, is the limit, because wrapping the "
     "R 5.2 cams costs about h/2R by itself; the best curvature is the flattest arch that still "
     "clears the real middle phalanx by 0.25 mm. Selected: 2 turns, 1.2 × 2.4 mm, sagitta 2.75 mm.",
-    "<b>The one weak spot:</b> 26 % strain where the strip enters the collar at 90°, against 16.5 % "
-    "in the strip. Partly the model's rigid tie, but it is where a print will crack first: blend "
-    "the junction with a 1–2 mm fillet.",
+    "<b>The one weak spot:</b> 26 % strain where the strip enters the collar at 90° with rigid ends, "
+    "against 16.5 % in the strip. With real (TPU) collars it falls to 21.5 % (next subsection), "
+    "still just over the limit at 90° and 12.8 % at 60°. It is where a print will crack first: "
+    "blend the junction with a 1–2 mm fillet.",
 ]
 TYPE_A_TENDON = [
     "From the hand assembly: the finger holds <b>3.0–3.4 N</b> at the fingertip with guides flush "
