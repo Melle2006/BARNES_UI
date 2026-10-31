@@ -58,5 +58,5 @@
  "stopped": null,
  "wall_s": 33.9,
  "capacity_T": null,
- "limited_by": "not resolved: the first load increments did not converge"
+ "limited_by": "not resolved: the bend to the pose did not converge"
 }

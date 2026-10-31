@@ -58,5 +58,5 @@
  "stopped": null,
  "wall_s": 963.8,
  "capacity_T": null,
- "limited_by": "not resolved: the first load increments did not converge"
+ "limited_by": "not resolved: the load did not converge"
 }

@@ -484,7 +484,8 @@ def postprocess(res):
     if len(load) < 3:
         # Not a capacity of zero: the solver never got the load on, which says
         # nothing about the joint.
-        return dict(capacity_T=None, limited_by="not resolved: the first load increments did not converge")
+        what = "load" if res.get("pose_reached") else "bend to the pose"
+        return dict(capacity_T=None, limited_by=f"not resolved: the {what} did not converge")
     T = np.array([0.0] + [r["T"] for r in load])
     du = np.array([0.0] + [r["du_along"] for r in load])
     k = np.diff(T) / np.maximum(np.diff(du), 1e-12)
