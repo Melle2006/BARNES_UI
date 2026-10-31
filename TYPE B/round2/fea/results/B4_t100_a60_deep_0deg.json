@@ -1,0 +1,235 @@
+{
+ "variant": "B4_t100_a60",
+ "offset": "deep",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B4",
+ "params": {
+  "family": "B4",
+  "strap_t": 1.0,
+  "angle": 60
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 3.4,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -3.4,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -3.4,
+  0.8
+ ],
+ "element_size": 0.5,
+ "elements": 23998,
+ "nodes": 43752,
+ "contact_faces": [
+  636,
+  628
+ ],
+ "info": {
+  "t": 1.0,
+  "w": 1.95,
+  "angle": 60,
+  "strip_len": 8.717989064763348,
+  "roll_r": 4.046762596930064,
+  "k_over_E": 0.07455847847150798,
+  "bearing_gap": 0.2999999999999998,
+  "bearing": "rolling",
+  "pivot_y": 0.0,
+  "bearing_w_total": 3.9
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "guided": true,
+ "load": [
+  {
+   "hold_moment": -6.403149e-05,
+   "du_y": 0.0,
+   "du_z": -0.0043125,
+   "du_along": 0.0043125,
+   "T": 0.03983096,
+   "side_force": -3.034248e-05
+  },
+  {
+   "hold_moment": -0.0003606928,
+   "du_y": 0.0,
+   "du_z": -0.02487891,
+   "du_along": 0.02487891,
+   "T": 0.2300819,
+   "side_force": -0.0001750571
+  },
+  {
+   "hold_moment": -0.001117145,
+   "du_y": 0.0,
+   "du_z": -0.08269336,
+   "du_along": 0.08269336,
+   "T": 0.7674912,
+   "side_force": -0.000581605
+  },
+  {
+   "hold_moment": -0.001780184,
+   "du_y": 0.0,
+   "du_z": -0.1426934,
+   "du_along": 0.1426934,
+   "T": 1.32917,
+   "side_force": -0.001001938
+  },
+  {
+   "hold_moment": -0.002317031,
+   "du_y": 0.0,
+   "du_z": -0.2026934,
+   "du_along": 0.2026934,
+   "T": 1.894735,
+   "side_force": -0.001418518
+  },
+  {
+   "hold_moment": -0.002724555,
+   "du_y": 0.0,
+   "du_z": -0.2626934,
+   "du_along": 0.2626934,
+   "T": 2.464011,
+   "side_force": -0.001828128
+  },
+  {
+   "hold_moment": -0.003561494,
+   "du_y": 0.0,
+   "du_z": -0.3226934,
+   "du_along": 0.3226934,
+   "T": 3.220954,
+   "side_force": -0.002669626
+  },
+  {
+   "hold_moment": -0.003391909,
+   "du_y": 0.0,
+   "du_z": -0.3826934,
+   "du_along": 0.3826934,
+   "T": 4.530574,
+   "side_force": -0.006482142
+  },
+  {
+   "hold_moment": 0.001114452,
+   "du_y": 0.0,
+   "du_z": -0.4426934,
+   "du_along": 0.4426934,
+   "T": 6.006838,
+   "side_force": -0.007139352
+  },
+  {
+   "hold_moment": 0.00289355,
+   "du_y": 0.0,
+   "du_z": -0.5026934,
+   "du_along": 0.5026934,
+   "T": 7.610389,
+   "side_force": -0.006272591
+  },
+  {
+   "hold_moment": 0.007372445,
+   "du_y": 0.0,
+   "du_z": -0.5626934,
+   "du_along": 0.5626934,
+   "T": 9.31766,
+   "side_force": -0.004002088
+  },
+  {
+   "hold_moment": 0.01654546,
+   "du_y": 0.0,
+   "du_z": -0.6226934,
+   "du_along": 0.6226934,
+   "T": 11.14869,
+   "side_force": -0.002512174
+  }
+ ],
+ "load_completed_fraction": 0.4151290000000001,
+ "frames": [
+  {
+   "T": 0.03983096,
+   "strain_max": 0.0005556049839141597,
+   "strain_p99": 0.00043419078731399827,
+   "strain_min": -0.0010041814021689577
+  },
+  {
+   "T": 0.23008102582530832,
+   "strain_max": 0.0032100871520115426,
+   "strain_p99": 0.0025092453411774845,
+   "strain_min": -0.005782503366478231
+  },
+  {
+   "T": 0.7674898893476323,
+   "strain_max": 0.010714138048907307,
+   "strain_p99": 0.008383660642051927,
+   "strain_min": -0.019119909693814496
+  },
+  {
+   "T": 1.3291686800548197,
+   "strain_max": 0.018566143379927347,
+   "strain_p99": 0.014544688476059596,
+   "strain_min": -0.03281119909278429
+  },
+  {
+   "T": 1.89473367092225,
+   "strain_max": 0.026481904200120532,
+   "strain_p99": 0.020782461449671677,
+   "strain_min": -0.046346640750073664
+  },
+  {
+   "T": 2.4640096622014003,
+   "strain_max": 0.03445985269463936,
+   "strain_p99": 0.027097633274414234,
+   "strain_min": -0.059723445334482705
+  },
+  {
+   "T": 3.22095222118395,
+   "strain_max": 0.04249796685689411,
+   "strain_p99": 0.033458947318290536,
+   "strain_min": -0.07293866964594298
+  },
+  {
+   "T": 4.530570922392999,
+   "strain_max": 0.05059443999713209,
+   "strain_p99": 0.039924020464357605,
+   "strain_min": -0.08598921886657263
+  },
+  {
+   "T": 6.006834530779599,
+   "strain_max": 0.06561498694994894,
+   "strain_p99": 0.048261394952460804,
+   "strain_min": -0.09887173945445482
+  },
+  {
+   "T": 7.610385231655149,
+   "strain_max": 0.08588586824557365,
+   "strain_p99": 0.05828114237692792,
+   "strain_min": -0.11158341139713723
+  },
+  {
+   "T": 9.317655987913149,
+   "strain_max": 0.10418250547091046,
+   "strain_p99": 0.06894010854757514,
+   "strain_min": -0.12411961617667355
+  },
+  {
+   "T": 11.1486856970795,
+   "strain_max": 0.12082598790543853,
+   "strain_p99": 0.08075916507784611,
+   "strain_min": -0.13647627961286846
+  }
+ ],
+ "ccx_tail": "es\n       (only relevant for node-to-surface contact)\n       must be strictly positive\n       the following default will be used:   2.8580955571428575E-005\n       the user is advised to analyze the results\n       carefully\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=REF,TOTALS=NO,FREQUENCY=1\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\ndivergence allowed: residual force too large\n divergence; the increment size is decreased to 9.765625e-06\n the increment is reattempted\n\n\n *ERROR: increment size smaller than minimum\n best solution and residuals are in the frd file\n\n",
+ "stopped": null,
+ "wall_s": 816.7,
+ "capacity_T": 11.14869,
+ "limited_by": "solver stopped (guided) before the bearing gave way: a lower bound",
+ "axial_k0": 9.243365486880116,
+ "peak_strain_at_cap": 0.12082598790543853
+}
