@@ -163,13 +163,27 @@ def fig_round2(r2, preds, basis):
     palette = ["#1f5fa8", "#e07b39", "#3a9d5d"]
     for i, a in enumerate(angles):
         vals = [r2[n].get(a, {}).get("capacity_T") for n in names]
-        ax.bar(x + (i - (len(angles) - 1) / 2) * wbar, [v or 0 for v in vals], wbar * 0.92,
-               color=palette[i % 3], label=f"pose {a:g}°")
+        lower = [bool(r2[n].get(a, {}).get("guided")) and "lower bound" in r2[n].get(a, {}).get("limited_by", "")
+                 for n in names]
+        bars = ax.bar(x + (i - (len(angles) - 1) / 2) * wbar, [v or 0 for v in vals], wbar * 0.92,
+                      color=palette[i % 3], label=f"pose {a:g}°")
+        for b, lb in zip(bars, lower):
+            if lb:
+                b.set_hatch("///")
+                b.set_alpha(0.55)
+                ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 0.8, "≥", ha="center", fontsize=8)
     est = []
     for n in names:
         p = preds.get(n) or preds.get(n.replace("_deep", ""))
         est.append(float(p["compression_capacity_N"]) if p and p.get("compression_capacity_N") else np.nan)
-    ax.scatter(x, est, marker="_", s=420, color="#222", zorder=5, label="hand estimate (TEST_PLAN)")
+    top = 60.0
+    est_c = [min(e, top - 2) if np.isfinite(e) else np.nan for e in est]
+    ax.scatter(x, est_c, marker="_", s=420, color="#222", zorder=5, label="hand estimate (TEST_PLAN)")
+    for xi, e in zip(x, est):
+        if np.isfinite(e) and e > top - 2:
+            ax.annotate(f"{e:.0f} ↑", (xi, top - 2), xytext=(0, -11), textcoords="offset points",
+                        ha="center", fontsize=7)
+    ax.set_ylim(0, top)
     ax.axhline(basis["servo_tension_N"], color="#b03030", lw=1, ls="--")
     ax.text(len(names) - 0.5, basis["servo_tension_N"] + 1.5, "servo tension 47 N", ha="right",
             fontsize=7.5, color="#b03030")
@@ -185,11 +199,15 @@ def fig_round2(r2, preds, basis):
                 continue
             T = [0] + [l["T"] for l in r["load"]]
             d = [0] + [l["du_along"] for l in r["load"]]
-            ax.plot(d, T, lw=1.3, label=n.replace("_", " "))
+            line, = ax.plot(d, T, lw=1.3, label=n.replace("_", " "))
+            cap = r.get("capacity_T")
+            if cap:
+                ax.plot(np.interp(cap, T, d), cap, "o", ms=4, color=line.get_color())
     ax.set_xlabel("joint shortening along the tendon (mm)")
     ax.set_ylabel("tendon tension (N)")
     ax.set_xlim(0, 2.0)
-    ax.set_title("Load–shortening at 0°: bearings stiffen, leaves soften", fontsize=9.5)
+    ax.set_ylim(0, 45)
+    ax.set_title("Load–shortening at 0° (dot = capacity)", fontsize=9.5)
     ax.legend(fontsize=6.5, frameon=False)
     ax.grid(alpha=0.3)
     fig.tight_layout()

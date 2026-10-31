@@ -32,6 +32,8 @@ SHORTLIST = [
     (9, "B8_y20_r125_deep", "B8_y20_r125", "deep"),
     (10, "B9_n150", "B9_n150", "as-built"),
     (11, "B9_n150_deep", "B9_n150", "deep"),
+    ("+", "B5_t150_a45 (round-1 winner)", "B5_t150_a45", "as-built"),
+    ("+", "B5_t150_a45_deep", "B5_t150_a45_deep", "deep"),
 ]
 HOOK_MM = 44.8
 TENDON_D = {"as-built": 1.93, "deep": 3.40}
@@ -180,12 +182,23 @@ def story(c):
         why = (rr.get(0.0) or {}).get("limited_by", "not run yet")
         why = why.replace("limit point: no equilibrium beyond this tension (buckling/collapse)", "limit point (collapse)") \
                  .replace("axial stiffness fell below 10 % of its initial value", "stiffness loss (buckling)") \
-                 .replace("peak strain reached 20 %", "20 % strain")
+                 .replace("peak strain reached 20 %", "20 % strain") \
+                 .replace("solver stopped (guided) before the bearing gave way: a lower bound", "lower bound: contact diverged (guided)") \
+                 .replace(" from bending to the pose, before any tendon load", " from the bend alone")
         p = preds.get(label, {})
         lev = lever(rr.get(0.0), dkey, run.replace("_deep", ""))
         hf = hook_force(c0, lev)
-        rows.append([str(num), label, run, f1(c0), f1(c60), why, p.get("compression_capacity_N", "–") or "–",
-                     "–" if hf is None else f"{hf * lo / 12:.2f} / {hf:.2f} / {hf * hi / 12:.2f}"])
+        if (rr.get(0.0) or {}).get("guided") and c0 is not None:
+            c0s = "≥ " + f1(c0)
+        else:
+            c0s = f1(c0)
+        c60r = rr.get(60.0) or {}
+        c60s = ("≥ " + f1(c60)) if c60r.get("guided") and c60 is not None and "lower bound" in c60r.get("limited_by", "") else f1(c60)
+        if c60r and str(c60r.get("limited_by", "")).startswith("already"):
+            c60s = "0 (over 20 % from the bend)"
+        rows.append([str(num), label, run, c0s, c60s, why, p.get("compression_capacity_N", "–") or "–",
+                     "–" if hf is None else ("≥ " if c0s.startswith("≥") else "")
+                     + f"{hf * lo / 12:.2f} / {hf:.2f} / {hf * hi / 12:.2f}"])
     s += [T(rows, widths=[6 * mm, 34 * mm, 30 * mm, 17 * mm, 17 * mm, 28 * mm, 14 * mm, W - 146 * mm])]
     s += [P("Capacity = the tendon tension at which the joint first buckles, collapses or reaches "
             "20 % strain while held at the pose, at E = 12 MPa (scales with E). Fingertip force = "
@@ -260,9 +273,54 @@ def round2_findings(c):
 # =============================================================================
 # TEXT (edited after the runs; see the commit history for what changed and why)
 # =============================================================================
-SUMMARY_INTRO = "TO BE WRITTEN"
-PRINT_SUMMARY_ROWS = []
-DECISION_SENTENCES = []
+SUMMARY_INTRO = (
+    "This is the list of parts worth printing next, drawn from every analysis in the "
+    "repository: the A3, A6 and A8 Type A springs, the 55 round-1 Type B variants, the "
+    "tendon-routing studies, and the round-2 tendon-load FEA and A8 mesh-convergence check run "
+    "for this report. Several designs have more than one variant on the list where a second "
+    "variant answers a question the first cannot. Batch 0 comes first because it measures the "
+    "one number every force in this report is waiting for.")
+PRINT_SUMMARY_ROWS = [
+    ["0", "Specimens + rig", "Tensile 1BA (1.0, 2.0 mm), edge strips, Ø10 compression cylinder; test rig",
+     "SUNLU publishes no modulus. Every torque, force and return margin here scales with it; "
+     "the specimens turn the 5.3–19.3 MPa bracket into one number."],
+    ["1", "Type A spring", "A8 2-turn strip, 1.2 × 2.4 mm, sagitta 2.75 mm (×2)",
+     "Strongest Type A spring inside the 20 % strain limit on the real index PIP (3.24 N·mm at "
+     "90° at 19.3 MPa); smooth to 100°; mesh-converged (0.45 %)."],
+    ["1", "Type A spring", "A8 same, sagitta 3.00 mm (×1)",
+     "Fallback if the print stands proud: 0.60 mm clearance instead of 0.39 mm, −3 % torque."],
+    ["1", "Type A spring", "A6 sliding leaf R28 / 1.4 / 6 mm (×2)",
+     "The only Type A layout that removes the A3's stretch problem by construction; 3.2 points "
+     "of strain margin; the print locates the real joint axis, A6's largest unknown."],
+    ["2", "Type A spring", "A6 R32 / 1.8 / 6 mm (×1)",
+     "Sweep optimum: about 3× the torque of R28 / 1.4, but at 19.8 % strain. Print once R28 works."],
+    ["1", "Type B joint", "B5 crossed strip t2.0 / 45°, deep tendon (×2, deep phalanges)",
+     "Highest tendon capacity of any Type B joint in the FEA (30 N at 0°), and the only one "
+     "above 2 N at the fingertip at 12 MPa."],
+    ["1", "Type B joint", "B5 crossed strip t1.5 / 45°, as built (×2)",
+     "Round-1 winner: longest range (77.8°), least twist (4.8°). Brackets B5 against the t2.0 "
+     "deep variant: range against compression capacity."],
+    ["2", "Type B joint", "B8 knuckle-in-cup, y20 r1.25 deep (×1) and y00 r1.5 (×1)",
+     "Tests the bearing idea. The FEA confirms the seated knuckle carries load at low strain "
+     "but cannot follow the sideways snap before it seats; only a print shows whether the cup "
+     "self-centres."],
+    ["3", "Type B control", "B3 dual leaf t1.5 / w3.0, as built (×1)",
+     "Optional: simplest Type B print and round-1 runner-up, as a reference for how much the "
+     "crossed strip and the bearing improve on a plain leaf (B3 buckles at about 10 N)."],
+    ["—", "Not printed", "A3 (use the part you have), B1, B6, B9, lattice, the remaining deep copies",
+     "See section 6 for the reason each is set aside."],
+]
+DECISION_SENTENCES = [
+    "<b>Type A is the safer route to a working finger.</b> Its pin carries the tendon's "
+    "compression, the routing study puts the finger at 3.0–6.2 N at the fingertip, and both "
+    "candidate springs (A8 strip, A6 sliding leaf) have converged or fully checked analyses.",
+    "<b>Type B can work only with the B5 crossed strip and the deep tendon so far.</b> The "
+    "round-2 FEA shows plain leaves (B3) buckling at about 10 N of tendon tension, a third of the "
+    "hand estimate; strut and notch joints (B9, B1) run out of strain before 60°; the B5 t2.0 "
+    "with the deep tendon carries 30 N.",
+    "<b>The material test decides the rest.</b> At 5.3 MPa most Type B joints could not hold the "
+    "finger straight and every force halves; at 19.3 MPa they gain 60 %. Batch 0 settles it.",
+]
 CONCEPTS = (
     "The project carries two ways of making a finger joint. <b>Type A</b> keeps the "
     "existing hand: a PLA pin is the hinge, and a TPU part beside it only has to return "
@@ -389,9 +447,105 @@ R2_METHOD = [
     "Verified first: a committed round-1 run (B3_t200_w30) re-run here reproduced its moments to "
     "five figures and its collision angle to 0.02°.",
 ]
-R2_FINDINGS_STATIC = []
-RATIONALE = []
-UNKNOWNS = []
+R2_FINDINGS_STATIC = [
+    "<b>The hand estimates were optimistic, by up to 5×.</b> B3_t200_w30 buckles sideways at "
+    "about 10 N (estimate 33 N); B1_t200_notch050 reaches 20 % strain at 25 N (estimate 133 N, "
+    "an Euler load the notch never gets near because it runs out of strain first). The "
+    "estimates assumed fixed-fixed buckling; the real joint can also sway sideways, which "
+    "needs a quarter of the load.",
+    "<b>B5 crossed strip with the deep tendon is the strongest Type B joint:</b> 30 N at 0° "
+    "(estimate 34 N) and 10 N at 60°, both limited by strain rather than buckling. Crossing "
+    "the strips braces the joint against the sideways sway that defeats parallel leaves.",
+    "<b>Bending uses up the strain budget.</b> At 60° B1_t200_notch050 is already at 68 % strain "
+    "and B9_n150 at 37 % from the bend alone, before any tendon load, so neither can be a "
+    "finger joint over that range. B5 and B3 lose about two thirds of their capacity between 0° "
+    "and 60° for the same reason.",
+    "<b>The B8 bearing carries load at low strain once seated, but could not be resolved to its "
+    "limit.</b> Its 0.75 mm return leaves buckle sideways at about 0.3 N, so under a free load "
+    "the joint snaps across its 0.3 mm gap before the knuckle seats. Driven along the tendon "
+    "line instead (guided), the seated knuckle carried at least 5.8 N (y00, 16 % strain) and "
+    "4.9 N (y20, 6 % strain) before CalculiX's contact iterations diverged. These are lower "
+    "bounds. Whether a real cup self-centres through the snap is the question its print answers.",
+    "<b>Even the best Type B joint holds less at the fingertip than Type A.</b> B5 t2.0 deep "
+    "converts 30 N of tension into about 2.3 N at the 44.8 mm hook at 12 MPa (1.0–3.7 N "
+    "across the modulus bracket), against 3.0–6.2 N for the pinned Type A finger, whose limit "
+    "is the servo's stroke, not the joint.",
+]
+RATIONALE = [
+    ("Why Type A springs are printed first", [
+        "The pin takes the tendon's compression, so a Type A spring only has to return the finger. "
+        "That is a much easier job, and it is fully analysed: A8 by converged contact FEA on the "
+        "real joint geometry, A6 by a sweep plus 24 as-built checks.",
+        "<b>A8 2-turn strip, sagitta 2.75 mm.</b> Chosen in the A8 study by explicit rules: clear "
+        "the real phalanx solids by 0.25 mm, no torque drop in 0–100°, at most 20 % strain at 90°, "
+        "then most torque. Two turns beat three at every height because the 2-turn strip does not "
+        "snap on the real joint. Height, not width, buys torque: wider strips bend in plane and "
+        "exceed the strain limit. This round confirmed the mesh: torque at 90° moves 0.45 % from "
+        "0.4 to 0.3 mm elements. Print two, because one will be used up in a destructive test.",
+        "<b>A8 sagitta 3.00 mm as well.</b> The 2.75 mm arch clears the real middle phalanx by "
+        "0.39 mm; a print that stands proud by 0.2 mm would touch. The 3.0 mm arch keeps 0.60 mm "
+        "for 3 % less torque. Printing both in the same session settles it at once.",
+        "<b>A6 R28 / 1.4 mm before R32 / 1.8 mm.</b> The A6 exists because the A3 cannot work as "
+        "laid out: the elastica sweep found none of 480 A3 variants valid, because a strap "
+        "clamped at both ends must stretch while the attachment points move apart. A sliding end "
+        "removes that by construction. R32 / 1.8 is the sweep optimum but sits at 19.8 % strain; "
+        "R28 / 1.4 keeps 3.2 points of margin and the widest travel window, so it is the one most "
+        "likely to work first time. Its print also locates the real joint axis, which "
+        "every A6 result currently guesses at four positions. That is why A6 FEA was skipped.",
+        "<b>A3 is not reprinted.</b> It is the benchmark (6.10 N·mm/rad, converged), and the one "
+        "question the model leaves open (do the C-clip collars slide and rescue it?) is answered "
+        "by flexing the A3 you already have and noting whether it clicks at 10–35°.",
+    ]),
+    ("Why B5 is the Type B design carried forward, in two variants", [
+        "Round 1 ranked B5_t150_a45 first on range, twist and robustness to weighting. Round 2 "
+        "ranked B5_t200_a45 with the deep tendon first on tendon capacity. They are the same "
+        "design at two thicknesses, and thickness trades range against compression capacity, so "
+        "printing both measures that trade directly instead of trusting either model alone.",
+        "The deep tendon matters as much as the flexure: at the same tension it gives 1.76× the "
+        "fingertip force (3.40 mm against 1.93 mm lever), and it costs nothing in the flexure. "
+        "It does need the deep-offset phalanges.",
+    ]),
+    ("Why B8 is printed although its FEA is incomplete", [
+        "B8 is the only round-2 design whose failure mode the FEA could not reach: the seated "
+        "knuckle was still at 6–16 % strain when the contact solution diverged, so its capacity "
+        "is a lower bound, not a limit. The open question is mechanical rather than numerical: "
+        "does the cup catch and centre the knuckle when the thin leaves sway? One print of each "
+        "pad position answers that in minutes on the rig, and the y20 deep copy has the longest "
+        "tendon lever of anything designed (5.4 mm at 0°).",
+    ]),
+    ("What is set aside, and why", [
+        "<b>B1 hourglass:</b> the notch concentrates bending; t2.0 / notch 0.5 reaches 20 % strain "
+        "by 18° and 68 % at 60°, and the softest B1 only reaches 46°. High tendon capacity "
+        "at 0° (25 N) does not help a joint that cannot bend.",
+        "<b>B9 compression strut:</b> 12.7 N at 0°, close to its estimate, but 37 % strain at 60° "
+        "from the bend alone; the neck cannot take the joint through a finger's range.",
+        "<b>B3 dual leaf:</b> buckles sideways at about 10 N even at 2 mm, and is the softest in "
+        "twist (16° under a 1 N pinch). Kept only as an optional plain-leaf control.",
+        "<b>B6 multi-leaf:</b> behaves like a split B3 with no torsional gain, and was not "
+        "shortlisted for round 2.",
+        "<b>Lattice:</b> 20 % strain by 10–20° in every variant run; the missing variants change "
+        "cell count, not strut slenderness. Skipped by agreement.",
+        "<b>B4 rolling contact:</b> see the round-2 table. As built its tendon lever falls to "
+        "0.9 mm by 60° because the contact moves palmar; the deep copy was the shortlisted one.",
+    ]),
+]
+UNKNOWNS = [
+    ["TPU modulus (SUNLU publishes none)", "Every force, torque, capacity and return margin "
+     "scales with it; at 5.3 MPa several Type B joints fail the return gate",
+     "Batch 0 tensile specimens; then edit E_SUNLU_MPA in scripts/sunlu_rescale.py and rebuild this report"],
+    ["Strain limit (20 % is an assumption)", "Decides A6's optimum, A8's height, and every Type B "
+     "range", "Cycling a printed spring (TEST_PLAN §4 step 5)"],
+    ["Real PIP axis position for A6", "Every A6 result is a worst case over four guesses",
+     "The A6 R28 / 1.4 print on the fit-check finger"],
+    ["Whether the B8 cup self-centres", "FEA capacity is a lower bound; the joint may wobble "
+     "sideways before seating", "B8 prints on the rig, TEST_PLAN §4 step 3"],
+    ["Print accuracy of thin features", "Stiffness goes as thickness cubed: a 1.0 mm leaf printed "
+     "at 1.1 mm is 33 % stiffer", "Calipers on every part before testing; reject beyond ±10 %"],
+    ["Whether the A3 C-clips slide", "Could make the as-built A3 better than the elastica model says",
+     "Flex the existing A3 print and note any click at 10–35°"],
+    ["DIP flexion stop at 40–51° in the Type A CAD", "Human DIP reaches 80–90°",
+     "A CAD decision, not a test: change the DP/MP geometry if unintended"],
+]
 LINKS_INTRO = (
     "Every link points at the file on branch claude/modest-cray-kbb75b of Melle2006/BARNES_UI "
     "(GitHub: open, then <i>Download raw file</i>). STL is for the slicer; STEP is the same part "
@@ -461,3 +615,26 @@ APPENDIX = [
     ("Type B round-2 test plan", "TYPE B/round2/TEST_PLAN.md", "TYPE B/round2/predict_round2.py"),
     ("Material basis (new)", "results/sunlu_rescale/", "scripts/sunlu_rescale.py"),
 ]
+
+
+def _module(folder, label, how):
+    return (label, how, [f"{folder}/03_PIP_module.stl", f"{folder}/03_PIP_module.step",
+                         f"{folder}/01_MCP_module_with_flange.stl", f"{folder}/05_DIP_module.stl",
+                         f"{folder}/finger_assembly.step"])
+
+
+PRINT_LINKS_TYPE_B = [
+    ("Type B joint modules (TPU). Rig tests use the PIP module; MCP and DIP modules are for a whole finger", [
+        _module("TYPE B/round2/deep_offset/B5_t200_a45_deep", "B5 crossed strip t2.0 / 45°, deep tendon",
+                "TPU ×2 (PIP); with the deep phalanges"),
+        _module("TYPE B/B5_crossed_strip/B5_t150_a45", "B5 crossed strip t1.5 / 45°, as built",
+                "TPU ×2 (PIP); with the as-built phalanges"),
+        _module("TYPE B/round2/deep_offset/B8_y20_r125_deep", "B8 knuckle 2 mm dorsal, r1.25, deep tendon",
+                "TPU ×1 (PIP); check the 0.3 mm gap is open"),
+        _module("TYPE B/round2/B8_y00_r150", "B8 knuckle central, r1.5, as built",
+                "TPU ×1 (PIP); check the 0.3 mm gap is open"),
+        _module("TYPE B/B3_dual_leaf/B3_t150_w30", "B3 dual leaf t1.5 / w3.0, as built (optional control)",
+                "TPU ×1 (PIP)"),
+    ]),
+]
+PRINT_LINKS = PRINT_LINKS_COMMON + PRINT_LINKS_TYPE_A + PRINT_LINKS_TYPE_B
