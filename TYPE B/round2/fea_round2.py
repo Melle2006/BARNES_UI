@@ -482,8 +482,9 @@ def postprocess(res):
     """Capacity and what limits it, at the run's own E."""
     load = res["load"]
     if len(load) < 3:
-        return dict(capacity_T=0.0 if load or res["load_completed_fraction"] == 0 else None,
-                    limited_by="no load increment converged")
+        # Not a capacity of zero: the solver never got the load on, which says
+        # nothing about the joint.
+        return dict(capacity_T=None, limited_by="not resolved: the first load increments did not converge")
     T = np.array([0.0] + [r["T"] for r in load])
     du = np.array([0.0] + [r["du_along"] for r in load])
     k = np.diff(T) / np.maximum(np.diff(du), 1e-12)

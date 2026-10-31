@@ -57,6 +57,6 @@
  "ccx_tail": "    1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            5\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n *INFO reading *SURFACE BEHAVIOR: the tension\n       value at large clearances\n       (only relevant for node-to-surface contact)\n       must be strictly positive\n       the following default will be used:   2.8580955571428575E-005\n       the user is advised to analyze the results\n       carefully\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n restoring the elastic contact stifnesses to their original values \n\ndivergence allowed: number of contact elements stabilized\n no convergence\n\n iteration 13\n\n Number of contact spring elements=49343\n\n Using up to 4 cpu(s) for the stress calculation.\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
  "stopped": null,
  "wall_s": 963.8,
- "capacity_T": 0.0,
- "limited_by": "no load increment converged"
+ "capacity_T": null,
+ "limited_by": "not resolved: the first load increments did not converge"
 }
