@@ -170,6 +170,12 @@ REPORT_ANGLES_DEG = (15.0, 30.0, 45.0, 60.0, 90.0)
 #: from either cap. The latter is the number to design to.
 CAP_EXCLUSION_MM = 1.0
 
+#: Set by the "collared" runs: the strip fused to the A3 fit-check collars
+#: (scripts/a8_collared_geometry.py). The collars are then TPU like the strip, held
+#: where they sit on the real phalanges instead of at the strip's end caps, and
+#: everything judged against the finger is the strip between the collars.
+COLLAR_HOLD: dict | None = None
+
 #: Element size, mm. Two quadratic elements across the narrowest true width of the
 #: 3-turn strip (0.71 mm); the 4-turn strip's 0.56 mm gets its own, smaller size.
 ELEMENT_SIZE_MM = 0.35
@@ -400,7 +406,11 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     # Clearance at rest, against every body. Checked before solving: a strip that
     # starts inside the finger would be pushed out by the contact penalty and the
     # "restoring torque" would include that preload. A geometric verdict.
-    sp = mesh.nodes[strip_node]
+    span_node = strip_node
+    if COLLAR_HOLD:
+        y_all = mesh.nodes[:, 1]
+        span_node = strip_node & (y_all > COLLAR_HOLD["span"][0] + 0.05) & (y_all < COLLAR_HOLD["span"][1] - 0.05)
+    sp = mesh.nodes[span_node]
     gaps = []
     for body in bodies:
         if body["kind"] == "cylinder":
@@ -443,11 +453,35 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     # End caps only. The strip's long faces run its whole length, so "every node
     # within the depth" selects exactly the caps; 0.12 mm covers the distal cap of
     # the exports, which is cut 0.08 mm out of square.
-    proximal = sets_where(lambda idx: strip_node[idx].all()
-                          and mesh.nodes[idx, 1].max() <= box.ymin + 0.12)
-    distal = sets_where(lambda idx: strip_node[idx].all()
-                        and mesh.nodes[idx, 1].min() >= box.ymax - 0.12)
-    strip_skin = sets_where(lambda idx: strip_node[idx].all())
+    if COLLAR_HOLD:
+        # Every collar face that faces its phalanx: median distance to the bone's
+        # surface under COLLAR_HOLD["tol"]. The A3 fit-check collars' inner faces sit
+        # 0.36-1.0 mm off the bone rather than on it; their outer faces are a wall
+        # thickness (1.2 mm) further out. Holding the inner faces is a collar gripped
+        # on the phalanx (snug or bonded), flexible everywhere else.
+        from scipy.spatial import cKDTree
+
+        def on_bone(bone_points):
+            tree = cKDTree(bone_points)
+
+            def test(idx):
+                if not strip_node[idx].all():
+                    return False
+                d, _ = tree.query(mesh.nodes[idx])
+                return float(np.median(d)) < COLLAR_HOLD["tol"]
+            return test
+        proximal = sets_where(on_bone(COLLAR_HOLD["proximal_bone"]))
+        distal = sets_where(on_bone(COLLAR_HOLD["distal_bone"]))
+        lo, hi = COLLAR_HOLD["span"]
+        strip_skin = sets_where(lambda idx: strip_node[idx].all()
+                                and mesh.nodes[idx, 1].min() > lo - 0.01
+                                and mesh.nodes[idx, 1].max() < hi + 0.01)
+    else:
+        proximal = sets_where(lambda idx: strip_node[idx].all()
+                              and mesh.nodes[idx, 1].max() <= box.ymin + 0.12)
+        distal = sets_where(lambda idx: strip_node[idx].all()
+                            and mesh.nodes[idx, 1].min() >= box.ymax - 0.12)
+        strip_skin = sets_where(lambda idx: strip_node[idx].all())
     strip_skin = [n for n in strip_skin if n not in proximal and n not in distal]
     # Only the underside can touch the finger, and only the underside is a slave.
     # With every strip face as a slave the run diverged as soon as contact engaged:
@@ -540,8 +574,10 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
 
     # Field post-processing, one increment at a time.
     y0 = mesh.nodes[:, 1]
-    interior = ((y0 > box.ymin + CAP_EXCLUSION_MM) & (y0 < box.ymax - CAP_EXCLUSION_MM)
+    span_lo, span_hi = COLLAR_HOLD["span"] if COLLAR_HOLD else (box.ymin, box.ymax)
+    interior = ((y0 > span_lo + CAP_EXCLUSION_MM) & (y0 < span_hi - CAP_EXCLUSION_MM)
                 & strip_node)
+    collar_zone = strip_node & ((y0 < span_lo) | (y0 > span_hi))
     corner = np.unique(mesh.elements[:, :4])
     axis = np.array([axis_y, axis_z])
     fields: dict[float, dict] = {}
@@ -566,6 +602,10 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                 entry["peak_strain_interior"] = float(
                     strain[mask_corner & interior[nodes]].max()
                 )
+                if COLLAR_HOLD:
+                    entry["peak_strain_collars"] = float(strain[mask_corner & collar_zone[nodes]].max())
+                    junction = strip_node & ~interior & ~collar_zone
+                    entry["peak_strain_junction"] = float(strain[mask_corner & junction[nodes]].max())
         if not KEEP_FRD:
             frd.unlink()  # hundreds of MB per run; the scalars above are what is kept
 
@@ -635,6 +675,11 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                                  for a in REPORT_ANGLES_DEG},
         "peak_strain_all": {f"{a:g}": field_at("peak_strain_all", a)
                             for a in REPORT_ANGLES_DEG},
+        "peak_strain_collars": ({f"{a:g}": field_at("peak_strain_collars", a)
+                                 for a in REPORT_ANGLES_DEG} if COLLAR_HOLD else None),
+        "peak_strain_junction": ({f"{a:g}": field_at("peak_strain_junction", a)
+                                  for a in REPORT_ANGLES_DEG} if COLLAR_HOLD else None),
+        "collar_hold_sets": ({"proximal": proximal, "distal": distal} if COLLAR_HOLD else None),
         "min_radius_from_axis_mm": {f"{a:g}": field_at("min_radius_mm", a)
                                     for a in (0.0,) + REPORT_ANGLES_DEG},
         "lateral_extent_mm": {f"{a:g}": field_at("lateral_extent_mm", a)
@@ -730,6 +775,11 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
                               + (f"_a{amplitude:.1f}" if amplitude else "")),
                     "kind": "printable", "n_turns": n_turns, "sagitta": sagitta,
                     "height": 1.2, "true_width": width, "amplitude": amplitude})
+    if "collared" in groups:
+        # The selected strip and its fallback, fused to the A3 fit-check collars.
+        for sagitta in (2.75, 3.0):
+            runs.append({"label": f"collared_2T_w1.2_h2.4_s{sagitta:.2f}", "kind": "collared",
+                         "n_turns": 2, "sagitta": sagitta, "height": 2.4, "true_width": 1.2})
     if "printable_2t" in groups:
         # Added once the 2-turn strip turned out not to snap on the real finger
         # (1.70 N.mm at 14 % strain, h 1.8): how far its height and width can go.
@@ -784,7 +834,7 @@ def main(argv: list[str] | None = None) -> int:
                         help="Use the node-to-surface formulation instead (comparison).")
     args = parser.parse_args(argv)
 
-    global CONTACT_FORMULATION, KEEP_FRD, FINGER
+    global CONTACT_FORMULATION, KEEP_FRD, FINGER, COLLAR_HOLD
     KEEP_FRD = args.keep_frd
     FINGER = args.finger
     if args.axis_y is None:
@@ -826,6 +876,29 @@ def main(argv: list[str] | None = None) -> int:
         if run["kind"] == "export":
             shape = strip_from_export(run["step"])
             geometry = None
+        elif run["kind"] == "collared":
+            import a8_collared_geometry as CG
+            import trimesh
+            from barnes_ui.core.cad.registry import load_geometry as _lg
+            shape, _, _, _, (r_, t_, _) = CG.build(run["sagitta"])
+            params = _printable(run["n_turns"], run["sagitta"], run["height"],
+                                run["true_width"], run["label"], run.get("amplitude"))
+            geometry = params.path_metrics()
+
+            def bone(name):
+                from OCP.BRepMesh import BRepMesh_IncrementalMesh
+                from OCP.StlAPI import StlAPI_Writer
+                b = CG.transformed(_lg(CG.REF / name).solids[0].shape, r_, t_)
+                BRepMesh_IncrementalMesh(b, 0.01, False, 0.05, True)
+                out = archive / f"{name}.stl"
+                archive.mkdir(parents=True, exist_ok=True)
+                StlAPI_Writer().Write(b, str(out))
+                # 0.05 mm spacing on the bone's surface, for a nearest-point distance
+                tri = trimesh.load(out)
+                return trimesh.sample.sample_surface_even(tri, int(tri.area / 0.0025))[0]
+            COLLAR_HOLD = {"span": CG.SPAN, "tol": 1.1,
+                           "proximal_bone": bone("Index_PP.step"),
+                           "distal_bone": bone("Index_MP.step")}
         elif run["kind"] == "printable":
             params = _printable(run["n_turns"], run["sagitta"], run["height"],
                                 run["true_width"], run["label"], run.get("amplitude"))
@@ -836,7 +909,7 @@ def main(argv: list[str] | None = None) -> int:
             shape = build_a8_meander(params)
             geometry = params.path_metrics()
         size = args.element_size
-        if run["kind"] == "printable":
+        if run["kind"] in ("printable", "collared"):
             # Three quadratic elements across the true width.
             size = round(min(PRINTABLE_ELEMENT_MM, run["true_width"] / 3.0), 3)
             if args.printable_element_size:
