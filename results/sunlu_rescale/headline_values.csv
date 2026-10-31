@@ -84,6 +84,11 @@ B1_t200_notch050,tendon capacity at 60 deg,N,12.0,0.0,0.0,0.0,0.0,"already 68 % 
 B3_t200_w30,tendon capacity at 0 deg,N,12.0,9.981,4.4083,9.981,16.0528,axial stiffness fell below 10 % of its initial value
 B3_t200_w30,tendon capacity at 30 deg,N,12.0,10.1172,4.4684,10.1172,16.2718,axial stiffness fell below 10 % of its initial value
 B3_t200_w30,tendon capacity at 60 deg,N,12.0,8.5921,3.7949,8.5921,13.819,peak strain reached 20 %
+B4_t100_a60_deep,tendon capacity at 0 deg,N,12.0,11.1487,4.924,11.1487,17.9308,solver stopped (guided) before the bearing gave way: a lower bound
+B5_t150_a45,tendon capacity at 0 deg,N,12.0,16.8329,7.4345,16.8329,27.0728,limit point: no equilibrium beyond this tension (buckling/collapse)
+B5_t150_a45,tendon capacity at 60 deg,N,12.0,6.4468,2.8474,6.4468,10.3687,peak strain reached 20 %
+B5_t150_a45_deep,tendon capacity at 0 deg,N,12.0,16.8329,7.4345,16.8329,27.0728,"limit point at 16.8 N, taken from B5_t150_a45_0deg.json: at 0 deg the deep and as-built decks are identical (tendon line straight down either way); this run followed the same path and stopped at the minimum increment at 11.8 N"
+B5_t150_a45_deep,tendon capacity at 60 deg,N,12.0,6.378,2.8169,6.378,10.2579,peak strain reached 20 %
 B5_t200_a45_deep,tendon capacity at 0 deg,N,12.0,30.2371,13.3547,30.2371,48.6313,peak strain reached 20 %
 B5_t200_a45_deep,tendon capacity at 60 deg,N,12.0,10.2551,4.5293,10.2551,16.4936,peak strain reached 20 %
 B8_y00_r150,tendon capacity at 0 deg,N,12.0,5.8207,2.5708,5.8207,9.3616,solver stopped (guided) before the bearing gave way: a lower bound

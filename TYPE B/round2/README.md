@@ -17,6 +17,8 @@ separately and together:
 The test plan is in [TEST_PLAN.md](TEST_PLAN.md). The rig and specimens are in
 [test_rig/](test_rig/).
 
+**Tendon-load FEA of the shortlist** (rows 1-11 of TEST_PLAN): [fea/](fea/README.md). It replaces the hand estimates in predictions.csv where it resolved: plain leaves (B3) buckle at about 10 N, a third of the estimate; B5 t2.0 with the deep tendon carries 30 N; the bearing joints carry load at low strain once seated, but only lower bounds could be resolved.
+
 ## The new designs (`./`)
 
 They use the same finger, collars, tabs, sockets and phalanges as round 1 (the

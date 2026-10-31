@@ -11,8 +11,8 @@ import csv
 import json
 
 #: Round-2 bars, in TEST_PLAN shortlist order
-ROUND2_ORDER = ["B1_t200_notch050", "B3_t200_w30", "B5_t200_a45_deep", "B4_t100_a60_deep",
-                "B8_y00_r150", "B8_y20_r125", "B9_n150"]
+ROUND2_ORDER = ["B1_t200_notch050", "B3_t200_w30", "B5_t200_a45_deep", "B5_t150_a45",
+                "B4_t100_a60_deep", "B8_y00_r150", "B8_y20_r125", "B9_n150"]
 #: round-1 variants shown on the return-gate bracket figure
 RETURN_GATE_NAMES = ["B5_t150_a45", "B5_t150_a60", "B5_t125_a45", "B3_t150_w30", "B3_t200_w20",
                      "B3_t150_w20", "B6_n4_t150_taper15", "B6_n4_t200", "B1_t100_notch100",
@@ -180,6 +180,8 @@ def story(c):
         rr = r2.get(run, {})
         c0, c60 = (rr.get(0.0) or {}).get("capacity_T"), (rr.get(60.0) or {}).get("capacity_T")
         why = (rr.get(0.0) or {}).get("limited_by", "not run yet")
+        if why.startswith("limit point at 16.8 N, taken from"):
+            why = "limit point (collapse); same deck as the as-built run"
         why = why.replace("limit point: no equilibrium beyond this tension (buckling/collapse)", "limit point (collapse)") \
                  .replace("axial stiffness fell below 10 % of its initial value", "stiffness loss (buckling)") \
                  .replace("peak strain reached 20 %", "20 % strain") \
