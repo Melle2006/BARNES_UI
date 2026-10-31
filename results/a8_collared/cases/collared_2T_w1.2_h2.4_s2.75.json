@@ -1,0 +1,1126 @@
+{
+  "label": "collared_2T_w1.2_h2.4_s2.75",
+  "converged": true,
+  "reached_deg": 100.0,
+  "increments": 100,
+  "cutbacks": 445,
+  "wall_seconds": 7202.7,
+  "mesh": {
+    "elements": 45286,
+    "nodes": 80094,
+    "element_size_mm": 0.4
+  },
+  "knuckle_radius_mm": 3.4,
+  "clearance_at_rest_mm": 0.43029465605059514,
+  "axis_point_mm": [
+    -0.20567147366883926,
+    41.875,
+    0.0
+  ],
+  "material": "TPU 90A (Jabil datasheet E = 19.3 MPa, Neo-Hookean): Neo-Hookean (C10=3.23915)",
+  "k0_n_mm_per_rad": 1.0750756614294665,
+  "torque_n_mm": {
+    "15": 0.3072521,
+    "30": 0.770929,
+    "45": 1.281575,
+    "60": 1.833284,
+    "90": 2.809298
+  },
+  "torque_max_n_mm": 3.011841,
+  "energy_0_90_n_mm": 2.0796977381692265,
+  "linearity_t90_over_k0": 1.6635616612273556,
+  "first_torque_drop_deg": null,
+  "peak_strain_interior": {
+    "15": 0.021522517126346674,
+    "30": 0.04848254345129277,
+    "45": 0.0754461014054777,
+    "60": 0.10136711897848771,
+    "90": 0.14667635877791407
+  },
+  "peak_strain_all": {
+    "15": 0.021522517126346674,
+    "30": 0.04848254345129277,
+    "45": 0.08082520226964274,
+    "60": 0.128314556885339,
+    "90": 0.2152154497885077
+  },
+  "peak_strain_collars": {
+    "15": 0.010930794194346394,
+    "30": 0.017391424927553523,
+    "45": 0.04097250861667967,
+    "60": 0.06393833343364941,
+    "90": 0.10605689885394143
+  },
+  "peak_strain_junction": {
+    "15": 0.016638912876595136,
+    "30": 0.03333376166255242,
+    "45": 0.08082520226964274,
+    "60": 0.128314556885339,
+    "90": 0.2152154497885077
+  },
+  "collar_hold_sets": {
+    "proximal": [
+      "surface_40",
+      "surface_41",
+      "surface_42",
+      "surface_44",
+      "surface_45",
+      "surface_46",
+      "surface_8"
+    ],
+    "distal": [
+      "surface_16",
+      "surface_65",
+      "surface_66",
+      "surface_67",
+      "surface_68",
+      "surface_69",
+      "surface_70",
+      "surface_71"
+    ]
+  },
+  "min_radius_from_axis_mm": {
+    "0": 5.980860346465842,
+    "15": 5.186290886252168,
+    "30": 4.899783001622306,
+    "45": 4.49384379522897,
+    "60": 4.113193014105983,
+    "90": 3.2864766842423467
+  },
+  "lateral_extent_mm": {
+    "0": 11.664164773484128,
+    "15": 11.664167409206627,
+    "30": 11.664172686527628,
+    "45": 11.664180883367628,
+    "60": 11.664191922107628,
+    "90": 11.664221093497627
+  },
+  "curve": {
+    "angle_deg": [
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.000000000000001,
+      8.0,
+      9.0,
+      10.0,
+      11.0,
+      12.0,
+      13.0,
+      14.000000000000002,
+      15.0,
+      16.0,
+      17.0,
+      18.0,
+      19.0,
+      20.0,
+      21.0,
+      22.0,
+      23.0,
+      24.0,
+      25.0,
+      26.0,
+      27.0,
+      28.000000000000004,
+      28.999999999999996,
+      30.0,
+      31.0,
+      32.0,
+      33.0,
+      34.0,
+      35.0,
+      36.0,
+      37.0,
+      38.0,
+      39.0,
+      40.0,
+      41.0,
+      42.0,
+      43.0,
+      44.0,
+      45.0,
+      46.0,
+      47.0,
+      48.0,
+      49.0,
+      50.0,
+      51.0,
+      52.0,
+      53.0,
+      54.0,
+      55.00000000000001,
+      56.00000000000001,
+      56.99999999999999,
+      57.99999999999999,
+      59.0,
+      60.0,
+      61.0,
+      62.0,
+      63.0,
+      64.0,
+      65.0,
+      66.0,
+      67.0,
+      68.0,
+      69.0,
+      70.0,
+      71.0,
+      72.0,
+      73.0,
+      74.0,
+      75.0,
+      76.0,
+      77.0,
+      78.0,
+      79.0,
+      80.0,
+      81.0,
+      82.0,
+      83.0,
+      84.0,
+      85.0,
+      86.0,
+      87.0,
+      88.0,
+      89.0,
+      90.0,
+      91.0,
+      92.0,
+      93.0,
+      94.0,
+      95.0,
+      96.0,
+      97.0,
+      98.0,
+      99.0,
+      100.0
+    ],
+    "torque_n_mm": [
+      0.01929895,
+      0.03824571,
+      0.05682617,
+      0.07502665,
+      0.09283398,
+      0.1102355,
+      0.1272191,
+      0.1437731,
+      0.1598868,
+      0.1755497,
+      0.1966023,
+      0.2234324,
+      0.2509247,
+      0.2789092,
+      0.3072521,
+      0.3359595,
+      0.3650181,
+      0.3943954,
+      0.4241063,
+      0.4541366,
+      0.4844886,
+      0.5151401,
+      0.5461005,
+      0.5773519,
+      0.6088793,
+      0.6406623,
+      0.6727217,
+      0.7051414,
+      0.7378941,
+      0.770929,
+      0.8041959,
+      0.8376871,
+      0.8713601,
+      0.9052112,
+      0.9392416,
+      0.973408,
+      1.007661,
+      1.041994,
+      1.076389,
+      1.110726,
+      1.144855,
+      1.178763,
+      1.212547,
+      1.246747,
+      1.281575,
+      1.316947,
+      1.352866,
+      1.389354,
+      1.426182,
+      1.46319,
+      1.500289,
+      1.537489,
+      1.574717,
+      1.611954,
+      1.649179,
+      1.686342,
+      1.723383,
+      1.760251,
+      1.796853,
+      1.833284,
+      1.869509,
+      1.905787,
+      1.942151,
+      1.978351,
+      2.014294,
+      2.04996,
+      2.085396,
+      2.120543,
+      2.155342,
+      2.189716,
+      2.223709,
+      2.257301,
+      2.290339,
+      2.322597,
+      2.354105,
+      2.385105,
+      2.415701,
+      2.447078,
+      2.479485,
+      2.512086,
+      2.544372,
+      2.57641,
+      2.608279,
+      2.63984,
+      2.670789,
+      2.700709,
+      2.729564,
+      2.757329,
+      2.783825,
+      2.809298,
+      2.83386,
+      2.857401,
+      2.879813,
+      2.901048,
+      2.921043,
+      2.939887,
+      2.9577,
+      2.974867,
+      2.992207,
+      3.011841
+    ]
+  },
+  "field_history": {
+    "0.010000": {
+      "min_radius_mm": 5.980860346465842,
+      "lateral_extent_mm": 11.664164773484128,
+      "peak_strain_all": 0.0014510689181865821,
+      "peak_strain_interior": 0.001395653841118616,
+      "peak_strain_collars": 0.0009031417106546424,
+      "peak_strain_junction": 0.0014510689181865821
+    },
+    "0.020000": {
+      "min_radius_mm": 5.908292124898132,
+      "lateral_extent_mm": 11.664164917681628,
+      "peak_strain_all": 0.0029296148546675838,
+      "peak_strain_interior": 0.002776313338913594,
+      "peak_strain_collars": 0.0018210033602132913,
+      "peak_strain_junction": 0.0029296148546675838
+    },
+    "0.030000": {
+      "min_radius_mm": 5.8336159696353205,
+      "lateral_extent_mm": 11.664165067928629,
+      "peak_strain_all": 0.0044347213393705065,
+      "peak_strain_interior": 0.004141636656998404,
+      "peak_strain_collars": 0.0027529083805093446,
+      "peak_strain_junction": 0.0044347213393705065
+    },
+    "0.040000": {
+      "min_radius_mm": 5.757109430688399,
+      "lateral_extent_mm": 11.664165224056628,
+      "peak_strain_all": 0.005965496086797861,
+      "peak_strain_interior": 0.005491253157092313,
+      "peak_strain_collars": 0.003698183603841221,
+      "peak_strain_junction": 0.005965496086797861
+    },
+    "0.050000": {
+      "min_radius_mm": 5.679217953033944,
+      "lateral_extent_mm": 11.664165385882628,
+      "peak_strain_all": 0.007520962648682072,
+      "peak_strain_interior": 0.006824842988118807,
+      "peak_strain_collars": 0.004656128403433879,
+      "peak_strain_junction": 0.007520962648682072
+    },
+    "0.060000": {
+      "min_radius_mm": 5.600254730516481,
+      "lateral_extent_mm": 11.664165553215629,
+      "peak_strain_all": 0.009100158787966661,
+      "peak_strain_interior": 0.00814206707852283,
+      "peak_strain_collars": 0.005626037775315451,
+      "peak_strain_junction": 0.009100158787966661
+    },
+    "0.070000": {
+      "min_radius_mm": 5.520071850181935,
+      "lateral_extent_mm": 11.664165725857627,
+      "peak_strain_all": 0.010702096108129222,
+      "peak_strain_interior": 0.009442597194400548,
+      "peak_strain_collars": 0.006607219022288113,
+      "peak_strain_junction": 0.010702096108129222
+    },
+    "0.080000": {
+      "min_radius_mm": 5.438401321219291,
+      "lateral_extent_mm": 11.664165903596627,
+      "peak_strain_all": 0.01232574164179323,
+      "peak_strain_interior": 0.010726155192062992,
+      "peak_strain_collars": 0.007598954176795347,
+      "peak_strain_junction": 0.01232574164179323
+    },
+    "0.090000": {
+      "min_radius_mm": 5.355791334205141,
+      "lateral_extent_mm": 11.664166086213626,
+      "peak_strain_all": 0.013970074567501323,
+      "peak_strain_interior": 0.011992384484014407,
+      "peak_strain_collars": 0.008600520233461362,
+      "peak_strain_junction": 0.013970074567501323
+    },
+    "0.100000": {
+      "min_radius_mm": 5.272293714973409,
+      "lateral_extent_mm": 11.664166273486627,
+      "peak_strain_all": 0.01563400539989135,
+      "peak_strain_interior": 0.013241017853317771,
+      "peak_strain_collars": 0.009611196141844358,
+      "peak_strain_junction": 0.01563400539989135
+    },
+    "0.110000": {
+      "min_radius_mm": 5.227963505489255,
+      "lateral_extent_mm": 11.664166474990626,
+      "peak_strain_all": 0.016544553401968587,
+      "peak_strain_interior": 0.014701749536325748,
+      "peak_strain_collars": 0.010222722765220738,
+      "peak_strain_junction": 0.016544553401968587
+    },
+    "0.120000": {
+      "min_radius_mm": 5.219366456017755,
+      "lateral_extent_mm": 11.664166693185628,
+      "peak_strain_all": 0.016676977989779296,
+      "peak_strain_interior": 0.016384548749047934,
+      "peak_strain_collars": 0.010435783121554687,
+      "peak_strain_junction": 0.016676977989779296
+    },
+    "0.130000": {
+      "min_radius_mm": 5.209714186778203,
+      "lateral_extent_mm": 11.664166921046627,
+      "peak_strain_all": 0.01808719526875957,
+      "peak_strain_interior": 0.01808719526875957,
+      "peak_strain_collars": 0.010612546855205851,
+      "peak_strain_junction": 0.01670904950057972
+    },
+    "0.140000": {
+      "min_radius_mm": 5.198738266323637,
+      "lateral_extent_mm": 11.664167159312626,
+      "peak_strain_all": 0.019802262906251755,
+      "peak_strain_interior": 0.019802262906251755,
+      "peak_strain_collars": 0.010770193560360575,
+      "peak_strain_junction": 0.016678722582179617
+    },
+    "0.150000": {
+      "min_radius_mm": 5.186290886252168,
+      "lateral_extent_mm": 11.664167409206627,
+      "peak_strain_all": 0.021522517126346674,
+      "peak_strain_interior": 0.021522517126346674,
+      "peak_strain_collars": 0.010930794194346394,
+      "peak_strain_junction": 0.016638912876595136
+    },
+    "0.160000": {
+      "min_radius_mm": 5.17253306961385,
+      "lateral_extent_mm": 11.664167671148629,
+      "peak_strain_all": 0.023278895354354345,
+      "peak_strain_interior": 0.023278895354354345,
+      "peak_strain_collars": 0.011098468990427879,
+      "peak_strain_junction": 0.01659968648587573
+    },
+    "0.170000": {
+      "min_radius_mm": 5.157922423649857,
+      "lateral_extent_mm": 11.664167945739628,
+      "peak_strain_all": 0.025057454859620742,
+      "peak_strain_interior": 0.025057454859620742,
+      "peak_strain_collars": 0.01128116687418479,
+      "peak_strain_junction": 0.016581424434446213
+    },
+    "0.180000": {
+      "min_radius_mm": 5.142471708632009,
+      "lateral_extent_mm": 11.664168233245627,
+      "peak_strain_all": 0.026838641302976862,
+      "peak_strain_interior": 0.026838641302976862,
+      "peak_strain_collars": 0.011474493411694375,
+      "peak_strain_junction": 0.01674834403828851
+    },
+    "0.190000": {
+      "min_radius_mm": 5.126011876429055,
+      "lateral_extent_mm": 11.664168533227627,
+      "peak_strain_all": 0.02862347178883451,
+      "peak_strain_interior": 0.02862347178883451,
+      "peak_strain_collars": 0.01168136776316886,
+      "peak_strain_junction": 0.017718677548035133
+    },
+    "0.200000": {
+      "min_radius_mm": 5.1086834020310645,
+      "lateral_extent_mm": 11.664168846207627,
+      "peak_strain_all": 0.030410672688902185,
+      "peak_strain_interior": 0.030410672688902185,
+      "peak_strain_collars": 0.01190057450780957,
+      "peak_strain_junction": 0.018736594417424923
+    },
+    "0.210000": {
+      "min_radius_mm": 5.09055459735147,
+      "lateral_extent_mm": 11.664169172037628,
+      "peak_strain_all": 0.032200380870453627,
+      "peak_strain_interior": 0.032200380870453627,
+      "peak_strain_collars": 0.012132517572949642,
+      "peak_strain_junction": 0.019801853100047895
+    },
+    "0.220000": {
+      "min_radius_mm": 5.071901330494899,
+      "lateral_extent_mm": 11.664169511187627,
+      "peak_strain_all": 0.0339912205073869,
+      "peak_strain_interior": 0.0339912205073869,
+      "peak_strain_collars": 0.012376452533485738,
+      "peak_strain_junction": 0.020915712848206036
+    },
+    "0.230000": {
+      "min_radius_mm": 5.052361031737725,
+      "lateral_extent_mm": 11.664169863267627,
+      "peak_strain_all": 0.03578414111071582,
+      "peak_strain_interior": 0.03578414111071582,
+      "peak_strain_collars": 0.012633526057577615,
+      "peak_strain_junction": 0.022076841596100127
+    },
+    "0.240000": {
+      "min_radius_mm": 5.032229336096406,
+      "lateral_extent_mm": 11.664170228597627,
+      "peak_strain_all": 0.037577720037134554,
+      "peak_strain_interior": 0.037577720037134554,
+      "peak_strain_collars": 0.012902524903805945,
+      "peak_strain_junction": 0.02328643210694281
+    },
+    "0.250000": {
+      "min_radius_mm": 5.011459865471032,
+      "lateral_extent_mm": 11.664170607087627,
+      "peak_strain_all": 0.039387441385227984,
+      "peak_strain_interior": 0.039387441385227984,
+      "peak_strain_collars": 0.013269118177648087,
+      "peak_strain_junction": 0.024545494373503507
+    },
+    "0.260000": {
+      "min_radius_mm": 4.98978023488506,
+      "lateral_extent_mm": 11.664170998967627,
+      "peak_strain_all": 0.04119905041884664,
+      "peak_strain_interior": 0.04119905041884664,
+      "peak_strain_collars": 0.013983413943764234,
+      "peak_strain_junction": 0.025853968137716343
+    },
+    "0.270000": {
+      "min_radius_mm": 4.967775372373735,
+      "lateral_extent_mm": 11.664171403937626,
+      "peak_strain_all": 0.04301196834079701,
+      "peak_strain_interior": 0.04301196834079701,
+      "peak_strain_collars": 0.014723482743389749,
+      "peak_strain_junction": 0.027209976475596198
+    },
+    "0.280000": {
+      "min_radius_mm": 4.945532348841695,
+      "lateral_extent_mm": 11.664171819607628,
+      "peak_strain_all": 0.044832411480747236,
+      "peak_strain_interior": 0.044832411480747236,
+      "peak_strain_collars": 0.015486676597409765,
+      "peak_strain_junction": 0.028607156191921
+    },
+    "0.290000": {
+      "min_radius_mm": 4.923047036654415,
+      "lateral_extent_mm": 11.664172246927627,
+      "peak_strain_all": 0.04665663403717968,
+      "peak_strain_interior": 0.04665663403717968,
+      "peak_strain_collars": 0.016273550438507423,
+      "peak_strain_junction": 0.030543834031113937
+    },
+    "0.300000": {
+      "min_radius_mm": 4.899783001622306,
+      "lateral_extent_mm": 11.664172686527628,
+      "peak_strain_all": 0.04848254345129277,
+      "peak_strain_interior": 0.04848254345129277,
+      "peak_strain_collars": 0.017391424927553523,
+      "peak_strain_junction": 0.03333376166255242
+    },
+    "0.310000": {
+      "min_radius_mm": 4.875886782440446,
+      "lateral_extent_mm": 11.664173137827628,
+      "peak_strain_all": 0.05030971539230622,
+      "peak_strain_interior": 0.05030971539230622,
+      "peak_strain_collars": 0.01881567991589317,
+      "peak_strain_junction": 0.03619686932630839
+    },
+    "0.320000": {
+      "min_radius_mm": 4.851671009485733,
+      "lateral_extent_mm": 11.664173602817627,
+      "peak_strain_all": 0.052134851967295504,
+      "peak_strain_interior": 0.052134851967295504,
+      "peak_strain_collars": 0.020265520764117584,
+      "peak_strain_junction": 0.039113177061452786
+    },
+    "0.330000": {
+      "min_radius_mm": 4.827109376982853,
+      "lateral_extent_mm": 11.664174080927626,
+      "peak_strain_all": 0.05395832192530903,
+      "peak_strain_interior": 0.05395832192530903,
+      "peak_strain_collars": 0.021741474674620287,
+      "peak_strain_junction": 0.04208340114617393
+    },
+    "0.340000": {
+      "min_radius_mm": 4.802261966378307,
+      "lateral_extent_mm": 11.664174572107626,
+      "peak_strain_all": 0.05577984224139354,
+      "peak_strain_interior": 0.05577984224139354,
+      "peak_strain_collars": 0.023241286801064298,
+      "peak_strain_junction": 0.04510371801107982
+    },
+    "0.350000": {
+      "min_radius_mm": 4.776936058539776,
+      "lateral_extent_mm": 11.664175076797628,
+      "peak_strain_all": 0.05759858674635088,
+      "peak_strain_interior": 0.05759858674635088,
+      "peak_strain_collars": 0.024759799223298185,
+      "peak_strain_junction": 0.04816413199784764
+    },
+    "0.360000": {
+      "min_radius_mm": 4.750745189225025,
+      "lateral_extent_mm": 11.664175594147629,
+      "peak_strain_all": 0.05941464255652318,
+      "peak_strain_interior": 0.05941464255652318,
+      "peak_strain_collars": 0.026303410217064283,
+      "peak_strain_junction": 0.0512762452532598
+    },
+    "0.370000": {
+      "min_radius_mm": 4.724304391784801,
+      "lateral_extent_mm": 11.664176129087627,
+      "peak_strain_all": 0.06121811155244883,
+      "peak_strain_interior": 0.06121811155244883,
+      "peak_strain_collars": 0.027855489525588917,
+      "peak_strain_junction": 0.0544035892602992
+    },
+    "0.380000": {
+      "min_radius_mm": 4.6977980897669225,
+      "lateral_extent_mm": 11.664176678637627,
+      "peak_strain_all": 0.06301682628242133,
+      "peak_strain_interior": 0.06301682628242133,
+      "peak_strain_collars": 0.029415427327676325,
+      "peak_strain_junction": 0.05754917821926964
+    },
+    "0.390000": {
+      "min_radius_mm": 4.67089139726076,
+      "lateral_extent_mm": 11.664177241907627,
+      "peak_strain_all": 0.06480934798045301,
+      "peak_strain_interior": 0.06480934798045301,
+      "peak_strain_collars": 0.030997135119775754,
+      "peak_strain_junction": 0.06073836775027974
+    },
+    "0.400000": {
+      "min_radius_mm": 4.642781000664338,
+      "lateral_extent_mm": 11.664177819107628,
+      "peak_strain_all": 0.06659244367928774,
+      "peak_strain_interior": 0.06659244367928774,
+      "peak_strain_collars": 0.03261065973570876,
+      "peak_strain_junction": 0.0639871429105332
+    },
+    "0.410000": {
+      "min_radius_mm": 4.613034019885799,
+      "lateral_extent_mm": 11.664178409417627,
+      "peak_strain_all": 0.06836510698233078,
+      "peak_strain_interior": 0.06836510698233078,
+      "peak_strain_collars": 0.034270852776470795,
+      "peak_strain_junction": 0.0673215899851507
+    },
+    "0.420000": {
+      "min_radius_mm": 4.582415921652772,
+      "lateral_extent_mm": 11.664179011917629,
+      "peak_strain_all": 0.07072412109216542,
+      "peak_strain_interior": 0.07013106304085803,
+      "peak_strain_collars": 0.03596754153491655,
+      "peak_strain_junction": 0.07072412109216542
+    },
+    "0.430000": {
+      "min_radius_mm": 4.551453190945516,
+      "lateral_extent_mm": 11.664179625947627,
+      "peak_strain_all": 0.07416515170424742,
+      "peak_strain_interior": 0.07189263641263866,
+      "peak_strain_collars": 0.03768350672935972,
+      "peak_strain_junction": 0.07416515170424742
+    },
+    "0.440000": {
+      "min_radius_mm": 4.522378207779759,
+      "lateral_extent_mm": 11.664180249757628,
+      "peak_strain_all": 0.07751794045643745,
+      "peak_strain_interior": 0.07366728421716795,
+      "peak_strain_collars": 0.03934383933406038,
+      "peak_strain_junction": 0.07751794045643745
+    },
+    "0.450000": {
+      "min_radius_mm": 4.49384379522897,
+      "lateral_extent_mm": 11.664180883367628,
+      "peak_strain_all": 0.08082520226964274,
+      "peak_strain_interior": 0.0754461014054777,
+      "peak_strain_collars": 0.04097250861667967,
+      "peak_strain_junction": 0.08082520226964274
+    },
+    "0.460000": {
+      "min_radius_mm": 4.466444146087606,
+      "lateral_extent_mm": 11.664181527377627,
+      "peak_strain_all": 0.08409963694516853,
+      "peak_strain_interior": 0.07722756330208913,
+      "peak_strain_collars": 0.04257713626471604,
+      "peak_strain_junction": 0.08409963694516853
+    },
+    "0.470000": {
+      "min_radius_mm": 4.440988595344407,
+      "lateral_extent_mm": 11.664182185587627,
+      "peak_strain_all": 0.08728014553877084,
+      "peak_strain_interior": 0.07900557892632265,
+      "peak_strain_collars": 0.044125938765376294,
+      "peak_strain_junction": 0.08728014553877084
+    },
+    "0.480000": {
+      "min_radius_mm": 4.416893808023416,
+      "lateral_extent_mm": 11.664182858047628,
+      "peak_strain_all": 0.09040067042881827,
+      "peak_strain_interior": 0.08077896565339593,
+      "peak_strain_collars": 0.045637317172057656,
+      "peak_strain_junction": 0.09040067042881827
+    },
+    "0.490000": {
+      "min_radius_mm": 4.392898302268171,
+      "lateral_extent_mm": 11.664183543237627,
+      "peak_strain_all": 0.09353085189011523,
+      "peak_strain_interior": 0.08254483890814068,
+      "peak_strain_collars": 0.04715098851987798,
+      "peak_strain_junction": 0.09353085189011523
+    },
+    "0.500000": {
+      "min_radius_mm": 4.368674744929145,
+      "lateral_extent_mm": 11.664184241277628,
+      "peak_strain_all": 0.09666861029810847,
+      "peak_strain_interior": 0.08430387096105574,
+      "peak_strain_collars": 0.04866653706803503,
+      "peak_strain_junction": 0.09666861029810847
+    },
+    "0.510000": {
+      "min_radius_mm": 4.343813804602905,
+      "lateral_extent_mm": 11.664184952237628,
+      "peak_strain_all": 0.09981954172036289,
+      "peak_strain_interior": 0.08605434269346057,
+      "peak_strain_collars": 0.05018801410619922,
+      "peak_strain_junction": 0.09981954172036289
+    },
+    "0.520000": {
+      "min_radius_mm": 4.3190336377163145,
+      "lateral_extent_mm": 11.664185677387628,
+      "peak_strain_all": 0.10296608966541654,
+      "peak_strain_interior": 0.08779577815608786,
+      "peak_strain_collars": 0.05170592599278789,
+      "peak_strain_junction": 0.10296608966541654
+    },
+    "0.530000": {
+      "min_radius_mm": 4.294155420499023,
+      "lateral_extent_mm": 11.664186415087627,
+      "peak_strain_all": 0.10612190441344382,
+      "peak_strain_interior": 0.0895283414586805,
+      "peak_strain_collars": 0.053228106561862054,
+      "peak_strain_junction": 0.10612190441344382
+    },
+    "0.540000": {
+      "min_radius_mm": 4.269234514181607,
+      "lateral_extent_mm": 11.664187165347627,
+      "peak_strain_all": 0.1092814282194563,
+      "peak_strain_interior": 0.09125142691799848,
+      "peak_strain_collars": 0.054751625612701416,
+      "peak_strain_junction": 0.1092814282194563
+    },
+    "0.550000": {
+      "min_radius_mm": 4.2442691379579225,
+      "lateral_extent_mm": 11.664187927607628,
+      "peak_strain_all": 0.11244647698383403,
+      "peak_strain_interior": 0.09296611276893496,
+      "peak_strain_collars": 0.05627769110980352,
+      "peak_strain_junction": 0.11244647698383403
+    },
+    "0.560000": {
+      "min_radius_mm": 4.219149602088686,
+      "lateral_extent_mm": 11.664188702747627,
+      "peak_strain_all": 0.11561398544711632,
+      "peak_strain_interior": 0.09466856977883897,
+      "peak_strain_collars": 0.05780537095655314,
+      "peak_strain_junction": 0.11561398544711632
+    },
+    "0.570000": {
+      "min_radius_mm": 4.193120353186838,
+      "lateral_extent_mm": 11.664189490287628,
+      "peak_strain_all": 0.11878325407056023,
+      "peak_strain_interior": 0.09636026743094184,
+      "peak_strain_collars": 0.059334098954296755,
+      "peak_strain_junction": 0.11878325407056023
+    },
+    "0.580000": {
+      "min_radius_mm": 4.16672932287589,
+      "lateral_extent_mm": 11.664190289627626,
+      "peak_strain_all": 0.12195722734564751,
+      "peak_strain_interior": 0.09804040526766777,
+      "peak_strain_collars": 0.060866176432811336,
+      "peak_strain_junction": 0.12195722734564751
+    },
+    "0.590000": {
+      "min_radius_mm": 4.140020791415515,
+      "lateral_extent_mm": 11.664191100797627,
+      "peak_strain_all": 0.12513425642003795,
+      "peak_strain_interior": 0.09970560008391116,
+      "peak_strain_collars": 0.06240122433257156,
+      "peak_strain_junction": 0.12513425642003795
+    },
+    "0.600000": {
+      "min_radius_mm": 4.113193014105983,
+      "lateral_extent_mm": 11.664191922107628,
+      "peak_strain_all": 0.128314556885339,
+      "peak_strain_interior": 0.10136711897848771,
+      "peak_strain_collars": 0.06393833343364941,
+      "peak_strain_junction": 0.128314556885339
+    },
+    "0.610000": {
+      "min_radius_mm": 4.086215163881806,
+      "lateral_extent_mm": 11.664192754837627,
+      "peak_strain_all": 0.13149349315039194,
+      "peak_strain_interior": 0.10301367569231346,
+      "peak_strain_collars": 0.06547580497142413,
+      "peak_strain_junction": 0.13149349315039194
+    },
+    "0.620000": {
+      "min_radius_mm": 4.059572687882355,
+      "lateral_extent_mm": 11.664193596737627,
+      "peak_strain_all": 0.13465609158192504,
+      "peak_strain_interior": 0.10466521543255669,
+      "peak_strain_collars": 0.06700318227349933,
+      "peak_strain_junction": 0.13465609158192504
+    },
+    "0.630000": {
+      "min_radius_mm": 4.0324827036679824,
+      "lateral_extent_mm": 11.664194447997627,
+      "peak_strain_all": 0.13781523082883518,
+      "peak_strain_interior": 0.10630810837432869,
+      "peak_strain_collars": 0.06852826899925368,
+      "peak_strain_junction": 0.13781523082883518
+    },
+    "0.640000": {
+      "min_radius_mm": 4.005249683722645,
+      "lateral_extent_mm": 11.664195309267628,
+      "peak_strain_all": 0.14097184205663726,
+      "peak_strain_interior": 0.10794028282726575,
+      "peak_strain_collars": 0.07005302477277486,
+      "peak_strain_junction": 0.14097184205663726
+    },
+    "0.650000": {
+      "min_radius_mm": 3.9779482947923612,
+      "lateral_extent_mm": 11.664196180607627,
+      "peak_strain_all": 0.1441216184462517,
+      "peak_strain_interior": 0.10956095839493774,
+      "peak_strain_collars": 0.07157526100458744,
+      "peak_strain_junction": 0.1441216184462517
+    },
+    "0.660000": {
+      "min_radius_mm": 3.950619129205922,
+      "lateral_extent_mm": 11.664197061667627,
+      "peak_strain_all": 0.1472606254481883,
+      "peak_strain_interior": 0.11117299012243831,
+      "peak_strain_collars": 0.07309306409117244,
+      "peak_strain_junction": 0.1472606254481883
+    },
+    "0.670000": {
+      "min_radius_mm": 3.923426789627175,
+      "lateral_extent_mm": 11.664197952507628,
+      "peak_strain_all": 0.15038459816558736,
+      "peak_strain_interior": 0.11277542372929283,
+      "peak_strain_collars": 0.07460382135400767,
+      "peak_strain_junction": 0.15038459816558736
+    },
+    "0.680000": {
+      "min_radius_mm": 3.895118059889005,
+      "lateral_extent_mm": 11.664198852787628,
+      "peak_strain_all": 0.15349545271006249,
+      "peak_strain_interior": 0.11436652233134126,
+      "peak_strain_collars": 0.07610915455205203,
+      "peak_strain_junction": 0.15349545271006249
+    },
+    "0.690000": {
+      "min_radius_mm": 3.8663298458766335,
+      "lateral_extent_mm": 11.664199758907628,
+      "peak_strain_all": 0.15661503650618558,
+      "peak_strain_interior": 0.11595292027135606,
+      "peak_strain_collars": 0.07762110452408799,
+      "peak_strain_junction": 0.15661503650618558
+    },
+    "0.700000": {
+      "min_radius_mm": 3.8376315308193467,
+      "lateral_extent_mm": 11.664200675657629,
+      "peak_strain_all": 0.1597077658028978,
+      "peak_strain_interior": 0.11752568986651357,
+      "peak_strain_collars": 0.07912051919877183,
+      "peak_strain_junction": 0.1597077658028978
+    },
+    "0.710000": {
+      "min_radius_mm": 3.808977174581183,
+      "lateral_extent_mm": 11.664201601347628,
+      "peak_strain_all": 0.16278122810947426,
+      "peak_strain_interior": 0.11908910872962353,
+      "peak_strain_collars": 0.08061161830073571,
+      "peak_strain_junction": 0.16278122810947426
+    },
+    "0.720000": {
+      "min_radius_mm": 3.7802456090899144,
+      "lateral_extent_mm": 11.664202535527629,
+      "peak_strain_all": 0.16583945848169734,
+      "peak_strain_interior": 0.1206415340089706,
+      "peak_strain_collars": 0.0820967166101314,
+      "peak_strain_junction": 0.16583945848169734
+    },
+    "0.730000": {
+      "min_radius_mm": 3.749925376408487,
+      "lateral_extent_mm": 11.664203477547627,
+      "peak_strain_all": 0.16888641041976404,
+      "peak_strain_interior": 0.12218105899217746,
+      "peak_strain_collars": 0.08357851108783665,
+      "peak_strain_junction": 0.16888641041976404
+    },
+    "0.740000": {
+      "min_radius_mm": 3.7191151016303152,
+      "lateral_extent_mm": 11.664204427997628,
+      "peak_strain_all": 0.1719174545834723,
+      "peak_strain_interior": 0.12370271696956125,
+      "peak_strain_collars": 0.08505600703971794,
+      "peak_strain_junction": 0.1719174545834723
+    },
+    "0.750000": {
+      "min_radius_mm": 3.689017490919374,
+      "lateral_extent_mm": 11.664205394597627,
+      "peak_strain_all": 0.17488879671682156,
+      "peak_strain_interior": 0.1252026391674459,
+      "peak_strain_collars": 0.08650430348446547,
+      "peak_strain_junction": 0.17488879671682156
+    },
+    "0.760000": {
+      "min_radius_mm": 3.6596735621142034,
+      "lateral_extent_mm": 11.664206376497628,
+      "peak_strain_all": 0.177807390158627,
+      "peak_strain_interior": 0.12667930561960228,
+      "peak_strain_collars": 0.08792652380042454,
+      "peak_strain_junction": 0.177807390158627
+    },
+    "0.770000": {
+      "min_radius_mm": 3.630676171712148,
+      "lateral_extent_mm": 11.664207371797627,
+      "peak_strain_all": 0.18068114594849893,
+      "peak_strain_interior": 0.12813990794790042,
+      "peak_strain_collars": 0.08932652233123806,
+      "peak_strain_junction": 0.18068114594849893
+    },
+    "0.780000": {
+      "min_radius_mm": 3.6030372725362825,
+      "lateral_extent_mm": 11.664208375497626,
+      "peak_strain_all": 0.18352658319060788,
+      "peak_strain_interior": 0.1296307724043393,
+      "peak_strain_collars": 0.09070693449632117,
+      "peak_strain_junction": 0.18352658319060788
+    },
+    "0.790000": {
+      "min_radius_mm": 3.5766737861003155,
+      "lateral_extent_mm": 11.664209383197626,
+      "peak_strain_all": 0.18637192753380227,
+      "peak_strain_interior": 0.13113278612976842,
+      "peak_strain_collars": 0.09208367467269185,
+      "peak_strain_junction": 0.18637192753380227
+    },
+    "0.800000": {
+      "min_radius_mm": 3.550742906313395,
+      "lateral_extent_mm": 11.664210398997628,
+      "peak_strain_all": 0.1891914234302161,
+      "peak_strain_interior": 0.13261910329877735,
+      "peak_strain_collars": 0.09344690213516893,
+      "peak_strain_junction": 0.1891914234302161
+    },
+    "0.810000": {
+      "min_radius_mm": 3.525073052249428,
+      "lateral_extent_mm": 11.664211423497626,
+      "peak_strain_all": 0.19197405274000845,
+      "peak_strain_interior": 0.1340906994389377,
+      "peak_strain_collars": 0.09479215161358767,
+      "peak_strain_junction": 0.19197405274000845
+    },
+    "0.820000": {
+      "min_radius_mm": 3.4997435397569916,
+      "lateral_extent_mm": 11.664212458497627,
+      "peak_strain_all": 0.19472858307470142,
+      "peak_strain_interior": 0.13555231563226888,
+      "peak_strain_collars": 0.09612414512800704,
+      "peak_strain_junction": 0.19472858307470142
+    },
+    "0.830000": {
+      "min_radius_mm": 3.473894293519913,
+      "lateral_extent_mm": 11.664213502597628,
+      "peak_strain_all": 0.1974546021651422,
+      "peak_strain_interior": 0.13701004344394985,
+      "peak_strain_collars": 0.09744187390425885,
+      "peak_strain_junction": 0.1974546021651422
+    },
+    "0.840000": {
+      "min_radius_mm": 3.4480026756298,
+      "lateral_extent_mm": 11.664214555697628,
+      "peak_strain_all": 0.20015010002579037,
+      "peak_strain_interior": 0.13845709840608977,
+      "peak_strain_collars": 0.09874520875539283,
+      "peak_strain_junction": 0.20015010002579037
+    },
+    "0.850000": {
+      "min_radius_mm": 3.4220728506711255,
+      "lateral_extent_mm": 11.664215617797627,
+      "peak_strain_all": 0.20280443486979727,
+      "peak_strain_interior": 0.13988668432558726,
+      "peak_strain_collars": 0.10002936373822968,
+      "peak_strain_junction": 0.20280443486979727
+    },
+    "0.860000": {
+      "min_radius_mm": 3.3958816293459906,
+      "lateral_extent_mm": 11.664216689597627,
+      "peak_strain_all": 0.2053999183188815,
+      "peak_strain_interior": 0.14129004326926875,
+      "peak_strain_collars": 0.10128654851931684,
+      "peak_strain_junction": 0.2053999183188815
+    },
+    "0.870000": {
+      "min_radius_mm": 3.3694903583403857,
+      "lateral_extent_mm": 11.664217772297627,
+      "peak_strain_all": 0.20794231748140013,
+      "peak_strain_interior": 0.14266993119643856,
+      "peak_strain_collars": 0.1025195788086588,
+      "peak_strain_junction": 0.20794231748140013
+    },
+    "0.880000": {
+      "min_radius_mm": 3.342448341564579,
+      "lateral_extent_mm": 11.664218867797626,
+      "peak_strain_all": 0.21041816965192361,
+      "peak_strain_interior": 0.14402436150678533,
+      "peak_strain_collars": 0.10372192241693767,
+      "peak_strain_junction": 0.21041816965192361
+    },
+    "0.890000": {
+      "min_radius_mm": 3.3142303466758944,
+      "lateral_extent_mm": 11.664219973897627,
+      "peak_strain_all": 0.21284253159188293,
+      "peak_strain_interior": 0.14535931268143165,
+      "peak_strain_collars": 0.1049016875844373,
+      "peak_strain_junction": 0.21284253159188293
+    },
+    "0.900000": {
+      "min_radius_mm": 3.2864766842423467,
+      "lateral_extent_mm": 11.664221093497627,
+      "peak_strain_all": 0.2152154497885077,
+      "peak_strain_interior": 0.14667635877791407,
+      "peak_strain_collars": 0.10605689885394143,
+      "peak_strain_junction": 0.2152154497885077
+    },
+    "0.910000": {
+      "min_radius_mm": 3.2591605102894237,
+      "lateral_extent_mm": 11.664222226197626,
+      "peak_strain_all": 0.21753406811155096,
+      "peak_strain_interior": 0.14797260262720946,
+      "peak_strain_collars": 0.1071865181544902,
+      "peak_strain_junction": 0.21753406811155096
+    },
+    "0.920000": {
+      "min_radius_mm": 3.232043391544822,
+      "lateral_extent_mm": 11.664223370697627,
+      "peak_strain_all": 0.21979573884904768,
+      "peak_strain_interior": 0.14924648516865635,
+      "peak_strain_collars": 0.10828930797385494,
+      "peak_strain_junction": 0.21979573884904768
+    },
+    "0.930000": {
+      "min_radius_mm": 3.203921902931261,
+      "lateral_extent_mm": 11.664224525497627,
+      "peak_strain_all": 0.2220087696772255,
+      "peak_strain_interior": 0.15050134372989832,
+      "peak_strain_collars": 0.10937033991812117,
+      "peak_strain_junction": 0.2220087696772255
+    },
+    "0.940000": {
+      "min_radius_mm": 3.175323239169746,
+      "lateral_extent_mm": 11.664225694097627,
+      "peak_strain_all": 0.22414503886014003,
+      "peak_strain_interior": 0.15173179361932165,
+      "peak_strain_collars": 0.11041420329375473,
+      "peak_strain_junction": 0.22414503886014003
+    },
+    "0.950000": {
+      "min_radius_mm": 3.147018387950228,
+      "lateral_extent_mm": 11.664226877297628,
+      "peak_strain_all": 0.22621067282862017,
+      "peak_strain_interior": 0.1529426700279124,
+      "peak_strain_collars": 0.11142452427074545,
+      "peak_strain_junction": 0.22621067282862017
+    },
+    "0.960000": {
+      "min_radius_mm": 3.1192336927675473,
+      "lateral_extent_mm": 11.664228077397627,
+      "peak_strain_all": 0.22818679941070763,
+      "peak_strain_interior": 0.15412985264703294,
+      "peak_strain_collars": 0.11239012699303452,
+      "peak_strain_junction": 0.22818679941070763
+    },
+    "0.970000": {
+      "min_radius_mm": 3.0918396667099213,
+      "lateral_extent_mm": 11.664229296097627,
+      "peak_strain_all": 0.2300783927640222,
+      "peak_strain_interior": 0.15530085207279543,
+      "peak_strain_collars": 0.11406216209694464,
+      "peak_strain_junction": 0.2300783927640222
+    },
+    "0.980000": {
+      "min_radius_mm": 3.0644117969175966,
+      "lateral_extent_mm": 11.664230538797629,
+      "peak_strain_all": 0.23187774699942398,
+      "peak_strain_interior": 0.1564606639977797,
+      "peak_strain_collars": 0.116004171556926,
+      "peak_strain_junction": 0.23187774699942398
+    },
+    "0.990000": {
+      "min_radius_mm": 3.039900600275753,
+      "lateral_extent_mm": 11.664231818997628,
+      "peak_strain_all": 0.23356192208765858,
+      "peak_strain_interior": 0.15761704150049205,
+      "peak_strain_collars": 0.11798881685721052,
+      "peak_strain_junction": 0.23356192208765858
+    },
+    "1.000000": {
+      "min_radius_mm": 3.023387321373095,
+      "lateral_extent_mm": 11.664233183497627,
+      "peak_strain_all": 0.23499812851074364,
+      "peak_strain_interior": 0.15879393363551952,
+      "peak_strain_collars": 0.12006683939237806,
+      "peak_strain_junction": 0.23499812851074364
+    }
+  },
+  "convergence_summary": "Converged in 100 increment(s) with 445 cutback(s)",
+  "run_directory": "/tmp/claude-0/-home-user-BARNES-UI/4940675b-2079-544a-8f4b-27cdd0df1243/scratchpad/a8col_arch/253f83223254",
+  "kind": "collared",
+  "n_turns": 2,
+  "sagitta": 2.75,
+  "height": 2.4,
+  "true_width": 1.2,
+  "geometry": {
+    "centreline_length_mm": 41.04655438139658,
+    "max_path_angle_deg": 55.034245297112946,
+    "min_true_width_mm": 1.2,
+    "mean_true_width_mm": 1.1999999999999997,
+    "lateral_extent_mm": 9.999999021330577,
+    "x_min_mm": -5.0,
+    "x_max_mm": 4.999999021330576,
+    "min_plan_radius_mm": 2.1517963422767026,
+    "spine_apex_top_z_mm": 8.677683979702909,
+    "spine_radius_mm": 39.60784090909091,
+    "volume_mm3": 118.21408606610225
+  }
+}
