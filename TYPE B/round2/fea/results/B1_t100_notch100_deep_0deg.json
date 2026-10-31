@@ -1,0 +1,110 @@
+{
+ "variant": "B1_t100_notch100",
+ "offset": "deep",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B1_hourglass",
+ "params": {
+  "throat": 1.0,
+  "notch_frac": 1.0
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 3.4,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -3.4,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -3.4,
+  0.8
+ ],
+ "element_size": 0.5,
+ "elements": 25826,
+ "nodes": 46695,
+ "contact_faces": null,
+ "info": {
+  "t": 1.0,
+  "w": 3.0,
+  "notch_len": 7.55,
+  "web_h": 8.907130750570548,
+  "k_over_E": 0.23106272682081952
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "guided": false,
+ "load": [
+  {
+   "hold_moment": 0.01672744,
+   "du_y": 0.002150452,
+   "du_z": -0.02461005,
+   "du_along": 0.02461005,
+   "T": 0.43124999999999414
+  },
+  {
+   "hold_moment": 0.0784479,
+   "du_y": 0.01042159,
+   "du_z": -0.1040579,
+   "du_along": 0.1040579,
+   "T": 1.8470999999999904
+  },
+  {
+   "hold_moment": 0.1752909,
+   "du_y": 0.02443141,
+   "du_z": -0.1986951,
+   "du_along": 0.1986951,
+   "T": 3.582450000000015
+  },
+  {
+   "hold_moment": 1.724554,
+   "du_y": 0.3062611,
+   "du_z": -0.4948705,
+   "du_along": 0.4948705,
+   "T": 9.16365
+  }
+ ],
+ "load_completed_fraction": 0.061091000000000006,
+ "frames": [
+  {
+   "T": 0.43124999999999414,
+   "strain_max": 0.003821677134977275,
+   "strain_p99": 0.003443091016100871,
+   "strain_min": -0.006954724614713137
+  },
+  {
+   "T": 1.8471679499999838,
+   "strain_max": 0.016361527968908662,
+   "strain_p99": 0.014781711558171753,
+   "strain_min": -0.029312790460338523
+  },
+  {
+   "T": 3.5824585499999895,
+   "strain_max": 0.03170203404379346,
+   "strain_p99": 0.02878439327240043,
+   "strain_min": -0.05574768767913407
+  },
+  {
+   "T": 9.16365,
+   "strain_max": 0.10749268351876617,
+   "strain_p99": 0.09700253040108449,
+   "strain_min": -0.15936041366798281
+  }
+ ],
+ "ccx_tail": "rial and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n no convergence\n\n iteration 4\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
+ "stopped": null,
+ "wall_s": 349.6,
+ "capacity_T": 9.16365,
+ "limited_by": "limit point: no equilibrium beyond this tension (buckling/collapse)",
+ "axial_k0": 17.672226527660847,
+ "peak_strain_at_cap": 0.10749268351876617
+}
