@@ -1,0 +1,123 @@
+{
+ "variant": "B5_t150_a45",
+ "offset": "deep",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B5_crossed_strip",
+ "params": {
+  "t": 1.5,
+  "angle": 45
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 3.4,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -3.4,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -3.4,
+  0.8
+ ],
+ "element_size": 0.75,
+ "elements": 8790,
+ "nodes": 16765,
+ "contact_faces": null,
+ "info": {
+  "t": 1.5,
+  "w": 1.95,
+  "angle": 45,
+  "strip_len": 8.172061112207574,
+  "k_over_E": 0.26844512906577955
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "guided": false,
+ "load": [
+  {
+   "hold_moment": 0.01638366,
+   "du_y": 0.001457568,
+   "du_z": -0.02688629,
+   "du_along": 0.02688629,
+   "T": 0.43124999999999414
+  },
+  {
+   "hold_moment": 0.1024693,
+   "du_y": 0.008620575,
+   "du_z": -0.1537815,
+   "du_along": 0.1537815,
+   "T": 2.4878999999999984
+  },
+  {
+   "hold_moment": 0.3520004,
+   "du_y": 0.02588798,
+   "du_z": -0.4344713,
+   "du_along": 0.4344713,
+   "T": 7.144349999999989
+  },
+  {
+   "hold_moment": 0.4922284,
+   "du_y": 0.03386697,
+   "du_z": -0.5590695,
+   "du_along": 0.5590695,
+   "T": 9.241949999999989
+  },
+  {
+   "hold_moment": 0.6911438,
+   "du_y": 0.04339147,
+   "du_z": -0.7118652,
+   "du_along": 0.7118652,
+   "T": 11.81279999999999
+  }
+ ],
+ "load_completed_fraction": 0.07875199999999993,
+ "frames": [
+  {
+   "T": 0.43124999999999414,
+   "strain_max": 0.003185532003009861,
+   "strain_p99": 0.002849443824742187,
+   "strain_min": -0.0050490882973409645
+  },
+  {
+   "T": 2.487890550000016,
+   "strain_max": 0.01812834744324321,
+   "strain_p99": 0.016282021840657926,
+   "strain_min": -0.028524460038660382
+  },
+  {
+   "T": 7.144335899999987,
+   "strain_max": 0.04993493727390308,
+   "strain_p99": 0.04616966632992997,
+   "strain_min": -0.07831959271644418
+  },
+  {
+   "T": 9.241992150000012,
+   "strain_max": 0.06399519188018932,
+   "strain_p99": 0.05897939203971433,
+   "strain_min": -0.10015956802248316
+  },
+  {
+   "T": 11.812792950000006,
+   "strain_max": 0.08230860631308512,
+   "strain_p99": 0.07485510126617476,
+   "strain_min": -0.12923757841536565
+  }
+ ],
+ "ccx_tail": "rial and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n no convergence\n\n iteration 7\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
+ "stopped": null,
+ "wall_s": 46.5,
+ "capacity_T": 11.81279999999999,
+ "limited_by": "limit point: no equilibrium beyond this tension (buckling/collapse)",
+ "axial_k0": 16.123620497095132,
+ "peak_strain_at_cap": 0.08230860631308512
+}
