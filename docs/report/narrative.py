@@ -11,7 +11,7 @@ import csv
 import json
 
 #: Round-2 bars, in TEST_PLAN shortlist order
-ROUND2_ORDER = ["B1_t200_notch050", "B3_t200_w30", "B5_t200_a45_deep", "B5_t150_a45",
+ROUND2_ORDER = ["B1_t200_notch050", "B1_t100_notch100", "B3_t200_w30", "B5_t200_a45_deep", "B5_t150_a45",
                 "B4_t100_a60_deep", "B8_y00_r150", "B8_y20_r125", "B9_n150"]
 #: round-1 variants shown on the return-gate bracket figure
 RETURN_GATE_NAMES = ["B5_t150_a45", "B5_t150_a60", "B5_t125_a45", "B3_t150_w30", "B3_t200_w20",
@@ -34,6 +34,8 @@ SHORTLIST = [
     (11, "B9_n150_deep", "B9_n150", "deep"),
     ("+", "B5_t150_a45 (round-1 winner)", "B5_t150_a45", "as-built"),
     ("+", "B5_t150_a45_deep", "B5_t150_a45_deep", "deep"),
+    ("+", "B1_t100_notch100 (B1 round-1 winner)", "B1_t100_notch100", "as-built"),
+    ("+", "B1_t100_notch100_deep", "B1_t100_notch100_deep", "deep"),
 ]
 HOOK_MM = 44.8
 TENDON_D = {"as-built": 1.93, "deep": 3.40}
@@ -100,7 +102,7 @@ def story(c):
 
     # ---------------------------------------------------------------- Type A
     s += [c["PageBreak"](), P("3. Type A: the spring beside the pin", "h1"), P(TYPE_A_INTRO)]
-    s += [P("3.1 A3 twin strap (the current part)", "h2")] + B(A3_POINTS)
+    s += [P("3.1 A3 twin strap (the current part)", "h2")] + models(c, ["A3_twin_strap"]) + B(A3_POINTS)
     hv = {(r["design"], r["quantity"]): r for r in csv.DictReader(open(REPO / "results/sunlu_rescale/headline_values.csv"))}
     a3 = hv[("A3 twin strap 1.0 mm", "rotational stiffness at neutral (FEA)")]
     s += [T([["A3 result", "Value", f"at {lo} / 12 / {hi} MPa"],
@@ -116,7 +118,7 @@ def story(c):
            "A3 parameter sweep: how far each curvature × thickness variant flexes before it snaps, "
            "touches the joint or over-stretches (results/a3_parameter_sweep).", max_h=78 * mm)
 
-    s += [P("3.2 A6 sliding-end leaf", "h2")] + B(A6_POINTS)
+    s += [P("3.2 A6 sliding-end leaf", "h2")] + models(c, ["A6_R28_t1.4", "A6_R32_t1.8"]) + B(A6_POINTS)
     a6a = hv[("A6 R32 / 1.8 / 6", "worst-case torque at 105 deg")]
     a6b = hv[("A6 R28 / 1.4 / 6", "worst-case torque at 105 deg")]
     s += [T([["A6 design", "Peak strain (worst axis)", "Closest to axis", "Head reaches stop", f"Torque at 105°, {lo} / 12 / {hi} MPa"],
@@ -128,7 +130,7 @@ def story(c):
     s += F(REPO / "results/a6/parameter_sweep.png", "A6 curvature × thickness sweep at 6 mm width "
            "(results/a6). Stars mark the optimum; hatched cells fail.", max_h=78 * mm)
 
-    s += [P("3.3 A8 meander strip", "h2")] + B(A8_POINTS)
+    s += [P("3.3 A8 meander strip", "h2")] + models(c, ["A8_original_export", "A8_strip_s2.75"]) + B(A8_POINTS)
     t = {a: hv[("A8 2-turn printable s2.75", f"restoring torque at {a} deg")] for a in ("30", "60", "90")}
     s += [T([["A8 selected strip: 2 turns, 1.2 × 2.4 mm, sagitta 2.75 mm", f"{lo} MPa", "12 MPa", f"{hi} MPa (as run)"]] +
             [[f"Restoring torque at {a}°", f"{float(r['at_low']):.2f} N·mm", f"{float(r['at_work']):.2f} N·mm",
@@ -147,7 +149,9 @@ def story(c):
     s += [P("3.4 Type A tendon routing", "h2")] + B(TYPE_A_TENDON)
 
     # ---------------------------------------------------------------- Type B
+    s += [P("The A8 strip with collars (new in this round)", "h2")] + models(c, ["A8_collared_s2.75"]) + B(collared_points(c))
     s += [c["PageBreak"](), P("4. Type B round 1: the TPU joint as a spring", "h1"), P(R1_INTRO)]
+    s += models(c, ["B5_t150_a45", "B3_t150_w30", "B6_n4_t150_taper15", "B1_t100_notch100", "B_T090_X3"], per_row=3)
     rows = [["Family", "Variant", "Range (°)", "Limited by", "Strain @60°", "Tendon force (N)",
              f"Return margin, {lo}/12/{hi} MPa", "Twist (°)"]]
     for fam, names in R1_TABLE:
@@ -172,9 +176,10 @@ def story(c):
 
     # ---------------------------------------------------------------- round 2
     s += [c["PageBreak"](), P("5. Type B round 2: carrying the tendon's compression", "h1"), P(R2_INTRO)]
+    s += models(c, ["B5_t200_a45_deep", "B4_t100_a60_deep", "B8_y00_r150", "B8_y20_r125_deep", "B9_n150", "B1_t200_notch050"], per_row=3)
     s += [P("Method", "h2")] + B(R2_METHOD)
     s += [P("Results", "h2")]
-    rows = [["#", "TEST_PLAN row", "FEA run", "Capacity @0° (N)", "Capacity @60° (N)", "Limited by (0°)",
+    rows = [["#", "TEST_PLAN row", "FEA run", "Capacity @0° (N)", "Capacity @60° or as noted (N)", "Limited by (0°)",
              "Hand est. (N)", f"Fingertip force @0°, {lo}/12/{hi} MPa (N)"]]
     for num, label, run, dkey in SHORTLIST:
         rr = r2.get(run, {})
@@ -195,9 +200,17 @@ def story(c):
         else:
             c0s = f1(c0)
         c60r = rr.get(60.0) or {}
+        if not c60r:
+            # B1 runs: the second pose is inside their range (30 or 15 deg), not 60
+            other = [a for a in rr if a not in (0.0, 60.0)]
+            if other:
+                c60r = rr[max(other)]
+                c60 = c60r.get("capacity_T")
         c60s = ("≥ " + f1(c60)) if c60r.get("guided") and c60 is not None and "lower bound" in c60r.get("limited_by", "") else f1(c60)
         if c60r and str(c60r.get("limited_by", "")).startswith("already"):
             c60s = "0 (over 20 % from the bend)"
+        if c60r and c60r.get("angle") not in (None, 60.0) and c60 is not None:
+            c60s = f"{f1(c60)} at {c60r['angle']:g}°"
         rows.append([str(num), label, run, c0s, c60s, why, p.get("compression_capacity_N", "–") or "–",
                      "–" if hf is None else ("≥ " if c0s.startswith("≥") else "")
                      + f"{hf * lo / 12:.2f} / {hf:.2f} / {hf * hi / 12:.2f}"])
@@ -222,7 +235,12 @@ def story(c):
             widths=[40 * mm, 70 * mm, W - 110 * mm])]
 
     # ---------------------------------------------------------------- links
-    s += [c["PageBreak"](), P("8. Files to print — links", "h1"), P(LINKS_INTRO)]
+    s += [c["PageBreak"](), P("8. How to print each part", "h1"), P(PRINT_GENERAL)]
+    s += B(PRINT_RULES)
+    s += [T([["Part", "Material, qty", "Orientation on the bed", "Supports", "Watch for / check after"]] + PRINT_SPECS,
+            widths=[30 * mm, 22 * mm, 44 * mm, 28 * mm, W - 124 * mm])]
+    s += models(c, ["test_rig"])
+    s += [c["PageBreak"](), P("9. Files to print — links", "h1"), P(LINKS_INTRO)]
     for head, items in PRINT_LINKS:
         rows = [["Part", "Print", "Files"]]
         for part, how, files in items:
@@ -235,6 +253,62 @@ def story(c):
 
 
 BRANCH_LABEL = "claude/modest-cray-kbb75b"
+
+
+def models(c, names, per_row=2):
+    """Rendered models in a row (or rows) of images, from docs/report/figures/models."""
+    from reportlab.platypus import Image, Table, TableStyle
+    from reportlab.lib.utils import ImageReader
+    base = c["REPO"] / "docs/report/figures/models"
+    w = c["W"] / per_row
+    cells = []
+    for n in names:
+        p = base / f"{n}.png"
+        if not p.exists():
+            continue
+        iw, ih = ImageReader(str(p)).getSize()
+        cells.append(Image(str(p), width=w - 4, height=(w - 4) * ih / iw))
+    if not cells:
+        return []
+    rows = [cells[i:i + per_row] for i in range(0, len(cells), per_row)]
+    rows[-1] += [""] * (per_row - len(rows[-1]))
+    t = Table(rows, colWidths=[w] * per_row)
+    t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 1),
+                           ("RIGHTPADDING", (0, 0), (-1, -1), 1)]))
+    return [t]
+
+
+def collared_points(c):
+    """Results of the collared A8 runs (results/a8_collared/cases)."""
+    cases = sorted((c["REPO"] / "results/a8_collared/cases").glob("collared_*.json"))
+    base = json.loads((c["REPO"] / "results/a8_index_pip_printable/cases/print_2T_w1.2_h2.4_s2.75.json").read_text())
+    out = [COLLARED_INTRO]
+    done = False
+    for p in cases:
+        r = json.loads(p.read_text())
+        if "failure" in r:
+            out.append(f"<b>{r['label']}</b>: did not complete ({r['failure']}).")
+            continue
+        done = True
+        t90 = (r.get("torque_n_mm") or {}).get("90")
+        j90 = (r.get("peak_strain_junction") or {}).get("90")
+        c90 = (r.get("peak_strain_collars") or {}).get("90")
+        i90 = (r.get("peak_strain_interior") or {}).get("90")
+        line = (f"<b>Sagitta {r['sagitta']:.2f} mm, with collars</b> (reached {r.get('reached_deg', 0):.0f}°): "
+                f"torque at 90° {t90:.2f} N·mm at 19.3 MPa" if t90 is not None else
+                f"<b>Sagitta {r['sagitta']:.2f} mm, with collars</b>: reached {r.get('reached_deg', 0):.0f}°")
+        if i90 is not None:
+            line += (f"; peak strain at 90° {100 * i90:.1f} % in the strip, "
+                     f"{100 * j90:.1f} % at the strip–collar junction, {100 * c90:.1f} % in the collars")
+        if abs(r["sagitta"] - 2.75) < 1e-6 and t90 is not None:
+            line += (f". Without collars (rigid ends) the same strip gave {base['torque_n_mm']['90']:.2f} N·mm, "
+                     f"{100 * base['peak_strain_interior']['90']:.1f} % in the strip and "
+                     f"{100 * base['peak_strain_all']['90']:.1f} % at its rigidly held ends.")
+        out.append(line)
+    if not done:
+        out.append("The collared runs are still solving; the numbers fill in when this report is rebuilt.")
+    out.append(COLLARED_HOLD_NOTE)
+    return out
 
 
 def a8_convergence_text(c):
@@ -286,10 +360,10 @@ PRINT_SUMMARY_ROWS = [
     ["0", "Specimens + rig", "Tensile 1BA (1.0, 2.0 mm), edge strips, Ø10 compression cylinder; test rig",
      "SUNLU publishes no modulus. Every torque, force and return margin here scales with it; "
      "the specimens turn the 5.3–19.3 MPa bracket into one number."],
-    ["1", "Type A spring", "A8 2-turn strip, 1.2 × 2.4 mm, sagitta 2.75 mm (×2)",
+    ["1", "Type A spring", "A8 2-turn strip, 1.2 × 2.4 mm, sagitta 2.75 mm, with the A3 fit-check collars fused on (×2)",
      "Strongest Type A spring inside the 20 % strain limit on the real index PIP (3.24 N·mm at "
      "90° at 19.3 MPa); smooth to 100°; mesh-converged (0.45 %)."],
-    ["1", "Type A spring", "A8 same, sagitta 3.00 mm (×1)",
+    ["1", "Type A spring", "A8 same with collars, sagitta 3.00 mm (×1)",
      "Fallback if the print stands proud: 0.60 mm clearance instead of 0.39 mm, −3 % torque."],
     ["1", "Type A spring", "A6 sliding leaf R28 / 1.4 / 6 mm (×2)",
      "The only Type A layout that removes the A3's stretch problem by construction; 3.2 points "
@@ -576,6 +650,7 @@ LINKS_INTRO = (
     "off nominal.")
 _A8M = "results/a8_index_pip_printable/model/"
 _A6 = "A6 designs/"
+_A8C = "results/a8_collared/"
 _RIG = "TYPE B/round2/test_rig/"
 PRINT_LINKS_COMMON = [
     ("Batch 0 — measure the material first (TPU, same spool as everything else)", [
@@ -602,13 +677,16 @@ PRINT_LINKS_COMMON = [
 ]
 PRINT_LINKS_TYPE_A = [
     ("Type A springs for the existing hand (index PIP)", [
-        ("A8 2-turn strip, sagitta 2.75 mm (selected)", "TPU ×2; fillet the collar junction",
+        ("A8 2-turn strip with A3 fit-check collars, sagitta 2.75 mm (selected)", "TPU ×2, one piece",
+         [_A8C + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_collared_study_frame.stl",
+          _A8C + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_collared_study_frame.step",
+          _A8C + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_collared_Assem3_frame.step"]),
+        ("A8 with collars, sagitta 3.00 mm (fallback if prints come out proud)", "TPU ×1, one piece",
+         [_A8C + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_collared_study_frame.stl",
+          _A8C + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_collared_study_frame.step"]),
+        ("A8 strip alone, s2.75 / s3.00 (if you attach it your own way)", "TPU",
          [_A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_IndexPP_frame.stl",
-          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_IndexPP_frame.step",
-          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s2.75_Assem3_frame.step"]),
-        ("A8 2-turn strip, sagitta 3.00 mm (fallback if prints come out proud)", "TPU ×1",
-         [_A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_IndexPP_frame.stl",
-          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_IndexPP_frame.step"]),
+          _A8M + "A8_PIP_2turn_printable_w1.2_h2.4_s3.00_IndexPP_frame.stl"]),
         ("A6 sliding leaf R28 / 1.4 / 6 mm (print first: strain margin)", "TPU, both bodies printed in place (0.25 mm sliding clearance), ×2",
          [_A6 + "A6_PIP_SlidingLeaf_R28_t1.4_w6.STL", _A6 + "A6_PIP_SlidingLeaf_R28_t1.4_w6.STEP"]),
         ("A6 sliding leaf R32 / 1.8 / 6 mm (sweep optimum, at the strain limit)", "TPU, both bodies in place, ×1",
@@ -660,3 +738,62 @@ PRINT_LINKS_TYPE_B = [
     ]),
 ]
 PRINT_LINKS = PRINT_LINKS_COMMON + PRINT_LINKS_TYPE_A + PRINT_LINKS_TYPE_B
+
+
+COLLARED_INTRO = (
+    "Both A8 analyses held the strip's ends rigidly and left the collars out: Part 1 kept only the "
+    "strip from your exports (whose rings were sized for a finger inferred from the exports), and "
+    "the printable strip was exported as the strip alone. For this round the printable strip was "
+    "fused to the collars of the A3 0.8 mm fit-check strap, which were designed for the real "
+    "Index_PP and Index_MP, at exactly the positions where the A3 straps leave them "
+    "(scripts/a8_collared_geometry.py). Because the strip's ends stop where the collars stop and "
+    "float 0.05–0.4 mm above them, each end was given a foot running back along the collar's top and "
+    "into its wall. The result is one 313 mm³ TPU part, then re-run in the A8 contact FEA with the "
+    "collars as TPU instead of rigid ends.")
+COLLARED_HOLD_NOTE = (
+    "How the collars are held in this FEA: on every collar face that faces its phalanx. The A3 "
+    "collars' inner faces sit 0.36–1.0 mm off the bone in the CAD rather than on it, so this "
+    "represents a collar gripped on the phalanx (snug, or bonded), flexible everywhere else. If the "
+    "printed collars are a loose fit, the joint between collar and bone will be softer still.")
+PRINT_GENERAL = (
+    "General rules first, then the part-by-part specification. These follow TEST_PLAN.md §2 and "
+    "common practice for a soft (90A) TPU; they are not results of this project's analyses, except "
+    "where a part's geometry (a gap, a thin wall) is quoted.")
+PRINT_RULES = [
+    "<b>Dry the TPU</b> before printing (about 50 °C for 4–6 h, or per the spool) and keep it in a "
+    "dry box while printing. Wet TPU strings, foams and prints softer.",
+    "<b>Slow and steady:</b> about 15–30 mm/s, minimal or no retraction; direct drive is easier with "
+    "90A. Use the nozzle and bed temperatures on the spool (SUNLU's sheet could not be read here). "
+    "A glue-stick release layer helps on PEI or glass, which TPU can bond to strongly.",
+    "<b>100 % infill, 0.4 mm line width, 0.2 mm layers</b>, and the same settings, spool and session "
+    "for every part of a batch, including the tensile specimens.",
+    "<b>Orientation:</b> a print is weakest between layers, and a flexure's strain runs along its "
+    "leaf. So lay leaves, strips and necks <b>lengthwise in the XY plane</b>, so their thickness is "
+    "set by perimeters (accurate) rather than by layer count (in 0.2 mm steps). Stiffness goes as "
+    "thickness cubed: +0.1 mm on a 1.0 mm leaf is +33 %.",
+    "<b>Check every part:</b> calipers on every leaf, strip or neck at three points; feeler gauge "
+    "through every printed-in-place gap; weigh each part. Reject anything beyond ±10 % of nominal.",
+]
+PRINT_SPECS = [
+    ["Tensile 1BA, 1.0 / 2.0 mm", "TPU, 3 each", "Flat on the bed", "None",
+     "Same session as the joints. Pull at constant speed; record force–extension to at least the strain the parts see (20 %)."],
+    ["Tensile strip on edge, 1.0 / 2.0 mm", "TPU, 3 each", "Standing on its long edge, 6 mm tall (laid down as a leaf is)", "None; brim if it wobbles",
+     "Thin tall wall: slow down. Compare its modulus with the flat 1BA to see the effect of print direction."],
+    ["Compression cylinder Ø10 × 10", "TPU, 3", "On a flat end", "None", "—"],
+    ["A8 strip with collars, s2.75 (and s3.00)", "TPU, 2 (+1)", "Collars' open (palmar) side up or on their side so the strip's 1.2 mm width lies in XY; the strip arches over the joint",
+     "Under the arch and the collar overhangs; easy-peel interface",
+     "Strip width is exactly 3 lines: check 1.2 mm ±0.1. Check it clips onto Index_PP / Index_MP; the collar–foot junction is the likely crack point."],
+    ["A6 R28 / 1.4 and R32 / 1.8", "TPU, 2 + 1", "On its side, leaf curve in the XY plane",
+     "Under the guide only", "Two bodies printed in place with 0.25 mm sliding clearance: free the slider after printing; a fused slider is a reject. Leaf thickness 1.4 / 1.8 mm ±10 %."],
+    ["Type B modules (B5, B3)", "TPU, per list", "On its side, lateral axis vertical, so every leaf or strip lies in XY",
+     "Under the bridging upper lanes only; support blockers elsewhere",
+     "Leaf/strip thickness at 3 points (1.5 or 2.0 mm). Never print standing on a tab end."],
+    ["B4 rolling contact (deep)", "TPU, 1", "On its side, as above; lobe profiles then lie in XY", "Under the lanes only",
+     "0.3 mm lobe gap must be open: 0.25 mm feeler gauge. Elephant's foot can close it near the bed."],
+    ["B8 knuckle-in-cup", "TPU, 1 each", "On its side; knuckle and cup circles lie in XY", "Under the lanes only",
+     "0.3 mm gap as for B4. Return leaves are 0.75 mm (PIP), 0.61 mm (DIP): under two line widths, so the slicer may thin or single-wall them; measure."],
+    ["Type B phalanges (as built / deep)", "PLA, 1 set per module", "Standard", "As needed",
+     "3+ perimeters. Deep-tendon modules need the deep phalanges: their tendon groove is closed by the PLA socket wall."],
+    ["Rig base, load adapter, pulley", "PLA, 1 each", "Rig base on its side plate", "As needed",
+     "4 perimeters on the base (the protractor stands vertical); brim if it wobbles. Pulley on a 623ZZ bearing and M3 bolt."],
+]
