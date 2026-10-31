@@ -79,5 +79,14 @@ B_T100_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0954
 B_T100_X3,tendon force at end of range,N,12.0,1.7177,0.7587,1.7177,2.7627,
 B_T120_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,19.5662,8.6417,19.5662,31.469,passes when >= 1
 B_T120_X3,tendon force at end of range,N,12.0,2.6425,1.1671,2.6425,4.25,
+B1_t200_notch050,tendon capacity at 0 deg,N,12.0,24.8859,10.9913,24.8859,40.0248,peak strain reached 20 %
+B1_t200_notch050,tendon capacity at 60 deg,N,12.0,0.0,0.0,0.0,0.0,"already 68 % strain from bending to the pose, before any tendon load"
 B3_t200_w30,tendon capacity at 0 deg,N,12.0,9.981,4.4083,9.981,16.0528,axial stiffness fell below 10 % of its initial value
 B3_t200_w30,tendon capacity at 30 deg,N,12.0,10.1172,4.4684,10.1172,16.2718,axial stiffness fell below 10 % of its initial value
+B3_t200_w30,tendon capacity at 60 deg,N,12.0,8.5921,3.7949,8.5921,13.819,peak strain reached 20 %
+B5_t200_a45_deep,tendon capacity at 0 deg,N,12.0,30.2371,13.3547,30.2371,48.6313,peak strain reached 20 %
+B5_t200_a45_deep,tendon capacity at 60 deg,N,12.0,10.2551,4.5293,10.2551,16.4936,peak strain reached 20 %
+B8_y00_r150,tendon capacity at 0 deg,N,12.0,5.8207,2.5708,5.8207,9.3616,solver stopped (guided) before the bearing gave way: a lower bound
+B8_y20_r125,tendon capacity at 0 deg,N,12.0,4.86,2.1465,4.86,7.8165,solver stopped (guided) before the bearing gave way: a lower bound
+B9_n150,tendon capacity at 0 deg,N,12.0,12.6866,5.6032,12.6866,20.4043,peak strain reached 20 %
+B9_n150,tendon capacity at 60 deg,N,12.0,0.0,0.0,0.0,0.0,"already 37 % strain from bending to the pose, before any tendon load"
