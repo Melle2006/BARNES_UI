@@ -428,7 +428,9 @@ R1_GAP = (
     "right test of a spring and the wrong test of a joint that has to carry a tendon. At the "
     "MCP none of the winners passes the return gate at 12 MPa (0.38–0.63×), so the MCP needs "
     "the thicker grading of REPORT.md §5.2 whatever else is chosen. At the DIP all pass "
-    "(3.5–4.0×). The tendon-routing study (docs/11) then estimated, by Euler buckling, that "
+    "the return gate (3.5–4.0×), and the B3, B5 and B6 winners reach the full 80°; the B1 "
+    "winner, checked at the DIP in the last round-1 commit, is strain-limited at 52.7°, the "
+    "same throat problem it has at the PIP (46°) and MCP (50.5°). The tendon-routing study (docs/11) then estimated, by Euler buckling, that "
     "every round-1 leaf buckles at a fraction of the servo's tension, which is why round 2 "
     "exists and why section 5 measures that compression directly.")
 R2_INTRO = (
