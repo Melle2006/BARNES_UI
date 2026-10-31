@@ -298,10 +298,13 @@ PRINT_SUMMARY_ROWS = [
      "Highest tendon capacity of any Type B joint in the FEA (30 N at 0°), and the only one "
      "above 2 N at the fingertip at 12 MPa."],
     ["1", "Type B joint", "B5 crossed strip t1.5 / 45°, as built (×2)",
-     "Round-1 winner: longest range (77.8°), least twist (4.8°). Brackets B5 against the t2.0 "
-     "deep variant: range against compression capacity."],
+     "Round-1 winner: longest range (77.8°), least twist (4.8°), but buckles at 17 N of tendon "
+     "tension. Brackets B5 against the t2.0 deep variant: range against compression capacity."],
+    ["2", "Type B joint", "B4 rolling contact t1.0 / 60°, deep tendon (×1)",
+     "Best bearing result: at least 11 N at only 12 % strain when the contact solution stopped. "
+     "Its lever falls as it rolls, which only a print can weigh against the capacity."],
     ["2", "Type B joint", "B8 knuckle-in-cup, y20 r1.25 deep (×1) and y00 r1.5 (×1)",
-     "Tests the bearing idea. The FEA confirms the seated knuckle carries load at low strain "
+     "Tests the pad bearing. The FEA confirms the seated knuckle carries load at low strain "
      "but cannot follow the sideways snap before it seats; only a print shows whether the cup "
      "self-centres."],
     ["3", "Type B control", "B3 dual leaf t1.5 / w3.0, as built (×1)",
@@ -455,7 +458,9 @@ R2_FINDINGS_STATIC = [
     "needs a quarter of the load.",
     "<b>B5 crossed strip with the deep tendon is the strongest Type B joint:</b> 30 N at 0° "
     "(estimate 34 N) and 10 N at 60°, both limited by strain rather than buckling. Crossing "
-    "the strips braces the joint against the sideways sway that defeats parallel leaves.",
+    "the strips braces the joint against the sideways sway that defeats parallel leaves. "
+    "The thinner round-1 winner, B5_t150_a45, buckles at 17 N at 0° and reaches 20 % strain "
+    "at 6.4 N at 60°: thickness buys compression capacity and costs range.",
     "<b>Bending uses up the strain budget.</b> At 60° B1_t200_notch050 is already at 68 % strain "
     "and B9_n150 at 37 % from the bend alone, before any tendon load, so neither can be a "
     "finger joint over that range. B5 and B3 lose about two thirds of their capacity between 0° "
@@ -465,7 +470,13 @@ R2_FINDINGS_STATIC = [
     "the joint snaps across its 0.3 mm gap before the knuckle seats. Driven along the tendon "
     "line instead (guided), the seated knuckle carried at least 5.8 N (y00, 16 % strain) and "
     "4.9 N (y20, 6 % strain) before CalculiX's contact iterations diverged. These are lower "
-    "bounds. Whether a real cup self-centres through the snap is the question its print answers.",
+    "bounds. At 60° neither B8 nor B4 could be resolved: the contact solution diverged during "
+    "the bend (B8_y20) or on the first load increment (B8_y00, B4). Whether a real cup "
+    "self-centres through the snap is the question its print answers.",
+    "<b>B4 rolling contact (deep) is the most promising bearing:</b> guided, it carried at least "
+    "11.1 N at 12 % strain at 0° (estimate 19 N) when the contact solution stopped, well "
+    "short of its strain limit. Its catch is kinematic, not structural: the rolling contact "
+    "moves palmar, so the tendon lever falls from 3.40 mm to about 1.4 mm by 60°.",
     "<b>Even the best Type B joint holds less at the fingertip than Type A.</b> B5 t2.0 deep "
     "converts 30 N of tension into about 2.3 N at the 44.8 mm hook at 12 MPa (1.0–3.7 N "
     "across the modulus bracket), against 3.0–6.2 N for the pinned Type A finger, whose limit "
@@ -505,8 +516,12 @@ RATIONALE = [
         "fingertip force (3.40 mm against 1.93 mm lever), and it costs nothing in the flexure. "
         "It does need the deep-offset phalanges.",
     ]),
-    ("Why B8 is printed although its FEA is incomplete", [
-        "B8 is the only round-2 design whose failure mode the FEA could not reach: the seated "
+    ("Why B4 and B8 are printed although their FEA is incomplete", [
+        "B4 deep is printed for the same reason as B8 below, and with better numbers: it carried "
+        "at least 11.1 N at 12 % strain at 0° before the contact solution stopped. The question "
+        "its print answers is whether the falling lever (3.40 → about 1.4 mm by 60°) leaves "
+        "enough fingertip force through the range.",
+        "B8 is the other round-2 design whose failure mode the FEA could not reach: the seated "
         "knuckle was still at 6–16 % strain when the contact solution diverged, so its capacity "
         "is a lower bound, not a limit. The open question is mechanical rather than numerical: "
         "does the cup catch and centre the knuckle when the thin leaves sway? One print of each "
@@ -525,8 +540,9 @@ RATIONALE = [
         "shortlisted for round 2.",
         "<b>Lattice:</b> 20 % strain by 10–20° in every variant run; the missing variants change "
         "cell count, not strut slenderness. Skipped by agreement.",
-        "<b>B4 rolling contact:</b> see the round-2 table. As built its tendon lever falls to "
-        "0.9 mm by 60° because the contact moves palmar; the deep copy was the shortlisted one.",
+        "<b>B4 as built and the other deep copies:</b> as built, B4's tendon lever falls to 0.9 mm "
+        "by 60° because the contact moves palmar, so only the deep copy is printed. Deep copies of "
+        "B1, B3, B6, B9 and the lattice inherit their flexure's limits above.",
     ]),
 ]
 UNKNOWNS = [
@@ -629,6 +645,8 @@ PRINT_LINKS_TYPE_B = [
                 "TPU ×2 (PIP); with the deep phalanges"),
         _module("TYPE B/B5_crossed_strip/B5_t150_a45", "B5 crossed strip t1.5 / 45°, as built",
                 "TPU ×2 (PIP); with the as-built phalanges"),
+        _module("TYPE B/round2/deep_offset/B4_t100_a60_deep", "B4 rolling contact t1.0 / 60°, deep tendon",
+                "TPU ×1 (PIP); check the 0.3 mm lobe gap is open"),
         _module("TYPE B/round2/deep_offset/B8_y20_r125_deep", "B8 knuckle 2 mm dorsal, r1.25, deep tendon",
                 "TPU ×1 (PIP); check the 0.3 mm gap is open"),
         _module("TYPE B/round2/B8_y00_r150", "B8 knuckle central, r1.5, as built",
