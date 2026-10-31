@@ -405,10 +405,11 @@ thicknesses (MCP ×1.27, DIP ×0.82):
 | B5 `t150_a45` | 82.2° | strain 20 % | 13.9 % | **0.6×** | 80° (full) | 12.5 % | 3.5× |
 | B3 `t150_w30` | 88.0° | collars touch | 11.9 % | **0.4×** | 80° (full) | 10.8 % | 4.0× |
 | B6 `n4_t150_taper15` | 77.7° | strain 20 % | 15.2 % | **0.4×** | 80° (full) | 13.7 % | 3.5× |
-| B1 `t100_notch100` | 50.5° | strain 20 % | 24.2 % | **0.4×** | see `results/tables_DIP.md` | | |
+| B1 `t100_notch100` | 50.5° | strain 20 % | 24.2 % | **0.4×** | 52.7° (strain 20 %) | 23.1 % | 3.7× |
 
-**DIP.** Every winner reaches the full 80° with low strain, and returns
-with a 3.5–4× margin.
+**DIP.** The B3, B5 and B6 winners reach the full 80° with low strain,
+and return with a 3.5–4× margin. The B1 hourglass is strain-limited at
+52.7°, the same throat-strain problem it shows at the PIP and MCP.
 
 **MCP: the gap.** At the MCP the flexure has to hold the whole finger
 (3.7 N·mm), and every winner gives only 0.4–0.6× of that. Two ways to fix

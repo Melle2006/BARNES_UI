@@ -1,3 +1,11 @@
+### B1 hourglass
+
+| Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `B1_t100_notch100` **(selected)** | 52.7 | strain 20 % | 23.1 % | 20.0 % | 2.43 | 1.55 | 1.42 | 1.36 | 4.8 | 12.8 | 0.25 | 3.7× | 1.000 |
+
+Winner under each weighting: balanced: `B1_t100_notch100`, range-first: `B1_t100_notch100`, durability-first: `B1_t100_notch100`, equal: `B1_t100_notch100`
+
 ### B3 dual leaf
 
 | Variant | Range (deg) | Limited by | Strain @60° | Strain @end | Stress @end (MPa) | k₀ (N·mm/rad) | Moment @end (N·mm) | Tendon force (N) | Side defl. 1 N (°) | Twist 1 N·5 mm (°) | Centre drift (mm) | Return margin | Score |
