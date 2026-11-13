@@ -1,0 +1,39 @@
+code,reads,part,material,label_on,file
+A-M,A  M,"B5 crossed strip t2.0 / 45°, deep tendon: MCP module",TPU,distal tab end face; 'A-M' on the flange top edge,print_ready/type_b_modules/A-M_B5_t200_a45_deep_MCP.stl
+A1-P,A  P  (other end: 1),"B5 crossed strip t2.0 / 45°, deep tendon: PIP module, copy 1",TPU,proximal tab end face; copy number 1 on the distal tab end face,print_ready/type_b_modules/A1-P_B5_t200_a45_deep_PIP.stl
+A2-P,A  P  (other end: 2),"B5 crossed strip t2.0 / 45°, deep tendon: PIP module, copy 2",TPU,proximal tab end face; copy number 2 on the distal tab end face,print_ready/type_b_modules/A2-P_B5_t200_a45_deep_PIP.stl
+A-D,A  D,"B5 crossed strip t2.0 / 45°, deep tendon: DIP module",TPU,proximal tab end face,print_ready/type_b_modules/A-D_B5_t200_a45_deep_DIP.stl
+B-M,B  M,"B5 crossed strip t1.5 / 45°, as built: MCP module",TPU,distal tab end face; 'B-M' on the flange top edge,print_ready/type_b_modules/B-M_B5_t150_a45_MCP.stl
+B1-P,B  P  (other end: 1),"B5 crossed strip t1.5 / 45°, as built: PIP module, copy 1",TPU,proximal tab end face; copy number 1 on the distal tab end face,print_ready/type_b_modules/B1-P_B5_t150_a45_PIP.stl
+B2-P,B  P  (other end: 2),"B5 crossed strip t1.5 / 45°, as built: PIP module, copy 2",TPU,proximal tab end face; copy number 2 on the distal tab end face,print_ready/type_b_modules/B2-P_B5_t150_a45_PIP.stl
+B-D,B  D,"B5 crossed strip t1.5 / 45°, as built: DIP module",TPU,proximal tab end face,print_ready/type_b_modules/B-D_B5_t150_a45_DIP.stl
+C-M,C  M,"B4 rolling contact t1.0 / 60°, deep tendon: MCP module",TPU,distal tab end face; 'C-M' on the flange top edge,print_ready/type_b_modules/C-M_B4_t100_a60_deep_MCP.stl
+C-P,C  P,"B4 rolling contact t1.0 / 60°, deep tendon: PIP module",TPU,proximal tab end face,print_ready/type_b_modules/C-P_B4_t100_a60_deep_PIP.stl
+C-D,C  D,"B4 rolling contact t1.0 / 60°, deep tendon: DIP module",TPU,proximal tab end face,print_ready/type_b_modules/C-D_B4_t100_a60_deep_DIP.stl
+E-M,E  M,"B8 knuckle 2 mm dorsal, r1.25, deep tendon: MCP module",TPU,distal tab end face; 'E-M' on the flange top edge,print_ready/type_b_modules/E-M_B8_y20_r125_deep_MCP.stl
+E-P,E  P,"B8 knuckle 2 mm dorsal, r1.25, deep tendon: PIP module",TPU,proximal tab end face,print_ready/type_b_modules/E-P_B8_y20_r125_deep_PIP.stl
+E-D,E  D,"B8 knuckle 2 mm dorsal, r1.25, deep tendon: DIP module",TPU,proximal tab end face,print_ready/type_b_modules/E-D_B8_y20_r125_deep_DIP.stl
+F-M,F  M,"B8 knuckle central, r1.5, as built: MCP module",TPU,distal tab end face; 'F-M' on the flange top edge,print_ready/type_b_modules/F-M_B8_y00_r150_MCP.stl
+F-P,F  P,"B8 knuckle central, r1.5, as built: PIP module",TPU,proximal tab end face,print_ready/type_b_modules/F-P_B8_y00_r150_PIP.stl
+F-D,F  D,"B8 knuckle central, r1.5, as built: DIP module",TPU,proximal tab end face,print_ready/type_b_modules/F-D_B8_y00_r150_DIP.stl
+G-M,G  M,"B3 dual leaf t1.5 / w3.0, as built (optional control): MCP module",TPU,distal tab end face; 'G-M' on the flange top edge,print_ready/type_b_modules/G-M_B3_t150_w30_MCP.stl
+G-P,G  P,"B3 dual leaf t1.5 / w3.0, as built (optional control): PIP module",TPU,proximal tab end face,print_ready/type_b_modules/G-P_B3_t150_w30_PIP.stl
+G-D,G  D,"B3 dual leaf t1.5 / w3.0, as built (optional control): DIP module",TPU,proximal tab end face,print_ready/type_b_modules/G-D_B3_t150_w30_DIP.stl
+S1,S1,"Type B phalanges, standard (as-built) tendon: Phalanx 1",PLA,"side face (+X), mid-length",print_ready/type_b_phalanges/S1_common_phalanges_02_Phalanx1.stl
+S2,S2,"Type B phalanges, standard (as-built) tendon: Phalanx 2",PLA,"side face (+X), mid-length",print_ready/type_b_phalanges/S2_common_phalanges_04_Phalanx2.stl
+S3,S3,"Type B phalanges, standard (as-built) tendon: Phalanx 3",PLA,"side face (+X), mid-length",print_ready/type_b_phalanges/S3_common_phalanges_06_Phalanx3.stl
+X1,X1,"Type B phalanges, deep tendon: Phalanx 1",PLA,"side face (+X), mid-length",print_ready/type_b_phalanges/X1_deep_phalanges_02_Phalanx1.stl
+X2,X2,"Type B phalanges, deep tendon: Phalanx 2",PLA,"side face (+X), mid-length",print_ready/type_b_phalanges/X2_deep_phalanges_04_Phalanx2.stl
+X3,X3,"Type B phalanges, deep tendon: Phalanx 3",PLA,"side face (+X), mid-length",print_ready/type_b_phalanges/X3_deep_phalanges_06_Phalanx3.stl
+F1-1,F1-1,"Tensile dog-bone 1BA, 1.0 mm, printed flat, copy 1",TPU,one grip end,print_ready/specimens/F1-1_tensile_1BA_t1.0_flat.stl
+F1-2,F1-2,"Tensile dog-bone 1BA, 1.0 mm, printed flat, copy 2",TPU,one grip end,print_ready/specimens/F1-2_tensile_1BA_t1.0_flat.stl
+F1-3,F1-3,"Tensile dog-bone 1BA, 1.0 mm, printed flat, copy 3",TPU,one grip end,print_ready/specimens/F1-3_tensile_1BA_t1.0_flat.stl
+F2-1,F2-1,"Tensile dog-bone 1BA, 2.0 mm, printed flat, copy 1",TPU,one grip end,print_ready/specimens/F2-1_tensile_1BA_t2.0_flat.stl
+F2-2,F2-2,"Tensile dog-bone 1BA, 2.0 mm, printed flat, copy 2",TPU,one grip end,print_ready/specimens/F2-2_tensile_1BA_t2.0_flat.stl
+F2-3,F2-3,"Tensile dog-bone 1BA, 2.0 mm, printed flat, copy 3",TPU,one grip end,print_ready/specimens/F2-3_tensile_1BA_t2.0_flat.stl
+E1-1,E1-1,"Tensile strip 1.0 mm, printed on edge, copy 1",TPU,one grip end,print_ready/specimens/E1-1_tensile_strip_t1.0_edge.stl
+E1-2,E1-2,"Tensile strip 1.0 mm, printed on edge, copy 2",TPU,one grip end,print_ready/specimens/E1-2_tensile_strip_t1.0_edge.stl
+E1-3,E1-3,"Tensile strip 1.0 mm, printed on edge, copy 3",TPU,one grip end,print_ready/specimens/E1-3_tensile_strip_t1.0_edge.stl
+E2-1,E2-1,"Tensile strip 2.0 mm, printed on edge, copy 1",TPU,one grip end,print_ready/specimens/E2-1_tensile_strip_t2.0_edge.stl
+E2-2,E2-2,"Tensile strip 2.0 mm, printed on edge, copy 2",TPU,one grip end,print_ready/specimens/E2-2_tensile_strip_t2.0_edge.stl
+E2-3,E2-3,"Tensile strip 2.0 mm, printed on edge, copy 3",TPU,one grip end,print_ready/specimens/E2-3_tensile_strip_t2.0_edge.stl
