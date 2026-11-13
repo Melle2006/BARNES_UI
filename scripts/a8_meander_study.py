@@ -176,6 +176,14 @@ CAP_EXCLUSION_MM = 1.0
 #: everything judged against the finger is the strip between the collars.
 COLLAR_HOLD: dict | None = None
 
+#: Set by the "it3" runs: the finger bodies of the iteration 3 index PIP, the dorsal
+#: caps of the real phalanges (scripts/iteration3_a8.py), each a dict with name,
+#: shape, moves_with, kind "solid", the cut box it was taken from, and a triangle
+#: mesh for the clearance check.
+IT3_BODIES: list | None = None
+#: The iteration 3 PIP pin, y in the study frame (scripts/iteration3_frame.py).
+IT3_PIN_Y = 39.18
+
 #: Element size, mm. Two quadratic elements across the narrowest true width of the
 #: 3-turn strip (0.71 mm); the 4-turn strip's 0.56 mm gets its own, smaller size.
 ELEMENT_SIZE_MM = 0.35
@@ -335,6 +343,8 @@ def finger_bodies(axis_y: float, axis_z: float, knuckle_radius: float) -> list[d
     Positions are relative to the joint axis, so moving the axis moves the finger.
     """
     dz = axis_z - AXIS_Z_MM
+    if FINGER == "iteration3":
+        return IT3_BODIES
     if FINGER == "index_pip":
         dy = axis_y - INDEX_PIP["axis_y"]
         bodies = []
@@ -387,8 +397,9 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     offset = strip_mesh.node_count
     for index, body in enumerate(bodies):
         body_mesh = generate_mesh(
-            body["shape"], MeshSettings(element_size=KNUCKLE_ELEMENT_MM, second_order=True),
-            smallest_dimension=KNUCKLE_WALL_MM,
+            body["shape"], MeshSettings(element_size=body.get("element", KNUCKLE_ELEMENT_MM),
+                                        second_order=True),
+            smallest_dimension=body.get("smallest", KNUCKLE_WALL_MM),
         )
         nodes.append(body_mesh.nodes)
         elements.append(body_mesh.elements + offset)
@@ -413,6 +424,14 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     sp = mesh.nodes[span_node]
     gaps = []
     for body in bodies:
+        if body["kind"] == "solid":
+            # signed distance to the real bone surface, positive inside it
+            from trimesh.proximity import signed_distance
+            near = (np.abs(sp[:, 0]) <= body["cut"]["x"]) & (sp[:, 1] >= body["cut"]["y"][0]) \
+                & (sp[:, 1] <= body["cut"]["y"][1])
+            if near.any():
+                gaps.append(float(-signed_distance(body["tri"], sp[near]).max()))
+            continue
         if body["kind"] == "cylinder":
             x0, x1 = body["x_range"]
             over = (sp[:, 0] >= x0) & (sp[:, 0] <= x1)
@@ -439,7 +458,19 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
     for index, body in enumerate(bodies):
         mine = sets_where(lambda idx, i=index: (owner[idx] == i).all())
         (moving_sets if body["moves_with"] == "distal" else fixed_sets).extend(mine)
-        if body["kind"] == "cylinder":
+        if body["kind"] == "solid":
+            # every face of the bone cap except the faces the cut box made
+            c = body["cut"]
+
+            def on_cut(idx):
+                q = mesh.nodes[idx]
+                return (np.allclose(q[:, 2], c["z"][0], atol=1e-3)
+                        or np.allclose(q[:, 2], c["z"][1], atol=1e-3)
+                        or np.allclose(q[:, 1], c["y"][0], atol=1e-3)
+                        or np.allclose(q[:, 1], c["y"][1], atol=1e-3)
+                        or np.allclose(np.abs(q[:, 0]), c["x"], atol=1e-3))
+            face = [n for n in mine if not on_cut(mesh.node_sets[n])]
+        elif body["kind"] == "cylinder":
             from_centre = np.linalg.norm(mesh.nodes[:, 1:3] - np.array(body["centre"]), axis=1)
             face = [n for n in mine
                     if np.allclose(from_centre[mesh.node_sets[n]], body["radius"], atol=1e-2)]
@@ -780,6 +811,15 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
         for sagitta in (2.75, 3.0):
             runs.append({"label": f"collared_2T_w1.2_h2.4_s{sagitta:.2f}", "kind": "collared",
                          "n_turns": 2, "sagitta": sagitta, "height": 2.4, "true_width": 1.2})
+    if "iteration3" in groups:
+        # The iteration 3 index finger: new snap-on collars, strip over the real bones.
+        for height, sagitta in ((2.4, 0.75), (2.4, 2.0), (1.8, 0.75), (1.8, 2.0)):
+            runs.append({"label": f"it3_2T_w1.2_h{height:.1f}_s{sagitta:.2f}", "kind": "it3",
+                         "n_turns": 2, "sagitta": sagitta, "height": height, "true_width": 1.2})
+    if "iteration3_extra" in groups:
+        for height, sagitta in ((2.4, 0.0), (3.0, 0.75), (2.4, 1.25), (3.0, 1.25)):
+            runs.append({"label": f"it3_2T_w1.2_h{height:.1f}_s{sagitta:.2f}", "kind": "it3",
+                         "n_turns": 2, "sagitta": sagitta, "height": height, "true_width": 1.2})
     if "printable_2t" in groups:
         # Added once the 2-turn strip turned out not to snap on the real finger
         # (1.70 N.mm at 14 % strain, h 1.8): how far its height and width can go.
@@ -816,7 +856,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--groups", default="exports,replicas,sweep")
     parser.add_argument("--only", default=None, help="Comma-separated labels to run.")
-    parser.add_argument("--finger", choices=("a8_rings", "index_pip"), default="a8_rings")
+    parser.add_argument("--finger", choices=("a8_rings", "index_pip", "iteration3"), default="a8_rings")
     parser.add_argument("--axis-y", type=float, default=None,
                         help="Joint axis y; defaults to the chosen finger's.")
     parser.add_argument("--axis-z", type=float, default=AXIS_Z_MM)
@@ -834,11 +874,11 @@ def main(argv: list[str] | None = None) -> int:
                         help="Use the node-to-surface formulation instead (comparison).")
     args = parser.parse_args(argv)
 
-    global CONTACT_FORMULATION, KEEP_FRD, FINGER, COLLAR_HOLD
+    global CONTACT_FORMULATION, KEEP_FRD, FINGER, COLLAR_HOLD, IT3_BODIES
     KEEP_FRD = args.keep_frd
     FINGER = args.finger
     if args.axis_y is None:
-        args.axis_y = INDEX_PIP["axis_y"] if FINGER == "index_pip" else AXIS_Y_MM
+        args.axis_y = {"index_pip": INDEX_PIP["axis_y"], "iteration3": IT3_PIN_Y}.get(FINGER, AXIS_Y_MM)
     if args.node_to_surface:
         CONTACT_FORMULATION = ContactFormulation.NODE_TO_SURFACE
     runs_dir = args.out / "cases"
@@ -899,6 +939,23 @@ def main(argv: list[str] | None = None) -> int:
             COLLAR_HOLD = {"span": CG.SPAN, "tol": 1.1,
                            "proximal_bone": bone("Index_PP.step"),
                            "distal_bone": bone("Index_MP.step")}
+        elif run["kind"] == "it3":
+            import iteration3_a8 as I3
+            import trimesh
+            shape, _, _, _, params = I3.build(run["height"], run["sagitta"], run["label"])
+            geometry = params.path_metrics()
+            pp, mp = I3.bones()
+            IT3_BODIES = []
+            for b in I3.caps(pp, mp):
+                import tempfile
+                from OCP.BRepMesh import BRepMesh_IncrementalMesh
+                from OCP.StlAPI import StlAPI_Writer
+                BRepMesh_IncrementalMesh(b["shape"], 0.02, False, 0.1, True)
+                f = Path(tempfile.mkdtemp()) / "cap.stl"
+                StlAPI_Writer().Write(b["shape"], str(f))
+                IT3_BODIES.append(dict(b, kind="solid", tri=trimesh.load(f), element=0.8, smallest=0.8))
+            COLLAR_HOLD = {"span": I3.SPAN, "tol": 0.35,
+                           "proximal_bone": I3.bone_points(pp), "distal_bone": I3.bone_points(mp)}
         elif run["kind"] == "printable":
             params = _printable(run["n_turns"], run["sagitta"], run["height"],
                                 run["true_width"], run["label"], run.get("amplitude"))
@@ -909,7 +966,7 @@ def main(argv: list[str] | None = None) -> int:
             shape = build_a8_meander(params)
             geometry = params.path_metrics()
         size = args.element_size
-        if run["kind"] in ("printable", "collared"):
+        if run["kind"] in ("printable", "collared", "it3"):
             # Three quadratic elements across the true width.
             size = round(min(PRINTABLE_ELEMENT_MM, run["true_width"] / 3.0), 3)
             if args.printable_element_size:
