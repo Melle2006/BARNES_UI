@@ -59,6 +59,7 @@ def story(c):
                                 c["f1"], c["W"], c["mm"])
     REPO, basis, r2, preds, summ = c["REPO"], c["basis"], c["r2"], c["preds"], c["summary"]
     lo, hi = basis["E_bracket_mpa"]
+    apply_iteration3(REPO)
     s = []
 
     # ---------------------------------------------------------------- title
@@ -150,6 +151,7 @@ def story(c):
 
     # ---------------------------------------------------------------- Type B
     s += [P("The A8 strip with collars (new in this round)", "h2")] + models(c, ["A8_collared_s2.75"]) + B(collared_points(c))
+    s += iteration3_section(c)
     s += [c["PageBreak"](), P("4. Type B round 1: the TPU joint as a spring", "h1"), P(R1_INTRO)]
     s += models(c, ["B5_t150_a45", "B3_t150_w30", "B6_n4_t150_taper15", "B1_t100_notch100", "B_T090_X3"], per_row=3)
     rows = [["Family", "Variant", "Range (°)", "Limited by", "Strain @60°", "Tendon force (N)",
@@ -814,3 +816,157 @@ PRINT_SPECS = [
     ["Rig base, load adapter, pulley", "PLA, 1 each", "Rig base on its side plate", "As needed",
      "4 perimeters on the base (the protractor stands vertical); brim if it wobbles. Pulley on a 623ZZ bearing and M3 bolt."],
 ]
+
+
+# ---------------------------------------------------------------------------
+# Iteration 3 hand: the A8 re-fitted (results/iteration3)
+# ---------------------------------------------------------------------------
+IT3_INTRO = (
+    "The hand moved to iteration 3 (reference_parts/iteration3_hand_assembly.step). Its index "
+    "finger keeps the 3.2 mm pinned PIP but is a different finger: the A8 collars above were fitted "
+    "to the old phalanges and do not fit it, and the joint the strip rides over changed. So the A8 "
+    "was re-fitted: new collars designed on the new phalanges, and the strip simulated again on the "
+    "real iteration 3 bones. Nothing else in this report depends on the old index finger.")
+IT3_CHANGES = [
+    ["", "Old index (A8 fitted to it)", "Iteration 3", "What it means for the A8"],
+    ["Phalanx section", "about 9 × 6 mm, flat-sided", "round, Ø14.8 mm (PP and MP)", "new collars: rings, not the A3 clips"],
+    ["PIP joint rounds", "r 5.2 mm, 2.7 mm either side of the pin", "r 9.4 mm, 5.8 mm either side",
+     "the joint is a r 7.4 mm envelope about the pin at every angle"],
+    ["MCP → PIP (PP length)", "41.9 mm", "39.2 mm", "shorter span for the strip"],
+    ["PIP → DIP (MP length)", "26.5 mm", "21.3 mm", "the MP is fully round only from 48.5 mm"],
+    ["Saved pose in the assembly", "5° flexed", "25° flexed", "straightened for the analysis"],
+]
+IT3_COLLARS = [
+    "<b>Collars.</b> A ring of the shaft's own radius (7.40 mm inside, so it grips with no gap), "
+    "1.2 mm wall, open across the palm side over ±60° so it clips on: the 12.8 mm opening is 2 mm "
+    "narrower than the shaft, 1 mm of snap each side. Proximal collar on the PP at 15.5–21.0 mm from "
+    "the MCP ball centre, where the shaft is fully round (it avoids the cross-slots at 21.5–23 mm and "
+    "the joint relief beyond 30 mm). Distal collar on the MP at 48.0–54.0 mm: before 47 mm the MP is "
+    "only its 6 mm tongue.",
+    "<b>Strip.</b> The same printable 2-turn strip family as before (1.2 mm true width, 4.4 mm "
+    "amplitude), from the proximal collar's edge to the distal collar's (27 mm), its underside on "
+    "the collars' tops. The joint stays inside 7.4 mm of the pin at every angle, so a flat strip "
+    "already clears it by 1.2 mm at rest; the sagitta adds arch on top. Each end has a foot run back "
+    "along its collar and fused into it, so the part prints as one piece.",
+    "<b>How it was simulated.</b> The strip and collars in TPU (Neo-Hookean, run at 19.3 MPa and "
+    "rescaled), each collar held where its inner face sits on its phalanx, the distal collar and "
+    "middle phalanx turned together about the pin to 100°. The surfaces the strip can touch are the "
+    "dorsal caps of the real phalanges, not idealised cams: where the round shaft meets the r 9.4 mm "
+    "joint rounds there is a crease, and the strip rides over it. The distal collar was checked "
+    "against the proximal phalanx as a rigid body: it does not touch it before 120°.",
+]
+
+
+def it3_cases(REPO):
+    out = []
+    for p in sorted((REPO / "results/iteration3/a8/cases").glob("it3_*.json")):
+        r = json.loads(p.read_text())
+        if "failure" in r:
+            out.append(dict(r, ok=False, why=r["failure"]))
+            continue
+        t90 = (r.get("torque_n_mm") or {}).get("90")
+        si = (r.get("peak_strain_interior") or {}).get("90")
+        sj = (r.get("peak_strain_junction") or {}).get("90")
+        sc = (r.get("peak_strain_collars") or {}).get("90")
+        worst = max(v for v in (si, sj, sc) if v is not None) if si is not None else None
+        ok = r.get("reached_deg", 0) >= 90 - 1e-6 and worst is not None and worst <= 0.20 \
+            and r.get("first_torque_drop_deg") is None
+        why = ("" if ok else "did not reach 90°" if r.get("reached_deg", 0) < 90 - 1e-6 else
+               f"torque drops at {r['first_torque_drop_deg']:.0f}°" if r.get("first_torque_drop_deg")
+               else f"{100 * worst:.1f} % strain at 90°")
+        out.append(dict(r, t90=t90, si=si, sj=sj, sc=sc, worst=worst, ok=ok, why=why))
+    return out
+
+
+def it3_selection(REPO):
+    """(selected, fallback) among the finished iteration 3 cases: the most torque at 90°
+    inside 20 % strain everywhere (strip, junction, collars) and without a torque drop;
+    the fallback is the next, preferring the other height."""
+    cases = [c for c in it3_cases(REPO) if "t90" in c and c["t90"] is not None]
+    good = sorted([c for c in cases if c["ok"]], key=lambda c: -c["t90"])
+    if not good:
+        good = sorted(cases, key=lambda c: c["worst"] if c["worst"] is not None else 9)
+    if not good:
+        return None, None
+    sel = good[0]
+    rest = [c for c in good[1:] if c["height"] != sel["height"]] or good[1:]
+    return sel, (rest[0] if rest else None)
+
+
+def it3_stem(case):
+    return f"A8_it3_2turn_w1.2_h{case['height']:.1f}_s{case['sagitta']:.2f}_collared"
+
+
+def iteration3_section(c):
+    P, B, T, F, W, mm = c["P"], c["bullets"], c["table"], c["figure"], c["W"], c["mm"]
+    REPO = c["REPO"]
+    s = [c["PageBreak"](), P("3.5 Iteration 3 hand: the A8 re-fitted (new in this round)", "h2"), P(IT3_INTRO)]
+    s += [T(IT3_CHANGES, widths=[30 * mm, 42 * mm, 42 * mm, W - 114 * mm])]
+    s += models(c, ["A8_it3_on_bones"], per_row=1)
+    s += B(IT3_COLLARS)
+    cases = it3_cases(REPO)
+    if not cases:
+        return s + [P("The iteration 3 runs are still solving; this section fills in when they finish.")]
+    k = 12 / 19.3
+    rows = [["Case (2 turns, 1.2 mm wide)", "Reached", "Torque 30 / 60 / 90° at 12 MPa (N·mm)",
+             "Strain at 90°: strip / junction / collars", "Clearance at rest", "Verdict"]]
+    for r in cases:
+        name = f"h {r['height']:.1f} mm, sagitta {r['sagitta']:.2f} mm"
+        if "t90" not in r:
+            rows.append([name, "–", "–", "–", "–", f"not resolved: {r['why']}"])
+            continue
+        tq = r.get("torque_n_mm") or {}
+        tt = " / ".join("–" if tq.get(a) is None else f"{tq[a] * k:.2f}" for a in ("30", "60", "90"))
+        st = " / ".join("–" if v is None else f"{100 * v:.1f} %" for v in (r["si"], r["sj"], r["sc"]))
+        rows.append([name, f"{r['reached_deg']:.0f}°", tt, st, f"{r['clearance_at_rest_mm']:.2f} mm",
+                     "passes" if r["ok"] else r["why"]])
+    s += [T(rows, widths=[38 * mm, 15 * mm, 38 * mm, 38 * mm, 20 * mm, W - 149 * mm])]
+    s += [P("Torques at 12 MPa; multiply by 5.3/12 or 19.3/12 for the ends of the bracket. Strain does "
+            "not depend on E. 'Junction' is the strip within 1 mm of a collar.", "cap")]
+    s += F(REPO / "docs/report/figures/it3_torque.png", "Restoring torque against flexion for every "
+           "iteration 3 case (results/iteration3/a8/cases).", max_h=70 * mm)
+    sel, fb = it3_selection(REPO)
+    if sel:
+        old = json.loads((REPO / "results/a8_collared/cases/collared_2T_w1.2_h2.4_s2.75.json").read_text())
+        txt = (f"<b>Selected for iteration 3:</b> h {sel['height']:.1f} mm, sagitta {sel['sagitta']:.2f} mm — "
+               f"{sel['t90'] * k:.2f} N·mm at 90° at 12 MPa ({sel['t90']:.2f} at 19.3), worst strain "
+               f"{100 * sel['worst']:.1f} % at 90°. On the old finger the collared A8 gave "
+               f"{old['torque_n_mm']['90'] * k:.2f} N·mm at 12 MPa with 21.5 % at its junction.")
+        if fb:
+            txt += (f" <b>Second print:</b> h {fb['height']:.1f} mm, sagitta {fb['sagitta']:.2f} mm "
+                    f"({fb['t90'] * k:.2f} N·mm, worst strain {100 * fb['worst']:.1f} %)"
+                    + ("." if fb["ok"] else f", which {fb['why']}: print it only as a comparison."))
+        s += [P(txt)]
+        if not sel["ok"]:
+            s += [P("No case stayed inside 20 % everywhere; the selection is the least strained. See "
+                    "section 6 for what to change.")]
+    return s
+
+
+def apply_iteration3(REPO):
+    """Point the Type A print rows and links at the iteration 3 A8 (the old collars no
+    longer fit the hand), once the iteration 3 runs have a selection."""
+    sel, fb = it3_selection(REPO)
+    if not sel:
+        return
+    k = 12 / 19.3
+    lab = "print_ready/type_a/"
+    PRINT_SUMMARY_ROWS[1:3] = [
+        ["1", "Type A spring", f"A8 for the iteration 3 hand: 2-turn strip 1.2 × {sel['height']:.1f} mm, "
+         f"sagitta {sel['sagitta']:.2f} mm, new snap-on collars (×2; labels 8S-1, 8S-2)",
+         f"Re-fitted to the iteration 3 index finger (round Ø14.8 mm phalanges). {sel['t90'] * k:.2f} N·mm "
+         f"at 90° at 12 MPa, worst strain {100 * sel['worst']:.1f} % at 90°, collars clear the joint to 120°."],
+    ] + ([["1", "Type A spring", f"A8 iteration 3, h {fb['height']:.1f} mm, sagitta {fb['sagitta']:.2f} mm "
+           f"(×1; label 8F)", f"Second option: {fb['t90'] * k:.2f} N·mm at 90°, worst strain "
+           f"{100 * fb['worst']:.1f} %" + ("." if fb["ok"] else f" ({fb['why']}): comparison only.")]] if fb else [])
+    items = [(f"A8 for the iteration 3 hand, h {sel['height']:.1f} / sagitta {sel['sagitta']:.2f} mm, "
+              "with snap-on collars (selected)", "TPU ×2, one piece; labelled 8S-1, 8S-2",
+              [lab + f"8S-1_{it3_stem(sel)}.stl", lab + f"8S-2_{it3_stem(sel)}.stl",
+               f"results/iteration3/a8/{it3_stem(sel)}.step"])]
+    if fb:
+        items.append((f"A8 for the iteration 3 hand, h {fb['height']:.1f} / sagitta {fb['sagitta']:.2f} mm "
+                      "(second option)", "TPU ×1, one piece; labelled 8F",
+                      [lab + f"8F_{it3_stem(fb)}.stl", f"results/iteration3/a8/{it3_stem(fb)}.step"]))
+    old = PRINT_LINKS_TYPE_A[0][1]
+    keep = [x for x in old if not x[0].startswith("A8")]
+    PRINT_LINKS_TYPE_A[0] = ("Type A springs for the iteration 3 hand (index PIP)", items + keep)

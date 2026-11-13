@@ -27,6 +27,7 @@ into a channel, pin hole or socket.
 from __future__ import annotations
 
 import csv
+import json
 import math
 from pathlib import Path
 
@@ -304,14 +305,51 @@ def write_markdown(rows, checks):
           "* **Compression cylinders Ø10 × 10**: an engraving would spoil a loading face or change the "
           "section. Mark them with a pen.",
           "* **Rig parts (PLA)**: one of each, nothing to confuse.",
-          "* **Type A springs (A8 with collars, A6)**: being re-fitted to the iteration 3 hand; they get "
-          "labels when the new versions are generated.", "",
+          "* **A6 sliding leaf**: its cuffs were sized for the old finger and need redesigning for the "
+          "iteration 3 hand before printing; it gets a label then.", "",
+          "## How to read a Type A (A8) part", "",
+          "The **design code** is on the outside of the proximal collar (the one on the proximal "
+          "phalanx), on the thumb side: **8S** is the selected iteration 3 A8, **8F** the second "
+          "option. Where two copies are printed, the **copy number** is on the distal collar.", "",
           "## Printing the labels", "",
           "The module labels are on a face that stands vertical when the module prints on its side, so the "
           "letters print as grooves in a wall: they come out cleanly at 0.4 mm line width and 0.2 mm layers. "
           "The DIP module letters are the smallest (about 2.1 mm tall); if they print soft, the design "
           "letter is still readable and the joint is obvious from the module's size."]
     (OUT / "LABELS.md").write_text("\n".join(L) + "\n")
+
+
+def label_a8_it3(stem, design, copy):
+    """Iteration 3 A8: design code on the outside of the proximal collar, copy number
+    on the distal collar, both on the thumb-side (+X) flank at mid-height, read from
+    outside with the back of the finger up."""
+    info = json.loads((REPO / "results/iteration3/a8" / f"{stem}.json").read_text())
+    r_out = info["r_in"] + info["wall"]
+    solid = load(REPO / "results/iteration3/a8" / f"{stem}.step")
+    lab = Labeller(solid)
+    for txt, band in ((design, info["bands"][0]), (str(copy) if copy else None, info["bands"][1])):
+        if not txt:
+            continue
+        size = fit_size(txt, band[1] - band[0] - 1.2, 2.6)
+        lab.add(txt, size, (r_out, (band[0] + band[1]) / 2, 0.0), (1, 0, 0), (0, 1, 0), DEPTH_TPU, 0.5)
+    return lab.result(), lab.checks
+
+
+def type_a_parts():
+    """(code, design glyphs, copy, stem, description) for the iteration 3 A8 selection."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("narrative", REPO / "docs/report/narrative.py")
+    N = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(N)
+    sel, fb = N.it3_selection(REPO)
+    out = []
+    if sel:
+        d = f"A8 for the iteration 3 hand, 2 turns, h {sel['height']:.1f} mm, sagitta {sel['sagitta']:.2f} mm (selected)"
+        out += [(f"8S-{k}", "8S", k, N.it3_stem(sel), d + f", copy {k}") for k in (1, 2)]
+    if fb:
+        d = f"A8 for the iteration 3 hand, 2 turns, h {fb['height']:.1f} mm, sagitta {fb['sagitta']:.2f} mm (second option)"
+        out.append(("8F", "8F", None, N.it3_stem(fb), d))
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -333,6 +371,15 @@ def main():
                                  material="TPU", label_on=where, file=path))
                 checks += [(code,) + c for c in ch]
                 print("ok", code)
+    for code, glyphs, cp, stem, desc in type_a_parts():
+        shape, ch = label_a8_it3(stem, glyphs, cp)
+        path = save(shape, f"{code}_{stem}", "type_a")
+        rows.append(dict(code=code, reads=f"{glyphs}" + (f"  (distal collar: {cp})" if cp else ""),
+                         part=desc, material="TPU",
+                         label_on="outside of the proximal collar, thumb side" +
+                         ("; copy number on the distal collar" if cp else ""), file=path))
+        checks += [(code,) + c for c in ch]
+        print("ok", code)
     for code, folder, desc in PHALANGES:
         for n, fname in PHALANX_FILES:
             shape, ch = label_phalanx(folder / f"{fname}.step", f"{code}{n}")
