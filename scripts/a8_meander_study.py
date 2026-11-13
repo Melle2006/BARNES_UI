@@ -176,8 +176,8 @@ CAP_EXCLUSION_MM = 1.0
 #: everything judged against the finger is the strip between the collars.
 COLLAR_HOLD: dict | None = None
 
-#: Set by the "it3" runs: the finger bodies of the iteration 3 index PIP, the dorsal
-#: caps of the real phalanges (scripts/iteration3_a8.py), each a dict with name,
+#: Set by the "it3" runs: the finger bodies of the iteration 3 index PIP, the real
+#: phalanges near the joint (scripts/iteration3_a8.py), each a dict with name,
 #: shape, moves_with, kind "solid", the cut box it was taken from, and a triangle
 #: mesh for the clearance check.
 IT3_BODIES: list | None = None
@@ -953,7 +953,7 @@ def main(argv: list[str] | None = None) -> int:
                 BRepMesh_IncrementalMesh(b["shape"], 0.02, False, 0.1, True)
                 f = Path(tempfile.mkdtemp()) / "cap.stl"
                 StlAPI_Writer().Write(b["shape"], str(f))
-                IT3_BODIES.append(dict(b, kind="solid", tri=trimesh.load(f), element=0.8, smallest=0.8))
+                IT3_BODIES.append(dict(b, kind="solid", tri=trimesh.load(f), element=1.0, smallest=1.0))
             COLLAR_HOLD = {"span": I3.SPAN, "tol": 0.35,
                            "proximal_bone": I3.bone_points(pp), "distal_bone": I3.bone_points(mp)}
         elif run["kind"] == "printable":

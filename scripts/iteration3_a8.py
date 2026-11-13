@@ -35,9 +35,14 @@ the collar wall, as for the old collared strip.
 
 The finger the strip can touch
 ------------------------------
-The dorsal caps of the real phalanges (z > 2.5, |x| < 7.6), the proximal one fixed,
-the middle one turning with the distal collar. Not idealised cams: where the shaft
-meets the r9.4 joint rounds the surface has a crease, and the strip rides over it.
+The real phalanges near the joint, the whole section (the proximal phalanx from the
+proximal collar to the cheek tips, the middle phalanx from its tongue to the distal
+collar), the proximal one fixed, the middle one turning with the distal collar. Not
+idealised cams: where the shaft meets the r9.4 joint rounds the surface has a crease,
+and the strip rides over it. The whole section, not just the back: once the joint
+passes about 50 degrees, the part of the tongue and the cheek rounds that faces the
+strip is what was underneath at rest. A first set of runs cut the bones at z > 2.5
+and the strip fell through that gap to the pin; those runs were discarded.
 """
 
 from __future__ import annotations
@@ -75,7 +80,7 @@ DIST_BAND = (48.0, 54.0)
 SPAN = (PROX_BAND[1], DIST_BAND[0])
 AMPLITUDE = 4.4
 WIDTH = 1.2
-CAP_Z = 2.5
+CAP_Z = -12.0                        # the whole bone near the joint, every z
 CAP_X = 7.6
 
 
@@ -108,7 +113,7 @@ def bones():
 
 
 def caps(pp, mp):
-    """Dorsal caps the strip can touch: (name, shape, moves_with, cut box)."""
+    """The bone the strip can touch near the joint: (name, shape, moves_with, cut box)."""
     out = []
     for name, parts, (y0, y1), moves in (("pp", pp, (SPAN[0] + 0.2, PIN_Y + 4.5), "proximal"),
                                          ("mp", mp, (PIN_Y - 4.5, SPAN[1] - 0.2), "distal")):
