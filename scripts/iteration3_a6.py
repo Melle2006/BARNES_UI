@@ -35,8 +35,11 @@ What changed from the old A6, and why
 * "Clears the joint" is 7.7 mm from the pin: the joint's 7.4 mm envelope plus 0.3 mm.
 * The leaf rides 8.6-9.5 mm from the pin, so its tip has to slide 12-17 mm by 105
   degrees. The ring stays on the round shaft (y = 15.5 to 29) and the guide may run on
-  proximally over the phalanx's tapered neck to y = 8, clear of the 7.25 mm MCP ball:
-  at most 21 mm of guide; designs needing more are rejected.
+  proximally over the phalanx's tapered neck to y = 4.5, above the MCP ball and clear
+  of the index metacarpal's socket (8.3 mm high there; the guide is above 8.8 and
+  rises away from the joint, and MCP flexion moves it further away): at most 24.5 mm
+  of guide; designs needing more are rejected. The 21 mm first tried (to y = 8)
+  rejected every geometrically valid design: they need 22.5-24.5 mm.
 """
 
 from __future__ import annotations
@@ -56,12 +59,17 @@ PIN_Y = 39.18
 R_OUT = 8.6
 RING = (2 * R_OUT, 2 * R_OUT, R_OUT - 0.01)
 OPEN_DEG = 60.0
-MAX_GUIDE_CUFF = 21.0              # 29.0 -> 8.0 mm: the ring stays on the round shaft (to 15.5),
-                                   # the guide runs on over the tapered neck, clear of the MCP ball
+MAX_GUIDE_CUFF = 24.5              # 29.0 -> 4.5 mm: the ring stays on the round shaft (to 15.5),
+                                   # the guide runs on over the tapered neck and the MCP ball; the
+                                   # index metacarpal's socket (top 8.3 mm at y = 4-6) stays under it
 
 RADII = (18.0, 22.0, 26.0, 30.0, 35.0, 45.0, 60.0, 1000.0)   # 1000 mm: flat to 0.04 mm over the span
 THICKNESSES = (0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0)
 WIDTHS = (4.0, 5.0, 6.0)
+#: The first sweep's best leaf was the thickest (2.0 mm) at only 10 % strain, so thicker
+#: leaves are added for the curvatures that worked.
+THICK_RADII = (35.0, 45.0, 60.0)
+THICK_EXTRA = (2.4, 2.8, 3.2)
 
 
 def configure():
@@ -106,9 +114,14 @@ def sweep():
     import a6_parameter_sweep as sw
     a6, rom = configure()
     sw.a6, sw.rom = a6, rom
-    jobs = [(r, t) for r in RADII for t in THICKNESSES]
+    jobs = [(r, t) for r in RADII for t in THICKNESSES] + [(r, t) for r in THICK_RADII for t in THICK_EXTRA]
     with Pool(4) as pool:
         sims = pool.map(simulate, jobs, chunksize=1)
+    # cached results keep their numbers; re-apply the guide-length limit as it now stands
+    for res in sims:
+        why = res.get("reason") or ""
+        if why.startswith("guide needs") and res.get("mp_cuff_length_mm", 99) <= MAX_GUIDE_CUFF:
+            res.update(valid_geometry=True, reason="")
     rows = [sw.combine(s, w, rom.STRAIN_LIMIT) for s in sims for w in WIDTHS]
     winner = sw.best(rows)
     by_limit = {}
