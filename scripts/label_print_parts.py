@@ -305,12 +305,14 @@ def write_markdown(rows, checks):
           "* **Compression cylinders Ø10 × 10**: an engraving would spoil a loading face or change the "
           "section. Mark them with a pen.",
           "* **Rig parts (PLA)**: one of each, nothing to confuse.",
-          "* **A6 sliding leaf**: its cuffs were sized for the old finger and need redesigning for the "
-          "iteration 3 hand before printing; it gets a label then.", "",
+
           "## How to read a Type A (A8) part", "",
           "The **design code** is on the outside of the proximal collar (the one on the proximal "
           "phalanx), on the thumb side: **8S** is the selected iteration 3 A8, **8F** the second "
           "option. Where two copies are printed, the **copy number** is on the distal collar.", "",
+          "The **A6** codes are on the outside of the middle-phalanx ring (the one carrying the leaf), on "
+          "the thumb side: **6S** is the selected iteration 3 A6, **6F** the second option; the copy number "
+          "is on the proximal-phalanx ring (the one carrying the guide).", "",
           "## Printing the labels", "",
           "The module labels are on a face that stands vertical when the module prints on its side, so the "
           "letters print as grooves in a wall: they come out cleanly at 0.4 mm line width and 0.2 mm layers. "
@@ -333,6 +335,42 @@ def label_a8_it3(stem, design, copy):
         size = fit_size(txt, band[1] - band[0] - 1.2, 2.6)
         lab.add(txt, size, (r_out, (band[0] + band[1]) / 2, 0.0), (1, 0, 0), (0, 1, 0), DEPTH_TPU, 0.5)
     return lab.result(), lab.checks
+
+
+def label_a6_it3(stem, design, copy):
+    """Iteration 3 A6, two bodies printed in place: design code on the thumb-side flank of
+    the middle-phalanx ring (y 48-54), copy number on the proximal-phalanx ring (y 15.5-29),
+    both at mid-height, clear of the anchor and the guide on top."""
+    d = REPO / "results/iteration3/a6"
+    out, checks = [], []
+    for body, (txt, y0, y1) in (("mp", (design, 48.0, 54.0)), ("pp", (str(copy) if copy else None, 17.0, 23.0))):
+        solid = load(d / f"{stem}_{body}_body.step")
+        if txt:
+            lab = Labeller(solid)
+            lab.add(txt, fit_size(txt, y1 - y0 - 1.2, 2.6), (8.6, (y0 + y1) / 2, 0.0), (1, 0, 0), (0, 1, 0),
+                    DEPTH_TPU, 0.5)
+            solid = lab.result()
+            checks += lab.checks
+        out.append(solid)
+    return cq.Compound.makeCompound(out), checks
+
+
+def a6_parts():
+    """(code, glyphs, copy, stem, description): the iteration 3 A6 picks. The R60 leaf is
+    the selected one (twice the travel window, 12 % strain); the R45 leaf, with more
+    torque but a 1 mm travel window, is the second option."""
+    built = json.loads((REPO / "results/iteration3/a6/build.json").read_text())
+    out = []
+    for tag, code, copies in (("margin", "6S", (1, 2)), ("best", "6F", (None,))):
+        if tag not in built:
+            continue
+        p = built[tag]["pick"]
+        d = (f"A6 sliding leaf for the iteration 3 hand, R{float(p['radius_mm']):g} mm, "
+             f"{p['thickness_mm']:g} × {p['width_mm']:g} mm leaf, {p['travel_mm']:g} mm travel"
+             + (" (selected)" if code == "6S" else " (second option)"))
+        for k in copies:
+            out.append((f"{code}-{k}" if k else code, code, k, built[tag]["stem"], d + (f", copy {k}" if k else "")))
+    return out
 
 
 def type_a_parts():
@@ -378,6 +416,15 @@ def main():
                          part=desc, material="TPU",
                          label_on="outside of the proximal collar, thumb side" +
                          ("; copy number on the distal collar" if cp else ""), file=path))
+        checks += [(code,) + c for c in ch]
+        print("ok", code)
+    for code, glyphs, cp, stem, desc in a6_parts():
+        shape, ch = label_a6_it3(stem, glyphs, cp)
+        path = save(shape, f"{code}_{stem}", "type_a")
+        rows.append(dict(code=code, reads=f"{glyphs}" + (f"  (proximal ring: {cp})" if cp else ""),
+                         part=desc, material="TPU, two bodies printed in place",
+                         label_on="outside of the middle-phalanx ring, thumb side" +
+                         ("; copy number on the proximal-phalanx ring" if cp else ""), file=path))
         checks += [(code,) + c for c in ch]
         print("ok", code)
     for code, folder, desc in PHALANGES:

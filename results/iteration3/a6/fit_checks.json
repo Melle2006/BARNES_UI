@@ -1,0 +1,18 @@
+{
+ "A6_it3_R60_t3.2_w6_tr19": {
+  "pp_body_vs_pp_bone": 0.0,
+  "pp_body_vs_mc2": 0.0,
+  "pp_body_vs_mp_bone": 0.0,
+  "mp_body_vs_mp_bone": 0.0,
+  "mp_body_vs_pp_bone": 0.0,
+  "mp_body_first_touches_pp_bone_deg": null
+ },
+ "A6_it3_R45_t3.2_w6_tr19": {
+  "pp_body_vs_pp_bone": 0.0,
+  "pp_body_vs_mc2": 0.0,
+  "pp_body_vs_mp_bone": 0.0,
+  "mp_body_vs_mp_bone": 0.0,
+  "mp_body_vs_pp_bone": 0.0,
+  "mp_body_first_touches_pp_bone_deg": null
+ }
+}

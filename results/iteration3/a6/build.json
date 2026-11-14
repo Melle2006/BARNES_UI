@@ -1,0 +1,84 @@
+{
+ "best": {
+  "stem": "A6_it3_R45_t3.2_w6_tr19",
+  "pick": {
+   "radius_mm": 45.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 18.8,
+   "mean_torque_Nmm": 6.449,
+   "torque_at_105_Nmm": 24.067,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 8.41,
+   "height_above_pp_cuff_mm": 7.37,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  "solids": [
+   1,
+   1
+  ],
+  "bodies_overlap_mm3": 0.0,
+  "summary": {
+   "radius_mm": "45",
+   "leaf_thickness_mm": 3.2,
+   "leaf_width_mm": 6.0,
+   "travel_mm": 19.0,
+   "guide_length_mm": 23.0,
+   "mp_cuff_length_mm": 24.0,
+   "free_arc_length_mm": 18.7,
+   "chord_mm": 18.57,
+   "anchor_angle_deg": 16.9,
+   "guide_angle_deg": -6.9,
+   "bend_angle_deg": 23.8,
+   "top_of_leaf_z_mm": 15.97,
+   "height_above_pp_cuff_mm": 7.37,
+   "leaf_guide_interference_mm3": 0.0,
+   "pp_body_volume_mm3": 1380.4,
+   "mp_body_volume_mm3": 2438.5
+  }
+ },
+ "margin": {
+  "stem": "A6_it3_R60_t3.2_w6_tr19",
+  "pick": {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 11.8,
+   "mean_torque_Nmm": 5.277,
+   "torque_at_105_Nmm": 13.287,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.06,
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  "solids": [
+   1,
+   1
+  ],
+  "bodies_overlap_mm3": 0.0,
+  "summary": {
+   "radius_mm": "60",
+   "leaf_thickness_mm": 3.2,
+   "leaf_width_mm": 6.0,
+   "travel_mm": 19.0,
+   "guide_length_mm": 23.0,
+   "mp_cuff_length_mm": 24.0,
+   "free_arc_length_mm": 18.62,
+   "chord_mm": 18.55,
+   "anchor_angle_deg": 13.0,
+   "guide_angle_deg": -4.8,
+   "bend_angle_deg": 17.8,
+   "top_of_leaf_z_mm": 15.03,
+   "height_above_pp_cuff_mm": 6.43,
+   "leaf_guide_interference_mm3": 0.0,
+   "pp_body_volume_mm3": 1359.9,
+   "mp_body_volume_mm3": 2342.4
+  }
+ }
+}

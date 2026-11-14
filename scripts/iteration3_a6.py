@@ -59,6 +59,10 @@ PIN_Y = 39.18
 R_OUT = 8.6
 RING = (2 * R_OUT, 2 * R_OUT, R_OUT - 0.01)
 OPEN_DEG = 60.0
+#: The proximal ring stops where the shaft stops being round; under the free run of the
+#: guide beyond it, nothing is kept below TRIM_Z (the guide's underside is above 8.8 mm).
+RING_END_Y = 15.5
+TRIM_Z = 8.7
 MAX_GUIDE_CUFF = 24.5              # 29.0 -> 4.5 mm: the ring stays on the round shaft (to 15.5),
                                    # the guide runs on over the tapered neck and the MCP ball; the
                                    # index metacarpal's socket (top 8.3 mm at y = 4-6) stays under it
@@ -83,6 +87,10 @@ def configure():
     a6.MP_START = Y_REF - 29.0
     a6.GUIDE_MOUTH_Y = a6.MP_START + 0.5
     a6.ANCHOR_EXIT = a6.CUFF_LENGTH + 1.0
+    # cuff() and _lumen() took CUFF_LENGTH as a default argument, fixed when they were
+    # defined (3 mm); without this the middle-phalanx ring came out 3 mm long.
+    a6.cuff.__defaults__ = (a6.CUFF_LENGTH,)
+    a6._lumen.__defaults__ = (a6.CUFF_LENGTH,)
     a6.MAX_LEAF_WIDTH = max(WIDTHS)
     a6.set_section(a6.LEAF_WIDTH, a6.LEAF_THICKNESS)
     pin = Y_REF - PIN_Y
@@ -163,6 +171,13 @@ def build():
         pp_body = guide_side.val().moved(loc)
         mp_body = cq.Workplane().add(mp_body).cut(slot).val()
         pp_body = cq.Workplane().add(pp_body).cut(slot).val()
+        # The old model runs the guide's cuff the whole length of the guide. Here the ring
+        # must stay on the round shaft (y >= 15.5): beyond it the guide runs on alone, so
+        # the ring and the bottom of the guide's saddle are cut away under it, which also
+        # keeps them off the MCP ball and the index metacarpal's socket.
+        under = (cq.Workplane("XY").box(40, 40, 40, centered=(True, False, False))
+                 .translate((0, RING_END_Y - 40, TRIM_Z - 40)))
+        pp_body = cq.Workplane().add(pp_body).cut(under).val()
         stem = (f"A6_it3_R{'flat' if r is None else f'{r:g}'}_t{p['thickness_mm']:g}_w{p['width_mm']:g}"
                 f"_tr{p['travel_mm']:g}")
         both = cq.Compound.makeCompound([mp_body, pp_body])
@@ -180,5 +195,70 @@ def build():
     (OUT / "build.json").write_text(json.dumps(out, indent=1, default=str))
 
 
+def figures():
+    """Report figures: the picks on the iteration 3 bones, and their torque curves."""
+    import cadquery as cq
+    import numpy as np
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+    a6, rom = configure()
+    built = json.loads((OUT / "build.json").read_text())
+    fig_dir = REPO / "docs" / "report" / "figures"
+
+    def tris(shape):
+        v, f = shape.tessellate(0.08, 0.3)
+        v = np.array([(p.x, p.y, p.z) for p in v])
+        return v[np.array(f)]
+
+    bones = [s for f in ("Index_PP_study.step", "Index_MP_study.step")
+             for s in cq.importers.importStep(str(REPO / "results/iteration3" / f)).solids().vals()]
+    bone_tris = [tris(b) for b in bones]
+    light = np.array([0.3, -0.5, 0.8]) / np.linalg.norm([0.3, -0.5, 0.8])
+    for tag, info in built.items():
+        parts = [cq.importers.importStep(str(OUT / f"{info['stem']}_{n}_body.step")).val() for n in ("mp", "pp")]
+        fig = plt.figure(figsize=(10, 4.2))
+        for k, (el, az, title) in enumerate(((22, -58, "three-quarter view"), (0, 0, "side view"))):
+            ax = fig.add_subplot(1, 2, k + 1, projection="3d")
+            for t, col in [(b, (0.75, 0.75, 0.75)) for b in bone_tris] + \
+                          [(tris(parts[0]), (0.85, 0.45, 0.2)), (tris(parts[1]), (0.2, 0.45, 0.85))]:
+                n = np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0])
+                n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
+                sh = 0.35 + 0.65 * np.abs(n @ light)
+                ax.add_collection3d(Poly3DCollection(t, facecolors=np.clip(np.array(col)[None] * sh[:, None], 0, 1),
+                                                     edgecolors="none"))
+            ax.set_xlim(-10, 10)
+            ax.set_ylim(0, 60)
+            ax.set_zlim(-10, 18)
+            ax.set_box_aspect((20, 60, 28))
+            ax.view_init(el, az)
+            ax.set_title(title, fontsize=9)
+            ax.set_axis_off()
+        fig.suptitle(f"{info['stem']}: leaf and anchor on the middle phalanx (orange), guide on the proximal "
+                     "phalanx (blue)", fontsize=9)
+        fig.tight_layout()
+        (fig_dir / "models").mkdir(parents=True, exist_ok=True)
+        fig.savefig(fig_dir / "models" / f"A6_it3_{tag}_on_bones.png", dpi=150)
+        plt.close(fig)
+
+    fig, ax = plt.subplots(figsize=(7.2, 3.4))
+    for (tag, info), col in zip(built.items(), ("#1f5fa8", "#c2571a")):
+        p = info["pick"]
+        a6.set_section(p["width_mm"], p["thickness_mm"])
+        ei = 12.0 * p["width_mm"] * p["thickness_mm"] ** 3 / 12
+        for row, ls in zip(rom.evaluate(float(p["radius_mm"]), p["travel_mm"]), ("-", ":", "--")):
+            ax.plot(row["_angles"], row["_torque"] * ei, ls, color=col, lw=1.6 if ls == "-" else 0.9,
+                    label=(f"R{float(p['radius_mm']):g} / {p['thickness_mm']:g} × {p['width_mm']:g} mm, "
+                           f"travel {p['travel_mm']:g} mm") if ls == "-" else None)
+    ax.set(xlabel="PIP flexion (deg)", ylabel="restoring torque at 12 MPa (N·mm)",
+           title="A6 on the iteration 3 finger (solid: measured pin; dotted, dashed: pin ±0.5 mm)")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(fig_dir / "it3_a6_torque.png", dpi=170)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
-    {"sweep": sweep, "build": build}[sys.argv[1]]()
+    {"sweep": sweep, "build": build, "figures": figures}[sys.argv[1]]()
