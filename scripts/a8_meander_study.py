@@ -514,12 +514,23 @@ def analyse_strip(shape, label: str, archive: Path, element_size: float,
                             and mesh.nodes[idx, 1].min() >= box.ymax - 0.12)
         strip_skin = sets_where(lambda idx: strip_node[idx].all())
     strip_skin = [n for n in strip_skin if n not in proximal and n not in distal]
+    if COLLAR_HOLD:
+        # Only faces that run along the strip can be its underside. The collars' flat
+        # end faces sit exactly at the span's ends, so they pass the span filter; on
+        # the iteration 3 finger the distal collar's end face (8.8 mm from the pin) is
+        # nearer the axis on average than the underside, and was picked as the slave,
+        # leaving the strip with no contact surface.
+        lo, hi = COLLAR_HOLD["span"]
+        strip_skin = [n for n in strip_skin if np.ptp(mesh.nodes[mesh.node_sets[n], 1]) > 0.5 * (hi - lo)]
     # Only the underside can touch the finger, and only the underside is a slave.
     # With every strip face as a slave the run diverged as soon as contact engaged:
     # 351 contact elements in one iteration, from top- and side-face nodes paired
     # with faces they lie behind. The underside is the long face nearest the joint
     # axis on average.
     strip_skin = [min(strip_skin, key=lambda n: radial0[mesh.node_sets[n]].mean())]
+    _q = mesh.nodes[mesh.node_sets[strip_skin[0]]]
+    print(f"      slave face {strip_skin[0]}: y {_q[:, 1].min():.2f}-{_q[:, 1].max():.2f}, "
+          f"z {_q[:, 2].min():.2f}-{_q[:, 2].max():.2f}, {len(_q)} nodes", flush=True)
     if not proximal or not distal or not strip_skin:
         raise RuntimeError(f"{label}: set classification failed "
                            f"({proximal}, {distal}, {len(strip_skin)}).")
