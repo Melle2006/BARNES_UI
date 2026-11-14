@@ -828,10 +828,13 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
         for height, sagitta in ((2.4, 0.75), (2.4, 2.0), (1.8, 0.75), (1.8, 2.0)):
             runs.append({"label": f"it3_2T_w1.2_h{height:.1f}_s{sagitta:.2f}", "kind": "it3",
                          "n_turns": 2, "sagitta": sagitta, "height": height, "true_width": 1.2})
-    if "iteration3_extra" in groups:
-        for height, sagitta in ((2.4, 0.0), (3.0, 0.75), (2.4, 1.25), (3.0, 1.25)):
-            runs.append({"label": f"it3_2T_w1.2_h{height:.1f}_s{sagitta:.2f}", "kind": "it3",
-                         "n_turns": 2, "sagitta": sagitta, "height": height, "true_width": 1.2})
+    if "iteration3_r2" in groups:
+        # Round 2: the 1.8 mm strips pass 20 % strain between 66 and 80 deg, so lower
+        # strips (bending strain goes with height), some widened to win back torque
+        # (torque goes with width, this bending strain does not).
+        for width, height, sagitta in ((1.2, 1.2, 0.75), (1.2, 1.5, 0.75), (2.0, 1.2, 0.75), (1.6, 1.5, 0.75)):
+            runs.append({"label": f"it3_2T_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}", "kind": "it3",
+                         "n_turns": 2, "sagitta": sagitta, "height": height, "true_width": width})
     if "printable_2t" in groups:
         # Added once the 2-turn strip turned out not to snap on the real finger
         # (1.70 N.mm at 14 % strain, h 1.8): how far its height and width can go.
@@ -954,7 +957,7 @@ def main(argv: list[str] | None = None) -> int:
         elif run["kind"] == "it3":
             import iteration3_a8 as I3
             import trimesh
-            shape, _, _, _, params = I3.build(run["height"], run["sagitta"], run["label"])
+            shape, _, _, _, params = I3.build(run["height"], run["sagitta"], run["label"], run["true_width"])
             geometry = params.path_metrics()
             pp, mp = I3.bones()
             IT3_BODIES = []

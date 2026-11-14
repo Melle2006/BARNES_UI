@@ -127,18 +127,18 @@ def caps(pp, mp):
     return out
 
 
-def strip_params(height, sagitta, label):
+def strip_params(height, sagitta, label, width=WIDTH):
     from barnes_ui.core.flexure.templates.a8_meander import A8MeanderParameters, sine_plan
     zc = R_OUT + height / 2.0
     return A8MeanderParameters(plan=sine_plan(2, AMPLITUDE), sagitta=sagitta, n_turns=2,
-                               height_z=height, true_width=WIDTH, y_start=SPAN[0], y_end=SPAN[1],
+                               height_z=height, true_width=width, y_start=SPAN[0], y_end=SPAN[1],
                                z_start=zc, z_end=zc, stations_per_lobe=40, label=label)
 
 
-def build(height, sagitta, label="it3"):
+def build(height, sagitta, label="it3", width=WIDTH):
     from barnes_ui.core.flexure.templates.a8_meander import build_a8_meander
     from barnes_ui.core.cad.inspect import bounding_box
-    params = strip_params(height, sagitta, label)
+    params = strip_params(height, sagitta, label, width)
     strip = build_a8_meander(params)
     prox, dist = collar(*PROX_BAND), collar(*DIST_BAND)
     feet = []
@@ -210,17 +210,18 @@ def export(part, stem):
     StlAPI_Writer().Write(part, str(OUT / f"{stem}.stl"))
 
 
-def stem_for(height, sagitta):
-    return f"A8_it3_2turn_w{WIDTH:.1f}_h{height:.1f}_s{sagitta:.2f}_collared"
+def stem_for(height, sagitta, width=WIDTH):
+    return f"A8_it3_2turn_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}_collared"
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--height", type=float, default=2.4)
     ap.add_argument("--sagitta", type=float, default=0.75)
+    ap.add_argument("--width", type=float, default=WIDTH)
     a = ap.parse_args()
-    part, prox, dist, strip, params = build(a.height, a.sagitta)
-    stem = stem_for(a.height, a.sagitta)
+    part, prox, dist, strip, params = build(a.height, a.sagitta, width=a.width)
+    stem = stem_for(a.height, a.sagitta, a.width)
     export(part, stem)
     pp, mp = bones()
     from OCP.GProp import GProp_GProps
@@ -230,7 +231,7 @@ if __name__ == "__main__":
         g = GProp_GProps()
         BRepGProp.VolumeProperties_s(s, g)
         return g.Mass()
-    info = dict(height=a.height, sagitta=a.sagitta, volume_mm3=vol(part), strip_mm3=vol(strip),
+    info = dict(height=a.height, sagitta=a.sagitta, width=a.width, volume_mm3=vol(part), strip_mm3=vol(strip),
                 collar_mm3=[vol(prox), vol(dist)], span=SPAN, bands=[PROX_BAND, DIST_BAND],
                 r_in=R_IN, wall=WALL, opening_half_deg=OPEN_DEG,
                 distal_collar_meets_pp_at_deg=flexion_clash(dist, pp))
