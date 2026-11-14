@@ -127,18 +127,19 @@ def caps(pp, mp):
     return out
 
 
-def strip_params(height, sagitta, label, width=WIDTH):
+def strip_params(height, sagitta, label, width=WIDTH, n_turns=2, amplitude=None):
     from barnes_ui.core.flexure.templates.a8_meander import A8MeanderParameters, sine_plan
     zc = R_OUT + height / 2.0
-    return A8MeanderParameters(plan=sine_plan(2, AMPLITUDE), sagitta=sagitta, n_turns=2,
+    amplitude = amplitude or {2: AMPLITUDE, 3: 3.5}[n_turns]
+    return A8MeanderParameters(plan=sine_plan(n_turns, amplitude), sagitta=sagitta, n_turns=n_turns,
                                height_z=height, true_width=width, y_start=SPAN[0], y_end=SPAN[1],
                                z_start=zc, z_end=zc, stations_per_lobe=40, label=label)
 
 
-def build(height, sagitta, label="it3", width=WIDTH):
+def build(height, sagitta, label="it3", width=WIDTH, n_turns=2, amplitude=None):
     from barnes_ui.core.flexure.templates.a8_meander import build_a8_meander
     from barnes_ui.core.cad.inspect import bounding_box
-    params = strip_params(height, sagitta, label, width)
+    params = strip_params(height, sagitta, label, width, n_turns, amplitude)
     strip = build_a8_meander(params)
     prox, dist = collar(*PROX_BAND), collar(*DIST_BAND)
     feet = []
@@ -210,8 +211,9 @@ def export(part, stem):
     StlAPI_Writer().Write(part, str(OUT / f"{stem}.stl"))
 
 
-def stem_for(height, sagitta, width=WIDTH):
-    return f"A8_it3_2turn_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}_collared"
+def stem_for(height, sagitta, width=WIDTH, n_turns=2, amplitude=None):
+    a = "" if amplitude is None else f"_a{amplitude:.1f}"
+    return f"A8_it3_{n_turns}turn_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}{a}_collared"
 
 
 if __name__ == "__main__":
