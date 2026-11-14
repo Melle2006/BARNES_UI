@@ -1,0 +1,330 @@
+{
+ "as_drawn_A8_flush": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 15.27,
+   "guide_on_distal_mm_from_pivot": 14.03,
+   "palmar_offset_from_centreline_mm": 6.94,
+   "offset_limit_here_mm": 7.03,
+   "worst_margin": 1.076,
+   "holdable_fingertip_force_N": 5.38,
+   "excursion_mm": 7.14,
+   "lever_at_full_flexion_mm": 11.82,
+   "theta_max_deg": 43.1
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 10.44,
+   "palmar_offset_from_centreline_mm": 3.08,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 1.072,
+   "holdable_fingertip_force_N": 5.36,
+   "excursion_mm": 11.1,
+   "lever_at_full_flexion_mm": 9.52,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 11.54,
+   "guide_on_distal_mm_from_pivot": 9.87,
+   "palmar_offset_from_centreline_mm": 0.63,
+   "offset_limit_here_mm": 0.63,
+   "worst_margin": 1.072,
+   "holdable_fingertip_force_N": 5.36,
+   "excursion_mm": 7.12,
+   "lever_at_full_flexion_mm": 7.94,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "as_drawn_A8_standoff": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 14.15,
+   "guide_on_distal_mm_from_pivot": 9.65,
+   "palmar_offset_from_centreline_mm": 11.0,
+   "offset_limit_here_mm": 5.37,
+   "worst_margin": 1.572,
+   "holdable_fingertip_force_N": 7.86,
+   "excursion_mm": 9.64,
+   "lever_at_full_flexion_mm": 14.26,
+   "theta_max_deg": 43.1
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 10.12,
+   "palmar_offset_from_centreline_mm": 5.0,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 1.586,
+   "holdable_fingertip_force_N": 7.93,
+   "excursion_mm": 13.83,
+   "lever_at_full_flexion_mm": 10.71,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.87,
+   "palmar_offset_from_centreline_mm": 1.5,
+   "offset_limit_here_mm": 0.63,
+   "worst_margin": 1.618,
+   "holdable_fingertip_force_N": 8.09,
+   "excursion_mm": 7.88,
+   "lever_at_full_flexion_mm": 8.01,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "as_drawn_A6_flush": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 15.27,
+   "guide_on_distal_mm_from_pivot": 14.03,
+   "palmar_offset_from_centreline_mm": 6.94,
+   "offset_limit_here_mm": 7.03,
+   "worst_margin": 1.073,
+   "holdable_fingertip_force_N": 5.37,
+   "excursion_mm": 7.14,
+   "lever_at_full_flexion_mm": 11.82,
+   "theta_max_deg": 43.1
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 10.06,
+   "palmar_offset_from_centreline_mm": 3.08,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 1.061,
+   "holdable_fingertip_force_N": 5.3,
+   "excursion_mm": 10.99,
+   "lever_at_full_flexion_mm": 9.4,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 11.54,
+   "guide_on_distal_mm_from_pivot": 9.87,
+   "palmar_offset_from_centreline_mm": 0.63,
+   "offset_limit_here_mm": 0.63,
+   "worst_margin": 1.056,
+   "holdable_fingertip_force_N": 5.28,
+   "excursion_mm": 7.12,
+   "lever_at_full_flexion_mm": 7.94,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "as_drawn_A6_standoff": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 14.15,
+   "guide_on_distal_mm_from_pivot": 9.65,
+   "palmar_offset_from_centreline_mm": 11.0,
+   "offset_limit_here_mm": 5.37,
+   "worst_margin": 1.567,
+   "holdable_fingertip_force_N": 7.84,
+   "excursion_mm": 9.64,
+   "lever_at_full_flexion_mm": 14.26,
+   "theta_max_deg": 43.1
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 10.12,
+   "palmar_offset_from_centreline_mm": 5.0,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 1.576,
+   "holdable_fingertip_force_N": 7.88,
+   "excursion_mm": 13.83,
+   "lever_at_full_flexion_mm": 10.71,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.87,
+   "palmar_offset_from_centreline_mm": 1.5,
+   "offset_limit_here_mm": 0.63,
+   "worst_margin": 1.594,
+   "holdable_fingertip_force_N": 7.97,
+   "excursion_mm": 7.88,
+   "lever_at_full_flexion_mm": 8.01,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "mcp_relieved_A8_flush": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 19.77,
+   "guide_on_distal_mm_from_pivot": 10.38,
+   "palmar_offset_from_centreline_mm": 5.43,
+   "offset_limit_here_mm": 5.65,
+   "worst_margin": 0.866,
+   "holdable_fingertip_force_N": 4.33,
+   "excursion_mm": 14.98,
+   "lever_at_full_flexion_mm": 11.58,
+   "theta_max_deg": 90.0
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.93,
+   "palmar_offset_from_centreline_mm": 2.47,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 0.899,
+   "holdable_fingertip_force_N": 4.5,
+   "excursion_mm": 10.04,
+   "lever_at_full_flexion_mm": 8.94,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.8,
+   "palmar_offset_from_centreline_mm": 0.42,
+   "offset_limit_here_mm": 0.56,
+   "worst_margin": 0.877,
+   "holdable_fingertip_force_N": 4.39,
+   "excursion_mm": 6.34,
+   "lever_at_full_flexion_mm": 7.23,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "mcp_relieved_A8_standoff": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 13.02,
+   "guide_on_distal_mm_from_pivot": 9.65,
+   "palmar_offset_from_centreline_mm": 6.0,
+   "offset_limit_here_mm": 5.26,
+   "worst_margin": 0.913,
+   "holdable_fingertip_force_N": 4.56,
+   "excursion_mm": 14.76,
+   "lever_at_full_flexion_mm": 11.33,
+   "theta_max_deg": 90.0
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 10.06,
+   "palmar_offset_from_centreline_mm": 2.5,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 0.91,
+   "holdable_fingertip_force_N": 4.55,
+   "excursion_mm": 10.13,
+   "lever_at_full_flexion_mm": 9.01,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.87,
+   "palmar_offset_from_centreline_mm": 0.5,
+   "offset_limit_here_mm": 0.63,
+   "worst_margin": 0.933,
+   "holdable_fingertip_force_N": 4.66,
+   "excursion_mm": 6.47,
+   "lever_at_full_flexion_mm": 7.31,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "mcp_relieved_A6_flush": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 19.77,
+   "guide_on_distal_mm_from_pivot": 10.38,
+   "palmar_offset_from_centreline_mm": 5.43,
+   "offset_limit_here_mm": 5.65,
+   "worst_margin": 0.864,
+   "holdable_fingertip_force_N": 4.32,
+   "excursion_mm": 14.98,
+   "lever_at_full_flexion_mm": 11.58,
+   "theta_max_deg": 90.0
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.93,
+   "palmar_offset_from_centreline_mm": 2.47,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 0.894,
+   "holdable_fingertip_force_N": 4.47,
+   "excursion_mm": 10.04,
+   "lever_at_full_flexion_mm": 8.94,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.8,
+   "palmar_offset_from_centreline_mm": 0.42,
+   "offset_limit_here_mm": 0.56,
+   "worst_margin": 0.864,
+   "holdable_fingertip_force_N": 4.32,
+   "excursion_mm": 6.34,
+   "lever_at_full_flexion_mm": 7.23,
+   "theta_max_deg": 90.0
+  }
+ ],
+ "mcp_relieved_A6_standoff": [
+  {
+   "finger": "Index",
+   "joint": "MCP",
+   "guide_on_proximal_mm_from_pivot": 13.02,
+   "guide_on_distal_mm_from_pivot": 9.65,
+   "palmar_offset_from_centreline_mm": 6.0,
+   "offset_limit_here_mm": 5.26,
+   "worst_margin": 0.91,
+   "holdable_fingertip_force_N": 4.55,
+   "excursion_mm": 14.76,
+   "lever_at_full_flexion_mm": 11.33,
+   "theta_max_deg": 90.0
+  },
+  {
+   "finger": "Index",
+   "joint": "PIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 10.06,
+   "palmar_offset_from_centreline_mm": 2.5,
+   "offset_limit_here_mm": 7.4,
+   "worst_margin": 0.904,
+   "holdable_fingertip_force_N": 4.52,
+   "excursion_mm": 10.13,
+   "lever_at_full_flexion_mm": 9.01,
+   "theta_max_deg": 95.0
+  },
+  {
+   "finger": "Index",
+   "joint": "DIP",
+   "guide_on_proximal_mm_from_pivot": 9.8,
+   "guide_on_distal_mm_from_pivot": 9.87,
+   "palmar_offset_from_centreline_mm": 0.5,
+   "offset_limit_here_mm": 0.63,
+   "worst_margin": 0.919,
+   "holdable_fingertip_force_N": 4.59,
+   "excursion_mm": 6.47,
+   "lever_at_full_flexion_mm": 7.31,
+   "theta_max_deg": 90.0
+  }
+ ]
+}

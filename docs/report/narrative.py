@@ -153,6 +153,7 @@ def story(c):
     s += [P("The A8 strip with collars (new in this round)", "h2")] + models(c, ["A8_collared_s2.75"]) + B(collared_points(c))
     s += iteration3_section(c)
     s += iteration3_a6_section(c)
+    s += iteration3_routing_section(c)
     s += [c["PageBreak"](), P("4. Type B round 1: the TPU joint as a spring", "h1"), P(R1_INTRO)]
     s += models(c, ["B5_t150_a45", "B3_t150_w30", "B6_n4_t150_taper15", "B1_t100_notch100", "B_T090_X3"], per_row=3)
     rows = [["Family", "Variant", "Range (°)", "Limited by", "Strain @60°", "Tendon force (N)",
@@ -1107,4 +1108,63 @@ def iteration3_a6_section(c):
             "stays at 12 % strain and meets its stop only near the end of the range. Both are far stiffer than the "
             "iteration 3 A8 (1.2 N·mm at 90°), which is the other reason to print the A8 too: they bracket the spring "
             "the finger needs.")]
+    return s
+
+
+# ---------------------------------------------------------------------------
+# Iteration 3 hand: Type A tendon routing, provisional (results/iteration3/routing)
+# ---------------------------------------------------------------------------
+def iteration3_routing_section(c):
+    P, B, T, F, W, mm = c["P"], c["bullets"], c["table"], c["figure"], c["W"], c["mm"]
+    REPO = c["REPO"]
+    path = REPO / "results/iteration3/routing/summary.json"
+    if not path.exists():
+        return []
+    summ = json.loads(path.read_text())
+    geo = json.loads((REPO / "results/iteration3/routing/type_a_geometry.json").read_text())["fingers"]["Index"]
+    s = [P("3.7 Iteration 3 hand: tendon routing (provisional, new in this round)", "h2")]
+    s += B([
+        "<b>Provisional: the iteration 3 assembly has no distal phalanx.</b> The old index DP stands in, its "
+        f"length and holes scaled by the middle phalanx's length ratio ({geo['stand_in_dp']['length_scale']:.3f}) "
+        f"and its palmar depth by the middle phalanges' depth ratio ({geo['stand_in_dp']['depth_scale']:.2f}): "
+        f"DP {geo['link_lengths']['DP']:.1f} mm. Everything else is measured from iteration 3 (links "
+        f"{geo['link_lengths']['PP']:.2f} / {geo['link_lengths']['MP']:.2f} mm, the bones' palmar depth, the MC2 "
+        "metacarpal, the joint stops). Rerun scripts/iteration3_routing.py once the DP exists.",
+        "<b>The MCP stops at 39° in the CAD.</b> The MC2 socket wraps the MCP ball to 6 mm past its centre on both "
+        "sides, so the proximal phalanx's neck meets the rim at 39° of flexion (26° of extension). The routing is "
+        "given as drawn and with the socket relieved so the MCP reaches the anatomical 90°; the second is the one "
+        "to design to, and the socket rim needs relieving on the palm side for it.",
+        "<b>The springs hardly matter to the tendon.</b> The A6 (6.7 N·mm/rad secant) costs about 0.1 N of "
+        "fingertip force against the A8 (0.8 N·mm/rad): the fingertip load dominates. The rows below use the A8.",
+    ])
+    rows = [["Case", "Guides", "MCP guides (mm from pivot) / offset", "PIP", "DIP", "Fingertip force", "Tendon stroke used"]]
+    for variant, vname in (("as_drawn", "As drawn (MCP to 43°)"), ("mcp_relieved", "MCP socket relieved (to 90°)")):
+        for scen in ("flush", "standoff"):
+            r = summ.get(f"{variant}_A8_{scen}")
+            if not r:
+                continue
+            by = {x["joint"]: x for x in r}
+
+            def g(j):
+                x = by[j]
+                return (f"{x['guide_on_proximal_mm_from_pivot']:.1f} / {x['guide_on_distal_mm_from_pivot']:.1f}; "
+                        f"{x['palmar_offset_from_centreline_mm']:.1f} palmar")
+            rows.append([vname, "flush with the surface" if scen == "flush" else "may stand proud",
+                         g("MCP"), g("PIP"), g("DIP"),
+                         f"{min(x['holdable_fingertip_force_N'] for x in r):.2f} N",
+                         f"{sum(x['excursion_mm'] for x in r):.1f} of 31.4 mm"])
+    s += [T(rows, widths=[30 * mm, 22 * mm, 34 * mm, 30 * mm, 30 * mm, 18 * mm, W - 164 * mm])]
+    s += [P("Guides: station of the last guide on the proximal link and of the first guide (or anchor) on the distal "
+            "link, measured from the joint's pivot, and the tendon's palmar offset from the link's centreline. "
+            "Fingertip force: the largest normal force at the fingertip the servo can hold through the grasp "
+            "(5 N reference load, half-stall MG995 on a 10 mm horn). The old index finger, same analysis: 3.43 N "
+            "flush, 5.15 N standing proud.", "cap")]
+    s += F(REPO / "results/iteration3/routing/mcp_relieved/A8/type_a_flush/index.png",
+           "Iteration 3 index, MCP relieved, guides flush: holdable fingertip force against each guide station and "
+           "offset through the chosen point (results/iteration3/routing).", max_h=120 * mm)
+    s += [P("<b>What it means.</b> The round 14.8 mm phalanges let the tendon sit up to 7.4 mm palmar of the axis, "
+            "against about 4 mm before, so each joint gets a longer lever. With the MCP at its full 90° the three "
+            "joints use the servo's whole 31.4 mm stroke, so the finger is now stroke-limited, not force-limited: "
+            "letting the guides stand proud gains little (4.6 against 4.4 N). A longer horn trades force for stroke "
+            "if more is needed.")]
     return s

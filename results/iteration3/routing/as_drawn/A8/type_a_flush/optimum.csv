@@ -1,0 +1,4 @@
+finger,joint,guide_on_proximal_mm_from_pivot,guide_on_distal_mm_from_pivot,palmar_offset_from_centreline_mm,offset_limit_here_mm,worst_margin,holdable_fingertip_force_N,excursion_mm,lever_at_full_flexion_mm,theta_max_deg
+Index,MCP,15.27,14.03,6.94,7.03,1.076,5.38,7.14,11.82,43.1
+Index,PIP,9.8,10.44,3.08,7.4,1.072,5.36,11.1,9.52,95.0
+Index,DIP,11.54,9.87,0.63,0.63,1.072,5.36,7.12,7.94,90.0
