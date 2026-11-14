@@ -152,6 +152,7 @@ def story(c):
     # ---------------------------------------------------------------- Type B
     s += [P("The A8 strip with collars (new in this round)", "h2")] + models(c, ["A8_collared_s2.75"]) + B(collared_points(c))
     s += iteration3_section(c)
+    s += iteration3_a6_section(c)
     s += [c["PageBreak"](), P("4. Type B round 1: the TPU joint as a spring", "h1"), P(R1_INTRO)]
     s += models(c, ["B5_t150_a45", "B3_t150_w30", "B6_n4_t150_taper15", "B1_t100_notch100", "B_T090_X3"], per_row=3)
     rows = [["Family", "Variant", "Range (°)", "Limited by", "Strain @60°", "Tendon force (N)",
@@ -582,8 +583,8 @@ RATIONALE = [
         "The pin takes the tendon's compression, so a Type A spring only has to return the finger. "
         "That is a much easier job, and it is fully analysed: A8 by converged contact FEA on the "
         "real joint geometry, A6 by a sweep plus 24 as-built checks.",
-        "<b>For the iteration 3 hand the A8 to print is the one in section 3.5</b>: the old index "
-        "finger's A8 (the next two points) was fitted to phalanges the hand no longer has. The same "
+        "<b>For the iteration 3 hand the A8 and A6 to print are in sections 3.5 and 3.6</b>: the old index "
+        "finger's A8 and A6 (the next points) were fitted to phalanges the hand no longer has. The same "
         "rules picked it: no torque drop to 90°, at most 20 % strain at 90° in the strip, its "
         "junctions and its collars, then most torque.",
         "<b>Old index finger: A8 2-turn strip, sagitta 2.75 mm.</b> Chosen in the A8 study by explicit rules: clear "
@@ -807,8 +808,9 @@ PRINT_SPECS = [
     ["A8 for the iteration 3 hand (8S-1, 8S-2, 8F)", "TPU, 2 + 1", "On its back (strip down, collar openings up): the rings then print as arches with no inner support, and the strip lies flat on the plate",
      "None inside the rings if printed open side up; a little under the collar feet",
      "Strip width is exactly 3 lines: check 1.2 mm ±0.1. Check each ring clips onto the Ø14.8 mm shaft (12.8 mm opening) and is snug, not loose; the strip–collar junction is the likely crack point."],
-    ["A6 R28 / 1.4 and R32 / 1.8", "TPU, 2 + 1", "On its side, leaf curve in the XY plane",
-     "Under the guide only", "Two bodies printed in place with 0.25 mm sliding clearance: free the slider after printing; a fused slider is a reject. Leaf thickness 1.4 / 1.8 mm ±10 %."],
+    ["A6 for the iteration 3 hand (6S-1, 6S-2, 6F)", "TPU, 2 + 1", "On its side (thumb side down), so the leaf's curve and the guide lie in the XY plane and the rings print as rings",
+     "Under the guide's free run over the MCP end and under the leaf's arch; support blockers inside the guide pocket",
+     "Two bodies printed in place with 0.25 mm sliding clearance: free the slider after printing; a fused slider is a reject. Leaf 3.2 mm ±10 %. Check the T-head slides the full travel (19 mm) and both rings clip on snugly."],
     ["Type B modules (B5, B3)", "TPU, per list", "On its side, lateral axis vertical, so every leaf or strip lies in XY",
      "Under the bridging upper lanes only; support blockers elsewhere",
      "Leaf/strip thickness at 3 points (1.5 or 2.0 mm). Never print standing on a tab end."],
@@ -1002,8 +1004,107 @@ def apply_iteration3(REPO):
     old_group = PRINT_LINKS_TYPE_A[0]
     keep = [x for x in old_group[1] if not x[0].startswith("A8")]
     new_group = ("Type A springs for the iteration 3 hand (index PIP)", items + keep)
+    # the iteration 3 A6 replaces the old-finger A6 rows and links
+    a6b = REPO / "results/iteration3/a6/build.json"
+    if a6b.exists():
+        built = json.loads(a6b.read_text())
+        sweep = json.loads((REPO / "results/iteration3/a6/sweep.json").read_text())
+        kk = 12 / sweep["modulus_mpa"]
+        a6rows, a6links = [], []
+        for tag, code, n, order in (("margin", "6S", 2, "1"), ("best", "6F", 1, "2")):
+            if tag not in built:
+                continue
+            p, stem = built[tag]["pick"], built[tag]["stem"]
+            name = f"A6 for the iteration 3 hand, R{float(p['radius_mm']):g} / {p['thickness_mm']:g} × {p['width_mm']:g} mm leaf, {p['travel_mm']:g} mm travel"
+            labels = ", ".join(f"{code}-{i}" for i in range(1, n + 1)) if n > 1 else code
+            a6rows.append([order, "Type A spring", f"{name} (×{n}; label{'s' if n > 1 else ''} {labels})",
+                           (f"Turned round for iteration 3: anchored on the middle phalanx, guide on the proximal. "
+                            f"{p['mean_torque_Nmm'] * kk:.1f} N·mm mean torque, {p['peak_strain_pct']:.0f} % strain, "
+                            f"{p['travel_window_mm']:g} mm travel window; clear of the bones and the MC2 socket.")
+                           if code == "6S" else
+                           (f"More torque ({p['mean_torque_Nmm'] * kk:.1f} N·mm mean, {p['torque_at_105_Nmm'] * kk:.0f} at 105°) "
+                            f"at {p['peak_strain_pct']:.0f} % strain, but a 1 mm travel window: print after 6S.")])
+            files = ([f"print_ready/type_a/{code}-{i}_{stem}.stl" for i in range(1, n + 1)] if n > 1
+                     else [f"print_ready/type_a/{code}_{stem}.stl"]) + [f"results/iteration3/a6/{stem}.step"]
+            a6links.append((name + (" (selected)" if code == "6S" else " (second option)"),
+                            f"TPU ×{n}, two bodies printed in place (0.25 mm sliding clearance)", files))
+        idx = [i for i, r in enumerate(PRINT_SUMMARY_ROWS) if r[2].startswith(("A6 sliding leaf R28", "A6 R32"))]
+        for i in reversed(idx):
+            del PRINT_SUMMARY_ROWS[i]
+        at = idx[0] if idx else len(PRINT_SUMMARY_ROWS)
+        PRINT_SUMMARY_ROWS[at:at] = a6rows
+        items = [x for x in new_group[1] if not x[0].startswith("A6")]
+        items[len([x for x in items if x[0].startswith("A8")]):len([x for x in items if x[0].startswith("A8")])] = a6links
+        new_group = (new_group[0], items)
     PRINT_LINKS_TYPE_A[0] = new_group
     # PRINT_LINKS was assembled from the original groups at import; swap the group there too
     for i, g in enumerate(PRINT_LINKS):
         if g is old_group:
             PRINT_LINKS[i] = new_group
+
+
+# ---------------------------------------------------------------------------
+# Iteration 3 hand: the A6 re-designed (results/iteration3/a6)
+# ---------------------------------------------------------------------------
+IT3_A6_POINTS = [
+    "<b>Why it is turned round.</b> The A6's leaf rides 8.6–9.5 mm from the pin on this finger (the joint "
+    "fills a 7.4 mm radius), so its tip must slide 17–19 mm by 105°. The middle phalanx is too short to "
+    "carry a guide that long (fully round only from 48.5 mm, DIP pin at 60.5 mm). So the leaf is "
+    "anchored on a ring on the <i>middle</i> phalanx (48–54 mm) and slides in a guide on the "
+    "<i>proximal</i> phalanx. The guide's ring sits on the round shaft (15.5–29 mm) and the guide runs "
+    "on proximally over the tapered neck and the MCP ball to about 6 mm, above the index metacarpal's "
+    "socket. The rings are the same snap-on rings as the iteration 3 A8.",
+    "<b>Same model, measured axis.</b> The old A6 analysis (planar elastica with a sliding end, travel "
+    "tuned per design) is used unchanged in a frame turned 180° about Z, since the leaf only feels the "
+    "relative turn of its two rings. The pin is measured (y = 39.18 mm), so instead of four guessed axis "
+    "positions each design must pass at the pin and 0.5 mm either side; 'clears the joint' is 7.7 mm "
+    "from the pin (the 7.4 mm envelope plus 0.3).",
+]
+
+
+def iteration3_a6_section(c):
+    P, B, T, F, W, mm = c["P"], c["bullets"], c["table"], c["figure"], c["W"], c["mm"]
+    REPO = c["REPO"]
+    path = REPO / "results/iteration3/a6/sweep.json"
+    s = [P("3.6 Iteration 3 hand: the A6 re-designed (new in this round)", "h2")] + B(IT3_A6_POINTS)
+    if not path.exists():
+        return s + [P("The A6 sweep for iteration 3 has not finished; this section fills in when it does.")]
+    d = json.loads(path.read_text())
+    built = json.loads((REPO / "results/iteration3/a6/build.json").read_text())
+    fits = json.loads((REPO / "results/iteration3/a6/fit_checks.json").read_text())
+    from collections import Counter
+    why = Counter("valid" if x.get("valid_geometry") else
+                  ("guide longer than the space" if (x.get("reason") or "").startswith("guide needs") else x["reason"])
+                  for x in d["simulations"])
+    s += [P(f"<b>The sweep.</b> {len(d['simulations'])} leaves (radius 18–60 mm and flat, 0.6–3.2 mm thick, 4–6 mm "
+            "wide, travel tuned 8–20 mm): " + "; ".join(f"{n} {k}" for k, n in why.most_common()) + ". "
+            "Every valid leaf needs 17.5–19.5 mm of travel, so a guide of 22.5–24.5 mm; strain is not what "
+            "limits it (the thickest valid leaves reach 12–19 %).")]
+    k = 12 / d["modulus_mpa"]
+    rows = [["Design (leaf radius, thickness × width, travel)", "Mean torque 0–105° (12 MPa)", "At 105°",
+             "Peak strain", "Travel window", "Closest to pin", "Fit checks"]]
+    for tag, code in (("margin", "6S (selected)"), ("best", "6F (second option)")):
+        if tag not in built:
+            continue
+        p, f = built[tag]["pick"], fits[built[tag]["stem"]]
+        clean = all(v == 0.0 for kk, v in f.items() if kk.endswith(("bone", "mc2"))) and f["mp_body_first_touches_pp_bone_deg"] is None
+        rows.append([f"<b>{code}</b>: R{float(p['radius_mm']):g} mm, {p['thickness_mm']:g} × {p['width_mm']:g} mm, "
+                     f"{p['travel_mm']:g} mm", f"{p['mean_torque_Nmm'] * k:.2f} N·mm", f"{p['torque_at_105_Nmm'] * k:.1f} N·mm",
+                     f"{p['peak_strain_pct']:.1f} %", f"{p['travel_window_mm']:g} mm", f"{p['closest_to_axis_mm']:.1f} mm",
+                     "clear of both phalanges and the MC2 socket; the turning ring clears the PP to 120°" if clean
+                     else "see results/iteration3/a6/fit_checks.json"])
+    s += [T(rows, widths=[46 * mm, 24 * mm, 17 * mm, 15 * mm, 16 * mm, 16 * mm, W - 134 * mm])]
+    s += [P("Torques are the sweep's 13 MPa values rescaled to 12 MPa. The travel window is the range of tip "
+            "travel over which the design still passes; a wider one tolerates a print that is a little off.", "cap")]
+    s += models(c, ["A6_it3_margin_on_bones"], per_row=1)
+    s += F(REPO / "docs/report/figures/it3_a6_torque.png", "Restoring torque against flexion for the two iteration 3 "
+           "A6 designs, at the measured pin and 0.5 mm either side. Both rise steadily until the T-head reaches its "
+           "stop (about 88° for R45, 98° for R60); from there the leaf bends between two fixed ends and the torque "
+           "climbs steeply.", max_h=66 * mm)
+    s += [P("<b>Why R60 is the one to print first.</b> R45 has the most torque, but it passes over a travel window of "
+            "only 1 mm and meets its stop at 88°, after which its torque reaches 22 N·mm at 105°: a lot of spring for the "
+            "tendon to work against at the end of the grip. R60 gives 18 % less mean torque, passes over 2 mm of travel, "
+            "stays at 12 % strain and meets its stop only near the end of the range. Both are far stiffer than the "
+            "iteration 3 A8 (1.2 N·mm at 90°), which is the other reason to print the A8 too: they bracket the spring "
+            "the finger needs.")]
+    return s
