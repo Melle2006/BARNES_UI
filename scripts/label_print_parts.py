@@ -344,10 +344,10 @@ def type_a_parts():
     sel, fb = N.it3_selection(REPO)
     out = []
     if sel:
-        d = f"A8 for the iteration 3 hand, 2 turns, h {sel['height']:.1f} mm, sagitta {sel['sagitta']:.2f} mm (selected)"
+        d = f"A8 for the iteration 3 hand, {N.it3_name(sel)} (selected)"
         out += [(f"8S-{k}", "8S", k, N.it3_stem(sel), d + f", copy {k}") for k in (1, 2)]
     if fb:
-        d = f"A8 for the iteration 3 hand, 2 turns, h {fb['height']:.1f} mm, sagitta {fb['sagitta']:.2f} mm (second option)"
+        d = f"A8 for the iteration 3 hand, {N.it3_name(fb)} (second option)"
         out.append(("8F", "8F", None, N.it3_stem(fb), d))
     return out
 

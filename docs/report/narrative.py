@@ -894,7 +894,15 @@ def it3_selection(REPO):
 
 
 def it3_stem(case):
-    return f"A8_it3_2turn_w1.2_h{case['height']:.1f}_s{case['sagitta']:.2f}_collared"
+    a = "" if not case.get("amplitude") else f"_a{case['amplitude']:.1f}"
+    return (f"A8_it3_{case.get('n_turns', 2)}turn_w{case.get('true_width', 1.2):.1f}_h{case['height']:.1f}"
+            f"_s{case['sagitta']:.2f}{a}_collared")
+
+
+def it3_name(case):
+    amp = case.get("amplitude") or {2: 4.4, 3: 3.5}[case.get("n_turns", 2)]
+    return (f"{case.get('n_turns', 2)} turns, {case.get('true_width', 1.2):.1f} × {case['height']:.1f} mm, "
+            f"lobes {amp:.1f} mm, sagitta {case['sagitta']:.2f} mm")
 
 
 def iteration3_section(c):
@@ -908,10 +916,10 @@ def iteration3_section(c):
     if not cases:
         return s + [P("The iteration 3 runs are still solving; this section fills in when they finish.")]
     k = 12 / 19.3
-    rows = [["Case (2 turns, 1.2 mm wide)", "Reached", "Torque 30 / 60 / 90° at 12 MPa (N·mm)",
+    rows = [["Case (turns, width × height, lobe amplitude, sagitta)", "Reached", "Torque 30 / 60 / 90° at 12 MPa (N·mm)",
              "Strain at 90°: strip / junction / collars", "Clearance at rest", "Verdict"]]
     for r in cases:
-        name = f"h {r['height']:.1f} mm, sagitta {r['sagitta']:.2f} mm"
+        name = it3_name(r)
         if "t90" not in r:
             rows.append([name, "–", "–", "–", "–", f"not resolved: {r['why']}"])
             continue
@@ -928,12 +936,12 @@ def iteration3_section(c):
     sel, fb = it3_selection(REPO)
     if sel:
         old = json.loads((REPO / "results/a8_collared/cases/collared_2T_w1.2_h2.4_s2.75.json").read_text())
-        txt = (f"<b>Selected for iteration 3:</b> h {sel['height']:.1f} mm, sagitta {sel['sagitta']:.2f} mm — "
+        txt = (f"<b>Selected for iteration 3:</b> {it3_name(sel)} — "
                f"{sel['t90'] * k:.2f} N·mm at 90° at 12 MPa ({sel['t90']:.2f} at 19.3), worst strain "
                f"{100 * sel['worst']:.1f} % at 90°. On the old finger the collared A8 gave "
                f"{old['torque_n_mm']['90'] * k:.2f} N·mm at 12 MPa with 21.5 % at its junction.")
         if fb:
-            txt += (f" <b>Second print:</b> h {fb['height']:.1f} mm, sagitta {fb['sagitta']:.2f} mm "
+            txt += (f" <b>Second print:</b> {it3_name(fb)} "
                     f"({fb['t90'] * k:.2f} N·mm, worst strain {100 * fb['worst']:.1f} %)"
                     + ("." if fb["ok"] else f", which {fb['why']}: print it only as a comparison."))
         s += [P(txt)]
@@ -952,20 +960,17 @@ def apply_iteration3(REPO):
     k = 12 / 19.3
     lab = "print_ready/type_a/"
     PRINT_SUMMARY_ROWS[1:3] = [
-        ["1", "Type A spring", f"A8 for the iteration 3 hand: 2-turn strip 1.2 × {sel['height']:.1f} mm, "
-         f"sagitta {sel['sagitta']:.2f} mm, new snap-on collars (×2; labels 8S-1, 8S-2)",
+        ["1", "Type A spring", f"A8 for the iteration 3 hand: {it3_name(sel)}, new snap-on collars "
+         "(×2; labels 8S-1, 8S-2)",
          f"Re-fitted to the iteration 3 index finger (round Ø14.8 mm phalanges). {sel['t90'] * k:.2f} N·mm "
          f"at 90° at 12 MPa, worst strain {100 * sel['worst']:.1f} % at 90°, collars clear the joint to 120°."],
-    ] + ([["1", "Type A spring", f"A8 iteration 3, h {fb['height']:.1f} mm, sagitta {fb['sagitta']:.2f} mm "
-           f"(×1; label 8F)", f"Second option: {fb['t90'] * k:.2f} N·mm at 90°, worst strain "
+    ] + ([["1", "Type A spring", f"A8 iteration 3, {it3_name(fb)} (×1; label 8F)", f"Second option: {fb['t90'] * k:.2f} N·mm at 90°, worst strain "
            f"{100 * fb['worst']:.1f} %" + ("." if fb["ok"] else f" ({fb['why']}): comparison only.")]] if fb else [])
-    items = [(f"A8 for the iteration 3 hand, h {sel['height']:.1f} / sagitta {sel['sagitta']:.2f} mm, "
-              "with snap-on collars (selected)", "TPU ×2, one piece; labelled 8S-1, 8S-2",
+    items = [(f"A8 for the iteration 3 hand, {it3_name(sel)}, with snap-on collars (selected)", "TPU ×2, one piece; labelled 8S-1, 8S-2",
               [lab + f"8S-1_{it3_stem(sel)}.stl", lab + f"8S-2_{it3_stem(sel)}.stl",
                f"results/iteration3/a8/{it3_stem(sel)}.step"])]
     if fb:
-        items.append((f"A8 for the iteration 3 hand, h {fb['height']:.1f} / sagitta {fb['sagitta']:.2f} mm "
-                      "(second option)", "TPU ×1, one piece; labelled 8F",
+        items.append((f"A8 for the iteration 3 hand, {it3_name(fb)} (second option)", "TPU ×1, one piece; labelled 8F",
                       [lab + f"8F_{it3_stem(fb)}.stl", f"results/iteration3/a8/{it3_stem(fb)}.step"]))
     old = PRINT_LINKS_TYPE_A[0][1]
     keep = [x for x in old if not x[0].startswith("A8")]

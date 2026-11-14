@@ -221,9 +221,11 @@ if __name__ == "__main__":
     ap.add_argument("--height", type=float, default=2.4)
     ap.add_argument("--sagitta", type=float, default=0.75)
     ap.add_argument("--width", type=float, default=WIDTH)
+    ap.add_argument("--turns", type=int, default=2)
+    ap.add_argument("--amplitude", type=float, default=None)
     a = ap.parse_args()
-    part, prox, dist, strip, params = build(a.height, a.sagitta, width=a.width)
-    stem = stem_for(a.height, a.sagitta, a.width)
+    part, prox, dist, strip, params = build(a.height, a.sagitta, width=a.width, n_turns=a.turns, amplitude=a.amplitude)
+    stem = stem_for(a.height, a.sagitta, a.width, a.turns, a.amplitude)
     export(part, stem)
     pp, mp = bones()
     from OCP.GProp import GProp_GProps
@@ -233,7 +235,7 @@ if __name__ == "__main__":
         g = GProp_GProps()
         BRepGProp.VolumeProperties_s(s, g)
         return g.Mass()
-    info = dict(height=a.height, sagitta=a.sagitta, width=a.width, volume_mm3=vol(part), strip_mm3=vol(strip),
+    info = dict(height=a.height, sagitta=a.sagitta, width=a.width, turns=a.turns, amplitude=a.amplitude, volume_mm3=vol(part), strip_mm3=vol(strip),
                 collar_mm3=[vol(prox), vol(dist)], span=SPAN, bands=[PROX_BAND, DIST_BAND],
                 r_in=R_IN, wall=WALL, opening_half_deg=OPEN_DEG,
                 distal_collar_meets_pp_at_deg=flexion_clash(dist, pp))
