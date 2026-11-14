@@ -59,7 +59,7 @@ OPEN_DEG = 60.0
 MAX_GUIDE_CUFF = 21.0              # 29.0 -> 8.0 mm: the ring stays on the round shaft (to 15.5),
                                    # the guide runs on over the tapered neck, clear of the MCP ball
 
-RADII = (18.0, 22.0, 26.0, 30.0, 35.0, 45.0, 60.0, None)
+RADII = (18.0, 22.0, 26.0, 30.0, 35.0, 45.0, 60.0, 1000.0)   # 1000 mm: flat to 0.04 mm over the span
 THICKNESSES = (0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0)
 WIDTHS = (4.0, 5.0, 6.0)
 
