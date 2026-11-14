@@ -845,6 +845,14 @@ def plan_runs(steps_dir: Path | None, groups: list[str]) -> list[dict]:
             runs.append({"label": f"it3_{n}T_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}" + (f"_a{amp:.1f}" if amp else ""),
                          "kind": "it3", "n_turns": n, "sagitta": sagitta, "height": height,
                          "true_width": width, "amplitude": amp})
+    if "iteration3_r4" in groups:
+        # Round 4: wider lobes (5.5 mm) were the first to stay inside 20 % to 100 deg,
+        # at 1.4 N.mm. With the stretch taken out, strain is mostly bending, so height
+        # buys torque again: taller strips at 5.5 and 6.0 mm amplitude.
+        for n, width, height, sagitta, amp in ((2, 1.2, 1.8, 0.75, 5.5), (2, 1.2, 1.8, 0.75, 6.0)):
+            runs.append({"label": f"it3_{n}T_w{width:.1f}_h{height:.1f}_s{sagitta:.2f}_a{amp:.1f}",
+                         "kind": "it3", "n_turns": n, "sagitta": sagitta, "height": height,
+                         "true_width": width, "amplitude": amp})
     if "printable_2t" in groups:
         # Added once the 2-turn strip turned out not to snap on the real finger
         # (1.70 N.mm at 14 % strain, h 1.8): how far its height and width can go.
