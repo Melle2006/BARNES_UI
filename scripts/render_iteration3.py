@@ -64,18 +64,33 @@ def on_bones(stem, out):
 
 
 def torque_curves(out):
-    cases = sorted((IT3 / "a8" / "cases").glob("it3_*.json"))
-    fig, ax = plt.subplots(figsize=(7.2, 3.6))
-    for p in cases:
-        r = json.loads(p.read_text())
-        if "failure" in r or not r.get("curve"):
+    """Every finished case; those inside 20 % strain to 90 deg in colour, the rest grey,
+    each grey curve marked where it first reaches 20 %."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("narrative", REPO / "docs/report/narrative.py")
+    N = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(N)
+    k = 12 / 19.3
+    fig, ax = plt.subplots(figsize=(7.4, 3.9))
+    colours = iter(["#1f5fa8", "#c2571a", "#2a8a4a", "#7a3fa0"])
+    for c in N.it3_cases(REPO):
+        if not c.get("curve"):
             continue
-        a, t = np.array(r["curve"]["angle_deg"]), np.array(r["curve"]["torque_n_mm"]) * 12 / 19.3
-        ax.plot(a, t, label=r["label"].replace("it3_2T_w1.2_", "").replace("_", " "))
+        a, t = np.array(c["curve"]["angle_deg"]), np.array(c["curve"]["torque_n_mm"]) * k
+        if c["ok"]:
+            ax.plot(a, t, lw=2.2, color=next(colours), label=N.it3_name(c) + " (passes)")
+        else:
+            ax.plot(a, t, lw=0.9, color="#9aa3ad")
+            fh = sorted((float(tt) * 100, v) for tt, v in c["field_history"].items() if "peak_strain_all" in v)
+            hit = [x for x, v in fh if max(v["peak_strain_interior"], v.get("peak_strain_junction") or 0,
+                                           v.get("peak_strain_collars") or 0) >= 0.2]
+            if hit:
+                ax.plot(hit[0], np.interp(hit[0], a, t), "x", color="#c0392b", ms=6, mew=1.5)
+    ax.plot([], [], color="#9aa3ad", lw=0.9, label="cases over 20 % strain (× marks where)")
     ax.set(xlabel="PIP flexion (deg)", ylabel="restoring torque at 12 MPa (N·mm)",
-           title="A8 with iteration 3 collars: torque against flexion")
+           title="A8 on the iteration 3 finger: torque against flexion, every case")
     ax.grid(alpha=0.3)
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=7.5, loc="upper left")
     fig.tight_layout()
     fig.savefig(out, dpi=170)
     plt.close(fig)
