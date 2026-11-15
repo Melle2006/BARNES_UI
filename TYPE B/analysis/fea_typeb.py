@@ -381,7 +381,7 @@ def collision_angle(joint, c, F, ures, target, ref_xyz):
 # ---------------------------------------------------------------------------
 # ONE RUN
 # ---------------------------------------------------------------------------
-def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", threads=1, pinned=False):
+def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", threads=1, pinned=False, pin_dy=0.0):
     variants = all_variants()
     v = variants[name]
     started = time.time()
@@ -395,7 +395,9 @@ def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", t
     # pinned: a hinge pin at mid flex zone on the neutral axis (the B5's own pivot), carried
     # by PLA side plates outside the module, so the distal collar turns about it with no
     # translation (round-2 hybrid, TYPE B/round2/b5_pinned.py)
-    ref_xyz = (0.0, 0.0, c + F / 2) if pinned else (0.0, 0.0, c + F)
+    # pin_dy moves the pin across the finger (Y), towards where the free B5's rotation pole
+    # drifts (round-1 FEA: about -0.0125 mm per degree), so the pin fights the strips less
+    ref_xyz = (0.0, pin_dy, c + F / 2) if pinned else (0.0, 0.0, c + F)
     material = provisional_tpu(E_MPA)
     target = TARGET_DEG[joint]
 
@@ -435,7 +437,7 @@ def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", t
         logs[job] = p.stdout[-3000:]
         (work / f"{job}.log").write_text(p.stdout + p.stderr)
 
-    res = dict(variant=name, joint=joint, family=v["family"], params=v["params"], pinned=pinned,
+    res = dict(variant=name, joint=joint, family=v["family"], params=v["params"], pinned=pinned, pin_dy=pin_dy if pinned else None,
                pin_xyz=list(ref_xyz) if pinned else None,
                target_deg=target, element_size=size, elements=int(mesh.element_count),
                nodes=int(mesh.node_count), info={k: (list(x) if isinstance(x, tuple) else x)
@@ -526,9 +528,10 @@ if __name__ == "__main__":
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--threads", type=int, default=1)
     ap.add_argument("--pinned", action="store_true", help="hinge pin at mid flex zone (round-2 hybrid)")
+    ap.add_argument("--pin-dy", type=float, default=0.0, help="pin offset across the finger (Y), mm")
     a = ap.parse_args()
     work = a.work or tempfile.mkdtemp(prefix=f"fea_{a.variant}_{a.joint}_")
-    r = run_joint(a.variant, a.joint, work, a.elements_through, a.keep, threads=a.threads, pinned=a.pinned)
+    r = run_joint(a.variant, a.joint, work, a.elements_through, a.keep, threads=a.threads, pinned=a.pinned, pin_dy=a.pin_dy)
     txt = json.dumps(r, indent=1)
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)

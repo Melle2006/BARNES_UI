@@ -1,0 +1,27 @@
+{
+ "plates_x_mm": {
+  "p1": [
+   7.0,
+   8.2
+  ],
+  "p2": [
+   8.399999999999999,
+   9.599999999999998
+  ]
+ },
+ "pin_from_joint_face_mm": 4.575,
+ "P1_vs_module_mm3": 0.0,
+ "P2_vs_module_mm3": 0.416,
+ "P1_vs_P2_at_0deg_mm3": 0.0,
+ "phalanges_and_plates_first_touch_deg": 80,
+ "hand": {
+  "load_per_pin_N": 23.5,
+  "pla_bearing_stress_MPa": 9.8,
+  "pla_bearing_safety": 3.1,
+  "plate_tear_out_stress_MPa": 3.3,
+  "steel_pin_shear_safety": 40.0,
+  "filament_pin_1p75_shear_MPa": 9.8,
+  "pin_friction_torque_at_servo_limit_Nmm": 14.1
+ },
+ "module": "deep_offset/B5_t200_a45_deep"
+}
