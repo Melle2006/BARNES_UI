@@ -52,6 +52,8 @@ DESIGNS = [
      "B8 knuckle central, r1.5, as built", 1),
     ("G", "B3_t150_w30", TB / "B3_dual_leaf/B3_t150_w30",
      "B3 dual leaf t1.5 / w3.0, as built (optional control)", 1),
+    ("H", "B5_t150_a45_deep", TB / "round2/deep_offset/B5_t150_a45_deep",
+     "B5 crossed strip t1.5 / 45°, deep tendon: the pinned hybrid's module (PIP pinned)", 2),
 ]
 #: joint letter, file, end carrying the label and its tab (w, h, corner r), and the
 #: tab at the other end, which carries the copy number when there is more than one
@@ -64,6 +66,12 @@ JOINT_NAME = {"M": "MCP", "P": "PIP", "D": "DIP"}
 PHALANGES = [
     ("S", TB / "common_phalanges", "Type B phalanges, standard (as-built) tendon"),
     ("X", TB / "round2/deep_offset/deep_phalanges", "Type B phalanges, deep tendon"),
+]
+#: The pinned hybrid's PLA phalanges (hinge plates at the PIP, TYPE B/round2/b5_pinned.py);
+#: its fingertip phalanx is the deep set's X3.
+PINNED_PHALANGES = [
+    ("H1", TB / "round2/pinned_b5/02_Phalanx1_pinned.step", "Pinned B5 hybrid: Phalanx 1 with PIP hinge plates"),
+    ("H2", TB / "round2/pinned_b5/04_Phalanx2_pinned.step", "Pinned B5 hybrid: Phalanx 2 with PIP hinge plates"),
 ]
 PHALANX_FILES = [("1", "02_Phalanx1"), ("2", "04_Phalanx2"), ("3", "06_Phalanx3")]
 RIG = TB / "round2/test_rig"
@@ -497,6 +505,13 @@ def main():
                              material="PLA", label_on="side face (+X), mid-length", file=path))
             checks += [(f"{code}{n}",) + c for c in ch]
             print("ok", code, n)
+    for code, path_, desc in PINNED_PHALANGES:
+        shape, ch = label_phalanx(path_, code)
+        path = save(shape, f"{code}_{path_.stem}", "type_b_phalanges")
+        rows.append(dict(code=code, reads=code, part=desc + " (Ø2 mm pins, one each side)",
+                         material="PLA", label_on="side face (+X), mid-length", file=path))
+        checks += [(code,) + c for c in ch]
+        print("ok", code)
     for code, fname, desc in SPECIMENS:
         for cp in range(1, SPECIMEN_COPIES + 1):
             c = f"{code}-{cp}"

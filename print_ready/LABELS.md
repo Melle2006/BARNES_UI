@@ -16,6 +16,7 @@ Look at the **end face of the proximal tab** (the end that goes into the proxima
 | **E** | B8 knuckle 2 mm dorsal, r1.25, deep tendon | `TYPE B/round2/print_gap05/deep_offset/B8_y20_r125_deep` |
 | **F** | B8 knuckle central, r1.5, as built | `TYPE B/round2/print_gap05/B8_y00_r150` |
 | **G** | B3 dual leaf t1.5 / w3.0, as built (optional control) | `TYPE B/B3_dual_leaf/B3_t150_w30` |
+| **H** | B5 crossed strip t1.5 / 45°, deep tendon: the pinned hybrid's module (PIP pinned) | `TYPE B/round2/deep_offset/B5_t150_a45_deep` |
 
 | Joint letter | Joint |
 |---|---|
@@ -49,6 +50,10 @@ Letters D, M and P are never used for a design, so a design letter never reads a
 | **G-M** | G  M | B3 dual leaf t1.5 / w3.0, as built (optional control): MCP module | TPU | distal tab end face; 'G-M' on the flange top edge | 2.6 | [G-M_B3_t150_w30_MCP.stl](type_b_modules/G-M_B3_t150_w30_MCP.stl) |
 | **G-P** | G  P | B3 dual leaf t1.5 / w3.0, as built (optional control): PIP module | TPU | proximal tab end face | 3.3 | [G-P_B3_t150_w30_PIP.stl](type_b_modules/G-P_B3_t150_w30_PIP.stl) |
 | **G-D** | G  D | B3 dual leaf t1.5 / w3.0, as built (optional control): DIP module | TPU | proximal tab end face | 2.3 | [G-D_B3_t150_w30_DIP.stl](type_b_modules/G-D_B3_t150_w30_DIP.stl) |
+| **H-M** | H  M | B5 crossed strip t1.5 / 45°, deep tendon: the pinned hybrid's module (PIP pinned): MCP module | TPU | distal tab end face; 'H-M' on the flange top edge | 2.6 | [H-M_B5_t150_a45_deep_MCP.stl](type_b_modules/H-M_B5_t150_a45_deep_MCP.stl) |
+| **H1-P** | H  P  (other end: 1) | B5 crossed strip t1.5 / 45°, deep tendon: the pinned hybrid's module (PIP pinned): PIP module, copy 1 | TPU | proximal tab end face; copy number 1 on the distal tab end face | 3.0 | [H1-P_B5_t150_a45_deep_PIP.stl](type_b_modules/H1-P_B5_t150_a45_deep_PIP.stl) |
+| **H2-P** | H  P  (other end: 2) | B5 crossed strip t1.5 / 45°, deep tendon: the pinned hybrid's module (PIP pinned): PIP module, copy 2 | TPU | proximal tab end face; copy number 2 on the distal tab end face | 3.0 | [H2-P_B5_t150_a45_deep_PIP.stl](type_b_modules/H2-P_B5_t150_a45_deep_PIP.stl) |
+| **H-D** | H  D | B5 crossed strip t1.5 / 45°, deep tendon: the pinned hybrid's module (PIP pinned): DIP module | TPU | proximal tab end face | 2.4 | [H-D_B5_t150_a45_deep_DIP.stl](type_b_modules/H-D_B5_t150_a45_deep_DIP.stl) |
 | **8S-1** | 8S  (distal collar: 1) | A8 for the iteration 3 hand, 2 turns, 1.2 × 1.8 mm, lobes 5.5 mm, sagitta 0.75 mm (selected), copy 1 | TPU | outside of the proximal collar, thumb side; copy number on the distal collar | 2.5 | [8S-1_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl](type_a/8S-1_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl) |
 | **8S-2** | 8S  (distal collar: 2) | A8 for the iteration 3 hand, 2 turns, 1.2 × 1.8 mm, lobes 5.5 mm, sagitta 0.75 mm (selected), copy 2 | TPU | outside of the proximal collar, thumb side; copy number on the distal collar | 2.5 | [8S-2_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl](type_a/8S-2_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl) |
 | **8F** | 8F | A8 for the iteration 3 hand, 2 turns, 1.2 × 1.5 mm, lobes 5.5 mm, sagitta 0.75 mm (second option) | TPU | outside of the proximal collar, thumb side | 2.6 | [8F_A8_it3_2turn_w1.2_h1.5_s0.75_a5.5_collared.stl](type_a/8F_A8_it3_2turn_w1.2_h1.5_s0.75_a5.5_collared.stl) |
@@ -64,6 +69,8 @@ Letters D, M and P are never used for a design, so a design letter never reads a
 | **X1** | X1 | Type B phalanges, deep tendon: Phalanx 1 | PLA | side face (+X), mid-length | 4.0 | [X1_deep_phalanges_02_Phalanx1.stl](type_b_phalanges/X1_deep_phalanges_02_Phalanx1.stl) |
 | **X2** | X2 | Type B phalanges, deep tendon: Phalanx 2 | PLA | side face (+X), mid-length | 3.6 | [X2_deep_phalanges_04_Phalanx2.stl](type_b_phalanges/X2_deep_phalanges_04_Phalanx2.stl) |
 | **X3** | X3 | Type B phalanges, deep tendon: Phalanx 3 | PLA | side face (+X), mid-length | 3.1 | [X3_deep_phalanges_06_Phalanx3.stl](type_b_phalanges/X3_deep_phalanges_06_Phalanx3.stl) |
+| **H1** | H1 | Pinned B5 hybrid: Phalanx 1 with PIP hinge plates (Ø2 mm pins, one each side) | PLA | side face (+X), mid-length | 4.0 | [H1_02_Phalanx1_pinned.stl](type_b_phalanges/H1_02_Phalanx1_pinned.stl) |
+| **H2** | H2 | Pinned B5 hybrid: Phalanx 2 with PIP hinge plates (Ø2 mm pins, one each side) | PLA | side face (+X), mid-length | 3.6 | [H2_04_Phalanx2_pinned.stl](type_b_phalanges/H2_04_Phalanx2_pinned.stl) |
 | **F1-1** | F1-1 | Tensile dog-bone 1BA, 1.0 mm, printed flat, copy 1 | TPU | one grip end | 2.5 | [F1-1_tensile_1BA_t1.0_flat.stl](specimens/F1-1_tensile_1BA_t1.0_flat.stl) |
 | **F1-2** | F1-2 | Tensile dog-bone 1BA, 1.0 mm, printed flat, copy 2 | TPU | one grip end | 2.6 | [F1-2_tensile_1BA_t1.0_flat.stl](specimens/F1-2_tensile_1BA_t1.0_flat.stl) |
 | **F1-3** | F1-3 | Tensile dog-bone 1BA, 1.0 mm, printed flat, copy 3 | TPU | one grip end | 2.6 | [F1-3_tensile_1BA_t1.0_flat.stl](specimens/F1-3_tensile_1BA_t1.0_flat.stl) |

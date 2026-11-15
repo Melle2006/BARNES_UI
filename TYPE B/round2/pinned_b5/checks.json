@@ -10,11 +10,11 @@
   ]
  },
  "pin_from_joint_face_mm": 4.575,
- "pin_dy_mm": -0.5,
+ "pin_dy_mm": -0.65,
  "P1_vs_module_mm3": 0.0,
  "P2_vs_module_mm3": 0.0,
  "P1_vs_P2_at_0deg_mm3": 0.0,
- "pla_parts_first_touch_flexion_deg": 82,
+ "pla_parts_first_touch_flexion_deg": 84,
  "pla_parts_first_touch_extension_deg": null,
  "hand": {
   "load_per_pin_N": 23.5,

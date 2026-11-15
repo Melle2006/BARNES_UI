@@ -54,9 +54,9 @@ PLATE_R = 4.0                        # disc round the pin; must stay under PIN_F
 ATTACH = 8.0                         # length fused to the phalanx's side
 PIN_D = 2.0
 #: Pin offset across the finger, mm (+Y is dorsal): the free B5's rotation pole drifts
-#: palmar as it bends (round-1 FEA, about 1.1 mm by 90 deg); a pin 0.5 mm palmar of the
+#: palmar as it bends (round-1 FEA, about 1.1 mm by 90 deg); a pin 0.65 mm palmar of the
 #: strip crossing follows it best (pinned FEA, TYPE B/analysis/results/PIP_pinned/).
-PIN_DY = -0.5
+PIN_DY = -0.65
 PIN_HOLE = 2.05
 
 # hand calculation inputs
