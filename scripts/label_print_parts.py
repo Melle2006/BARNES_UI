@@ -304,7 +304,6 @@ def write_markdown(rows, checks):
     L += ["", "## Not labelled", "",
           "* **Compression cylinders Ø10 × 10**: an engraving would spoil a loading face or change the "
           "section. Mark them with a pen.",
-          "* **Rig parts (PLA)**: one of each, nothing to confuse.",
 
           "## How to read a Type A (A8) part", "",
           "The **design code** is on the outside of the proximal collar (the one on the proximal "
@@ -373,6 +372,47 @@ def a6_parts():
     return out
 
 
+#: PLA rig parts: code, file, the face to label (outward normal), in-face x direction,
+#: and the largest letters wanted. The face is the largest flat face with that normal.
+RIG_PARTS = [
+    ("RIG", "rig_base", (0, -1, 0), (1, 0, 0), 8.0, "Test rig base (PLA)"),
+    ("ADP", "load_adapter", (0, -1, 0), (0, 0, 1), 4.0, "Rig load adapter, hook arm (PLA)"),
+    ("PUL", "pulley", (1, 0, 0), (0, 1, 0), 2.6, "Rig tendon pulley (PLA)"),
+]
+
+
+def label_flat_face(path, code, normal, xdir, max_h):
+    """Engrave ``code`` on the largest flat face with outward ``normal``: try spots across
+    the face and sizes down from ``max_h`` until one leaves 0.8 mm of PLA behind it."""
+    solid = load(path)
+    n = cq.Vector(*normal)
+    faces = [f for f in solid.Faces() if f.geomType() == "PLANE" and f.normalAt().dot(n) > 0.999]
+    face = max(faces, key=lambda f: f.Area())
+    bb = face.BoundingBox()
+    c = face.Center()
+    x = cq.Vector(*xdir)
+    y = n.cross(x)
+    ext_x = abs(x.x) * bb.xlen + abs(x.y) * bb.ylen + abs(x.z) * bb.zlen
+    ext_y = abs(y.x) * bb.xlen + abs(y.y) * bb.ylen + abs(y.z) * bb.zlen
+    for h in (max_h, max_h * 0.75, max_h * 0.55):
+        size = fit_size(code, 0.6 * ext_x, h)
+        for fx, fy in ((0, 0), (0, 0.25), (0, -0.25), (0.25, 0), (-0.25, 0), (0.25, 0.25), (-0.25, -0.25),
+                       (0, 0.35), (0, -0.35)):
+            centre = c + x * (fx * ext_x) + y * (fy * ext_y)
+            p0 = (centre.x, centre.y, centre.z)
+            from OCP.BRepClass import BRepClass_FaceClassifier
+            from OCP.gp import gp_Pnt
+            if BRepClass_FaceClassifier(face.wrapped, gp_Pnt(*p0), 1e-6).State() != 0:   # 0 = IN
+                continue
+            lab = Labeller(solid)
+            try:
+                lab.add(code, size, p0, normal, xdir, DEPTH_PLA, 0.8)
+                return lab.result(), lab.checks
+            except ValueError:
+                continue
+    raise ValueError(f"no clear place for {code} on {path.name}")
+
+
 def type_a_parts():
     """(code, design glyphs, copy, stem, description) for the iteration 3 A8 selection."""
     import importlib.util
@@ -425,6 +465,13 @@ def main():
                          part=desc, material="TPU, two bodies printed in place",
                          label_on="outside of the middle-phalanx ring, thumb side" +
                          ("; copy number on the proximal-phalanx ring" if cp else ""), file=path))
+        checks += [(code,) + c for c in ch]
+        print("ok", code)
+    for code, fname, normal, xdir, h, desc in RIG_PARTS:
+        shape, ch = label_flat_face(RIG / f"{fname}.step", code, normal, xdir, h)
+        path = save(shape, f"{code}_{fname}", "rig")
+        rows.append(dict(code=code, reads=code, part=desc, material="PLA",
+                         label_on="its largest flat face", file=path))
         checks += [(code,) + c for c in ch]
         print("ok", code)
     for code, folder, desc in PHALANGES:

@@ -53,3 +53,4 @@ results/visual/
 results/**/*.claim
 TYPE B/round2/fea/campaign.log
 results/iteration3/a6/sweep.log
+results/iteration3/a3/sweep.log
