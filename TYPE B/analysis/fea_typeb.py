@@ -381,7 +381,7 @@ def collision_angle(joint, c, F, ures, target, ref_xyz):
 # ---------------------------------------------------------------------------
 # ONE RUN
 # ---------------------------------------------------------------------------
-def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", threads=1):
+def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", threads=1, pinned=False):
     variants = all_variants()
     v = variants[name]
     started = time.time()
@@ -392,7 +392,10 @@ def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", t
         elements_through = LATTICE_ELEMENTS_THROUGH
     size = max(0.2, tmin / elements_through)
     eps = 1e-4
-    ref_xyz = (0.0, 0.0, c + F)
+    # pinned: a hinge pin at mid flex zone on the neutral axis (the B5's own pivot), carried
+    # by PLA side plates outside the module, so the distal collar turns about it with no
+    # translation (round-2 hybrid, TYPE B/round2/b5_pinned.py)
+    ref_xyz = (0.0, 0.0, c + F / 2) if pinned else (0.0, 0.0, c + F)
     material = provisional_tpu(E_MPA)
     target = TARGET_DEG[joint]
 
@@ -422,7 +425,7 @@ def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", t
 
     work = Path(workdir)
     work.mkdir(parents=True, exist_ok=True)
-    (work / "flex.inp").write_text(flexion_deck(mesh, material, prox, dist, ref_xyz, target,
+    (work / "flex.inp").write_text(flexion_deck(mesh, material, prox, dist, ref_xyz, target, pin_ref=pinned,
                                                 first_inc=0.0025 if is_lattice else 0.01))
     (work / "offaxis.inp").write_text(offaxis_deck(mesh_off, material, prox_off, dist_off, ref_xyz))
     env = dict(os.environ, OMP_NUM_THREADS=str(threads), CCX_NPROC_EQUATION_SOLVER=str(threads))
@@ -432,7 +435,8 @@ def run_joint(name, joint, workdir, elements_through=2, keep=False, ccx="ccx", t
         logs[job] = p.stdout[-3000:]
         (work / f"{job}.log").write_text(p.stdout + p.stderr)
 
-    res = dict(variant=name, joint=joint, family=v["family"], params=v["params"],
+    res = dict(variant=name, joint=joint, family=v["family"], params=v["params"], pinned=pinned,
+               pin_xyz=list(ref_xyz) if pinned else None,
                target_deg=target, element_size=size, elements=int(mesh.element_count),
                nodes=int(mesh.node_count), info={k: (list(x) if isinstance(x, tuple) else x)
                                                  for k, x in info.items() if not isinstance(x, dict)})
@@ -521,9 +525,10 @@ if __name__ == "__main__":
     ap.add_argument("--elements-through", type=float, default=2)
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--threads", type=int, default=1)
+    ap.add_argument("--pinned", action="store_true", help="hinge pin at mid flex zone (round-2 hybrid)")
     a = ap.parse_args()
     work = a.work or tempfile.mkdtemp(prefix=f"fea_{a.variant}_{a.joint}_")
-    r = run_joint(a.variant, a.joint, work, a.elements_through, a.keep, threads=a.threads)
+    r = run_joint(a.variant, a.joint, work, a.elements_through, a.keep, threads=a.threads, pinned=a.pinned)
     txt = json.dumps(r, indent=1)
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
