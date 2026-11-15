@@ -53,6 +53,10 @@ PLATE_H = 8.0                        # plate height (y), centred on the neutral 
 PLATE_R = 4.0                        # disc round the pin; must stay under PIN_FROM_FACE
 ATTACH = 8.0                         # length fused to the phalanx's side
 PIN_D = 2.0
+#: Pin offset across the finger, mm (+Y is dorsal): the free B5's rotation pole drifts
+#: palmar as it bends (round-1 FEA, about 1.1 mm by 90 deg); a pin 0.5 mm palmar of the
+#: strip crossing follows it best (pinned FEA, TYPE B/analysis/results/PIP_pinned/).
+PIN_DY = -0.5
 PIN_HOLE = 2.05
 
 # hand calculation inputs
@@ -62,13 +66,13 @@ STEEL_SHEAR = 300.0                  # MPa, plain steel dowel
 FRICTION = 0.3                       # PLA on steel, dry
 
 
-def plate(x0, x1, z_end_body, z_pin, body_side):
+def plate(x0, x1, z_end_body, z_pin, body_side, dy=0.0):
     """A plate from x0 to x1 (both > 0, mirrored later), running from the phalanx body
     (ATTACH mm onto it) to a disc round the pin."""
     zb = z_end_body - ATTACH if body_side == "proximal" else z_end_body + ATTACH
     z_lo, z_hi = sorted((zb, z_pin))
     bar = cq.Workplane("XY").box(x1 - x0, PLATE_H, z_hi - z_lo, centered=(False, True, False)).translate((x0, 0, z_lo))
-    disc = (cq.Workplane("YZ").workplane(offset=x0).center(0, z_pin).circle(PLATE_R).extrude(x1 - x0))
+    disc = (cq.Workplane("YZ").workplane(offset=x0).center(dy, z_pin).circle(PLATE_R).extrude(x1 - x0))
     return bar.union(disc)
 
 
@@ -79,7 +83,7 @@ def side_extent(solid, z):
     return max(abs(bb.xmin), abs(bb.xmax))
 
 
-def build(module_folder: Path):
+def build(module_folder: Path, dy: float = PIN_DY):
     p1 = cq.importers.importStep(str(PHAL / "02_Phalanx1.step")).val()
     p2 = cq.importers.importStep(str(PHAL / "04_Phalanx2.step")).val()
     mod = cq.importers.importStep(str(module_folder / "03_PIP_module.step")).val()
@@ -95,16 +99,16 @@ def build(module_folder: Path):
     for sx in (1, -1):
         m = (lambda w: w.mirror("YZ")) if sx < 0 else (lambda w: w)
         # P1: plate, plus a bridge from its side out to the plate over the attach length
-        pl1 = plate(a0, a1, z1, pin1, "proximal")
+        pl1 = plate(a0, a1, z1, pin1, "proximal", dy)
         br1 = cq.Workplane("XY").box(a1 - (w1 - 0.6), PLATE_H, ATTACH, centered=(False, True, False)).translate(
             (w1 - 0.6, 0, z1 - ATTACH))
         parts1.append(m(pl1.union(br1)))
-        pl2 = plate(b0, b1, z2, pin2, "distal")
+        pl2 = plate(b0, b1, z2, pin2, "distal", dy)
         br2 = cq.Workplane("XY").box(b1 - (w2 - 0.6), PLATE_H, ATTACH - 0.3, centered=(False, True, False)).translate(
             (w2 - 0.6, 0, z2 + 0.3))
         parts2.append(m(pl2.union(br2)))
-    hole1 = cq.Workplane("YZ").workplane(offset=-20).center(0, pin1).circle(PIN_HOLE / 2).extrude(40)
-    hole2 = cq.Workplane("YZ").workplane(offset=-20).center(0, pin2).circle(PIN_HOLE / 2).extrude(40)
+    hole1 = cq.Workplane("YZ").workplane(offset=-20).center(dy, pin1).circle(PIN_HOLE / 2).extrude(40)
+    hole2 = cq.Workplane("YZ").workplane(offset=-20).center(dy, pin2).circle(PIN_HOLE / 2).extrude(40)
     # the holes must not cut the module region: only through the plates (|x| > a0)
     keep_out = cq.Workplane("XY").box(2 * a0, 40, 40)
     hole1, hole2 = hole1.cut(keep_out), hole2.cut(keep_out)
@@ -116,7 +120,7 @@ def build(module_folder: Path):
     for q in parts2:
         P2 = P2.union(q)
     P2 = P2.cut(hole2)
-    return dict(P1=P1.val(), P2=P2.val(), module=mod, z1=z1, z2=z2, pin1=pin1, pin2=pin2,
+    return dict(P1=P1.val(), P2=P2.val(), module=mod, dy=dy, z1=z1, z2=z2, pin1=pin1, pin2=pin2,
                 plates=dict(p1=(a0, a1), p2=(b0, b1)), widths=(w1, w2))
 
 
@@ -142,18 +146,20 @@ def checks(geo):
         except Exception:
             return None
     p2_in_p1 = P2.moved(cq.Location(cq.Vector(0, 0, dz_p2)))
-    out = {"plates_x_mm": geo["plates"], "pin_from_joint_face_mm": PIN_FROM_FACE,
+    out = {"plates_x_mm": geo["plates"], "pin_from_joint_face_mm": PIN_FROM_FACE, "pin_dy_mm": geo["dy"],
            "P1_vs_module_mm3": overlap(P1, module), "P2_vs_module_mm3": overlap(p2_in_p1, module),
            "P1_vs_P2_at_0deg_mm3": overlap(P1, p2_in_p1)}
-    first = None
-    for deg in range(0, 101, 5):
-        loc = cq.Location(cq.Vector(0, 0, geo["pin1"]), cq.Vector(1, 0, 0), -deg) * \
-            cq.Location(cq.Vector(0, 0, -geo["pin1"]))
-        moved = p2_in_p1.moved(loc)
-        if overlap(P1, moved) and overlap(P1, moved) > 0.05:
-            first = deg
-            break
-    out["phalanges_and_plates_first_touch_deg"] = first
+    def first_touch(sign, stop):
+        # +X rotation carries the distal end towards -Y (palmar): flexion
+        for deg in range(0, stop + 1, 2):
+            loc = cq.Location(cq.Vector(0, geo["dy"], geo["pin1"]), cq.Vector(1, 0, 0), sign * deg) * \
+                cq.Location(cq.Vector(0, -geo["dy"], -geo["pin1"]))
+            ov = overlap(P1, p2_in_p1.moved(loc))
+            if ov and ov > 0.05:
+                return deg
+        return None
+    out["pla_parts_first_touch_flexion_deg"] = first_touch(1, 120)
+    out["pla_parts_first_touch_extension_deg"] = first_touch(-1, 40)
     # hand calculations: the whole tendon squeeze through the two pins
     per_pin = SERVO_T / 2
     out["hand"] = {
@@ -169,8 +175,9 @@ def checks(geo):
 
 
 def main():
-    folder = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "deep_offset" / "B5_t200_a45_deep"
+    folder = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "deep_offset" / "B5_t150_a45_deep"
     geo = build(folder)
+    res = checks(geo)              # before the exports: the STL meshing upsets later booleans
     OUT.mkdir(parents=True, exist_ok=True)
     for k, name in (("P1", "02_Phalanx1_pinned"), ("P2", "04_Phalanx2_pinned")):
         cq.exporters.export(cq.Workplane().add(geo[k]), str(OUT / f"{name}.step"))
@@ -179,7 +186,6 @@ def main():
     asm = cq.Compound.makeCompound([geo["P1"], module, geo["P2"].moved(cq.Location(cq.Vector(0, 0, dz_p2)))])
     cq.exporters.export(cq.Workplane().add(asm), str(OUT / "pip_assembly.step"))
     cq.exporters.export(cq.Workplane().add(asm), str(OUT / "pip_assembly.stl"), tolerance=0.02, angularTolerance=0.2)
-    res = checks(geo)
     res["module"] = str(folder.relative_to(HERE))
     (OUT / "checks.json").write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps(res, indent=1, default=str))

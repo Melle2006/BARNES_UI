@@ -303,6 +303,9 @@ DEEP_ROUND1 = {
     "B6": ("B6_n6_t100", "B6_n4_t200"),
     "lattice": ("B_T090_X3", "B_T120_X3"),
 }
+#: The pinned B5 hybrid (b5_pinned.py) wants a softer B5 than t2.0: the pin carries the
+#: squeeze, so the strips only need to spring.
+DEEP_ROUND1["B5"] += ("B5_t125_a45", "B5_t150_a45")
 
 
 def all_variants(deep):

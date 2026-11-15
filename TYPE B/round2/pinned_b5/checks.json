@@ -10,10 +10,12 @@
   ]
  },
  "pin_from_joint_face_mm": 4.575,
+ "pin_dy_mm": -0.5,
  "P1_vs_module_mm3": 0.0,
- "P2_vs_module_mm3": 0.416,
+ "P2_vs_module_mm3": 0.0,
  "P1_vs_P2_at_0deg_mm3": 0.0,
- "phalanges_and_plates_first_touch_deg": 80,
+ "pla_parts_first_touch_flexion_deg": 82,
+ "pla_parts_first_touch_extension_deg": null,
  "hand": {
   "load_per_pin_N": 23.5,
   "pla_bearing_stress_MPa": 9.8,
@@ -23,5 +25,5 @@
   "filament_pin_1p75_shear_MPa": 9.8,
   "pin_friction_torque_at_servo_limit_Nmm": 14.1
  },
- "module": "deep_offset/B5_t200_a45_deep"
+ "module": "deep_offset/B5_t150_a45_deep"
 }
