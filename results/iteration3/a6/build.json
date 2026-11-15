@@ -18,9 +18,12 @@
   },
   "solids": [
    1,
+   1,
    1
   ],
   "bodies_overlap_mm3": 0.0,
+  "lid_overlaps_leaf_mm3": 0.0,
+  "lid_interference_with_base_mm3": 3.45,
   "summary": {
    "radius_mm": "45",
    "leaf_thickness_mm": 3.2,
@@ -37,7 +40,7 @@
    "height_above_pp_cuff_mm": 7.37,
    "leaf_guide_interference_mm3": 0.0,
    "pp_body_volume_mm3": 1380.4,
-   "mp_body_volume_mm3": 2438.5
+   "mp_body_volume_mm3": 2252.7
   }
  },
  "margin": {
@@ -59,9 +62,12 @@
   },
   "solids": [
    1,
+   1,
    1
   ],
   "bodies_overlap_mm3": 0.0,
+  "lid_overlaps_leaf_mm3": 0.0,
+  "lid_interference_with_base_mm3": 3.45,
   "summary": {
    "radius_mm": "60",
    "leaf_thickness_mm": 3.2,
@@ -78,7 +84,7 @@
    "height_above_pp_cuff_mm": 6.43,
    "leaf_guide_interference_mm3": 0.0,
    "pp_body_volume_mm3": 1359.9,
-   "mp_body_volume_mm3": 2342.4
+   "mp_body_volume_mm3": 2156.6
   }
  }
 }

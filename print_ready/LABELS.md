@@ -12,9 +12,9 @@ Look at the **end face of the proximal tab** (the end that goes into the proxima
 |---|---|---|
 | **A** | B5 crossed strip t2.0 / 45°, deep tendon | `TYPE B/round2/deep_offset/B5_t200_a45_deep` |
 | **B** | B5 crossed strip t1.5 / 45°, as built | `TYPE B/B5_crossed_strip/B5_t150_a45` |
-| **C** | B4 rolling contact t1.0 / 60°, deep tendon | `TYPE B/round2/deep_offset/B4_t100_a60_deep` |
-| **E** | B8 knuckle 2 mm dorsal, r1.25, deep tendon | `TYPE B/round2/deep_offset/B8_y20_r125_deep` |
-| **F** | B8 knuckle central, r1.5, as built | `TYPE B/round2/B8_y00_r150` |
+| **C** | B4 rolling contact t1.0 / 60°, deep tendon | `TYPE B/round2/print_gap05/deep_offset/B4_t100_a60_deep` |
+| **E** | B8 knuckle 2 mm dorsal, r1.25, deep tendon | `TYPE B/round2/print_gap05/deep_offset/B8_y20_r125_deep` |
+| **F** | B8 knuckle central, r1.5, as built | `TYPE B/round2/print_gap05/B8_y00_r150` |
 | **G** | B3 dual leaf t1.5 / w3.0, as built (optional control) | `TYPE B/B3_dual_leaf/B3_t150_w30` |
 
 | Joint letter | Joint |
@@ -52,9 +52,12 @@ Letters D, M and P are never used for a design, so a design letter never reads a
 | **8S-1** | 8S  (distal collar: 1) | A8 for the iteration 3 hand, 2 turns, 1.2 × 1.8 mm, lobes 5.5 mm, sagitta 0.75 mm (selected), copy 1 | TPU | outside of the proximal collar, thumb side; copy number on the distal collar | 2.5 | [8S-1_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl](type_a/8S-1_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl) |
 | **8S-2** | 8S  (distal collar: 2) | A8 for the iteration 3 hand, 2 turns, 1.2 × 1.8 mm, lobes 5.5 mm, sagitta 0.75 mm (selected), copy 2 | TPU | outside of the proximal collar, thumb side; copy number on the distal collar | 2.5 | [8S-2_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl](type_a/8S-2_A8_it3_2turn_w1.2_h1.8_s0.75_a5.5_collared.stl) |
 | **8F** | 8F | A8 for the iteration 3 hand, 2 turns, 1.2 × 1.5 mm, lobes 5.5 mm, sagitta 0.75 mm (second option) | TPU | outside of the proximal collar, thumb side | 2.6 | [8F_A8_it3_2turn_w1.2_h1.5_s0.75_a5.5_collared.stl](type_a/8F_A8_it3_2turn_w1.2_h1.5_s0.75_a5.5_collared.stl) |
-| **6S-1** | 6S  (proximal ring: 1) | A6 sliding leaf for the iteration 3 hand, R60 mm, 3.2 × 6 mm leaf, 19 mm travel (selected), copy 1 | TPU, two bodies printed in place | outside of the middle-phalanx ring, thumb side; copy number on the proximal-phalanx ring | 2.6 | [6S-1_A6_it3_R60_t3.2_w6_tr19.stl](type_a/6S-1_A6_it3_R60_t3.2_w6_tr19.stl) |
-| **6S-2** | 6S  (proximal ring: 2) | A6 sliding leaf for the iteration 3 hand, R60 mm, 3.2 × 6 mm leaf, 19 mm travel (selected), copy 2 | TPU, two bodies printed in place | outside of the middle-phalanx ring, thumb side; copy number on the proximal-phalanx ring | 2.6 | [6S-2_A6_it3_R60_t3.2_w6_tr19.stl](type_a/6S-2_A6_it3_R60_t3.2_w6_tr19.stl) |
-| **6F** | 6F | A6 sliding leaf for the iteration 3 hand, R45 mm, 3.2 × 6 mm leaf, 19 mm travel (second option) | TPU, two bodies printed in place | outside of the middle-phalanx ring, thumb side | 2.6 | [6F_A6_it3_R45_t3.2_w6_tr19.stl](type_a/6F_A6_it3_R45_t3.2_w6_tr19.stl) |
+| **6S-1** | 6S  (proximal ring: 1) | A6 sliding leaf for the iteration 3 hand, R60 mm, 3.2 × 6 mm leaf, 19 mm travel (selected), copy 1; three pieces: leaf body, guide body, guide lid | TPU | outside of the middle-phalanx ring, thumb side; copy number on the proximal-phalanx ring; design code on the lid | 2.6 | [6S-1_A6_it3_R60_t3.2_w6_tr19.stl](type_a/6S-1_A6_it3_R60_t3.2_w6_tr19.stl) |
+| **6S-2** | 6S  (proximal ring: 2) | A6 sliding leaf for the iteration 3 hand, R60 mm, 3.2 × 6 mm leaf, 19 mm travel (selected), copy 2; three pieces: leaf body, guide body, guide lid | TPU | outside of the middle-phalanx ring, thumb side; copy number on the proximal-phalanx ring; design code on the lid | 2.6 | [6S-2_A6_it3_R60_t3.2_w6_tr19.stl](type_a/6S-2_A6_it3_R60_t3.2_w6_tr19.stl) |
+| **6F** | 6F | A6 sliding leaf for the iteration 3 hand, R45 mm, 3.2 × 6 mm leaf, 19 mm travel (second option); three pieces: leaf body, guide body, guide lid | TPU | outside of the middle-phalanx ring, thumb side; design code on the lid | 2.6 | [6F_A6_it3_R45_t3.2_w6_tr19.stl](type_a/6F_A6_it3_R45_t3.2_w6_tr19.stl) |
+| **RIG** | RIG | Test rig base (PLA) | PLA | its largest flat face | 8.0 | [RIG_rig_base.stl](rig/RIG_rig_base.stl) |
+| **ADP** | ADP | Rig load adapter, hook arm (PLA) | PLA | its largest flat face | 4.0 | [ADP_load_adapter.stl](rig/ADP_load_adapter.stl) |
+| **PUL** | PUL | Rig tendon pulley (PLA) | PLA | its largest flat face | 2.6 | [PUL_pulley.stl](rig/PUL_pulley.stl) |
 | **S1** | S1 | Type B phalanges, standard (as-built) tendon: Phalanx 1 | PLA | side face (+X), mid-length | 4.0 | [S1_common_phalanges_02_Phalanx1.stl](type_b_phalanges/S1_common_phalanges_02_Phalanx1.stl) |
 | **S2** | S2 | Type B phalanges, standard (as-built) tendon: Phalanx 2 | PLA | side face (+X), mid-length | 4.0 | [S2_common_phalanges_04_Phalanx2.stl](type_b_phalanges/S2_common_phalanges_04_Phalanx2.stl) |
 | **S3** | S3 | Type B phalanges, standard (as-built) tendon: Phalanx 3 | PLA | side face (+X), mid-length | 3.3 | [S3_common_phalanges_06_Phalanx3.stl](type_b_phalanges/S3_common_phalanges_06_Phalanx3.stl) |
@@ -77,12 +80,11 @@ Letters D, M and P are never used for a design, so a design letter never reads a
 ## Not labelled
 
 * **Compression cylinders Ø10 × 10**: an engraving would spoil a loading face or change the section. Mark them with a pen.
-* **Rig parts (PLA)**: one of each, nothing to confuse.
 ## How to read a Type A (A8) part
 
 The **design code** is on the outside of the proximal collar (the one on the proximal phalanx), on the thumb side: **8S** is the selected iteration 3 A8, **8F** the second option. Where two copies are printed, the **copy number** is on the distal collar.
 
-The **A6** codes are on the outside of the middle-phalanx ring (the one carrying the leaf), on the thumb side: **6S** is the selected iteration 3 A6, **6F** the second option; the copy number is on the proximal-phalanx ring (the one carrying the guide).
+The **A6** codes are on the outside of the middle-phalanx ring (the one carrying the leaf), on the thumb side: **6S** is the selected iteration 3 A6, **6F** the second option; the copy number is on the proximal-phalanx ring (the one carrying the guide), and the design code again on the guide's lid, which is a separate piece.
 
 ## Printing the labels
 

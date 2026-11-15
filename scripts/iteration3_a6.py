@@ -149,6 +149,33 @@ def sweep():
                                           "mean_torque_Nmm", "torque_at_105_Nmm", "peak_strain_pct")})
 
 
+LID_EXTRA = 0.8         # added on top of the guide roof, so the lid is 1.6 mm thick
+SKIRT_T = 1.0           # lid side skirts that clip over the channel walls
+SKIRT_DROP = 1.5        # how far below the pocket's top the skirts reach
+SKIRT_GRIP = 0.05       # interference of each skirt on its wall
+
+
+def split_guide(a6, arc, travel, guide_side):
+    """Split the guide into an open-top channel (kept on the proximal-phalanx body) and
+    a separate lid, so nothing is printed in place and no support is trapped in the
+    pocket. The lid's underside is exactly where the guide's roof was, so the leaf's
+    sliding clearances, and every result, are unchanged. In the model frame."""
+    b, tb = arc.b, arc.tangent(arc.b)
+    length = a6.guide_length(travel)
+    gap = a6.LEAF_THICKNESS / 2 + a6.CLEARANCE
+    top = a6._oriented_box(b, tb, -2.0, length + 2.0, gap, a6.GUIDE_HALF_DEPTH + 20, a6.GUIDE_WIDTH + 20)
+    lid = guide_side.intersect(top)
+    base = guide_side.cut(top)
+    lid = lid.union(a6._oriented_box(b, tb, -1.0, length, a6.GUIDE_HALF_DEPTH - 0.01,
+                                     a6.GUIDE_HALF_DEPTH + LID_EXTRA, a6.GUIDE_WIDTH))
+    outer = a6._oriented_box(b, tb, 0.0, length, gap - SKIRT_DROP, a6.GUIDE_HALF_DEPTH + LID_EXTRA,
+                             a6.GUIDE_WIDTH + 2 * SKIRT_T)
+    inner = a6._oriented_box(b, tb, -0.5, length + 0.5, gap - SKIRT_DROP - 1, a6.GUIDE_HALF_DEPTH + 0.0,
+                             a6.GUIDE_WIDTH - 2 * SKIRT_GRIP)
+    lid = lid.union(outer.cut(inner))
+    return base, lid
+
+
 def build():
     """CAD for the sweep's pick (and the pick at 17.5 % strain, for margin), in the A8
     study frame, with the rings opened on the palm side."""
@@ -163,12 +190,14 @@ def build():
         r = None if p["radius_mm"] in (None, "None", "flat") else float(p["radius_mm"])
         a6.set_section(p["width_mm"], p["thickness_mm"])
         arc, anchor_side, guide_side = a6.build(r, p["travel_mm"])
+        guide_side, lid = split_guide(a6, arc, p["travel_mm"], guide_side)
         # back to the study frame: 180 degrees about Z through y = Y_REF / 2
         loc = cq.Location(cq.Vector(0, Y_REF, 0), cq.Vector(0, 0, 1), 180)
         z_cut = -(R_OUT - 1.2) * math.cos(math.radians(OPEN_DEG))
         slot = cq.Workplane("XY").box(40, 200, 20, centered=(True, True, False)).translate((0, 0, z_cut - 20))
         mp_body = anchor_side.val().moved(loc)
         pp_body = guide_side.val().moved(loc)
+        lid_body = lid.val().moved(loc)
         mp_body = cq.Workplane().add(mp_body).cut(slot).val()
         pp_body = cq.Workplane().add(pp_body).cut(slot).val()
         # The old model runs the guide's cuff the whole length of the guide. Here the ring
@@ -180,16 +209,24 @@ def build():
         pp_body = cq.Workplane().add(pp_body).cut(under).val()
         stem = (f"A6_it3_R{'flat' if r is None else f'{r:g}'}_t{p['thickness_mm']:g}_w{p['width_mm']:g}"
                 f"_tr{p['travel_mm']:g}")
-        both = cq.Compound.makeCompound([mp_body, pp_body])
+        both = cq.Compound.makeCompound([mp_body, pp_body, lid_body])
         OUT.mkdir(parents=True, exist_ok=True)
         cq.exporters.export(cq.Workplane().add(both), str(OUT / f"{stem}.step"))
         cq.exporters.export(cq.Workplane().add(both), str(OUT / f"{stem}.stl"), tolerance=0.01,
                             angularTolerance=0.1)
-        for name, body in (("mp", mp_body), ("pp", pp_body)):
+        for name, body in (("mp", mp_body), ("pp", pp_body), ("lid", lid_body)):
             cq.exporters.export(cq.Workplane().add(body), str(OUT / f"{stem}_{name}_body.step"))
-        inter = cq.Workplane().add(mp_body).intersect(cq.Workplane().add(pp_body))
-        out[tag] = dict(stem=stem, pick=p, solids=[len(cq.Workplane().add(b).solids().vals()) for b in (mp_body, pp_body)],
-                        bodies_overlap_mm3=round(inter.val().Volume(), 4) if inter.solids().size() else 0.0,
+            cq.exporters.export(cq.Workplane().add(body), str(OUT / f"{stem}_{name}_body.stl"), tolerance=0.01,
+                                angularTolerance=0.1)
+
+        def overlap(x, y):
+            i = cq.Workplane().add(x).intersect(cq.Workplane().add(y))
+            return round(i.val().Volume(), 4) if i.solids().size() else 0.0
+        out[tag] = dict(stem=stem, pick=p,
+                        solids=[len(cq.Workplane().add(b).solids().vals()) for b in (mp_body, pp_body, lid_body)],
+                        bodies_overlap_mm3=overlap(mp_body, pp_body),
+                        lid_overlaps_leaf_mm3=overlap(lid_body, mp_body),
+                        lid_interference_with_base_mm3=overlap(lid_body, pp_body),
                         summary=a6.summary(arc, p["travel_mm"], anchor_side, guide_side))
         print(tag, json.dumps(out[tag], default=str)[:400])
     (OUT / "build.json").write_text(json.dumps(out, indent=1, default=str))
@@ -217,12 +254,13 @@ def figures():
     bone_tris = [tris(b) for b in bones]
     light = np.array([0.3, -0.5, 0.8]) / np.linalg.norm([0.3, -0.5, 0.8])
     for tag, info in built.items():
-        parts = [cq.importers.importStep(str(OUT / f"{info['stem']}_{n}_body.step")).val() for n in ("mp", "pp")]
+        parts = [cq.importers.importStep(str(OUT / f"{info['stem']}_{n}_body.step")).val() for n in ("mp", "pp", "lid")]
         fig = plt.figure(figsize=(10, 4.2))
         for k, (el, az, title) in enumerate(((22, -58, "three-quarter view"), (0, 0, "side view"))):
             ax = fig.add_subplot(1, 2, k + 1, projection="3d")
             for t, col in [(b, (0.75, 0.75, 0.75)) for b in bone_tris] + \
-                          [(tris(parts[0]), (0.85, 0.45, 0.2)), (tris(parts[1]), (0.2, 0.45, 0.85))]:
+                          [(tris(parts[0]), (0.85, 0.45, 0.2)), (tris(parts[1]), (0.2, 0.45, 0.85)),
+                           (tris(parts[2].moved(cq.Location(cq.Vector(0, 0, 6)))), (0.35, 0.7, 0.45))]:
                 n = np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0])
                 n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
                 sh = 0.35 + 0.65 * np.abs(n @ light)
@@ -235,8 +273,8 @@ def figures():
             ax.view_init(el, az)
             ax.set_title(title, fontsize=9)
             ax.set_axis_off()
-        fig.suptitle(f"{info['stem']}: leaf and anchor on the middle phalanx (orange), guide on the proximal "
-                     "phalanx (blue)", fontsize=9)
+        fig.suptitle(f"{info['stem']}: leaf body on the middle phalanx (orange), guide channel on the proximal "
+                     "phalanx (blue), lid lifted 6 mm (green)", fontsize=9)
         fig.tight_layout()
         (fig_dir / "models").mkdir(parents=True, exist_ok=True)
         fig.savefig(fig_dir / "models" / f"A6_it3_{tag}_on_bones.png", dpi=150)

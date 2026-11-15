@@ -44,11 +44,11 @@ DESIGNS = [
      "B5 crossed strip t2.0 / 45°, deep tendon", 2),
     ("B", "B5_t150_a45", TB / "B5_crossed_strip/B5_t150_a45",
      "B5 crossed strip t1.5 / 45°, as built", 2),
-    ("C", "B4_t100_a60_deep", TB / "round2/deep_offset/B4_t100_a60_deep",
+    ("C", "B4_t100_a60_deep", TB / "round2/print_gap05/deep_offset/B4_t100_a60_deep",
      "B4 rolling contact t1.0 / 60°, deep tendon", 1),
-    ("E", "B8_y20_r125_deep", TB / "round2/deep_offset/B8_y20_r125_deep",
+    ("E", "B8_y20_r125_deep", TB / "round2/print_gap05/deep_offset/B8_y20_r125_deep",
      "B8 knuckle 2 mm dorsal, r1.25, deep tendon", 1),
-    ("F", "B8_y00_r150", TB / "round2/B8_y00_r150",
+    ("F", "B8_y00_r150", TB / "round2/print_gap05/B8_y00_r150",
      "B8 knuckle central, r1.5, as built", 1),
     ("G", "B3_t150_w30", TB / "B3_dual_leaf/B3_t150_w30",
      "B3 dual leaf t1.5 / w3.0, as built (optional control)", 1),
@@ -311,7 +311,8 @@ def write_markdown(rows, checks):
           "option. Where two copies are printed, the **copy number** is on the distal collar.", "",
           "The **A6** codes are on the outside of the middle-phalanx ring (the one carrying the leaf), on "
           "the thumb side: **6S** is the selected iteration 3 A6, **6F** the second option; the copy number "
-          "is on the proximal-phalanx ring (the one carrying the guide).", "",
+          "is on the proximal-phalanx ring (the one carrying the guide), and the design code again on the "
+          "guide's lid, which is a separate piece.", "",
           "## Printing the labels", "",
           "The module labels are on a face that stands vertical when the module prints on its side, so the "
           "letters print as grooves in a wall: they come out cleanly at 0.4 mm line width and 0.2 mm layers. "
@@ -351,6 +352,19 @@ def label_a6_it3(stem, design, copy):
             solid = lab.result()
             checks += lab.checks
         out.append(solid)
+    # the guide's lid (a separate piece since the split): design code on its top face
+    lid = load(d / f"{stem}_lid_body.step")
+    face = max((f for f in lid.Faces() if f.geomType() == "PLANE"), key=lambda f: f.Area())
+    n = face.normalAt()
+    x = cq.Vector(0, -1, 0)
+    x = (x - n * x.dot(n)).normalized()
+    bb = face.BoundingBox()
+    lab = Labeller(lid)
+    length = max(bb.xlen, bb.ylen, bb.zlen)
+    lab.add(design, fit_size(design, 0.35 * length, 3.0), face.Center().toTuple(), n.toTuple(), x.toTuple(),
+            DEPTH_TPU, 0.5)
+    out.append(lab.result())
+    checks += lab.checks
     return cq.Compound.makeCompound(out), checks
 
 
@@ -462,9 +476,9 @@ def main():
         shape, ch = label_a6_it3(stem, glyphs, cp)
         path = save(shape, f"{code}_{stem}", "type_a")
         rows.append(dict(code=code, reads=f"{glyphs}" + (f"  (proximal ring: {cp})" if cp else ""),
-                         part=desc, material="TPU, two bodies printed in place",
+                         part=desc + "; three pieces: leaf body, guide body, guide lid", material="TPU",
                          label_on="outside of the middle-phalanx ring, thumb side" +
-                         ("; copy number on the proximal-phalanx ring" if cp else ""), file=path))
+                         ("; copy number on the proximal-phalanx ring" if cp else "") + "; design code on the lid", file=path))
         checks += [(code,) + c for c in ch]
         print("ok", code)
     for code, fname, normal, xdir, h, desc in RIG_PARTS:

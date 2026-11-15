@@ -243,10 +243,15 @@ def story(c):
     s += [P("7. What is still unknown, and what each print will settle", "h1")]
     s += [T([["Unknown", "Why it matters", "What settles it"]] + UNKNOWNS,
             widths=[40 * mm, 70 * mm, W - 110 * mm])]
+    s += [P("Tests needed besides the single-joint rig", "h2"),
+          P("The rig (section 8 picture) tests Type B joint modules under tendon load. It does not measure the "
+            "material or the Type A springs, so these go with it:")]
+    s += [T([["Test", "Measures", "Why"]] + TESTS_BEYOND_RIG, widths=[62 * mm, 52 * mm, W - 114 * mm])]
 
     # ---------------------------------------------------------------- links
     s += [c["PageBreak"](), P("8. How to print each part", "h1"), P(PRINT_GENERAL)]
     s += B(PRINT_RULES)
+    s += [P("Supports", "h2")] + B(SUPPORT_NOTES)
     s += [T([["Part", "Material, qty", "Orientation on the bed", "Supports", "Watch for / check after"]] + PRINT_SPECS,
             widths=[30 * mm, 22 * mm, 44 * mm, 28 * mm, W - 124 * mm])]
     s += models(c, ["test_rig"])
@@ -455,11 +460,14 @@ A3_POINTS = [
     "<b>Caveat:</b> the model's collars are rigid; the real A3 clips are C-shaped and might slide, "
     "which would act like the A6's sliding end. Only a print would show that, and it is not worth one: "
     "even a sliding clip leaves the strap clamped where it meets the clip.",
+    "<b>Re-run on the iteration 3 finger</b> (scripts/iteration3_a3.py; straps leaving iteration 3 rings at "
+    "21 and 48 mm, the measured pin and 0.5 mm either side, 7.7 mm joint clearance): <b>all 72</b> curvature × "
+    "thickness variants fail, every one for lack of an equilibrium before 105°. The tightest arch (R14) gets to "
+    "about 40°, the as-built shape to 2–6°. The bigger joint moves the attachment points further apart, so the "
+    "stretch that rules the A3 out is worse, as expected.",
     "<b>Decision: the A3 is not printed.</b> It stays the analytical <i>benchmark</i> (its FEA "
-    "stiffness is the reference the other designs are compared against), but no A3 variant passes, "
-    "and its collars fit the old phalanges, not the iteration 3 hand. It was not re-run on iteration 3: "
-    "the larger joint makes the attachment points move further apart, so the stretch that rules it out "
-    "only grows.",
+    "stiffness is the reference the other designs are compared against), but no A3 variant passes on "
+    "either finger.",
 ]
 A6_POINTS = [
     "<b>Why it exists:</b> one end of the leaf slides in a guide, which removes the change in "
@@ -751,12 +759,12 @@ PRINT_LINKS_TYPE_B = [
                 "TPU ×2 (PIP); with the deep phalanges"),
         _module("TYPE B/B5_crossed_strip/B5_t150_a45", "B5 crossed strip t1.5 / 45°, as built",
                 "TPU ×2 (PIP); with the as-built phalanges"),
-        _module("TYPE B/round2/deep_offset/B4_t100_a60_deep", "B4 rolling contact t1.0 / 60°, deep tendon",
-                "TPU ×1 (PIP); check the 0.3 mm lobe gap is open"),
-        _module("TYPE B/round2/deep_offset/B8_y20_r125_deep", "B8 knuckle 2 mm dorsal, r1.25, deep tendon",
-                "TPU ×1 (PIP); check the 0.3 mm gap is open"),
-        _module("TYPE B/round2/B8_y00_r150", "B8 knuckle central, r1.5, as built",
-                "TPU ×1 (PIP); check the 0.3 mm gap is open"),
+        _module("TYPE B/round2/print_gap05/deep_offset/B4_t100_a60_deep", "B4 rolling contact t1.0 / 60°, deep tendon "
+                "(print version: 0.5 mm bearing gap)", "TPU ×1 (PIP); check the 0.5 mm lobe gap is open"),
+        _module("TYPE B/round2/print_gap05/deep_offset/B8_y20_r125_deep", "B8 knuckle 2 mm dorsal, r1.25, deep tendon "
+                "(print version: 0.5 mm gap)", "TPU ×1 (PIP); check the 0.5 mm gap is open"),
+        _module("TYPE B/round2/print_gap05/B8_y00_r150", "B8 knuckle central, r1.5, as built (print version: 0.5 mm gap)",
+                "TPU ×1 (PIP); check the 0.5 mm gap is open"),
         _module("TYPE B/B3_dual_leaf/B3_t150_w30", "B3 dual leaf t1.5 / w3.0, as built (optional control)",
                 "TPU ×1 (PIP)"),
     ]),
@@ -783,6 +791,34 @@ PRINT_GENERAL = (
     "General rules first, then the part-by-part specification. These follow TEST_PLAN.md §2 and "
     "common practice for a soft (90A) TPU; they are not results of this project's analyses, except "
     "where a part's geometry (a gap, a thin wall) is quoted.")
+SUPPORT_NOTES = [
+    "<b>Supports, measured.</b> Every TPU part was placed in its recommended orientation and its downward "
+    "surfaces steeper than 45° counted: Type B modules need support under about 130–430 mm² each (the rounded "
+    "undersides of their tabs and collars, the MCP flange), the A8 about 180 mm² (under the strip's arch and the "
+    "collar feet), the A6 about 700 mm² (under the guide's free run and the leaf's arch). All of it is "
+    "<i>outside</i> the part, where it can be reached.",
+    "<b>Best: PLA supports, or a PLA support interface,</b> if your printer can print two materials (a second "
+    "extruder, a tool changer, or a multi-material unit): PLA hardly bonds to TPU, so it peels off clean. "
+    "<b>Single extruder:</b> TPU supports work outside a part if they are kept off it: top and bottom Z distance "
+    "0.2–0.3 mm, a coarse interface, tree supports where offered. Expect a rougher surface where they touched.",
+    "<b>Never inside a part.</b> That is why the A6 is now three separate pieces and the B4/B8 print versions "
+    "have a 0.5 mm bearing gap (printed upright on its side, the gap is a vertical wall: no support goes in it, "
+    "and 0.5 mm stops strings bridging it). The FEA used 0.3 mm; the bearing seats after 0.5 mm of collar travel "
+    "instead, a little more slack at the first load, and the results are otherwise unaffected.",
+]
+TESTS_BEYOND_RIG = [
+    ["Tensile bars and strips (batch 0)", "The TPU's modulus E, flat and on edge", "Every torque and force in this report scales with it (5.3–19.3 MPa bracket now)"],
+    ["Compression cylinder (batch 0)", "E in compression, 2–10 % strain", "The B4/B8 bearings are loaded in compression"],
+    ["Strip fatigue: a tensile strip cycled to a set strain", "The real strain limit (cycles to crack at 10, 15, 20 %)", "20 % is a placeholder in every pass/fail decision"],
+    ["Creep and recovery: hold a strip at 15 % strain for 1 h, release", "How much TPU relaxes and sets", "A spring that loses torque overnight, or a finger that does not straighten"],
+    ["Type A spring on the iteration 3 finger: PP clamped, weights on the MP at known distances, angle read off", "The A8 and A6 torque–angle curves", "The rig takes Type B modules only; this checks the Type A FEA and elastica directly"],
+    ["Ring retention: pull each snap-on ring off its shaft with a spring scale", "How hard the rings grip", "The analysis holds the rings' inner faces fixed to the bone"],
+    ["A6 slider friction: tension needed to slide the T-head with the joint straight", "Friction in the guide", "Adds to the torque the tendon works against"],
+    ["Tendon friction through the guides: tension in vs out", "Friction loss along the finger", "The routing assumes a frictionless tendon"],
+    ["Print accuracy: calipers and scale on every part", "Leaf, strip and wall thickness, gaps", "Stiffness goes as thickness cubed"],
+]
+
+
 PRINT_RULES = [
     "<b>Dry the TPU</b> before printing (about 50 °C for 4–6 h, or per the spool) and keep it in a "
     "dry box while printing. Wet TPU strings, foams and prints softer.",
@@ -807,9 +843,9 @@ PRINT_SPECS = [
     ["A8 for the iteration 3 hand (8S-1, 8S-2, 8F)", "TPU, 2 + 1", "On its back (strip down, collar openings up): the rings then print as arches with no inner support, and the strip lies flat on the plate",
      "None inside the rings if printed open side up; a little under the collar feet",
      "Strip width is exactly 3 lines: check 1.2 mm ±0.1. Check each ring clips onto the Ø14.8 mm shaft (12.8 mm opening) and is snug, not loose; the strip–collar junction is the likely crack point."],
-    ["A6 for the iteration 3 hand (6S-1, 6S-2, 6F)", "TPU, 2 + 1", "On its side (thumb side down), so the leaf's curve and the guide lie in the XY plane and the rings print as rings",
-     "Under the guide's free run over the MCP end and under the leaf's arch; support blockers inside the guide pocket",
-     "Two bodies printed in place with 0.25 mm sliding clearance: free the slider after printing; a fused slider is a reject. Leaf 3.2 mm ±10 %. Check the T-head slides the full travel (19 mm) and both rings clip on snugly."],
+    ["A6 for the iteration 3 hand (6S-1, 6S-2, 6F)", "TPU, 2 + 1, three pieces each", "Leaf body and guide body on their side (thumb side down), so the leaf and channel lie in the XY plane; lid flat, top down",
+     "Leaf body: under the arch. Guide body: under the free run over the MCP end (outside, removable). Lid: none",
+     "Three pieces, printed separately: leaf body, guide body (open channel) and lid. Assemble: T-head into the channel, lid on. Leaf 3.2 mm ±10 %. Check the T-head slides the full 19 mm and both rings clip on snugly."],
     ["Type B modules (B5, B3)", "TPU, per list", "On its side, lateral axis vertical, so every leaf or strip lies in XY",
      "Under the bridging upper lanes only; support blockers elsewhere",
      "Leaf/strip thickness at 3 points (1.5 or 2.0 mm). Never print standing on a tab end."],
@@ -1053,6 +1089,12 @@ IT3_A6_POINTS = [
     "<i>proximal</i> phalanx. The guide's ring sits on the round shaft (15.5–29 mm) and the guide runs "
     "on proximally over the tapered neck and the MCP ball to about 6 mm, above the index metacarpal's "
     "socket. The rings are the same snap-on rings as the iteration 3 A8.",
+    "<b>Printed as three pieces, nothing in place.</b> The guide is an open-top channel on the "
+    "proximal-phalanx body, closed by a separate lid (1.6 mm, side skirts that clip over the channel walls "
+    "with 0.05 mm of interference). The lid's underside is exactly where the guide's roof was, so the leaf's "
+    "0.25 mm sliding clearances and every result here are unchanged; no support is trapped in the pocket and "
+    "the slider cannot fuse. Assembly: lay the T-head in the channel, press the lid on, and tack it with a "
+    "soldering iron or a TPU-compatible adhesive if it lifts.",
     "<b>Same model, measured axis.</b> The old A6 analysis (planar elastica with a sliding end, travel "
     "tuned per design) is used unchanged in a frame turned 180° about Z, since the leaf only feels the "
     "relative turn of its two rings. The pin is measured (y = 39.18 mm), so instead of four guessed axis "
