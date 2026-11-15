@@ -103,7 +103,7 @@ def story(c):
 
     # ---------------------------------------------------------------- Type A
     s += [c["PageBreak"](), P("3. Type A: the spring beside the pin", "h1"), P(TYPE_A_INTRO)]
-    s += [P("3.1 A3 twin strap (the current part)", "h2")] + models(c, ["A3_twin_strap"]) + B(A3_POINTS)
+    s += [P("3.1 A3 twin strap (the original design)", "h2")] + models(c, ["A3_twin_strap"]) + B(A3_POINTS)
     hv = {(r["design"], r["quantity"]): r for r in csv.DictReader(open(REPO / "results/sunlu_rescale/headline_values.csv"))}
     a3 = hv[("A3 twin strap 1.0 mm", "rotational stiffness at neutral (FEA)")]
     s += [T([["A3 result", "Value", f"at {lo} / 12 / {hi} MPa"],
@@ -399,7 +399,7 @@ PRINT_SUMMARY_ROWS = [
     ["3", "Type B control", "B3 dual leaf t1.5 / w3.0, as built (×1)",
      "Optional: simplest Type B print and round-1 runner-up, as a reference for how much the "
      "crossed strip and the bearing improve on a plain leaf (B3 buckles at about 10 N)."],
-    ["—", "Not printed", "A3 (use the part you have), B1, B6, B9, lattice, the remaining deep copies",
+    ["—", "Not printed", "A3 (no variant passes; old-finger collars), B1, B6, B9, lattice, the remaining deep copies",
      "See section 6 for the reason each is set aside."],
 ]
 DECISION_SENTENCES = [
@@ -452,11 +452,14 @@ A3_POINTS = [
     "elastica sweep of 480 curvature × thickness × width variants found <b>none</b> that reaches "
     "105° without snapping, touching the joint or over-stretching, at any strain limit from 10 "
     "to 30 %. The as-built A3 has an equilibrium only to about 7°.",
-    "<b>Caveat that a print settles in minutes:</b> the model's collars are rigid; the real A3 "
-    "clips are C-shaped and may slide, which would act like the A6's sliding end. The existing "
-    "printed A3 on the fit-check finger answers it: does it click or bottom out at 10–35°?",
-    "<b>Decision:</b> the A3 is kept as the <i>benchmark</i> every other design is compared "
-    "against, not developed further. No new A3 print is needed beyond the one you have.",
+    "<b>Caveat:</b> the model's collars are rigid; the real A3 clips are C-shaped and might slide, "
+    "which would act like the A6's sliding end. Only a print would show that, and it is not worth one: "
+    "even a sliding clip leaves the strap clamped where it meets the clip.",
+    "<b>Decision: the A3 is not printed.</b> It stays the analytical <i>benchmark</i> (its FEA "
+    "stiffness is the reference the other designs are compared against), but no A3 variant passes, "
+    "and its collars fit the old phalanges, not the iteration 3 hand. It was not re-run on iteration 3: "
+    "the larger joint makes the attachment points move further apart, so the stretch that rules it out "
+    "only grows.",
 ]
 A6_POINTS = [
     "<b>Why it exists:</b> one end of the leaf slides in a guide, which removes the change in "
@@ -605,9 +608,8 @@ RATIONALE = [
         "R28 / 1.4 keeps 3.2 points of margin and the widest travel window, so it is the one most "
         "likely to work first time. Its print also locates the real joint axis, which "
         "every A6 result currently guesses at four positions. That is why A6 FEA was skipped.",
-        "<b>A3 is not reprinted.</b> It is the benchmark (6.10 N·mm/rad, converged), and the one "
-        "question the model leaves open (do the C-clip collars slide and rescue it?) is answered "
-        "by flexing the A3 you already have and noting whether it clicks at 10–35°.",
+        "<b>A3 is not printed.</b> It is the benchmark (6.10 N·mm/rad, converged), but none of its "
+        "480 variants passes, and its collars do not fit the iteration 3 phalanges.",
     ]),
     ("Why B5 is the Type B design carried forward, in two variants", [
         "Round 1 ranked B5_t150_a45 first on range, twist and robustness to weighting. Round 2 "
@@ -661,8 +663,6 @@ UNKNOWNS = [
      "sideways before seating", "B8 prints on the rig, TEST_PLAN §4 step 3"],
     ["Print accuracy of thin features", "Stiffness goes as thickness cubed: a 1.0 mm leaf printed "
      "at 1.1 mm is 33 % stiffer", "Calipers on every part before testing; reject beyond ±10 %"],
-    ["Whether the A3 C-clips slide", "Could make the as-built A3 better than the elastica model says",
-     "Flex the existing A3 print and note any click at 10–35°"],
     ["DIP flexion stop at 40–51° in the Type A CAD", "Human DIP reaches 80–90°",
      "A CAD decision, not a test: change the DP/MP geometry if unintended"],
 ]
@@ -717,8 +717,6 @@ PRINT_LINKS_TYPE_A = [
          [_A6 + "A6_PIP_SlidingLeaf_R28_t1.4_w6.STL", _A6 + "A6_PIP_SlidingLeaf_R28_t1.4_w6.STEP"]),
         ("A6 sliding leaf R32 / 1.8 / 6 mm (sweep optimum, at the strain limit)", "TPU, both bodies in place, ×1",
          [_A6 + "A6_PIP_SlidingLeaf_R32_t1.8_w6.STL", _A6 + "A6_PIP_SlidingLeaf_R32_t1.8_w6.STEP"]),
-        ("A3 twin strap (benchmark: test the print you already have)", "no new print needed",
-         ["reference_parts/A3_PIP_twin_strap_1.0mm.step"]),
     ]),
 ]
 PRINT_LINKS = []          # assembled in finalise() once the Type B list is settled

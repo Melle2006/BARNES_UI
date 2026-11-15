@@ -27,7 +27,7 @@ sys.path.insert(0, str(REPO / "src"))
 TB = "TYPE B"
 #: name -> (file, title, view elevation, view azimuth)
 MODELS = {
-    "A3_twin_strap": ("reference_parts/A3_PIP_twin_strap_1.0mm.step", "A3 twin strap, 1.0 mm (current part)", 25, -60),
+    "A3_twin_strap": ("reference_parts/A3_PIP_twin_strap_1.0mm.step", "A3 twin strap, 1.0 mm (original design, not printed)", 25, -60),
     "A6_R28_t1.4": ("A6 designs/A6_PIP_SlidingLeaf_R28_t1.4_w6.STL", "A6 sliding leaf R28 / 1.4 / 6 mm", 15, -35),
     "A6_R32_t1.8": ("A6 designs/A6_PIP_SlidingLeaf_R32_t1.8_w6.STL", "A6 sliding leaf R32 / 1.8 / 6 mm", 15, -35),
     "A8_strip_s2.75": ("results/a8_index_pip_printable/model/A8_PIP_2turn_printable_w1.2_h2.4_s2.75_IndexPP_frame.stl",
