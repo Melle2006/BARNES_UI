@@ -86,7 +86,7 @@ def row(path):
 
 def main():
     rows, runs = [], {}
-    for p in sorted(glob.glob(str(RES / "PIP_pinned" / "B5_*.json"))):
+    for p in sorted(glob.glob(str(RES / "PIP_pinned" / "B5*.json"))):
         if re.search(r"summary", p):
             continue
         o, r = row(p)

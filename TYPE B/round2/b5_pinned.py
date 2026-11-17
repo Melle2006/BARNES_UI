@@ -62,9 +62,9 @@ PIN_HOLE = 2.05
 #:             out of its socket wall; middle phalanx plate inner, its root jogging out onto
 #:             its socket wall next to the joint face.
 LAYOUTS = {
-    "outside": dict(collar_half=6.7, clear=0.2, plate_t=(1.0, 1.0), gap=0.15, plate_r=4.0, outer="P2",
+    "outside": dict(dy=-0.65, collar_half=6.7, clear=0.2, plate_t=(1.0, 1.0), gap=0.15, plate_r=4.0, outer="P2",
                     out=HERE / "pinned_b5"),
-    "inset": dict(collar_half=4.6, clear=0.3, plate_t=(1.0, 1.0), gap=0.15, plate_r=3.0, outer="P1",
+    "inset": dict(dy=-0.8, collar_half=4.6, clear=0.3, plate_t=(1.0, 1.0), gap=0.15, plate_r=3.0, outer="P1",
                   out=HERE / "pinned_b5_inset", jog=1.2, socket_half=5.8),
 }
 
@@ -111,8 +111,9 @@ def side_extent(solid, z):
     return max(abs(bb.xmin), abs(bb.xmax))
 
 
-def build(module_folder: Path, dy: float = PIN_DY, layout: str = "outside", module=None):
+def build(module_folder: Path, dy: float = None, layout: str = "outside", module=None):
     L = LAYOUTS[layout]
+    dy = L["dy"] if dy is None else dy
     p1 = cq.importers.importStep(str(PHAL / "02_Phalanx1.step")).val()
     p2 = cq.importers.importStep(str(PHAL / "04_Phalanx2.step")).val()
     mod = module if module is not None else cq.importers.importStep(str(module_folder / "03_PIP_module.step")).val()
@@ -226,7 +227,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--layout", choices=list(LAYOUTS), default="outside")
     ap.add_argument("--module", default=None, help="module folder (default: B5 t1.5 deep / the inset build)")
-    ap.add_argument("--dy", type=float, default=PIN_DY)
+    ap.add_argument("--dy", type=float, default=None, help="pin offset (default: the layout's)")
     a = ap.parse_args()
     L = LAYOUTS[a.layout]
     folder = Path(a.module) if a.module else HERE / "deep_offset" / "B5_t150_a45_deep"

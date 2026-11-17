@@ -17,7 +17,7 @@
  "plate_disc_r_mm": 3.0,
  "joint_width_over_plates_mm": 14.14,
  "pin_from_joint_face_mm": 4.575,
- "pin_dy_mm": -0.65,
+ "pin_dy_mm": -0.8,
  "P1_vs_module_mm3": 0.0,
  "P2_vs_module_mm3": 0.0,
  "P1_vs_P2_at_0deg_mm3": 0.0,
