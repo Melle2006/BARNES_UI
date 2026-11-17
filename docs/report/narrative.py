@@ -395,10 +395,15 @@ PRINT_SUMMARY_ROWS = [
     ["1", "Type B joint", "B5 crossed strip t1.5 / 45°, as built (×2)",
      "Round-1 winner: longest range (77.8°), least twist (4.8°), but buckles at 17 N of tendon "
      "tension. Brackets B5 against the t2.0 deep variant: range against compression capacity."],
-    ["1", "Type B hybrid", "Pinned B5: B5 t1.5 / 45° deep module (H) between PLA phalanges with PIP hinge plates (H1, H2), two Ø2 mm pins",
-     "New: the pins carry the tendon's squeeze, so the TPU only springs. The whole 47 N servo tension is usable at every angle: "
-     "about 2.5 N at the fingertip at 0° and at 60° (free B5 t1.5: 1.3 N and 0.5 N). Range 74° (collars meet), "
-     "return moment within 15 % of the free B5's. Section 5.5."],
+    ["1", "Type B hybrid", "Inset pinned B5 (14.1 mm, the finger's own width): B5i t1.75 / 45° deep PIP module (K1-P, K2-P) "
+     "between PLA phalanges with inset hinge plates (K1, K2), two Ø2 × 1.8 mm pins; MCP and DIP modules H-M, H-D",
+     "New: the pins carry the tendon's squeeze, so the TPU only springs, and nothing sticks out of the finger. The whole 47 N servo "
+     "tension is usable at every angle: 2.4 N at the fingertip at 0° and at 60° (free B5 t1.5: 1.3 N and 0.5 N). Range 76° "
+     "(collars meet), 18.8 % strain, return margin 1.57. Section 5.5."],
+    ["1", "Type B hybrid", "Pinned B5, plates outside (18.1 mm): unchanged B5 t1.5 / 45° deep module (H1-P, H2-P) between PLA "
+     "phalanges with outside hinge plates (H1, H2), two Ø2 mm pins",
+     "The same hinge with the round-1 module untouched: 2.6 N at the fingertip at 0° and 2.5 N at 60°, range 74°, return "
+     "margin 1.9. 4 mm wider than the finger. Print both: the pair separates the narrower strips from the pin itself."],
     ["2", "Type B joint", "B4 rolling contact t1.0 / 60°, deep tendon (×1)",
      "Best bearing result: at least 11 N at only 12 % strain when the contact solution stopped. "
      "Its lever falls as it rolls, which only a print can weigh against the capacity."],
@@ -766,10 +771,17 @@ PRINT_LINKS_TYPE_B = [
                 "TPU ×2 (PIP); with the as-built phalanges"),
         _module("TYPE B/round2/deep_offset/B5_t150_a45_deep", "Pinned B5 hybrid: B5 crossed strip t1.5 / 45°, deep tendon "
                 "(module H; print the labelled copies in print_ready/)", "TPU ×2 (PIP); with the hinge-plate phalanges below"),
-        ("Pinned B5 hybrid: PLA phalanges with PIP hinge plates (H1, H2), and the PIP assembly",
+        ("Pinned B5, plates outside: PLA phalanges with PIP hinge plates (H1, H2), and the PIP assembly",
          "PLA ×1 set; Phalanx 3 is the deep set's; two Ø2 mm steel dowels (or 1.75 mm filament)",
          ["TYPE B/round2/pinned_b5/02_Phalanx1_pinned.stl", "TYPE B/round2/pinned_b5/04_Phalanx2_pinned.stl",
           "TYPE B/round2/pinned_b5/pip_assembly.step"]),
+        ("Inset pinned B5: B5i t1.75 / 45° deep PIP module (collars 9.2 mm wide; print the labelled copies K1-P, K2-P)",
+         "TPU ×2; MCP and DIP modules are design H's", ["TYPE B/round2/pinned_b5_inset/B5i_t175_a45_deep/03_PIP_module.stl",
+                                                         "TYPE B/round2/pinned_b5_inset/B5i_t175_a45_deep/03_PIP_module.step"]),
+        ("Inset pinned B5: PLA phalanges with inset PIP hinge plates (K1, K2), and the PIP assembly",
+         "PLA ×1 set; Phalanx 3 is the deep set's; two Ø2 × 1.8 mm pins (steel dowel cut to length, or 1.75 mm filament)",
+         ["TYPE B/round2/pinned_b5_inset/02_Phalanx1_pinned.stl", "TYPE B/round2/pinned_b5_inset/04_Phalanx2_pinned.stl",
+          "TYPE B/round2/pinned_b5_inset/pip_assembly.step"]),
         _module("TYPE B/round2/print_gap05/deep_offset/B4_t100_a60_deep", "B4 rolling contact t1.0 / 60°, deep tendon "
                 "(print version: 0.5 mm bearing gap)", "TPU ×1 (PIP); check the 0.5 mm lobe gap is open"),
         _module("TYPE B/round2/print_gap05/deep_offset/B8_y20_r125_deep", "B8 knuckle 2 mm dorsal, r1.25, deep tendon "
@@ -864,9 +876,17 @@ PRINT_SPECS = [
      "0.3 mm lobe gap must be open: 0.25 mm feeler gauge. Elephant's foot can close it near the bed."],
     ["B8 knuckle-in-cup", "TPU, 1 each", "On its side; knuckle and cup circles lie in XY", "Under the lanes only",
      "0.3 mm gap as for B4. Return leaves are 0.75 mm (PIP), 0.61 mm (DIP): under two line widths, so the slicer may thin or single-wall them; measure."],
-    ["Pinned B5 phalanges (H1, H2)", "PLA, 1 set", "Standing on the end away from the joint, plates vertical",
+    ["Inset pinned B5 module (K1-P, K2-P)", "TPU, 2", "On its side, as the other Type B modules", "Under the lanes only",
+     "Strips are 0.9 mm wide (just over two lines) and 1.75 mm thick: measure both. The collars are narrower than the tabs; "
+     "check they still seat on the socket's top and bottom rims."],
+    ["Inset pinned B5 phalanges (K1, K2)", "PLA, 1 set", "Standing on the end away from the joint, plates vertical",
+     "None in the pin holes; K2's plate root jogs outward 0.9 mm over 1.2 mm (37°), which prints without support",
+     "4 perimeters, 50 %+ infill. K2's pin hole is blind on its inner side, so the pin cannot reach the module: push a "
+     "1.8 mm long Ø2 pin in from outside, through K1's plate, and glue its outer end. Plates 1.0 mm, 0.15 mm apart: if "
+     "they print fused, sand the inner faces."],
+    ["Pinned B5 phalanges, plates outside (H1, H2)", "PLA, 1 set", "Standing on the end away from the joint, plates vertical",
      "None in the pin holes; the plates' discs may want a little under their overhang",
-     "4 perimeters and 50 %+ infill in the plates and bridges (the pin load goes through them). Drill the pin holes to Ø2.0 "
+     "4 perimeters and 50 %+ infill in the plates and fins (the pin load goes through them). Drill the pin holes to Ø2.0 "
      "if they print small; the pin should turn freely in at least one plate. Assemble: module into H1, H2 over it, pins in."],
     ["Type B phalanges (as built / deep)", "PLA, 1 set per module", "Standard", "As needed",
      "3+ perimeters. Deep-tendon modules need the deep phalanges: their tendon groove is closed by the PLA socket wall."],
@@ -1289,12 +1309,13 @@ def pinned_b5_section(c):
            max_h=70 * mm)
     s += models(c, ["B5_pinned_straight", "B5_pinned_flexed"])
     s += B([
-        f"<b>Hinge plates (TYPE B/round2/b5_pinned.py).</b> Proximal phalanx plates {chk['plates_x_mm']['p1'][0]:.1f}–"
-        f"{chk['plates_x_mm']['p1'][1]:.1f} mm from the centreline (0.3 mm outside the module's collar), middle "
-        f"phalanx plates {chk['plates_x_mm']['p2'][0]:.1f}–{chk['plates_x_mm']['p2'][1]:.1f} mm outboard of them; "
-        "each 1.2 mm thick, fused to its phalanx's side over 8 mm, ending in a 4 mm disc round the pin. The pin is "
-        f"{chk['pin_from_joint_face_mm']:.3f} mm beyond each joint face and {-chk['pin_dy_mm']:.2f} mm palmar. The "
-        "joint is 19.2 mm wide over the plates (14 mm before). The module is unchanged and plugs in as before.",
+        f"<b>Plates outside (TYPE B/round2/b5_pinned.py --layout outside).</b> Proximal phalanx plates {chk['plates_x_mm']['P1'][0]:.1f}–"
+        f"{chk['plates_x_mm']['P1'][1]:.1f} mm from the centreline (0.2 mm outside the module's collar), middle "
+        f"phalanx plates {chk['plates_x_mm']['P2'][0]:.1f}–{chk['plates_x_mm']['P2'][1]:.1f} mm outboard of them; "
+        "each 1.0 mm thick and 0.15 mm apart, on a tapered fin from its phalanx's side, the bar as tall as the 4 mm "
+        f"disc round the pin. The pin is {chk['pin_from_joint_face_mm']:.3f} mm beyond each joint face and "
+        f"{-chk['pin_dy_mm']:.2f} mm palmar. The joint is {chk['joint_width_over_plates_mm']:.1f} mm wide over the "
+        "plates (19.2 mm in the first build, 14 mm without plates). The module is unchanged and plugs in as before.",
         f"<b>Checks.</b> Plates clear the module (0 mm³ overlap) and each other; the PLA parts first touch at "
         f"{chk['pla_parts_first_touch_flexion_deg']}° of flexion, beyond the collars' 74°. Per pin at the full 47 N: "
         f"{hand['load_per_pin_N']} N, PLA bearing {hand['pla_bearing_stress_MPa']} MPa (safety "
@@ -1302,12 +1323,82 @@ def pinned_b5_section(c):
         f"dowel has a shear safety of about {hand['steel_pin_shear_safety']:.0f}, 1.75 mm PLA filament sees "
         f"{hand['filament_pin_1p75_shear_MPa']} MPa (fine for testing).",
         "<b>What the pin costs.</b> About 20 % of the lever (2.75 against 3.4 mm), pin friction of up to 14 N·mm at "
-        "full tension (it goes away on the return stroke, when the tendon is slack), 2.6 mm of width each side, and "
+        "full tension (it goes away on the return stroke, when the tendon is slack), 2 mm of width each side, and "
         "a stop at 74° set by the module's collars. Chamfering the collars' palm-side edges would lift that stop; "
         "the module would then need re-running.",
         "<b>What only a print can show.</b> Whether the pin offset suits the printed B5 (its pole drift scales with "
         "the real strip geometry), how much the plates rub, and whether 0.2 mm between the plates is enough. "
         "Test it on the rig like the other modules: torque–angle with the tendon slack, then tendon capacity at 0° "
         "and 60°; it should reach the servo's tension with no buckling.",
+    ])
+    s += inset_section(c, rows)
+    return s
+
+
+def inset_section(c, rows):
+    """The inset layout: plates inside the finger's width, module narrowed."""
+    P, B, T, F, W, mm = c["P"], c["bullets"], c["table"], c["figure"], c["W"], c["mm"]
+    REPO = c["REPO"]
+    cp = REPO / "TYPE B/round2/pinned_b5_inset/checks.json"
+    if not cp.exists():
+        return []
+    chk = json.loads(cp.read_text())
+    hand = chk["hand"]
+    s = [P("Inset version: the hinge inside the finger's own width", "h2")]
+    s += B([
+        "<b>Why.</b> With the plates outside the module the joint is 18.1 mm wide on a 14 mm finger. Here the module's "
+        "collars are cut down from 13.4 to 9.2 mm wide, so both plates fit beside them inside the phalanx's own outline: "
+        f"{chk['joint_width_over_plates_mm']:.1f} mm over the plates. The tabs, retention pins and channels are the deep "
+        "build's, so the module goes into the same deep phalanges, and the collars still seat on the socket's dorsal and "
+        "palmar rims (11.4 mm tall against a 9.6 mm socket).",
+        "<b>What it costs the B5.</b> The strips must fit in the narrower band, 1.9–4.3 mm from the centreline: each is "
+        "0.9 mm wide instead of 1.95 mm, so a thicker strip makes up the stiffness, and a thicker strip strains more per "
+        "degree. The pinned FEA (same method as above, collars narrowed in the model and in the collar check) swept "
+        "thickness 1.5–2.25 mm and pin offset 0.5–0.8 mm:",
+    ])
+    head = [["Inset strips", "Pin", "Range (°)", "Limited by", "Strain at stop", "Return moment 30° / 60° (N·mm)",
+             "Return margin (12 MPa)", "Fingertip 0° / 60° (N)"]]
+    body = []
+    import numpy as np
+
+    def margin(v, dy):
+        p = REPO / f"TYPE B/analysis/results/PIP_pinned/{v}_dy{dy:g}.json"
+        r = json.loads(p.read_text())
+        a = [x["angle"] for x in r["curve"]]
+        m = [x["moment"] for x in r["curve"]]
+        return float(np.interp(20, a, m)) / 0.80     # weight moment of the distal finger, round 1
+    for r in sorted((r for r in rows if r["variant"].startswith("B5i")), key=lambda r: (r["variant"], -r["pin_dy_mm"])):
+        sel = r["variant"] == "B5i_t175_a45" and abs(r["pin_dy_mm"] + 0.8) < 1e-6
+        ft60 = "–" if r["fingertip_60deg_N"] is None else f"{r['fingertip_60deg_N']:.2f}"
+        body.append([r["variant"].replace("B5i_t", "t").replace("_a45", "") + (" ◀ selected" if sel else ""),
+                     f"{-r['pin_dy_mm']:.2f} mm palmar", f"{r['rom_deg']:.1f}", r["limited_by"],
+                     f"{r['strain_at_rom_pct']:.1f} %", f"{r['M30_Nmm']:.2f} / {r['M60_Nmm']:.2f}",
+                     f"{margin(r['variant'], r['pin_dy_mm']):.2f}", f"{r['fingertip_0deg_N']:.2f} / {ft60}"])
+    s += [T(head + body, widths=[26 * mm, 24 * mm, 14 * mm, 22 * mm, 16 * mm, 28 * mm, 20 * mm, W - 150 * mm])]
+    s += [P("Return margin = B5 moment at 20° ÷ the distal finger's weight moment (0.80 N·mm, round 1); at least 1 to hold "
+            "the finger straight. Thickness in the strips' bending direction; all inset strips are 0.9 mm wide. Fingertip "
+            "force as in the table above (lever 3.4 mm less the pin offset).", "cap")]
+    s += F(REPO / "TYPE B/analysis/figures/PIP/pinned_b5_inset.png",
+           "Inset strips against the outside-plate selection (black): return moment and peak strain.", max_h=70 * mm)
+    s += models(c, ["B5_inset_straight", "B5_inset_flexed", "B5_pinned_top", "B5_inset_top"])
+    s += B([
+        "<b>Selected: strips t1.75, pin 0.8 mm palmar.</b> Range 76.0° (the collars meet; strain 18.8 %), return margin "
+        "1.57, 2.4 N at the fingertip at 0° and at 60°. t1.5 is too soft to hold the finger straight at 12 MPa (0.82); "
+        "t2.0 and t2.25 are strain-limited at 67° and 60°. The narrow strips want the pin further palmar than the wide "
+        "ones (0.8 against 0.65 mm); at 0.8 mm the t2.0 runs out of strain at 50°, so the offset suits t1.75 only.",
+        f"<b>Plates (b5_pinned.py --layout inset).</b> Proximal phalanx plate outer ({chk['plates_x_mm']['P1'][0]:.2f}–"
+        f"{chk['plates_x_mm']['P1'][1]:.2f} mm), rising straight out of its socket wall; middle phalanx plate inner "
+        f"({chk['plates_x_mm']['P2'][0]:.2f}–{chk['plates_x_mm']['P2'][1]:.2f} mm), its root jogging out onto its own "
+        "socket wall over the last 1.2 mm. Both 1.0 mm thick, 0.15 mm apart, as tall as the 3 mm disc round the pin, so "
+        "neither can reach the other phalanx at any angle. The inner plate's hole is blind 0.3 mm short of its inner face, "
+        "so the 1.8 mm pin cannot be pushed into the module.",
+        f"<b>Checks.</b> Plates clear the module and each other (0 mm³); PLA parts first touch at "
+        f"{chk['pla_parts_first_touch_flexion_deg']}°, beyond the collars' 76°. Per pin at 47 N: PLA bearing "
+        f"{hand['pla_bearing_stress_MPa']} MPa (safety {hand['pla_bearing_safety']}), tear-out "
+        f"{hand['plate_tear_out_stress_MPa']} MPa on the smaller disc.",
+        "<b>Which to print.</b> Both, on the rig. The inset version is the one for the hand (no width added); the outside "
+        "version keeps the round-1 B5 untouched, so if the inset one disappoints the pair shows whether the narrow strips "
+        "or the pin are to blame. Risks particular to the inset version: 0.9 mm strips are only just over two extrusion "
+        "lines, the narrowed collars bear on the socket rims only top and bottom, and the short pins need gluing.",
     ])
     return s
