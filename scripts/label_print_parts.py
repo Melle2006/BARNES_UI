@@ -70,9 +70,19 @@ PHALANGES = [
 #: The pinned hybrid's PLA phalanges (hinge plates at the PIP, TYPE B/round2/b5_pinned.py);
 #: its fingertip phalanx is the deep set's X3.
 PINNED_PHALANGES = [
-    ("H1", TB / "round2/pinned_b5/02_Phalanx1_pinned.step", "Pinned B5 hybrid: Phalanx 1 with PIP hinge plates"),
-    ("H2", TB / "round2/pinned_b5/04_Phalanx2_pinned.step", "Pinned B5 hybrid: Phalanx 2 with PIP hinge plates"),
+    ("H1", TB / "round2/pinned_b5/02_Phalanx1_pinned.step",
+     "Pinned B5, plates outside (18.1 mm): Phalanx 1 with PIP hinge plates"),
+    ("H2", TB / "round2/pinned_b5/04_Phalanx2_pinned.step",
+     "Pinned B5, plates outside (18.1 mm): Phalanx 2 with PIP hinge plates"),
+    ("K1", TB / "round2/pinned_b5_inset/02_Phalanx1_pinned.step",
+     "Inset pinned B5 (14.1 mm): Phalanx 1 with inset PIP hinge plates"),
+    ("K2", TB / "round2/pinned_b5_inset/04_Phalanx2_pinned.step",
+     "Inset pinned B5 (14.1 mm): Phalanx 2 with inset PIP hinge plates"),
 ]
+#: The inset pinned B5 has its own PIP module only (TYPE B/round2/b5_inset.py); its MCP and
+#: DIP modules are design H's. The selected strip thickness is in selected.txt.
+INSET_DIR = TB / "round2/pinned_b5_inset"
+INSET_PIP_COPIES = 2
 PHALANX_FILES = [("1", "02_Phalanx1"), ("2", "04_Phalanx2"), ("3", "06_Phalanx3")]
 RIG = TB / "round2/test_rig"
 SPECIMENS = [
@@ -471,6 +481,21 @@ def main():
                                  material="TPU", label_on=where, file=path))
                 checks += [(code,) + c for c in ch]
                 print("ok", code)
+    sel = (INSET_DIR / "selected.txt")
+    if sel.exists():
+        name = sel.read_text().strip()
+        _, fname, end, tab, other_tab = JOINTS[1]
+        for cp in range(1, INSET_PIP_COPIES + 1):
+            shape, ch = label_module(INSET_DIR / name / f"{fname}.step", "K", "P", end, tab, other_tab, cp)
+            code = f"K{cp}-P"
+            path = save(shape, f"{code}_{name}_PIP", "type_b_modules")
+            rows.append(dict(code=code, reads=f"K  P  (other end: {cp})",
+                             part=f"Inset pinned B5 ({name.replace('_deep', '').replace('B5i_t', 'strips t').replace('_a45', ' / 45°')}, "
+                                  f"collars 9.2 mm wide, deep tendon): PIP module, copy {cp}; MCP and DIP modules are H-M and H-D",
+                             material="TPU", label_on=f"proximal tab end face; copy number {cp} on the distal tab end face",
+                             file=path))
+            checks += [(code,) + c for c in ch]
+            print("ok", code)
     for code, glyphs, cp, stem, desc in type_a_parts():
         shape, ch = label_a8_it3(stem, glyphs, cp)
         path = save(shape, f"{code}_{stem}", "type_a")

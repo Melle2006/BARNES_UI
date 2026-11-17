@@ -133,6 +133,36 @@ def main():
     fig.savefig(out, dpi=160)
     print("wrote", out)
 
+    # inset layout (narrow collars, 0.9 mm strips) against the outside layout's selection
+    fig, ax = plt.subplots(1, 2, figsize=(11, 4.2))
+    cases = [("B5_t150_a45_dy-0.65", "k", "-", "outside: B5 t1.5 (1.95 mm strips), pin 0.65")]
+    cols = {"150": "#9ecae1", "175": "#2a7ab9", "200": "#d0702a", "225": "#6a3d9a"}
+    for stem in sorted(runs):
+        m_ = re.match(r"B5i_t(\d+)_a45_dy(-[\d.]+)$", stem)
+        if m_:
+            t, dy = m_.groups()
+            cases.append((stem, cols.get(t, "grey"), {"-0.65": "-", "-0.5": "--", "-0.8": ":"}[dy],
+                          f"inset: t{int(t) / 100:.2f} (0.9 mm strips), pin {-float(dy):.2f}"))
+    for stem, col, ls, lab in cases:
+        r = runs.get(stem)
+        if r is None:
+            continue
+        a, m = curve(r, "moment")
+        _, e = curve(r, "strain_max")
+        ax[0].plot(a, m, ls, color=col, lw=1.6, label=lab)
+        ax[1].plot(a, 100 * np.array(e), ls, color=col, lw=1.6)
+    ax[1].axhline(20, color="r", lw=0.8)
+    ax[0].set(xlabel="PIP flexion (deg)", ylabel="B5 return moment (N·mm, 12 MPa)", xlim=(0, 100), ylim=(0, 25))
+    ax[1].set(xlabel="PIP flexion (deg)", ylabel="peak strain (%)", xlim=(0, 100), ylim=(0, 45))
+    ax[0].legend(fontsize=7, frameon=False)
+    for x in ax:
+        x.grid(alpha=0.3)
+    fig.suptitle("Inset pinned B5 (14.1 mm joint) against the outside-plate selection (18.1 mm)", fontsize=10)
+    fig.tight_layout()
+    out = HERE / "figures" / "PIP" / "pinned_b5_inset.png"
+    fig.savefig(out, dpi=160)
+    print("wrote", out)
+
 
 if __name__ == "__main__":
     main()
