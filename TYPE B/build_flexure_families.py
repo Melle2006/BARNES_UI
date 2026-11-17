@@ -195,6 +195,34 @@ def crossed_strips(t, angle_deg):
     return flexure
 
 
+#: Inset B5 (pinned hybrid, TYPE B/round2/b5_inset.py): the module's collars are cut down
+#: to |x| <= INSET_COLLAR_HALF at the PIP so the PLA hinge plates fit beside them inside
+#: the finger's own width; the strips are laid out in the narrower band that leaves.
+INSET_COLLAR_HALF = 4.6
+
+
+def crossed_strips_inset(t, angle_deg, collar_half=INSET_COLLAR_HALF):
+    def flexure(cs, spec, z0, F, name):
+        j = joint_of(name)
+        tj = t * GRADE[j]
+        beta = math.radians(angle_deg / 2)
+        hs = F / 2 * math.tan(beta)
+        d = tj / math.cos(beta)
+        x_in = corridor_half()
+        x_out = min(side_band(cs, hs + d / 2)[1], collar_half - EDGE)
+        w = (x_out - x_in - LANE_GAP) / 2
+        if w < MIN_LEAF_W:
+            raise ValueError(f"{name}: inset strips leave {w:.2f} mm lanes, below {MIN_LEAF_W}")
+        z1 = z0 + F
+        strip_a = [(hs + d / 2, z0), (-hs + d / 2, z1), (-hs - d / 2, z1), (hs - d / 2, z0)]
+        strip_b = [(-hs + d / 2, z0), (hs + d / 2, z1), (hs - d / 2, z1), (-hs - d / 2, z0)]
+        solids = mirrored([yz_prism(strip_a, x_out - w, x_out), yz_prism(strip_b, x_in, x_in + w)])
+        ls = F / math.cos(beta)
+        return solids, dict(t=tj, w=w, angle=angle_deg, strip_len=ls, k_over_E=4 * (w * tj ** 3 / 12) / ls,
+                            collar_half=collar_half)
+    return flexure
+
+
 # ---------------------------------------------------------------------------
 # VARIANTS
 # ---------------------------------------------------------------------------
@@ -227,6 +255,11 @@ fam = FAMILIES.setdefault("B5", dict(folder="B5_crossed_strip", variants={}))
 for t in T_LEVELS:
     for a in (45, 60, 75):
         fam["variants"][f"B5_t{tag(t)}_a{a}"] = (dict(t=t, angle=a), crossed_strips(t, a))
+
+fam = FAMILIES.setdefault("B5i", dict(folder="B5_inset", variants={}))
+for t in (1.5, 1.75, 2.0, 2.25):
+    fam["variants"][f"B5i_t{tag(t)}_a45"] = (dict(t=t, angle=45, collar_half=INSET_COLLAR_HALF),
+                                             crossed_strips_inset(t, 45))
 
 fam = FAMILIES.setdefault("B1", dict(folder="B1_hourglass", variants={}))
 for t in T_LEVELS:

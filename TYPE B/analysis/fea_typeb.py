@@ -115,12 +115,24 @@ def min_feature(variant, joint, info):
     return min(vals)
 
 
+#: Collar half-width override for the current run (inset B5: the collars are cut down to
+#: make room for the PLA hinge plates), or None for the builder's collar.
+COLLAR_HALF = None
+
+
+def collar_dims(cs):
+    cw, ch, cr = B.collar_dims(cs)
+    return (2 * COLLAR_HALF if COLLAR_HALF else cw), ch, cr
+
+
 def flex_zone(variant, joint):
     """The FEA body: proximal collar, flexure, distal collar. Returns
     (solid, info, z_flex, flex_len)."""
+    global COLLAR_HALF
+    COLLAR_HALF = variant["params"].get("collar_half")
     cs, spec = CS[joint], variant["spec"](joint)
     c, F = B.COLLAR_LEN, spec["flex_len"]
-    cw, ch, cr = B.collar_dims(cs)
+    cw, ch, cr = collar_dims(cs)
     fx = variant["flexure"] or B.lattice_flexure
     parts, info = fx(cs, spec, c, F, f"{joint} fea")
     solid = B.fuse([B.prism(cw, ch, cr, 0, c)] + parts + [B.prism(cw, ch, cr, c + F, c)])
@@ -319,7 +331,7 @@ def _phalanx(name):
 def rigid_sets(joint, c, F):
     """Proximal (fixed) and distal (moving) rigid geometry in flex-zone coordinates:
     collars plus the phalanges whose end faces they seat against."""
-    cw, ch, cr = B.collar_dims(CS[joint])
+    cw, ch, cr = collar_dims(CS[joint])
     prox = [B.prism(cw, ch, cr, 0, c)]
     dist = [B.prism(cw, ch, cr, c + F, c)]
     pn, dn = _PHAL[joint]
@@ -350,7 +362,7 @@ def collision_angle(joint, c, F, ures, target, ref_xyz):
     if not ures:
         return dict(angle=None, first_contact="no pose history")
     p_rigid, d_rigid = rigid_sets(joint, c, F)
-    cw, ch, cr = B.collar_dims(CS[joint])
+    cw, ch, cr = collar_dims(CS[joint])
     pc, dc = B.prism(cw, ch, cr, 0, c), B.prism(cw, ch, cr, c + F, c)
     ang = np.array([0.0] + [h[0] * target for h in ures])
     uy = np.array([0.0] + [h[1][1] for h in ures])

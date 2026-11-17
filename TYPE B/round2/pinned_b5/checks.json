@@ -1,14 +1,21 @@
 {
+ "layout": "outside",
  "plates_x_mm": {
-  "p1": [
-   7.0,
-   8.2
+  "P1": [
+   6.9,
+   7.9
   ],
-  "p2": [
-   8.399999999999999,
-   9.599999999999998
+  "P2": [
+   8.05,
+   9.05
   ]
  },
+ "plate_t_mm": [
+  1.0,
+  1.0
+ ],
+ "plate_disc_r_mm": 4.0,
+ "joint_width_over_plates_mm": 18.1,
  "pin_from_joint_face_mm": 4.575,
  "pin_dy_mm": -0.65,
  "P1_vs_module_mm3": 0.0,
@@ -18,9 +25,9 @@
  "pla_parts_first_touch_extension_deg": null,
  "hand": {
   "load_per_pin_N": 23.5,
-  "pla_bearing_stress_MPa": 9.8,
-  "pla_bearing_safety": 3.1,
-  "plate_tear_out_stress_MPa": 3.3,
+  "pla_bearing_stress_MPa": 11.8,
+  "pla_bearing_safety": 2.6,
+  "plate_tear_out_stress_MPa": 3.9,
   "steel_pin_shear_safety": 40.0,
   "filament_pin_1p75_shear_MPa": 9.8,
   "pin_friction_torque_at_servo_limit_Nmm": 14.1

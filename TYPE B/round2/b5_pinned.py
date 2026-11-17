@@ -45,19 +45,28 @@ OUT = HERE / "pinned_b5"
 PHAL = HERE / "deep_offset" / "deep_phalanges"
 
 PIN_FROM_FACE = 0.8 + 7.55 / 2       # collar + half the PIP flex zone
-COLLAR_HALF = 6.7                    # PIP collar half-width (13.4 mm)
-PLATE_T = 1.2
-PLATE_GAP = 0.2                      # between the two plates of a side
-MODULE_CLEAR = 0.3                   # plate to collar
-PLATE_H = 8.0                        # plate height (y), centred on the neutral axis
-PLATE_R = 4.0                        # disc round the pin; must stay under PIN_FROM_FACE
-ATTACH = 8.0                         # length fused to the phalanx's side
+ATTACH = 8.0                         # length the plate's root runs onto its phalanx
 PIN_D = 2.0
 #: Pin offset across the finger, mm (+Y is dorsal): the free B5's rotation pole drifts
 #: palmar as it bends (round-1 FEA, about 1.1 mm by 90 deg); a pin 0.65 mm palmar of the
 #: strip crossing follows it best (pinned FEA, TYPE B/analysis/results/PIP_pinned/).
 PIN_DY = -0.65
 PIN_HOLE = 2.05
+
+#: Two layouts of the same hinge (see the module docstring):
+#: "outside" - plates outboard of the unchanged module's collar (13.4 mm), proximal phalanx
+#:             plate inner, middle phalanx plate outer, each on a tapered fin from the
+#:             phalanx's side. 2.6 mm a side in round 1; slimmed to 2.05 mm here.
+#: "inset"   - the module's collars cut down to 9.2 mm wide (b5_inset.py) so both plates fit
+#:             inside the phalanx's own 14 mm: proximal phalanx plate outer, rising straight
+#:             out of its socket wall; middle phalanx plate inner, its root jogging out onto
+#:             its socket wall next to the joint face.
+LAYOUTS = {
+    "outside": dict(collar_half=6.7, clear=0.2, plate_t=(1.0, 1.0), gap=0.15, plate_r=4.0, outer="P2",
+                    out=HERE / "pinned_b5"),
+    "inset": dict(collar_half=4.6, clear=0.3, plate_t=(1.0, 1.0), gap=0.15, plate_r=3.0, outer="P1",
+                  out=HERE / "pinned_b5_inset", jog=1.2, socket_half=5.8),
+}
 
 # hand calculation inputs
 SERVO_T = 47.0                       # N, the servo's usable tendon tension
@@ -66,14 +75,33 @@ STEEL_SHEAR = 300.0                  # MPa, plain steel dowel
 FRICTION = 0.3                       # PLA on steel, dry
 
 
-def plate(x0, x1, z_end_body, z_pin, body_side, dy=0.0):
-    """A plate from x0 to x1 (both > 0, mirrored later), running from the phalanx body
-    (ATTACH mm onto it) to a disc round the pin."""
-    zb = z_end_body - ATTACH if body_side == "proximal" else z_end_body + ATTACH
-    z_lo, z_hi = sorted((zb, z_pin))
-    bar = cq.Workplane("XY").box(x1 - x0, PLATE_H, z_hi - z_lo, centered=(False, True, False)).translate((x0, 0, z_lo))
-    disc = (cq.Workplane("YZ").workplane(offset=x0).center(dy, z_pin).circle(PLATE_R).extrude(x1 - x0))
+def stadium(x0, x1, z_root, z_pin, dy, r):
+    """A plate x0..x1 (x > 0; mirrored later): a bar 2r tall centred on the pin's y, from
+    z_root to the pin, capped by a disc of radius r round the pin. Its edges never come
+    closer to the other phalanx than r from the pin, at any angle."""
+    z_lo, z_hi = sorted((z_root, z_pin))
+    bar = cq.Workplane("XY").box(x1 - x0, 2 * r, z_hi - z_lo, centered=(False, True, False)).translate((x0, dy, z_lo))
+    disc = cq.Workplane("YZ").workplane(offset=x0).center(dy, z_pin).circle(r).extrude(x1 - x0)
     return bar.union(disc)
+
+
+def fin(x_body, x_plate, z_face, length, dy, r, towards):
+    """Tapered fin joining a phalanx's side (x_body) to a plate's outer face (x_plate):
+    full width at the joint face, running out to the side over `length`."""
+    zs = z_face - length if towards < 0 else z_face + length
+    pts = [(x_body, z_face), (x_plate, z_face), (x_body, zs)]
+    w = cq.Workplane("XZ").polyline(pts).close().extrude(r, both=True)
+    return w.translate((0, dy, 0))
+
+
+def jogged(x0, x1, xr0, xr1, z_face, z_pin, dy, r, jog):
+    """Middle phalanx inner plate (inset layout): at the pin it is x0..x1; next to the joint
+    face it steps out to xr0..xr1 (onto the socket wall) over `jog` mm."""
+    main = stadium(x0, x1, z_face - jog, z_pin, dy, r)
+    sec = lambda a, b, z: cq.Sketch().push([((a + b) / 2, dy)]).rect(b - a, 2 * r).moved(cq.Location(cq.Vector(0, 0, z)))  # noqa: E731
+    ramp = (cq.Workplane("XY").placeSketch(sec(x0, x1, z_face - jog), sec(xr0, xr1, z_face)).loft())
+    root = cq.Workplane("XY").box(xr1 - xr0, 2 * r, ATTACH, centered=(False, True, False)).translate((xr0, dy, z_face))
+    return main.union(ramp).union(root)
 
 
 def side_extent(solid, z):
@@ -83,45 +111,50 @@ def side_extent(solid, z):
     return max(abs(bb.xmin), abs(bb.xmax))
 
 
-def build(module_folder: Path, dy: float = PIN_DY):
+def build(module_folder: Path, dy: float = PIN_DY, layout: str = "outside", module=None):
+    L = LAYOUTS[layout]
     p1 = cq.importers.importStep(str(PHAL / "02_Phalanx1.step")).val()
     p2 = cq.importers.importStep(str(PHAL / "04_Phalanx2.step")).val()
-    mod = cq.importers.importStep(str(module_folder / "03_PIP_module.step")).val()
+    mod = module if module is not None else cq.importers.importStep(str(module_folder / "03_PIP_module.step")).val()
     z1 = p1.BoundingBox().zmax                     # P1's joint face (distal end)
     z2 = p2.BoundingBox().zmin                     # P2's joint face (proximal end)
     pin1, pin2 = z1 + PIN_FROM_FACE, z2 - PIN_FROM_FACE
     w1, w2 = side_extent(p1, z1 - 2.0), side_extent(p2, z2 + 2.0)
-    a0 = COLLAR_HALF + MODULE_CLEAR                # inner plate's inner face
-    a1 = a0 + PLATE_T
-    b0 = a1 + PLATE_GAP
-    b1 = b0 + PLATE_T
+    r = L["plate_r"]
+    ti, to = L["plate_t"]
+    i0 = L["collar_half"] + L["clear"]             # inner plate
+    i1 = i0 + ti
+    o0 = i1 + L["gap"]                             # outer plate
+    o1 = o0 + to
     parts1, parts2 = [], []
     for sx in (1, -1):
         m = (lambda w: w.mirror("YZ")) if sx < 0 else (lambda w: w)
-        # P1: plate, plus a bridge from its side out to the plate over the attach length
-        pl1 = plate(a0, a1, z1, pin1, "proximal", dy)
-        br1 = cq.Workplane("XY").box(a1 - (w1 - 0.6), PLATE_H, ATTACH, centered=(False, True, False)).translate(
-            (w1 - 0.6, 0, z1 - ATTACH))
-        parts1.append(m(pl1.union(br1)))
-        pl2 = plate(b0, b1, z2, pin2, "distal", dy)
-        br2 = cq.Workplane("XY").box(b1 - (w2 - 0.6), PLATE_H, ATTACH - 0.3, centered=(False, True, False)).translate(
-            (w2 - 0.6, 0, z2 + 0.3))
-        parts2.append(m(pl2.union(br2)))
-    hole1 = cq.Workplane("YZ").workplane(offset=-20).center(dy, pin1).circle(PIN_HOLE / 2).extrude(40)
-    hole2 = cq.Workplane("YZ").workplane(offset=-20).center(dy, pin2).circle(PIN_HOLE / 2).extrude(40)
-    # the holes must not cut the module region: only through the plates (|x| > a0)
-    keep_out = cq.Workplane("XY").box(2 * a0, 40, 40)
-    hole1, hole2 = hole1.cut(keep_out), hole2.cut(keep_out)
+        if layout == "outside":
+            q1 = stadium(i0, i1, z1 - ATTACH, pin1, dy, r).union(fin(w1 - 0.6, i1, z1, ATTACH, dy, r, -1))
+            q2 = stadium(o0, o1, z2 + ATTACH, pin2, dy, r).union(fin(w2 - 0.6, o1, z2, ATTACH, dy, r, +1))
+        else:
+            q1 = stadium(o0, o1, z1 - ATTACH, pin1, dy, r)
+            xr0 = L["socket_half"]
+            q2 = jogged(i0, i1, xr0, xr0 + ti, z2, pin2, dy, r, L["jog"])
+        parts1.append(m(q1))
+        parts2.append(m(q2))
+    # pin holes: through both plates; on the inset layout the inner plate's hole stops
+    # 0.3 mm short of its inner face so the pin cannot be pushed into the module
+    stop = i0 + (0.3 if layout == "inset" else 0.0)
+    hole = lambda zp: (cq.Workplane("YZ").workplane(offset=stop).center(dy, zp).circle(PIN_HOLE / 2).extrude(20)  # noqa: E731
+                       .union(cq.Workplane("YZ").workplane(offset=-stop).center(dy, zp).circle(PIN_HOLE / 2).extrude(-20)))
     P1 = cq.Workplane().add(p1)
     for q in parts1:
         P1 = P1.union(q)
-    P1 = P1.cut(hole1)
+    P1 = P1.cut(hole(pin1))
     P2 = cq.Workplane().add(p2)
     for q in parts2:
         P2 = P2.union(q)
-    P2 = P2.cut(hole2)
-    return dict(P1=P1.val(), P2=P2.val(), module=mod, dy=dy, z1=z1, z2=z2, pin1=pin1, pin2=pin2,
-                plates=dict(p1=(a0, a1), p2=(b0, b1)), widths=(w1, w2))
+    P2 = P2.cut(hole(pin2))
+    plates = {"P1": (o0, o1) if L["outer"] == "P1" else (i0, i1), "P2": (o0, o1) if L["outer"] == "P2" else (i0, i1)}
+    return dict(P1=P1.val(), P2=P2.val(), module=mod, dy=dy, z1=z1, z2=z2, pin1=pin1, pin2=pin2, layout=layout,
+                plates=plates, plate_r=r, plate_t=(ti, to), width_over_plates=round(2 * max(o1, w1, w2), 2),
+                widths=(w1, w2))
 
 
 def place(geo):
@@ -146,7 +179,9 @@ def checks(geo):
         except Exception:
             return None
     p2_in_p1 = P2.moved(cq.Location(cq.Vector(0, 0, dz_p2)))
-    out = {"plates_x_mm": geo["plates"], "pin_from_joint_face_mm": PIN_FROM_FACE, "pin_dy_mm": geo["dy"],
+    out = {"layout": geo["layout"], "plates_x_mm": geo["plates"], "plate_t_mm": geo["plate_t"],
+           "plate_disc_r_mm": geo["plate_r"], "joint_width_over_plates_mm": geo["width_over_plates"],
+           "pin_from_joint_face_mm": PIN_FROM_FACE, "pin_dy_mm": geo["dy"],
            "P1_vs_module_mm3": overlap(P1, module), "P2_vs_module_mm3": overlap(p2_in_p1, module),
            "P1_vs_P2_at_0deg_mm3": overlap(P1, p2_in_p1)}
     def first_touch(sign, stop):
@@ -162,6 +197,7 @@ def checks(geo):
     out["pla_parts_first_touch_extension_deg"] = first_touch(-1, 40)
     # hand calculations: the whole tendon squeeze through the two pins
     per_pin = SERVO_T / 2
+    PLATE_T, PLATE_R = min(geo["plate_t"]), geo["plate_r"]
     out["hand"] = {
         "load_per_pin_N": per_pin,
         "pla_bearing_stress_MPa": round(per_pin / (PIN_D * PLATE_T), 1),
@@ -174,20 +210,31 @@ def checks(geo):
     return out
 
 
-def main():
-    folder = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "deep_offset" / "B5_t150_a45_deep"
-    geo = build(folder)
-    res = checks(geo)              # before the exports: the STL meshing upsets later booleans
-    OUT.mkdir(parents=True, exist_ok=True)
+def export(geo, out, module_name):
+    out.mkdir(parents=True, exist_ok=True)
     for k, name in (("P1", "02_Phalanx1_pinned"), ("P2", "04_Phalanx2_pinned")):
-        cq.exporters.export(cq.Workplane().add(geo[k]), str(OUT / f"{name}.step"))
-        cq.exporters.export(cq.Workplane().add(geo[k]), str(OUT / f"{name}.stl"), tolerance=0.01, angularTolerance=0.1)
+        cq.exporters.export(cq.Workplane().add(geo[k]), str(out / f"{name}.step"))
+        cq.exporters.export(cq.Workplane().add(geo[k]), str(out / f"{name}.stl"), tolerance=0.01, angularTolerance=0.1)
     module, dz_p2 = place(geo)
     asm = cq.Compound.makeCompound([geo["P1"], module, geo["P2"].moved(cq.Location(cq.Vector(0, 0, dz_p2)))])
-    cq.exporters.export(cq.Workplane().add(asm), str(OUT / "pip_assembly.step"))
-    cq.exporters.export(cq.Workplane().add(asm), str(OUT / "pip_assembly.stl"), tolerance=0.02, angularTolerance=0.2)
-    res["module"] = str(folder.relative_to(HERE))
-    (OUT / "checks.json").write_text(json.dumps(res, indent=1, default=str))
+    cq.exporters.export(cq.Workplane().add(asm), str(out / "pip_assembly.step"))
+    cq.exporters.export(cq.Workplane().add(asm), str(out / "pip_assembly.stl"), tolerance=0.02, angularTolerance=0.2)
+
+
+def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--layout", choices=list(LAYOUTS), default="outside")
+    ap.add_argument("--module", default=None, help="module folder (default: B5 t1.5 deep / the inset build)")
+    ap.add_argument("--dy", type=float, default=PIN_DY)
+    a = ap.parse_args()
+    L = LAYOUTS[a.layout]
+    folder = Path(a.module) if a.module else HERE / "deep_offset" / "B5_t150_a45_deep"
+    geo = build(folder, a.dy, a.layout)
+    res = checks(geo)              # before the exports: the STL meshing upsets later booleans
+    export(geo, L["out"], folder.name)
+    res["module"] = str(folder.resolve().relative_to(HERE))
+    (L["out"] / "checks.json").write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps(res, indent=1, default=str))
 
 

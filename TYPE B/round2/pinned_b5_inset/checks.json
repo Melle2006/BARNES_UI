@@ -1,0 +1,36 @@
+{
+ "layout": "inset",
+ "plates_x_mm": {
+  "P1": [
+   6.05,
+   7.05
+  ],
+  "P2": [
+   4.8999999999999995,
+   5.8999999999999995
+  ]
+ },
+ "plate_t_mm": [
+  1.0,
+  1.0
+ ],
+ "plate_disc_r_mm": 3.0,
+ "joint_width_over_plates_mm": 14.14,
+ "pin_from_joint_face_mm": 4.575,
+ "pin_dy_mm": -0.65,
+ "P1_vs_module_mm3": 0.0,
+ "P2_vs_module_mm3": 0.0,
+ "P1_vs_P2_at_0deg_mm3": 0.0,
+ "pla_parts_first_touch_flexion_deg": 84,
+ "pla_parts_first_touch_extension_deg": null,
+ "hand": {
+  "load_per_pin_N": 23.5,
+  "pla_bearing_stress_MPa": 11.8,
+  "pla_bearing_safety": 2.6,
+  "plate_tear_out_stress_MPa": 5.9,
+  "steel_pin_shear_safety": 40.0,
+  "filament_pin_1p75_shear_MPa": 9.8,
+  "pin_friction_torque_at_servo_limit_Nmm": 14.1
+ },
+ "module": "pinned_b5_inset/B5i_t175_a45_deep"
+}
