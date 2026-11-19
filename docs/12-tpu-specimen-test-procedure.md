@@ -20,6 +20,8 @@ copies in [`print_ready/specimens/`](../print_ready/specimens/)). Log template:
 
 ---
 
+![How each specimen sits on the print bed](figures/specimen_tests/print_orientation.png)
+
 ## 1. Before you test
 
 1. **Print the specimens with the joints:** same spool, same session, same settings
@@ -58,6 +60,8 @@ in the clamps so the TPU does not slip, and do not tighten so hard that you cut 
 
 ## 3. Test A and B: tension (same steps for dog-bones and strips)
 
+![Tension set-up with hanging weights](figures/specimen_tests/tension_setup.png)
+
 1. Hang the specimen with only the empty bag. That is the zero point: measure L₀ again here.
 2. **Condition it:** load to about the mass in the table below (around 15 % strain),
    unload, and repeat three times. TPU is stiffer on its very first stretch (the Mullins
@@ -84,11 +88,21 @@ Approximate load for 15 % strain (×0.45 to ×1.6 if E is at the ends of its ran
 * strain ε = (L − L₀) ÷ L₀
 * stress σ = F ÷ A, in MPa when F is in N and A in mm²
 
-Plot σ against ε. **E is the slope of a straight line fitted to the points between 2 %
-and 10 % strain** (spreadsheet: `=SLOPE(stress range, strain range)`). Also note σ at 20 %
-strain: the designs are held to 20 %, and it shows whether the curve bends over.
+* **E for that row** = 3σ ÷ ((1 + ε) − 1 ÷ (1 + ε)²)
+  (spreadsheet, strain as a fraction in C2 and stress in D2: `=3*D2/((1+C2)-1/(1+C2)^2)`)
+
+**E is the average of that last column over the rows between 2 % and 10 % strain**
+(`=AVERAGEIFS(E:E, C:C, ">=0.02", C:C, "<=0.10")`). This is the formula for the
+neo-Hookean material the analyses use, so it gives exactly the E they need. Do not just
+take the straight-line slope of σ against ε: TPU's curve bends over, and the slope reads
+about 10 % low. The rows' E values should be roughly level; if they climb or fall steadily,
+note it. Also note σ at 20 % strain: the designs are held to 20 %.
+
+![Working out E from the readings](figures/specimen_tests/worked_example.png)
 
 ## 4. Test C: compression
+
+![Compression set-up on a kitchen scale](figures/specimen_tests/compression_setup.png)
 
 1. Put a drop of oil or a smear of grease on both flat ends of the cylinder, so they can
    spread sideways freely (dry ends make it look stiffer).
@@ -101,8 +115,9 @@ strain: the designs are held to 20 %, and it shows whether the curve bends over.
 4. Do it twice on the same cylinder (the second run is the one to use), then repeat on
    the other two.
 
-**Working out E:** strain ε = (h₀ − h) ÷ h₀, stress σ = F ÷ A, and E is the slope from
-2 % to 10 %, as for tension.
+**Working out E:** strain ε = (h₀ − h) ÷ h₀ and stress σ = F ÷ A (both positive); for each
+row E = 3σ ÷ (1 ÷ (1 − ε)² − (1 − ε)), in a spreadsheet `=3*D2/(1/(1-C2)^2-(1-C2))`; then
+average the rows from 2 % to 10 %, as for tension.
 
 ## 5. Checking and reporting
 

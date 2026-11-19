@@ -1,2 +1,2 @@
-specimen,test,date,room_temp_C,width_or_diameter_mm,thickness_mm,area_mm2,L0_or_h0_mm,step,mass_kg,force_N,L_or_h_mm,strain,stress_MPa,notes
-F1-1,tension_flat,,,,,,,0,0,0,,0,0,"after 3 conditioning cycles; force_N = mass_kg*9.81; strain = (L-L0)/L0 (compression: (h0-h)/h0); stress = force_N/area_mm2"
+specimen,test,date,room_temp_C,width_or_diameter_mm,thickness_mm,area_mm2,L0_or_h0_mm,step,mass_kg,force_N,L_or_h_mm,strain,stress_MPa,E_row_MPa,notes
+F1-1,tension_flat,,,,,,,0,0,0,,0,0,,"E_row = 3*stress/((1+strain)-1/(1+strain)^2) (compression: 3*stress/(1/(1-strain)^2-(1-strain))); after 3 conditioning cycles; force_N = mass_kg*9.81; strain = (L-L0)/L0 (compression: (h0-h)/h0); stress = force_N/area_mm2"
