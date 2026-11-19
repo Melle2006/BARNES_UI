@@ -130,6 +130,14 @@ the same session**.
 
 ## 3. The rig (`test_rig/`)
 
+![Rig overview](../../docs/figures/test_rig/rig_overview.png)
+
+![Reading the angle: joint at 60 degrees](../../docs/figures/test_rig/rig_side_60.png)
+
+![Assembly order](../../docs/figures/test_rig/rig_exploded.png)
+
+(Pictures: `scripts/render_test_rig.py`.)
+
 * **Setup.**
   * Clamp `rig_base` to a table edge by its side plate. The finger, the pulley
     and both weight strings then hang clear of the table.

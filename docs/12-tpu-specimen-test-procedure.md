@@ -89,10 +89,10 @@ Approximate load for 15 % strain (×0.45 to ×1.6 if E is at the ends of its ran
 * stress σ = F ÷ A, in MPa when F is in N and A in mm²
 
 * **E for that row** = 3σ ÷ ((1 + ε) − 1 ÷ (1 + ε)²)
-  (spreadsheet, strain as a fraction in C2 and stress in D2: `=3*D2/((1+C2)-1/(1+C2)^2)`)
+  (in the log sheet, strain is column M as a fraction and stress column N: put `=3*N2/((1+M2)-1/(1+M2)^2)` in column O, E_row)
 
 **E is the average of that last column over the rows between 2 % and 10 % strain**
-(`=AVERAGEIFS(E:E, C:C, ">=0.02", C:C, "<=0.10")`). This is the formula for the
+(for one specimen: `=AVERAGEIFS(O:O, A:A, "F1-1", M:M, ">=0.02", M:M, "<=0.10")`). This is the formula for the
 neo-Hookean material the analyses use, so it gives exactly the E they need. Do not just
 take the straight-line slope of σ against ε: TPU's curve bends over, and the slope reads
 about 10 % low. The rows' E values should be roughly level; if they climb or fall steadily,
@@ -116,7 +116,7 @@ note it. Also note σ at 20 % strain: the designs are held to 20 %.
    the other two.
 
 **Working out E:** strain ε = (h₀ − h) ÷ h₀ and stress σ = F ÷ A (both positive); for each
-row E = 3σ ÷ (1 ÷ (1 − ε)² − (1 − ε)), in a spreadsheet `=3*D2/(1/(1-C2)^2-(1-C2))`; then
+row E = 3σ ÷ (1 ÷ (1 − ε)² − (1 − ε)), in the log sheet `=3*N2/(1/(1-M2)^2-(1-M2))` in column O; then
 average the rows from 2 % to 10 %, as for tension.
 
 ## 5. Checking and reporting
