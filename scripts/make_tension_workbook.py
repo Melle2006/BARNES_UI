@@ -18,10 +18,10 @@ from openpyxl.utils import get_column_letter
 OUT = Path(__file__).resolve().parents[1] / "results" / "material_tests" / "tension_tests_AB.xlsx"
 
 SPECIMENS = [
-    ("F1", "A. tension, dog-bone 1BA 1.0 mm, printed flat", "width", 100, 1500),
-    ("F2", "A. tension, dog-bone 1BA 2.0 mm, printed flat", "width", 200, 3000),
-    ("E1", "B. tension, strip 1.0 mm, printed on edge", "height", 100, 1500),
-    ("E2", "B. tension, strip 2.0 mm, printed on edge", "height", 200, 3000),
+    ("F1", "A. tension, dog-bone 1BA 1.0 mm, printed flat", "width", 100, 2000),
+    ("F2", "A. tension, dog-bone 1BA 2.0 mm, printed flat", "width", 200, 4000),
+    ("E1", "B. tension, strip 1.0 mm, printed on edge", "height", 100, 2000),
+    ("E2", "B. tension, strip 2.0 mm, printed on edge", "height", 200, 4000),
 ]
 COND_MASS = {"F1": 0.9, "F2": 1.8, "E1": 1.1, "E2": 2.2}
 

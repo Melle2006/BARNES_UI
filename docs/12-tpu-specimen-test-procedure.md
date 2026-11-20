@@ -81,7 +81,8 @@ rescale factor. Test C and anything else go in the plain log
   about 50 g**: it pre-stretches the specimen a little before the zero.
 * **Loads:** anything weighed on a kitchen scale to ±1 g (water, coins, washers), made up
   in steps of about **100 g** for the 1.0 mm specimens and **200 g** for the 2.0 mm ones,
-  up to about 3 kg. Weigh each step before the test and label it.
+  up to about 4 kg (most of it only for the 2.0 mm specimens if your TPU is at the stiff
+  end). Weigh each step before the test and label it.
 * **Measuring L:** a phone on a stand, square to the specimen about 20–30 cm away, with a
   steel ruler touching the specimen's face (same plane as the marks); or calipers.
 * **Compression:** a kitchen or parcel scale reading to about 20 kg (turn auto-off off if
@@ -111,7 +112,9 @@ hard that you cut the TPU. The specimen must hang straight, not twisted.
    **This is L₀**, and the added mass here is 0.
 4. **Measure:** add the load in steps, gently (lower each weight in, do not drop it; stop
    the bag swinging). At each step **wait 30 s**, then record the *total added mass so far*
-   and the mark gap L. Go on until the strain is at least 15 %.
+   and the mark gap L. Go on until the strain is at least 15 % (20 % if you can, for the
+   stress at 20 %), then stop: the workbook lists steps up to 2 kg (1.0 mm) and 4 kg
+   (2.0 mm) to cover the stiffest TPU, but you do not have to use them all.
    * Photographs: take one photo per step from the same spot; afterwards, read both marks
      against the ruler, or measure them in a photo app (ImageJ, or any app that measures
      distances using the ruler as the scale).
