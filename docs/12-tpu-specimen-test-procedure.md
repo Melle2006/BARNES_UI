@@ -47,6 +47,8 @@ copies in [`print_ready/specimens/`](../print_ready/specimens/)). Log template:
    apart, centred on the narrow section (strips: centred on the middle). Measure the
    actual gap L₀ unloaded, to 0.02 mm.
 
+![Steps 3 and 4: measuring each specimen and marking the gauge length](figures/specimen_tests/steps_measure.png)
+
 ## 2. Equipment
 
 * A fixed top clamp, e.g. two flat PLA or wood plates with two M3 bolts, or a bench vice,
@@ -63,9 +65,13 @@ copies in [`print_ready/specimens/`](../print_ready/specimens/)). Log template:
 Grip only the wide ends (dog-bones) or the outer 20 mm (strips). Put a strip of sandpaper
 in the clamps so the TPU does not slip, and do not tighten so hard that you cut it.
 
+![Building and hanging the grips](figures/specimen_tests/steps_grips.png)
+
 ## 3. Test A and B: tension (same steps for dog-bones and strips)
 
 ![Tension set-up with hanging weights](figures/specimen_tests/tension_setup.png)
+
+![Tension, steps 1 to 3](figures/specimen_tests/steps_tension.png)
 
 1. Hang the specimen with only the empty bag. That is the zero point: measure L₀ again here.
 2. **Condition it:** load to about the mass in the table below (around 15 % strain),
@@ -108,6 +114,8 @@ note it. Also note σ at 20 % strain: the designs are held to 20 %.
 ## 4. Test C: compression
 
 ![Compression set-up on a kitchen scale](figures/specimen_tests/compression_setup.png)
+
+![Compression, steps 1 to 4](figures/specimen_tests/steps_compression.png)
 
 1. Put a drop of oil or a smear of grease on both flat ends of the cylinder, so they can
    spread sideways freely (dry ends make it look stiffer).
