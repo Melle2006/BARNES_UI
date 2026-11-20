@@ -186,7 +186,8 @@ the steps in this order: they go from gentle to destructive.
    * Holding force at a tension T is the largest W the joint holds at 30°.
      Compare with `tension_per_N_hook_*` and `hook_N_at_capacity`.
 3. **Where it gives way: buckling, squashing or twisting.**
-   * With the arm held at 30° (a hook weight, or a stop clamped under it), raise
+   * With the arm held at 30° (pressing up against a stop clamped across the
+     protractor frame above it, with a small hook weight to steady it), raise
      the tension in steps until one of these happens:
      * **buckles:** the angle jumps, or a leaf visibly bows sideways;
      * **squashes:** the gap between the collars closes by more than 0.5 mm, or a
@@ -209,13 +210,15 @@ the steps in this order: they go from gentle to destructive.
    * Every 100 cycles, check the free angle and the tension to reach 30°.
    * Stop at a visible crack, a 20 % change in the tension to reach 30°, a 5°
      change in the free angle, or 10,000 cycles. Record which.
-6. **Material** (specimens):
-   * Tensile: pull each dog-bone and strip with hanging weights in steps, and
-     measure the gauge length (marks 20 mm apart) with calipers or a
-     photograph. Take E from 2–10 % strain, then go to break.
-   * Compression: load the Ø10 × 10 cylinder in steps. E is the slope from 2–10 %
-     strain. The bearings depend on this number.
+6. **Material** (specimens): follow
+   [docs/12-tpu-specimen-test-procedure.md](../../docs/12-tpu-specimen-test-procedure.md),
+   Part 1. It supersedes the short version that was here: condition each specimen before
+   measuring L₀, and take E with the neo-Hookean per-reading formula averaged over 2–10 %
+   strain (a straight-line slope reads about 10 % low).
    * Rescale predictions.csv by E_measured ÷ 12 MPa before comparing.
+   * The rig steps above are written out in full, with pictures, in Part 2 of the same
+     document (rest block for lift-off, stop above the arm in step 3, pin lengths, palm
+     side up).
 
 ## 5. Type A baseline
 

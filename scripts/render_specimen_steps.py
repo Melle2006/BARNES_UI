@@ -271,10 +271,10 @@ def steps_tension():
     fig, axs = plt.subplots(1, 4, figsize=(15, 7.4))
     # 1: zero
     ax = axs[0]
-    panel(ax, "Step 1: empty bag = zero", (-30, 34), (-98, 58))
+    panel(ax, "Steps 1 and 3: empty bag; L₀", (-30, 34), (-98, 58))
     bot, mid = tension_frame(ax, 0.0, "empty\nbag")
     dim(ax, (9, mid - 10), (9, mid + 10), " L₀", off=(1, 0), ha="left")
-    caption(ax, "Hang it with only the empty bag (and the bottom grip).\nMeasure L₀ again here: this is the zero point.")
+    caption(ax, "1: hang it with the empty bag (grip + bag under 50 g).\n3: after step 2, wait 2 min like this, then measure L₀.")
     # 2: conditioning
     ax = axs[1]
     panel(ax, "Step 2: condition it 3 times", (-30, 34), (-98, 58))
@@ -282,17 +282,17 @@ def steps_tension():
     ax.annotate("", (24, 10), (24, -20), arrowprops=dict(arrowstyle="<->", color=NOTE, lw=1.4,
                                                         connectionstyle="arc3,rad=0.5"))
     ax.text(28, -5, "load,\nunload,\n× 3", fontsize=8, color=NOTE, va="center")
-    caption(ax, "Load to the mass in the table (≈15 % stretch), take it off,\nrepeat 3 times. Then start the real readings.")
+    caption(ax, "Load to the mass in the table (≈15 % stretch), wait 30 s,\ntake it off; 3 times. Then the zero (step 3).")
     # 3: load steps
     ax = axs[2]
-    panel(ax, "Step 3: add a step, wait 30 s, read L", (-30, 34), (-98, 58))
+    panel(ax, "Step 4: add a step, wait 30 s, read L", (-30, 34), (-98, 58))
     bot, mid = tension_frame(ax, 0.06, "+100 g\n(+200 g for\n2.0 mm)")
     dim(ax, (9, mid - 10.6), (9, mid + 10.6), " L", off=(1, 0), ha="left")
     clock(ax, 22, 30)
-    caption(ax, "Add one step, wait 30 s, then record the total mass and L.\nKeep going to at least 15 % strain.")
+    caption(ax, "Add one step gently, wait 30 s, record the total added\nmass and L. At least 4 readings between 2 and 10 %.")
     # 3b: reading L from a photo
     ax = axs[3]
-    panel(ax, "Step 3: reading L from a photo", (-24, 26), (-52, 40))
+    panel(ax, "Step 4: reading L from a photo", (-24, 26), (-52, 40))
     ax.add_patch(mp.FancyBboxPatch((-20, -30), 40, 62, boxstyle="round,pad=1.2", fc="#2b2b2b", ec=INK))
     ax.add_patch(mp.Rectangle((-17, -26), 34, 54, fc="#f5f5f5", ec="none"))
     ax.add_patch(mp.Rectangle((-3, -26), 6, 54, fc=TPU, ec=INK, lw=0.6))
@@ -304,7 +304,7 @@ def steps_tension():
     ax.text(0, -36, "phone square on, ruler touching the specimen's face;\nread both marks against the ruler "
                     "(or measure in a photo app)", ha="center", fontsize=7.5)
     caption(ax, "Calipers also work: touch the jaw tips to the marks\nwithout squeezing the specimen.", y=-0.02)
-    fig.suptitle("Tests A and B, tension (section 3, steps 1–3); dog-bone shown, edge strips are done the same way",
+    fig.suptitle("Tests A and B, tension (section 3, steps 1–4); dog-bone shown, edge strips are done the same way",
                  fontsize=11)
     fig.tight_layout()
     fig.savefig(OUT / "steps_tension.png", dpi=160)
@@ -346,7 +346,7 @@ def steps_compression():
     panel(ax, "Step 2: stack it, zero the scale", (-20, 20), (-14, 26))
     y0, top = stack(ax, scale_text="0.00 kg")
     ax.text(12, 10, "top plate on,\nthen press\nTARE / zero", fontsize=8, color=NOTE)
-    caption(ax, "Scale → flat plate → cylinder → flat plate.\nZero the scale with the top plate resting on it.")
+    caption(ax, "Scale → plate → cylinder → plate. Zero with the top plate on,\nbring the press to touch, measure h₀ across the plates.")
     ax = axs[2]
     panel(ax, "Step 3: press 0.2 mm, wait 30 s", (-20, 20), (-14, 32))
     y0, top = stack(ax, h=9.8, scale_text="1.96 kg", press=True)
@@ -361,9 +361,10 @@ def steps_compression():
     ax.plot([11, 15], [top, top], color=NOTE, lw=1)
     ax.text(16, (top - 1.5) / 2, "calipers across\nboth plates\n− 2 × plate\nthickness\n= h", fontsize=8,
             color=NOTE, va="center")
-    caption(ax, "Record the scale reading and h at every step, to about 1.0 mm (10 %).\n"
-                "Run each cylinder twice; use the second run.")
-    fig.suptitle("Test C, compression (section 4, steps 1–4)", fontsize=11)
+    caption(ax, "Steps 3–4: record kg and h at every step, to about 1.0 mm (10 %).\n"
+                "Step 5: wait 5 min, run it again; use the second run.")
+    fig.suptitle("Test C, compression (section 4, steps 1–5). The press must push against the bench, so the force "
+                 "goes through the scale", fontsize=11)
     fig.tight_layout()
     fig.savefig(OUT / "steps_compression.png", dpi=160)
     plt.close(fig)
