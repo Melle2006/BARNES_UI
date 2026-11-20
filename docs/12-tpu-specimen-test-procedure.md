@@ -23,7 +23,14 @@ That is 12 tensile specimens and 3 cylinders. (The specimen codes E1/E2 are "edg
 have nothing to do with joint module E-P in Part 2.)
 
 Specimen files: [`TYPE B/round2/test_rig/`](../TYPE%20B/round2/test_rig/) (labelled
-copies in [`print_ready/specimens/`](../print_ready/specimens/)). Log template:
+copies in [`print_ready/specimens/`](../print_ready/specimens/)).
+
+**Record tests A and B in the workbook**
+[`results/material_tests/tension_tests_AB.xlsx`](../results/material_tests/tension_tests_AB.xlsx):
+one sheet per specimen with the load steps already listed and every formula in place (you
+fill in the blue cells: sizes, L₀ and the mark gap at each step), and a Summary sheet that
+gives E for each specimen, the group means, the ±10 % check, flat against edge, and the
+rescale factor. Test C and anything else go in the plain log
 [`results/material_tests/specimen_log.csv`](../results/material_tests/specimen_log.csv).
 
 **Mistakes that spoil the result** (each is covered in the steps below):
