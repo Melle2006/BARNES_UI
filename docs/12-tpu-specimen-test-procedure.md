@@ -30,7 +30,11 @@ copies in [`print_ready/specimens/`](../print_ready/specimens/)).
 one sheet per specimen with the load steps already listed and every formula in place (you
 fill in the blue cells: sizes, L₀ and the mark gap at each step), and a Summary sheet that
 gives E for each specimen, the group means, the ±10 % check, flat against edge, and the
-rescale factor. Test C and anything else go in the plain log
+rescale factor. **Record test C in**
+[`results/material_tests/compression_test_C.xlsx`](../results/material_tests/compression_test_C.xlsx):
+one sheet per cylinder with run 1 and run 2 (run 2 is used), the 0.2 mm steps listed, and a
+Summary sheet with E for each cylinder, the mean, the ±10 % check and the comparison with
+the tension value. Anything else goes in the plain log
 [`results/material_tests/specimen_log.csv`](../results/material_tests/specimen_log.csv).
 
 **Mistakes that spoil the result** (each is covered in the steps below):
