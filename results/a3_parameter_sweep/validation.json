@@ -1,0 +1,10 @@
+{
+  "measured_radius_mm": 41.66,
+  "end_z_mm": 9.848,
+  "elastica_stiffness_at_2deg_Nmm_per_rad": 9.067,
+  "fea_stiffness_Nmm_per_rad": 6.10336,
+  "reduced_order_stiffness_Nmm_per_rad": 7.558,
+  "elastica_over_fea": 1.486,
+  "peak_strain_to_90deg_pct": 5.2,
+  "reached_deg": 7.0
+}

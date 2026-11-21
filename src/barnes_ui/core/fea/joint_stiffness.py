@@ -31,6 +31,11 @@ Both earlier mistakes produced converged, warning-free, plausible-looking runs:
 So every surface inside the attachment depth is tied, and the reference node is
 pinned by default. Neither is optional here.
 
+The rotation node's two off-axis rotations are held at zero too, for an
+axis-aligned joint direction: the joint is a hinge. Leaving them free was not a wrong
+answer but a badly conditioned one -- on the A8 meander strip it cut the first
+increment back to ~0.01 deg, with the largest residual on the free DOF 3.
+
 What it does not decide
 -----------------------
 
@@ -319,6 +324,22 @@ def measure_joint_stiffness(
             f"prescribed joint rotation {setup.rotation_deg:g} deg",
         )
     )
+    # A PIP joint is a hinge: the distal body turns about the joint axis and nothing
+    # else. Left free, the two off-axis rotations are a near-singular mode of the
+    # rigid body; on the A8 meander strip the largest residual sat on DOF 3 of this
+    # node and the first increment was cut back to ~0.01 deg. Held, it converged in
+    # one increment per tenth of the step. Only expressible as per-DOF zeros when the
+    # joint axis is a coordinate axis.
+    direction = np.asarray(setup.joint_direction, dtype=float)
+    if np.count_nonzero(np.abs(direction) > 1.0e-12) == 1:
+        boundary.append(
+            BoundaryCondition(
+                rigid.rotation_set_name,
+                tuple(d + 1 for d in range(3) if d != setup.axis_component),
+                0.0,
+                "hinge: off-axis rotations held",
+            )
+        )
 
     deck = write_deck(mesh, material, boundary, settings, title=title)
 

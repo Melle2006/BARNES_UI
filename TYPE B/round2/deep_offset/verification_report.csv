@@ -1,0 +1,733 @@
+variant,check,value,limit,unit,result
+B1_t100_notch100_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t100_notch100_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B1_t100_notch100_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B1_t100_notch100_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B1_t100_notch100_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B1_t100_notch100_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B1_t100_notch100_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B1_t100_notch100_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B1_t100_notch100_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t100_notch100_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B1_t100_notch100_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B1_t100_notch100_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t100_notch100_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B1_t100_notch100_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B1_t100_notch100_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B1_t100_notch100_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B1_t100_notch100_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B1_t100_notch100_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B1_t100_notch100_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B1_t100_notch100_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t100_notch100_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B1_t100_notch100_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B1_t100_notch100_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t100_notch100_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B1_t100_notch100_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B1_t100_notch100_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B1_t100_notch100_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B1_t100_notch100_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B1_t100_notch100_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B1_t100_notch100_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B1_t100_notch100_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B1_t100_notch100_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B1_t100_notch100_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B1_t100_notch100_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B1_t100_notch100_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B1_t100_notch100_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B1_t200_notch050_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t200_notch050_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B1_t200_notch050_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B1_t200_notch050_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B1_t200_notch050_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B1_t200_notch050_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B1_t200_notch050_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B1_t200_notch050_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B1_t200_notch050_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t200_notch050_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B1_t200_notch050_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B1_t200_notch050_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t200_notch050_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B1_t200_notch050_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B1_t200_notch050_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B1_t200_notch050_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B1_t200_notch050_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B1_t200_notch050_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B1_t200_notch050_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B1_t200_notch050_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t200_notch050_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B1_t200_notch050_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B1_t200_notch050_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B1_t200_notch050_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B1_t200_notch050_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B1_t200_notch050_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B1_t200_notch050_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B1_t200_notch050_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B1_t200_notch050_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B1_t200_notch050_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B1_t200_notch050_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B1_t200_notch050_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B1_t200_notch050_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B1_t200_notch050_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B1_t200_notch050_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B1_t200_notch050_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B3_t100_w20_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t100_w20_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B3_t100_w20_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B3_t100_w20_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B3_t100_w20_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B3_t100_w20_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B3_t100_w20_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B3_t100_w20_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B3_t100_w20_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t100_w20_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B3_t100_w20_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B3_t100_w20_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t100_w20_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B3_t100_w20_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B3_t100_w20_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B3_t100_w20_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B3_t100_w20_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B3_t100_w20_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B3_t100_w20_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B3_t100_w20_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t100_w20_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B3_t100_w20_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B3_t100_w20_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t100_w20_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B3_t100_w20_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B3_t100_w20_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B3_t100_w20_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B3_t100_w20_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B3_t100_w20_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B3_t100_w20_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B3_t100_w20_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B3_t100_w20_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B3_t100_w20_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B3_t100_w20_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B3_t100_w20_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B3_t100_w20_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B3_t200_w30_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t200_w30_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B3_t200_w30_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B3_t200_w30_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B3_t200_w30_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B3_t200_w30_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B3_t200_w30_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B3_t200_w30_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B3_t200_w30_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t200_w30_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B3_t200_w30_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B3_t200_w30_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t200_w30_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B3_t200_w30_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B3_t200_w30_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B3_t200_w30_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B3_t200_w30_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B3_t200_w30_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B3_t200_w30_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B3_t200_w30_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t200_w30_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B3_t200_w30_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B3_t200_w30_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B3_t200_w30_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B3_t200_w30_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B3_t200_w30_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B3_t200_w30_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B3_t200_w30_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B3_t200_w30_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B3_t200_w30_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B3_t200_w30_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B3_t200_w30_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B3_t200_w30_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B3_t200_w30_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B3_t200_w30_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B3_t200_w30_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B5_t100_a75_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t100_a75_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B5_t100_a75_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B5_t100_a75_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B5_t100_a75_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B5_t100_a75_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B5_t100_a75_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B5_t100_a75_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B5_t100_a75_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t100_a75_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B5_t100_a75_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B5_t100_a75_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t100_a75_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B5_t100_a75_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B5_t100_a75_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B5_t100_a75_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B5_t100_a75_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B5_t100_a75_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B5_t100_a75_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B5_t100_a75_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t100_a75_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B5_t100_a75_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B5_t100_a75_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t100_a75_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B5_t100_a75_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B5_t100_a75_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B5_t100_a75_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B5_t100_a75_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B5_t100_a75_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B5_t100_a75_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B5_t100_a75_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B5_t100_a75_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B5_t100_a75_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B5_t100_a75_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B5_t100_a75_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B5_t100_a75_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B5_t200_a45_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t200_a45_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B5_t200_a45_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B5_t200_a45_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B5_t200_a45_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B5_t200_a45_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B5_t200_a45_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B5_t200_a45_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B5_t200_a45_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t200_a45_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B5_t200_a45_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B5_t200_a45_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t200_a45_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B5_t200_a45_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B5_t200_a45_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B5_t200_a45_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B5_t200_a45_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B5_t200_a45_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B5_t200_a45_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B5_t200_a45_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t200_a45_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B5_t200_a45_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B5_t200_a45_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B5_t200_a45_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B5_t200_a45_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B5_t200_a45_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B5_t200_a45_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B5_t200_a45_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B5_t200_a45_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B5_t200_a45_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B5_t200_a45_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B5_t200_a45_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B5_t200_a45_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B5_t200_a45_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B5_t200_a45_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B5_t200_a45_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B6_n6_t100_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n6_t100_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B6_n6_t100_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B6_n6_t100_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B6_n6_t100_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B6_n6_t100_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B6_n6_t100_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B6_n6_t100_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B6_n6_t100_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n6_t100_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B6_n6_t100_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B6_n6_t100_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n6_t100_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B6_n6_t100_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B6_n6_t100_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B6_n6_t100_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B6_n6_t100_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B6_n6_t100_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B6_n6_t100_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B6_n6_t100_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n6_t100_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B6_n6_t100_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B6_n6_t100_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n6_t100_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B6_n6_t100_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B6_n6_t100_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B6_n6_t100_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B6_n6_t100_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B6_n6_t100_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B6_n6_t100_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B6_n6_t100_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B6_n6_t100_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B6_n6_t100_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B6_n6_t100_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B6_n6_t100_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B6_n6_t100_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B6_n4_t200_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n4_t200_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B6_n4_t200_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B6_n4_t200_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B6_n4_t200_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B6_n4_t200_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B6_n4_t200_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B6_n4_t200_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B6_n4_t200_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n4_t200_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B6_n4_t200_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B6_n4_t200_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n4_t200_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B6_n4_t200_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B6_n4_t200_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B6_n4_t200_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B6_n4_t200_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B6_n4_t200_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B6_n4_t200_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B6_n4_t200_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n4_t200_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B6_n4_t200_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B6_n4_t200_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B6_n4_t200_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B6_n4_t200_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B6_n4_t200_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B6_n4_t200_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B6_n4_t200_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B6_n4_t200_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B6_n4_t200_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B6_n4_t200_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B6_n4_t200_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B6_n4_t200_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B6_n4_t200_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B6_n4_t200_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B6_n4_t200_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B_T090_X3_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T090_X3_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B_T090_X3_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B_T090_X3_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B_T090_X3_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B_T090_X3_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B_T090_X3_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B_T090_X3_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B_T090_X3_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T090_X3_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B_T090_X3_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B_T090_X3_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T090_X3_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B_T090_X3_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B_T090_X3_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B_T090_X3_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B_T090_X3_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B_T090_X3_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B_T090_X3_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B_T090_X3_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T090_X3_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B_T090_X3_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B_T090_X3_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T090_X3_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B_T090_X3_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B_T090_X3_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B_T090_X3_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B_T090_X3_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B_T090_X3_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B_T090_X3_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B_T090_X3_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B_T090_X3_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B_T090_X3_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B_T090_X3_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B_T090_X3_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B_T090_X3_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B_T120_X3_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T120_X3_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B_T120_X3_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B_T120_X3_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B_T120_X3_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B_T120_X3_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B_T120_X3_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B_T120_X3_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B_T120_X3_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T120_X3_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B_T120_X3_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B_T120_X3_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T120_X3_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B_T120_X3_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B_T120_X3_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B_T120_X3_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B_T120_X3_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B_T120_X3_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B_T120_X3_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B_T120_X3_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T120_X3_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B_T120_X3_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B_T120_X3_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B_T120_X3_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B_T120_X3_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B_T120_X3_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B_T120_X3_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B_T120_X3_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B_T120_X3_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B_T120_X3_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B_T120_X3_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B_T120_X3_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B_T120_X3_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B_T120_X3_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B_T120_X3_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B_T120_X3_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B4_t080_a60_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t080_a60_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B4_t080_a60_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B4_t080_a60_deep,MCP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t080_a60_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B4_t080_a60_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B4_t080_a60_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B4_t080_a60_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B4_t080_a60_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t080_a60_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B4_t080_a60_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t080_a60_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B4_t080_a60_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B4_t080_a60_deep,PIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t080_a60_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t080_a60_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B4_t080_a60_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B4_t080_a60_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B4_t080_a60_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t080_a60_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B4_t080_a60_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B4_t080_a60_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B4_t080_a60_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B4_t080_a60_deep,DIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t080_a60_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t080_a60_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B4_t080_a60_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B4_t080_a60_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B4_t080_a60_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B4_t080_a60_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B4_t080_a60_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B4_t080_a60_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B4_t080_a60_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B4_t080_a60_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B4_t100_a60_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t100_a60_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B4_t100_a60_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B4_t100_a60_deep,MCP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t100_a60_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B4_t100_a60_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B4_t100_a60_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B4_t100_a60_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B4_t100_a60_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t100_a60_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B4_t100_a60_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t100_a60_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B4_t100_a60_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B4_t100_a60_deep,PIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t100_a60_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t100_a60_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B4_t100_a60_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B4_t100_a60_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B4_t100_a60_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t100_a60_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B4_t100_a60_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B4_t100_a60_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B4_t100_a60_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B4_t100_a60_deep,DIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t100_a60_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t100_a60_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B4_t100_a60_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B4_t100_a60_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B4_t100_a60_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B4_t100_a60_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B4_t100_a60_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B4_t100_a60_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B4_t100_a60_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B4_t100_a60_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B8_y00_r150_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y00_r150_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B8_y00_r150_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B8_y00_r150_deep,MCP bearing surfaces clear as printed,0.2991,>= 0.25,mm,pass
+B8_y00_r150_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B8_y00_r150_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B8_y00_r150_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B8_y00_r150_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B8_y00_r150_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y00_r150_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B8_y00_r150_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y00_r150_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B8_y00_r150_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B8_y00_r150_deep,PIP bearing surfaces clear as printed,0.2992,>= 0.25,mm,pass
+B8_y00_r150_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y00_r150_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B8_y00_r150_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B8_y00_r150_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B8_y00_r150_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y00_r150_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B8_y00_r150_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B8_y00_r150_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B8_y00_r150_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B8_y00_r150_deep,DIP bearing surfaces clear as printed,0.2993,>= 0.25,mm,pass
+B8_y00_r150_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y00_r150_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B8_y00_r150_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B8_y00_r150_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B8_y00_r150_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B8_y00_r150_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B8_y00_r150_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B8_y00_r150_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B8_y00_r150_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B8_y00_r150_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B8_y20_r125_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y20_r125_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B8_y20_r125_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B8_y20_r125_deep,MCP bearing surfaces clear as printed,0.2992,>= 0.25,mm,pass
+B8_y20_r125_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B8_y20_r125_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B8_y20_r125_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B8_y20_r125_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B8_y20_r125_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y20_r125_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B8_y20_r125_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y20_r125_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B8_y20_r125_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B8_y20_r125_deep,PIP bearing surfaces clear as printed,0.2993,>= 0.25,mm,pass
+B8_y20_r125_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y20_r125_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B8_y20_r125_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B8_y20_r125_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B8_y20_r125_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y20_r125_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B8_y20_r125_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B8_y20_r125_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B8_y20_r125_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B8_y20_r125_deep,DIP bearing surfaces clear as printed,0.2994,>= 0.25,mm,pass
+B8_y20_r125_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y20_r125_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B8_y20_r125_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B8_y20_r125_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B8_y20_r125_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B8_y20_r125_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B8_y20_r125_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B8_y20_r125_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B8_y20_r125_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B8_y20_r125_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B9_n100_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n100_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n100_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B9_n100_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n100_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n100_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B9_n100_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B9_n100_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B9_n100_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B9_n100_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B9_n100_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B9_n100_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n100_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n100_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B9_n100_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n100_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B9_n100_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B9_n100_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n100_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B9_n100_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B9_n100_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B9_n100_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n100_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n100_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B9_n100_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B9_n100_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B9_n100_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B9_n100_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n100_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B9_n100_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B9_n100_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B9_n100_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n100_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n100_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B9_n100_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B9_n100_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B9_n100_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B9_n100_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B9_n100_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B9_n100_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B9_n150_deep,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n150_deep,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n150_deep,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B9_n150_deep,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n150_deep,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150_deep,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n150_deep,MCP distal PLA wall outside grooved tendon channel (02_Phalanx1),0.9624,>= 0.8,mm,pass
+B9_n150_deep,MCP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B9_n150_deep,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B9_n150_deep,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B9_n150_deep,MCP tab material tendon to sensor channel,5.15,>= 0.5,mm,pass
+B9_n150_deep,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B9_n150_deep,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n150_deep,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150_deep,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n150_deep,PIP proximal PLA wall outside grooved tendon channel (02_Phalanx1),1.1,>= 0.8,mm,pass
+B9_n150_deep,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150_deep,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n150_deep,PIP distal PLA wall outside grooved tendon channel (04_Phalanx2),0.8339,>= 0.8,mm,pass
+B9_n150_deep,PIP collar wall around deep tendon channel,0.8,>= 0.8,mm,pass
+B9_n150_deep,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n150_deep,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B9_n150_deep,PIP tab material tendon to sensor channel,3.8339,>= 0.5,mm,pass
+B9_n150_deep,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B9_n150_deep,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n150_deep,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150_deep,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n150_deep,DIP proximal PLA wall outside grooved tendon channel (04_Phalanx2),1.2,>= 0.8,mm,pass
+B9_n150_deep,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150_deep,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B9_n150_deep,DIP distal PLA wall outside grooved tendon channel (06_Phalanx3),1.0584,>= 0.8,mm,pass
+B9_n150_deep,DIP collar wall around deep tendon channel,0.9,>= 0.8,mm,pass
+B9_n150_deep,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n150_deep,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B9_n150_deep,DIP tab material tendon to sensor channel,1.8584,>= 0.5,mm,pass
+B9_n150_deep,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B9_n150_deep,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n150_deep,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n150_deep,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B9_n150_deep,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B9_n150_deep,anchor boss hole to deep tendon channel (04_Phalanx2),0.7654,>= 0.5,mm,pass
+B9_n150_deep,anchor boss hole to deep tendon channel (06_Phalanx3),0.5188,>= 0.5,mm,pass
+B9_n150_deep,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B9_n150_deep,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B9_n150_deep,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass

@@ -1,0 +1,227 @@
+{
+ "variant": "B1_t100_notch100",
+ "offset": "as-built",
+ "joint": "PIP",
+ "angle": 30.0,
+ "family": "B1_hourglass",
+ "params": {
+  "throat": 1.0,
+  "notch_frac": 1.0
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 1.93,
+ "tendon_dir_yz": [
+  0.2588190451025207,
+  -0.9659258262890682
+ ],
+ "tendon_entry_yz": [
+  -3.5589290293039664,
+  6.879245899286256
+ ],
+ "tendon_exit_yz": [
+  -1.93,
+  0.8
+ ],
+ "element_size": 0.5,
+ "elements": 25826,
+ "nodes": 46695,
+ "contact_faces": null,
+ "info": {
+  "t": 1.0,
+  "w": 3.0,
+  "notch_len": 7.55,
+  "web_h": 8.907130750570548,
+  "k_over_E": 0.23106272682081952
+ },
+ "pose_reached": true,
+ "pose_moment": 1.43162,
+ "pose_ref_u": [
+  0.0,
+  -1.90934,
+  -0.4242958
+ ],
+ "guided": false,
+ "load": [
+  {
+   "hold_moment": 1.160495,
+   "du_y": 0.009125999999999967,
+   "du_z": -0.02622599999999997,
+   "du_along": 0.02769435332586267,
+   "T": 0.43124999999999414
+  },
+  {
+   "hold_moment": -0.1895876,
+   "du_y": 0.05452199999999996,
+   "du_z": -0.149185,
+   "du_along": 0.15821297637201426,
+   "T": 2.4878999999999984
+  },
+  {
+   "hold_moment": -2.698207,
+   "du_y": 0.15229099999999995,
+   "du_z": -0.35050689999999995,
+   "du_along": 0.37797947820022776,
+   "T": 6.019350000000012
+  },
+  {
+   "hold_moment": -4.074602,
+   "du_y": 0.2604790000000001,
+   "du_z": -0.45305320000000004,
+   "du_along": 0.505032712612166,
+   "T": 8.058449999999995
+  },
+  {
+   "hold_moment": -4.35483,
+   "du_y": 0.33791499999999997,
+   "du_z": -0.47861529999999997,
+   "du_along": 0.5497657167529085,
+   "T": 8.740649999999995
+  },
+  {
+   "hold_moment": -4.059294,
+   "du_y": 0.543785,
+   "du_z": -0.4872503,
+   "du_along": 0.6113895630781706,
+   "T": 9.497699999999998
+  },
+  {
+   "hold_moment": -3.604571,
+   "du_y": 0.672234,
+   "du_z": -0.4814199,
+   "du_along": 0.6390028766649485,
+   "T": 9.70184999999999
+  },
+  {
+   "hold_moment": -3.177005,
+   "du_y": 0.777091,
+   "du_z": -0.47635609999999995,
+   "du_along": 0.6612506100781008,
+   "T": 9.811800000000003
+  },
+  {
+   "hold_moment": -2.642454,
+   "du_y": 0.8997980000000001,
+   "du_z": -0.47190410000000005,
+   "du_along": 0.688709216866857,
+   "T": 9.904500000000006
+  },
+  {
+   "hold_moment": -1.999204,
+   "du_y": 1.0415602000000002,
+   "du_z": -0.4699565,
+   "du_along": 0.723518736963209,
+   "T": 9.982650000000003
+  },
+  {
+   "hold_moment": -1.256536,
+   "du_y": 1.201405,
+   "du_z": -0.4728363,
+   "du_along": 0.7676712886583597,
+   "T": 10.048650000000004
+  },
+  {
+   "hold_moment": -0.7729386,
+   "du_y": 1.3044104,
+   "du_z": -0.47785869999999997,
+   "du_along": 0.799182313796717,
+   "T": 10.083299999999983
+  },
+  {
+   "hold_moment": -0.3080248,
+   "du_y": 1.4030619,
+   "du_z": -0.4851443,
+   "du_along": 0.83175255002466,
+   "T": 10.11255000000001
+  }
+ ],
+ "load_completed_fraction": 0.06741700000000006,
+ "frames": [
+  {
+   "T": 0.43124999999999414,
+   "strain_max": 0.12320438032296477,
+   "strain_p99": 0.1103222832659909,
+   "strain_min": -0.12892314682864814
+  },
+  {
+   "T": 2.487890550000016,
+   "strain_max": 0.13911606950138844,
+   "strain_p99": 0.10910292951793188,
+   "strain_min": -0.17550618525287054
+  },
+  {
+   "T": 6.01933590000001,
+   "strain_max": 0.21538951601507428,
+   "strain_p99": 0.1619035655637927,
+   "strain_min": -0.25758818670253447
+  },
+  {
+   "T": 8.058398399999989,
+   "strain_max": 0.265127501426655,
+   "strain_p99": 0.19649123827214277,
+   "strain_min": -0.30762280285119215
+  },
+  {
+   "T": 8.740649400000011,
+   "strain_max": 0.28225575847542994,
+   "strain_p99": 0.20941636137956643,
+   "strain_min": -0.32534234689793406
+  },
+  {
+   "T": 9.497753399999986,
+   "strain_max": 0.30139760534169935,
+   "strain_p99": 0.22929800445279686,
+   "strain_min": -0.35841963163857515
+  },
+  {
+   "T": 9.701889750000014,
+   "strain_max": 0.3089656305835451,
+   "strain_p99": 0.24096480963417463,
+   "strain_min": -0.37658511557132124
+  },
+  {
+   "T": 9.811767149999984,
+   "strain_max": 0.3237437620084793,
+   "strain_p99": 0.2492304488305882,
+   "strain_min": -0.3897444162344468
+  },
+  {
+   "T": 9.904476149999997,
+   "strain_max": 0.33993261064199665,
+   "strain_p99": 0.25927082390441475,
+   "strain_min": -0.4038217566163209
+  },
+  {
+   "T": 9.98269934999999,
+   "strain_max": 0.35879828908497635,
+   "strain_p99": 0.2722171408440295,
+   "strain_min": -0.41872949460889886
+  },
+  {
+   "T": 10.048700249999998,
+   "strain_max": 0.37932025035211026,
+   "strain_p99": 0.2856740645802688,
+   "strain_min": -0.43416159405505184
+  },
+  {
+   "T": 10.083317250000013,
+   "strain_max": 0.3917838118114836,
+   "strain_p99": 0.2938693998577899,
+   "strain_min": -0.44345726699864196
+  },
+  {
+   "T": 10.112525400000006,
+   "strain_max": 0.41164166558008475,
+   "strain_p99": 0.30329124706780425,
+   "strain_min": -0.45193417424956084
+  }
+ ],
+ "ccx_tail": "rial and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n no convergence\n\n iteration 5\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
+ "stopped": null,
+ "wall_s": 1491.5,
+ "capacity_T": 5.306804380129162,
+ "limited_by": "peak strain reached 20 %",
+ "axial_k0": 15.664643905646656,
+ "peak_strain_at_cap": 0.2
+}

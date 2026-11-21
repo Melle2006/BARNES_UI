@@ -87,10 +87,56 @@ crosshead speeds spanning the range of real finger motion.
 describes injection-moulded or extruded bulk material, not your printed part, and the difference
 is usually significant. It will be accepted and labelled as datasheet-derived.
 
-**Not acceptable:** deriving hyperelastic coefficients from the "95A" hardness label. Shore
+**Not acceptable:** deriving hyperelastic coefficients from the "90A" hardness label. Shore
 hardness to modulus correlations carry large scatter and give a small-strain modulus, which is
 not what a hyperelastic fit requires. The application will not do this. Without data it runs in
 provisional mode and every force it reports is marked unvalidated.
+
+#### What the filament's own datasheet supplies — checked 29 October 2026
+
+The filament in use is **SUNLU TPU 90A, 1.75 mm**. Its [product page][sunlu90a] publishes:
+
+| Property | Published value | Standard stated |
+|---|---|---|
+| Density | **1.23 g/cm³** | none |
+| Shore hardness | 80, scale unstated (HA/HD) | none |
+| Tensile strength | 40 ± 6 MPa | none |
+| Flexural strength | 65 ± 6 MPa | none |
+| Elongation at break | 10 ± 5 % | none |
+| Notched Izod | 5 ± 3 kJ/m² | none |
+| Heat deflection / Vicat | 55 ± 5 °C / 54 °C | none |
+| Tensile or flexural **modulus** | **absent** | — |
+| Stress–strain curve | **absent** | — |
+
+**One figure is usable: density, 1.23 g/cm³.** It is a physical property rather than a
+constitutive one, and it is what `GravityLoad` needs — pass it through
+`density_from_g_per_cm3(1.23)`. It is deliberately not made a default; see
+`core/fea/loads.py` on why a default density would itself be an invented material property.
+
+**The mechanical rows are not usable, and not merely weak.** They are internally
+inconsistent:
+
+- Elongation at break of **10 ± 5 %** describes a rigid plastic. TPU 90A stretches several
+  hundred per cent, and SUNLU's own [store listing][sunlustore] for the same filament says
+  **≥1000 %** — the manufacturer's two pages disagree by two orders of magnitude.
+- **Shore 80** on a product sold as 90A, with the scale not stated.
+- A **flexural strength** and a **notched Izod** figure, which a 90A elastomer does not
+  meaningfully have: it bends without breaking, which is the reason for choosing it.
+
+Taken together the mechanical column reads like a rigid-polymer table placed on a TPU page.
+The [linked TDS PDF][sunlutds] could not be read, and its document metadata names a different
+company (a polymer compounder) rather than SUNLU, so it may describe another grade entirely
+and is not treated as a source.
+
+**This does not move item 7 towards closed.** Even a trustworthy sheet of this shape would not,
+because tensile *strength* is a failure point while the analysis needs *stiffness* — the slope
+at roughly 1.5 % strain, where the flexure actually works. There is no modulus and no curve to
+fit, so `fit_uniaxial` has nothing to act on and even the datasheet-derived path cannot be
+taken. The tensile test remains blocking.
+
+[sunlu90a]: https://www.sunlu.com/products/tpu-90a-flexible-filament
+[sunlustore]: https://store.sunlu.com/products/moq-3kg-tpu-3d-printer-filament-1kg
+[sunlutds]: https://www.sunlu.com/public/upload/file/20260325/0ddd5d28-710b-46d6-bf63-669309b8cb7b.pdf?filename=TDS%28English%29
 
 Until item 7 arrives, Phases 1 and 2 still deliver real value — geometry, dimensions, relative
 comparisons between designs — because relative ranking of variants is much less sensitive to the

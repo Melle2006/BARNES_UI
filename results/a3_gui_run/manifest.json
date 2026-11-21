@@ -1,0 +1,38 @@
+{
+  "run_id": "c284be4e014d",
+  "converged": true,
+  "elapsed_seconds": 3934.186,
+  "solver": {
+    "executable": "C:\\Users\\msaip\\AppData\\Local\\Programs\\CalculiX\\calculix_2.23_4win\\ccx_static.exe",
+    "version": "2.23 (inferred from the install path)",
+    "banner": "Usage: CalculiX.exe -i jobname"
+  },
+  "mesh": {
+    "description": "32965 C3D10 elements, 61021 nodes, target size 0.5000 mm",
+    "element_type": "C3D10",
+    "element_count": 32965,
+    "node_count": 61021,
+    "element_size_mm": 0.5,
+    "quality": {
+      "min_volume": 2.744048379325095e-06,
+      "mean_volume": 0.008917185139225604,
+      "negative_volume_count": 0.0,
+      "max_edge_ratio": 1100.5558846995345,
+      "mean_edge_ratio": 13.426075832568122,
+      "poor_elements": 2079.0
+    }
+  },
+  "material": {
+    "description": "TPU (PROVISIONAL - not calibrated): Neo-Hookean (C10=2.00067)",
+    "kind": "Neo-Hookean",
+    "parameters": [
+      2.0006668889629875
+    ],
+    "poisson_ratio": 0.4995,
+    "provenance": "Assumption",
+    "caveats": [
+      "Material parameters are assumed, not calibrated against test data. Absolute force and stress values are not validated predictions."
+    ],
+    "calibration_strain_range": null
+  }
+}

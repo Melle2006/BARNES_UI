@@ -260,6 +260,18 @@ The solve still needs about 285 cutbacks across 48 increments at 0.5 mm, and 278
 1.0 mm. The model is stiff to converge and the increment sizing is not comfortable;
 that has not changed and is not a discretisation question.
 
+A likely cause has since been found, not yet confirmed on A3. Those runs left two of
+the distal rigid body's three rotations free: only the joint-axis rotation was
+prescribed. On the A8 meander strip the same set-up cut the first increment back to
+~0.01 deg, with the largest residual on the rotation node's free DOF 3. Holding the
+off-axis rotations at zero (a PIP joint is a hinge) made it converge in one increment
+per tenth of the step. `measure_joint_stiffness` now applies that hinge condition for
+any axis-aligned joint direction. A check on a plain 4 x 30 x 1 mm strip went from 66
+cutbacks to 30, and the stiffness moved by 0.06 %. **The A3 figures above come from
+before this change.** Rerun `scripts/a3_joint_stiffness.py --element-size 1.0` and
+compare against `results/a3_mesh_study/mesh_1.json` (6.1604 N.mm/rad, 278 cutbacks)
+before quoting them again.
+
 **Four defects that only a real solver could expose.** The deck generator passed every
 structural test and was still wrong in four ways, each found by submitting to `ccx`:
 

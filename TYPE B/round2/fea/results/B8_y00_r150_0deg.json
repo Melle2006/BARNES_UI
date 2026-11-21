@@ -1,0 +1,279 @@
+{
+ "variant": "B8_y00_r150",
+ "offset": "as-built",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B8",
+ "params": {
+  "family": "B8",
+  "pad_y": 0.0,
+  "knuckle_r": 1.5
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 1.93,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -1.93,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -1.93,
+  0.8
+ ],
+ "element_size": 0.375,
+ "elements": 20268,
+ "nodes": 37654,
+ "contact_faces": [
+  442,
+  418
+ ],
+ "info": {
+  "t": 0.75,
+  "w": 1.95,
+  "knuckle_r": 1.5,
+  "pivot_y": 0.0,
+  "seat_rom_deg": 80.48731511472266,
+  "k_over_E": 0.018160182119205302,
+  "bearing_gap": 0.2991742132211759,
+  "bearing": "knuckle",
+  "bearing_w_total": 3.9
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "guided": true,
+ "load": [
+  {
+   "hold_moment": -3.633587e-06,
+   "du_y": 0.0,
+   "du_z": -0.0043125,
+   "du_along": 0.0043125,
+   "T": 0.02102251,
+   "side_force": -5.233866e-07
+  },
+  {
+   "hold_moment": -1.938801e-05,
+   "du_y": 0.0,
+   "du_z": -0.02487891,
+   "du_along": 0.02487891,
+   "T": 0.121618,
+   "side_force": -3.34085e-06
+  },
+  {
+   "hold_moment": -4.317839e-05,
+   "du_y": 0.0,
+   "du_z": -0.08269336,
+   "du_along": 0.08269336,
+   "T": 0.4074463,
+   "side_force": -1.418784e-05
+  },
+  {
+   "hold_moment": 2.085281e-06,
+   "du_y": 0.0,
+   "du_z": -0.1426934,
+   "du_along": 0.1426934,
+   "T": 0.7089433,
+   "side_force": -3.021564e-05
+  },
+  {
+   "hold_moment": 0.0003343913,
+   "du_y": 0.0,
+   "du_z": -0.2026934,
+   "du_along": 0.2026934,
+   "T": 1.015549,
+   "side_force": -5.13584e-05
+  },
+  {
+   "hold_moment": 0.003990913,
+   "du_y": 0.0,
+   "du_z": -0.2514434,
+   "du_along": 0.2514434,
+   "T": 1.268429,
+   "side_force": -7.267356e-05
+  },
+  {
+   "hold_moment": 0.04081783,
+   "du_y": 0.0,
+   "du_z": -0.261873,
+   "du_along": 0.261873,
+   "T": 1.317149,
+   "side_force": -7.993934e-05
+  },
+  {
+   "hold_moment": 0.1005024,
+   "du_y": 0.0,
+   "du_z": -0.2683,
+   "du_along": 0.2683,
+   "T": 1.321149,
+   "side_force": -8.502759e-05
+  },
+  {
+   "hold_moment": 0.2070744,
+   "du_y": 0.0,
+   "du_z": -0.2907003,
+   "du_along": 0.2907003,
+   "T": 1.32402,
+   "side_force": -8.908413e-05
+  },
+  {
+   "hold_moment": 0.2913771,
+   "du_y": 0.0,
+   "du_z": -0.3181532,
+   "du_along": 0.3181532,
+   "T": 1.488972,
+   "side_force": 0.0004699268
+  },
+  {
+   "hold_moment": 0.4105297,
+   "du_y": 0.0,
+   "du_z": -0.3781532,
+   "du_along": 0.3781532,
+   "T": 2.206915,
+   "side_force": -0.001421951
+  },
+  {
+   "hold_moment": 0.5097838,
+   "du_y": 0.0,
+   "du_z": -0.4381532,
+   "du_along": 0.4381532,
+   "T": 3.039602,
+   "side_force": -0.0005989453
+  },
+  {
+   "hold_moment": 0.5866002,
+   "du_y": 0.0,
+   "du_z": -0.4981532,
+   "du_along": 0.4981532,
+   "T": 3.926719,
+   "side_force": -0.001489265
+  },
+  {
+   "hold_moment": 0.6519853,
+   "du_y": 0.0,
+   "du_z": -0.5581532,
+   "du_along": 0.5581532,
+   "T": 4.85402,
+   "side_force": -0.002837085
+  },
+  {
+   "hold_moment": 0.7102178,
+   "du_y": 0.0,
+   "du_z": -0.6181532,
+   "du_along": 0.6181532,
+   "T": 5.820658,
+   "side_force": -0.004364913
+  }
+ ],
+ "load_completed_fraction": 0.41210199999999997,
+ "frames": [
+  {
+   "T": 0.02102251,
+   "strain_max": 0.0004349922468787071,
+   "strain_p99": 0.0003619471010564406,
+   "strain_min": -0.0007056351689883611
+  },
+  {
+   "T": 0.12161753777872816,
+   "strain_max": 0.002516351245174242,
+   "strain_p99": 0.0020921230145573176,
+   "strain_min": -0.004072377176569164
+  },
+  {
+   "T": 0.407445602912067,
+   "strain_max": 0.008428714649072466,
+   "strain_p99": 0.007001277218424004,
+   "strain_min": -0.013550202222176733
+  },
+  {
+   "T": 0.70894259148205,
+   "strain_max": 0.014661867159003972,
+   "strain_p99": 0.012165916339554723,
+   "strain_min": -0.023406462164154873
+  },
+  {
+   "T": 1.0155482794766049,
+   "strain_max": 0.020994765331769916,
+   "strain_p99": 0.017382799425403845,
+   "strain_min": -0.033276832682067936
+  },
+  {
+   "T": 1.2684282685932309,
+   "strain_max": 0.026190577163654805,
+   "strain_p99": 0.02175794107759581,
+   "strain_min": -0.04121439551833339
+  },
+  {
+   "T": 1.3171490289381562,
+   "strain_max": 0.032298178707118375,
+   "strain_p99": 0.024509028159039273,
+   "strain_min": -0.04721965319035404
+  },
+  {
+   "T": 1.3211487190198365,
+   "strain_max": 0.04238053344570769,
+   "strain_p99": 0.030469258018944772,
+   "strain_min": -0.05778349683099926
+  },
+  {
+   "T": 1.3240218836721667,
+   "strain_max": 0.06224270496964368,
+   "strain_p99": 0.043003211141836355,
+   "strain_min": -0.08025650832594444
+  },
+  {
+   "T": 1.4889738128060734,
+   "strain_max": 0.07766239949261977,
+   "strain_p99": 0.05291503866783452,
+   "strain_min": -0.09720759681751934
+  },
+  {
+   "T": 2.2069171025346734,
+   "strain_max": 0.10172174765596664,
+   "strain_p99": 0.06843253785769637,
+   "strain_min": -0.12283723873624741
+  },
+  {
+   "T": 3.0396042399704233,
+   "strain_max": 0.12025663643029949,
+   "strain_p99": 0.08052178158196757,
+   "strain_min": -0.1419247410305563
+  },
+  {
+   "T": 3.926721341435028,
+   "strain_max": 0.1359852897472955,
+   "strain_p99": 0.09212018652927653,
+   "strain_min": -0.15768955656724404
+  },
+  {
+   "T": 4.854022440760954,
+   "strain_max": 0.1499332442252026,
+   "strain_p99": 0.10380647463198293,
+   "strain_min": -0.17134650819395825
+  },
+  {
+   "T": 5.820658,
+   "strain_max": 0.16262122041075777,
+   "strain_p99": 0.11495134575158614,
+   "strain_min": -0.18350939588592174
+  }
+ ],
+ "ccx_tail": "lt will be used:   2.8580955571428575E-005\n       the user is advised to analyze the results\n       carefully\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=REF,TOTALS=NO,FREQUENCY=1\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\ndivergence allowed: residual force too large\n no convergence\n\n iteration 19\n\n Number of contact spring elements=8801\n\n Using up to 4 cpu(s) for the stress calculation.\n\n Using up to 4 cpu(s) for the symmetric stiffness/mass contributions.\n\n Factoring the system of equations using the symmetric spooles solver\n Using up to 4 cpu(s) for spooles.\n\n",
+ "stopped": null,
+ "wall_s": 1326.9,
+ "capacity_T": 5.820658,
+ "limited_by": "solver stopped (guided) before the bearing gave way: a lower bound",
+ "axial_k0": 4.883018365420373,
+ "peak_strain_at_cap": 0.16262122041075777,
+ "notes": [
+  "ccx was killed out of memory at 0.62 mm of guided shortening when contact diverged; the increments before are valid"
+ ]
+}

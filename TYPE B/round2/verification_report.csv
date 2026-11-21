@@ -1,0 +1,241 @@
+variant,check,value,limit,unit,result
+B4_t080_a60,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t080_a60,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t080_a60,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B4_t080_a60,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t080_a60,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t080_a60,MCP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B4_t080_a60,MCP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t080_a60,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B4_t080_a60,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B4_t080_a60,MCP tab material tendon to sensor channel,3.8124,>= 0.5,mm,pass
+B4_t080_a60,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B4_t080_a60,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t080_a60,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t080_a60,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t080_a60,PIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B4_t080_a60,PIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t080_a60,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t080_a60,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B4_t080_a60,PIP tab material tendon to sensor channel,2.3678,>= 0.5,mm,pass
+B4_t080_a60,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B4_t080_a60,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t080_a60,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t080_a60,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t080_a60,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B4_t080_a60,DIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B4_t080_a60,DIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t080_a60,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t080_a60,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B4_t080_a60,DIP tab material tendon to sensor channel,0.6167,>= 0.5,mm,pass
+B4_t080_a60,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B4_t080_a60,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t080_a60,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t080_a60,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B4_t080_a60,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B4_t080_a60,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B4_t080_a60,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B4_t080_a60,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B4_t100_a60,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t100_a60,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B4_t100_a60,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B4_t100_a60,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t100_a60,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t100_a60,MCP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B4_t100_a60,MCP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t100_a60,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B4_t100_a60,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B4_t100_a60,MCP tab material tendon to sensor channel,3.8124,>= 0.5,mm,pass
+B4_t100_a60,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B4_t100_a60,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t100_a60,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B4_t100_a60,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t100_a60,PIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B4_t100_a60,PIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t100_a60,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t100_a60,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B4_t100_a60,PIP tab material tendon to sensor channel,2.3678,>= 0.5,mm,pass
+B4_t100_a60,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B4_t100_a60,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B4_t100_a60,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B4_t100_a60,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B4_t100_a60,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B4_t100_a60,DIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B4_t100_a60,DIP bearing surfaces clear as printed,0.3,>= 0.25,mm,pass
+B4_t100_a60,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B4_t100_a60,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B4_t100_a60,DIP tab material tendon to sensor channel,0.6167,>= 0.5,mm,pass
+B4_t100_a60,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B4_t100_a60,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t100_a60,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B4_t100_a60,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B4_t100_a60,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B4_t100_a60,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B4_t100_a60,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B4_t100_a60,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B8_y00_r150,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y00_r150,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y00_r150,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B8_y00_r150,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y00_r150,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y00_r150,MCP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B8_y00_r150,MCP bearing surfaces clear as printed,0.2991,>= 0.25,mm,pass
+B8_y00_r150,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B8_y00_r150,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B8_y00_r150,MCP tab material tendon to sensor channel,3.8124,>= 0.5,mm,pass
+B8_y00_r150,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B8_y00_r150,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y00_r150,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y00_r150,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y00_r150,PIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B8_y00_r150,PIP bearing surfaces clear as printed,0.2992,>= 0.25,mm,pass
+B8_y00_r150,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y00_r150,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B8_y00_r150,PIP tab material tendon to sensor channel,2.3678,>= 0.5,mm,pass
+B8_y00_r150,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B8_y00_r150,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y00_r150,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y00_r150,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y00_r150,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B8_y00_r150,DIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B8_y00_r150,DIP bearing surfaces clear as printed,0.2993,>= 0.25,mm,pass
+B8_y00_r150,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y00_r150,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B8_y00_r150,DIP tab material tendon to sensor channel,0.6167,>= 0.5,mm,pass
+B8_y00_r150,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B8_y00_r150,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y00_r150,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y00_r150,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B8_y00_r150,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B8_y00_r150,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B8_y00_r150,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B8_y00_r150,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B8_y20_r125,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y20_r125,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B8_y20_r125,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B8_y20_r125,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y20_r125,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y20_r125,MCP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B8_y20_r125,MCP bearing surfaces clear as printed,0.2992,>= 0.25,mm,pass
+B8_y20_r125,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B8_y20_r125,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B8_y20_r125,MCP tab material tendon to sensor channel,3.8124,>= 0.5,mm,pass
+B8_y20_r125,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B8_y20_r125,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y20_r125,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B8_y20_r125,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y20_r125,PIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B8_y20_r125,PIP bearing surfaces clear as printed,0.2993,>= 0.25,mm,pass
+B8_y20_r125,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y20_r125,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B8_y20_r125,PIP tab material tendon to sensor channel,2.3678,>= 0.5,mm,pass
+B8_y20_r125,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B8_y20_r125,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B8_y20_r125,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B8_y20_r125,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B8_y20_r125,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B8_y20_r125,DIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B8_y20_r125,DIP bearing surfaces clear as printed,0.2994,>= 0.25,mm,pass
+B8_y20_r125,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B8_y20_r125,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B8_y20_r125,DIP tab material tendon to sensor channel,0.6167,>= 0.5,mm,pass
+B8_y20_r125,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B8_y20_r125,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y20_r125,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B8_y20_r125,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B8_y20_r125,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B8_y20_r125,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B8_y20_r125,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B8_y20_r125,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B9_n100,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n100,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n100,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B9_n100,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n100,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n100,MCP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B9_n100,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B9_n100,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B9_n100,MCP tab material tendon to sensor channel,3.8124,>= 0.5,mm,pass
+B9_n100,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B9_n100,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n100,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n100,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n100,PIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B9_n100,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n100,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B9_n100,PIP tab material tendon to sensor channel,2.3678,>= 0.5,mm,pass
+B9_n100,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B9_n100,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n100,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n100,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n100,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B9_n100,DIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B9_n100,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n100,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B9_n100,DIP tab material tendon to sensor channel,0.6167,>= 0.5,mm,pass
+B9_n100,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B9_n100,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n100,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n100,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B9_n100,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B9_n100,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B9_n100,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B9_n100,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass
+B9_n150,"tendon path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n150,"sensor lead path clear, flange to fingertip",0.0,<= 0.001,mm^3,pass
+B9_n150,fingertip tendon anchor hole clear,0.0,<= 0.001,mm^3,pass
+B9_n150,MCP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n150,MCP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150,MCP distal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n150,MCP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B9_n150,MCP tab wall around sensor channel,1.6124,>= 0.8,mm,pass
+B9_n150,MCP tab material tendon channel to pin hole,1.4312,>= 0.3,mm,pass
+B9_n150,MCP tab material tendon to sensor channel,3.8124,>= 0.5,mm,pass
+B9_n150,MCP tab side wall outside pin hole,1.4312,>= 0.3,mm,pass
+B9_n150,PIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n150,PIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150,PIP proximal socket wall (02_Phalanx1),1.2,>= 1.0,mm,pass
+B9_n150,PIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150,PIP distal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n150,PIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B9_n150,PIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n150,PIP tab material tendon channel to pin hole,0.867,>= 0.3,mm,pass
+B9_n150,PIP tab material tendon to sensor channel,2.3678,>= 0.5,mm,pass
+B9_n150,PIP tab side wall outside pin hole,0.867,>= 0.3,mm,pass
+B9_n150,DIP flex zone inside collar outline,0.0,<= 0.001,mm^3,pass
+B9_n150,DIP proximal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150,DIP proximal socket wall (04_Phalanx2),1.2,>= 1.0,mm,pass
+B9_n150,DIP distal tab radial clearance in socket,0.3,0.3 +/- 0.02,mm,pass
+B9_n150,DIP distal socket wall (06_Phalanx3),1.2,>= 1.0,mm,pass
+B9_n150,DIP tab wall around tendon channel,0.8,>= 0.8,mm,pass
+B9_n150,DIP tab wall around sensor channel,0.8,>= 0.8,mm,pass
+B9_n150,DIP tab material tendon channel to pin hole,0.4292,>= 0.3,mm,pass
+B9_n150,DIP tab material tendon to sensor channel,0.6167,>= 0.5,mm,pass
+B9_n150,DIP tab side wall outside pin hole,0.4292,>= 0.3,mm,pass
+B9_n150,flange screw hole x=-11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n150,flange screw hole x=+11 and M3 head clearance,0.0,<= 0.001,mm^3,pass
+B9_n150,anchor boss hole open (04_Phalanx2),0.0,<= 0.001,mm^3,pass
+B9_n150,anchor boss hole open (06_Phalanx3),0.0,<= 0.001,mm^3,pass
+B9_n150,02_Phalanx1 nub/boss on palmar side (ymin beyond -h/2),-8.8401,< -7.0,mm,pass
+B9_n150,04_Phalanx2 nub/boss on palmar side (ymin beyond -h/2),-7.1906,< -6.0,mm,pass
+B9_n150,06_Phalanx3 nub/boss on palmar side (ymin beyond -h/2),-6.8188,< -5.0,mm,pass

@@ -1,0 +1,46 @@
+{
+ "variant": "B5_t200_a45",
+ "offset": "deep",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B5_crossed_strip",
+ "params": {
+  "t": 2.0,
+  "angle": 45
+ },
+ "E_mpa": 21.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 3.4,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -3.4,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -3.4,
+  0.8
+ ],
+ "element_size": 0.975,
+ "elements": 6056,
+ "nodes": 11505,
+ "contact_faces": null,
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "guided": false,
+ "load_completed_fraction": 0.44762900000000005,
+ "stopped": null,
+ "wall_s": 79.8,
+ "capacity_T": 53.027120053205095,
+ "limited_by": "peak strain reached 20 %",
+ "axial_k0": 38.86670370410987,
+ "peak_strain_at_cap": 0.2
+}

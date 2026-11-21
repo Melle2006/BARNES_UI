@@ -1,0 +1,285 @@
+<title>A8 PIP Spring Study</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column of engineering report, wide figures and tables break out to a wider measure. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --fg: #1b2230; --muted: #5a6577; --rule: #d9dee6;
+  --accent: #1f6fd1; --accent-soft: #e5effb; --good: #1d7f55; --good-soft: #e3f3ea;
+  --warn: #a6531a; --warn-soft: #fbeee3; --bad: #b4313a; --bad-soft: #fbe6e7;
+  --fig: #ffffff;
+  --f-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --f-body: "Public Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --paper: #171c25; --fg: #e3e8f0; --muted: #9aa5b6; --rule: #2b3340;
+  --accent: #6aa8f5; --accent-soft: #1b2b42; --good: #57c493; --good-soft: #163128;
+  --warn: #e7a06a; --warn-soft: #3a2817; --bad: #f08a92; --bad-soft: #3b1d21; --fig: #f4f6f9;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #11151c; --paper: #171c25; --fg: #e3e8f0; --muted: #9aa5b6; --rule: #2b3340;
+  --accent: #6aa8f5; --accent-soft: #1b2b42; --good: #57c493; --good-soft: #163128;
+  --warn: #e7a06a; --warn-soft: #3a2817; --bad: #f08a92; --bad-soft: #3b1d21; --fig: #f4f6f9;
+  color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 16px; line-height: 1.6; }
+.page { max-width: 1060px; margin: 0 auto; padding-block: 40px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.col { max-width: 720px; }
+header { display: grid; gap: 10px; padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 32px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 650; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 27px; line-height: 1.2; margin: 56px 0 12px; text-wrap: balance; }
+h3 { font-size: 17px; font-weight: 700; margin: 28px 0 6px; }
+p { margin: 0 0 14px; }
+.lede { font-size: 18px; color: var(--muted); max-width: 720px; margin: 0; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code, .num { font-family: var(--f-mono); font-size: .9em; font-variant-numeric: tabular-nums; }
+.answer { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; background: var(--paper);
+  border: 1px solid var(--rule); border-radius: 10px; padding: 24px; }
+.answer h2 { margin-top: 0; font-size: 23px; }
+.spec { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; align-content: start; }
+.spec dt { color: var(--muted); font-size: 14px; }
+.spec dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.radius { font-family: var(--f-display); font-size: 40px; line-height: 1; color: var(--accent); margin: 4px 0 6px; }
+.dl { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.dl a { display: inline-block; padding: 9px 14px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; }
+:root[data-theme="dark"] .dl a { color: #0d1420 }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .dl a { color: #0d1420 } }
+.dl a.alt { background: var(--accent-soft); color: var(--accent); }
+figure { margin: 22px 0 28px; }
+figure img { display: block; width: 100%; background: var(--fig); border: 1px solid var(--rule); border-radius: 8px; padding: 6px; box-sizing: border-box; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; max-width: 760px; }
+.tablewrap { overflow-x: auto; margin: 16px 0 24px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { font-weight: 600; color: var(--muted); font-size: 12.5px; background: var(--bg); }
+td:first-child, th:first-child { text-align: left; }
+tr:last-child td { border-bottom: 0; }
+tr.pick td { background: var(--good-soft); font-weight: 700; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; font-family: var(--f-body); }
+.ok { background: var(--good-soft); color: var(--good); }
+.no { background: var(--bad-soft); color: var(--bad); }
+.warn { background: var(--warn-soft); color: var(--warn); }
+.findings { display: grid; gap: 14px; padding: 0; list-style: none; counter-reset: f; }
+.findings li { counter-increment: f; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px; }
+.findings li::before { content: counter(f); font-family: var(--f-display); font-size: 22px; color: var(--accent); line-height: 1.3; }
+.callout { border-left: 3px solid var(--warn); background: var(--warn-soft); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 18px 0; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.small { font-size: 14px; color: var(--muted); }
+footer { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+@media (max-width: 760px) { .answer, .grid2 { grid-template-columns: minmax(0, 1fr); } .radius { font-size: 34px; } }
+</style>
+
+<div class="page">
+<header>
+  <div class="eyebrow">Barnes UI · TPU 90A · Index finger PIP · nonlinear FEA (CalculiX)</div>
+  <h1>A8 PIP spring: which meander, which curvature</h1>
+  <p class="lede">A spring-back strip across the index-finger PIP joint, analysed from your three A8 SolidWorks exports, then redesigned so it prints with a 0.4 mm nozzle and re-analysed on the real joint geometry from your A3 fit-check assembly.</p>
+</header>
+
+<section class="answer" aria-labelledby="answer">
+  <div>
+    <h2 id="answer">Recommendation</h2>
+    <p><strong>Use 2 turns, with a 1.2 mm-wide, 2.4 mm-tall section drawn square to the path, on a spine arched 2.75 mm over the 29 mm span.</strong></p>
+    <p>On the real index PIP it gives <strong>3.24 N·mm</strong> of restoring torque at 90° flexion and rises smoothly all the way to 100°, with 16.5 % peak strain. That is about five times the 0.63 N·mm of a 3-turn strip at your current 1.2 mm height on the same joint. Every wall is at least 1.2 mm, three 0.4 mm lines. It clears the real phalanges by 0.39 mm at rest.</p>
+    <div class="dl">
+      <a href="https://github.com/Melle2006/BARNES_UI/raw/claude/sweet-curie-3r59na/results/a8_index_pip_printable/model/A8_PIP_2turn_printable_w1.2_h2.4_s2.75_Assem3_frame.step">STEP · assembly frame</a>
+      <a class="alt" href="https://github.com/Melle2006/BARNES_UI/raw/claude/sweet-curie-3r59na/results/a8_index_pip_printable/model/A8_PIP_2turn_printable_w1.2_h2.4_s2.75_IndexPP_frame.step">STEP · Index_PP part frame</a>
+    </div>
+    <p class="small" style="margin-top:10px">The assembly-frame file drops straight into <code>Assem3_A3_0.8_PIP_FitCheck</code> where the A3 strap sits. The part-frame file is in the Index_PP part's own coordinates, for mating. The strip ends are flat faces at the collar positions, so the collars are added in CAD as they are on the A3.</p>
+  </div>
+  <div>
+    <div class="eyebrow">Best-fit spine curvature</div>
+    <div class="radius">R 39.6 mm</div>
+    <p class="small">Sagitta 2.75 mm over a 29.0 mm chord. On this finger the best curvature is the flattest arch that still clears the joint: flatter gives more torque, and the real middle phalanx sets the limit. On the A8 test geometry, with your original section, the best fit was R 84.1 mm (sagitta 1.0 mm); that joint is smaller, so it needed less arch.</p>
+    <dl class="spec">
+      <dt>Turns</dt><dd>2 (3 lateral lobes)</dd>
+      <dt>True width</dt><dd>1.2 mm, constant</dd>
+      <dt>Height</dt><dd>2.4 mm</dd>
+      <dt>Lobe amplitude</dt><dd>4.4 mm (sine)</dd>
+      <dt>Span</dt><dd>y 24.0 → 53.0 mm</dd>
+      <dt>Torque at 90°</dt><dd>3.24 N·mm</dd>
+      <dt>Torque at 30° / 60°</dt><dd>0.81 / 2.02 N·mm</dd>
+      <dt>Peak strain at 90°</dt><dd>16.5 %</dd>
+      <dt>Volume</dt><dd>118.2 mm³ (≈ 0.14 g)</dd>
+    </dl>
+  </div>
+</section>
+
+<figure>
+  <img src="img/fig_fit_recommended.png" alt="The recommended 2-turn strip shown on the index finger proximal and middle phalanges, attached at the A3 collar positions, from an oblique view and from the side.">
+  <figcaption>The recommended strip (blue) on the index PIP, with its ends at the A3 collar positions (orange). Proximal phalanx grey, middle phalanx tan. The side view shows the 2.75 mm arch over the pin.</figcaption>
+</figure>
+
+<h2>What was asked, and how it was answered</h2>
+<div class="col">
+<p>The strip is a spring-back element. The finger flexes, the strip deforms, and its stored energy returns the joint to extension. You asked:</p>
+<ul>
+  <li>how your 2-turn and 3-turn A8 designs compare;</li>
+  <li>what happens with more turns;</li>
+  <li>which spine curvature is best for each, with matrices for each turn count;</li>
+  <li>for a printable version on the real joint, since no nozzle finer than 0.4 mm is available.</li>
+</ul>
+<p>Every case was solved the same way. The strip's proximal end is held at its collar. The distal end is turned about the joint pin from 0° to 100° of flexion, with the finger modelled as rigid surfaces the strip can rest and slide on. The reaction moment at the pin is the restoring torque, recorded at every increment, so each case gives a full torque–angle curve rather than one number. Strain is the largest principal engineering strain, taken more than 1 mm from the tied ends.</p>
+<p><strong>Material:</strong> TPU 90A, Neo-Hookean, E = 19.3 MPa. That is the 2800 psi tensile modulus on Jabil's TPU 90A datasheet (ASTM D638). Polymaker PolyFlex TPU90's 100 % modulus implies about 12 MPa. Every torque scales close to linearly with E, so another filament rescales the numbers without reordering them.</p>
+<p>In total about 50 nonlinear solves were run across the two studies, each from 0° to 100°.</p>
+</div>
+
+<h2>Part 1 · Your three A8 designs</h2>
+<div class="col">
+<p>Measured from the STEP files, not the file names:</p>
+<ul>
+  <li><strong>The section is drawn across the finger.</strong> Every cut across the finger is a 2.000 × 1.200 mm rectangle. The strip's true width is therefore 2.0·cos φ, where φ is the path's angle to the finger axis. Where the path crosses steeply, that is <strong>0.92 mm on the 2-turn and 0.71 mm on the 3-turn</strong>, under two 0.4 mm extrusion lines.</li>
+  <li><strong>The spine is a circular arc.</strong> It fits to 0.015 mm, with sagitta 0.75, 1.14 and 2.17 mm: bend radius 112, 74 and 40 mm.</li>
+  <li><strong>Both 3-turn files share one plan path.</strong> They differ only in the spine.</li>
+</ul>
+</div>
+<figure>
+  <img src="img/a8_exports_3d.png" alt="Three-dimensional views of the three supplied A8 exports: the 2-turn, the 3-turn, and the 3-turn with the more arched spine, each with its two rings.">
+  <figcaption>The three supplied parts. Strip in blue, rings in orange.</figcaption>
+</figure>
+<div class="col">
+<p>A parametric model was built to reproduce them and to vary the turns and the curvature. It matches the exports to 0.03 mm in geometry and to 0.4 % (3-turn) and 1.3 % (3-turn v2) in torque at 90°. Turns (2, 3, 4) were then swept against spine sagitta (0 to 3.5 mm) on a finger inferred from the rings.</p>
+</div>
+<div class="grid2">
+  <figure><img src="img/fig_torque_angle_2turn.png" alt="Torque against flexion for the 2-turn strip at each spine sagitta, showing a sudden drop between 75 and 91 degrees in every case."><figcaption>2 turns, original section: every variant snaps between 75° and 91° on the ring-inferred finger.</figcaption></figure>
+  <figure><img src="img/fig_torque_angle_3turn.png" alt="Torque against flexion for the 3-turn strip at each spine sagitta, smooth and rising to 100 degrees."><figcaption>3 turns, original section: smooth to 100°. Curvature barely changes it.</figcaption></figure>
+</div>
+<div class="tablewrap"><table>
+  <thead><tr><th>Part 1 (A8 rings, original 2 mm section)</th><th>Torque at 90°</th><th>Strain at 90°</th><th>Behaviour</th><th>Best sagitta</th></tr></thead>
+  <tbody>
+    <tr><td>2 turns</td><td>~0.8 N·mm before the snap</td><td>7–8 %</td><td><span class="pill no">snaps 75–91°</span></td><td>none clean</td></tr>
+    <tr><td>3 turns</td><td>0.36–0.45 N·mm</td><td>7–8 %</td><td><span class="pill ok">smooth</span></td><td>1.0 mm (R 84.1 mm)</td></tr>
+    <tr><td>4 turns</td><td>0.13–0.16 N·mm</td><td>4–5 %</td><td><span class="pill warn">smooth, very weak</span></td><td>n/a</td></tr>
+  </tbody>
+</table></div>
+<div class="col">
+<p>Part 1's conclusion was 3 turns at sagitta about 1.0 mm, close to your existing 3-turn file. It also found the spring far too weak, at under 0.5 N·mm, with the material barely strained. Its matrices are in <a href="https://github.com/Melle2006/BARNES_UI/tree/claude/sweet-curie-3r59na/results/a8_meander_study">results/a8_meander_study</a>. Part 2 supersedes it for the build, because Part 1's finger was inferred from the A8 rings and its section cannot be printed.</p>
+</div>
+
+<h2>Part 2 · The real index PIP, from the A3 fit-check</h2>
+<div class="col">
+<p>The A3 strap in <code>Assem3_A3_0.8_PIP_FitCheck</code> sits across the <strong>index finger PIP</strong>, between Index_PP and Index_MP. Measured in the proximal phalanx's own frame:</p>
+<ul>
+  <li><strong>The joint is a 3.2 mm pin.</strong> It is 18 mm from the proximal collar and 11 mm from the distal one, not midway.</li>
+  <li><strong>Over the joint the strip meets two cams of radius 5.195 mm.</strong> One is the proximal phalanx's clevis cheeks (|x| 3.0–5.36 mm), rounded about a line 2.69 mm behind the pin. The other is the middle phalanx tongue between them, rounded about a line 2.69 mm ahead of the pin, which turns with the middle phalanx. These are much taller than the 3.4 mm knuckle Part 1 had to assume.</li>
+  <li><strong>The strip's ends are where the A3 strap leaves its collars:</strong> y = 24.0 and 53.0 mm, with the underside 3.70 and 3.35 mm above the bone axis.</li>
+</ul>
+<p><strong>The arch has a hard lower limit.</strong> To clear both cams by 0.25 mm, the spine needs a sagitta of at least about 2.5 mm, the same rise your A3 strap uses. Every design was also checked against the actual Index_PP and Index_MP solids. The real middle-phalanx base stands about 0.05 mm proud of its R 5.195 arc, which moves the limit to about 2.6 mm.</p>
+</div>
+
+<h2>Part 3 · A section you can print</h2>
+<div class="col">
+<p>The strip is redrawn with its section square to the path at a constant true width. Near each end the section turns to face the collar, so the end caps stay flat for bonding. A 1.2 mm width is three 0.4 mm lines everywhere, against 0.71 mm at the narrowest point of the current 3-turn.</p>
+<p>A constant true width exposed a defect the drawn-across section hid. Your 3-turn plan has a lobe tip of only 0.62 mm centreline radius, so a 1.2 mm strip's inner edge would fold over itself. The printable designs use clean sine paths at your files' own dominant amplitudes: 4.4 mm for 2 turns and 3.5 mm for 3 turns, which gives 3-turn tips of 0.97 mm radius.</p>
+</div>
+<figure>
+  <img src="img/fig_plan_views.png" alt="Plan views comparing the supplied 3-turn strip, which narrows to 0.71 mm at the crossings, with printable 3-turn and 2-turn strips of constant 1.2 mm true width.">
+  <figcaption>Looking down on the back of the finger. The supplied 3-turn (left) pinches to 0.71 mm where it crosses; the printable strips (centre, right) are 1.2 mm everywhere.</figcaption>
+</figure>
+
+<h3>What the real joint changes</h3>
+<div class="col">
+<ul class="findings">
+  <li><div><strong>2 turns no longer snaps.</strong> On the ring-inferred finger the 2-turn strip was pulled into a crease and lost up to 60 % of its torque. On the real joint the two R 5.2 cams carry it across, and every printable 2-turn case is smooth to 100°.</div></li>
+  <li><div><strong>Strain, not stiffness, is the limit.</strong> The strip has to wrap cams of 5.2 mm radius, which by itself costs a bending strain of about h ÷ 2R: 11.5 % at 1.2 mm height. The original 1.2 mm section already reaches 17 % at 90°.</div></li>
+  <li><div><strong>Height still pays, though less than beam theory said.</strong> Part 1 estimated torque would grow with the cube of height. Measured on the real joint, going from 1.2 to 1.8 mm roughly doubles torque, and strain rises only from 15.5 % to 17.2 % (3 turns, 3.5 mm sagitta). The strip is working mostly in tension around the cams, not in pure bending.</div></li>
+  <li><div><strong>Width does not come free.</strong> 2.4 mm-wide 2-turn strips give 2.7–3.0 N·mm but reach 24–25 % strain, because their lobes bend in their own plane. A 2.0 mm-wide 3-turn reached 45 %. Width only helps where the lobes do not open.</div></li>
+  <li><div><strong>2 turns beats 3 at every height.</strong> At 2.4 mm height and 3.5 mm sagitta: 2 turns gives 3.03 N·mm at 15.1 % strain, 3 turns 1.96 N·mm at 20.3 %. The shorter path carries more load for less strain.</div></li>
+</ul>
+</div>
+<figure>
+  <img src="img/fig_torque_vs_strain.png" alt="Scatter of restoring torque at 90 degrees against peak strain at 90 degrees for every printable case, with the 20 percent strain limit marked; 2-turn cases at 2.4 mm height sit highest left of the limit.">
+  <figcaption>Every printable case: torque at 90° against peak strain. Up and to the left is better; the dashed line is the 20 % limit. The 2-turn strips at 2.4 mm height (top left, inside the limit) are the strongest safe springs.</figcaption>
+</figure>
+<figure>
+  <img src="img/fig_torque_angle.png" alt="Grid of torque against flexion curves for each printable design group, by turns, width and height.">
+  <figcaption>Torque against flexion for each printable group. The 2-turn, 2.4 mm-tall group (top row, second panel) rises smoothly to about 3.5 N·mm at 100°. The 2.4 mm-wide strips level off and ease after about 85°.</figcaption>
+</figure>
+
+<h3>The matrices, printable section on the index PIP</h3>
+<p class="small">Torque in N·mm, strain is the peak principal engineering strain away from the tied ends, clearance is to the real phalanx solids at rest. Feasible means: clears the real bones by ≥ 0.25 mm, no torque drop anywhere in 0–100°, and ≤ 20 % strain at 90°.</p>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>2 turns · w 1.2 mm</th><th>Height</th><th>Sagitta</th><th>Spine R</th><th>k₀ N·mm/rad</th><th>T30°</th><th>T60°</th><th>T90°</th><th>T100°</th><th>ε90°</th><th>Clearance</th><th>Top above axis</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>2T</td><td>1.8</td><td>2.50</td><td>43.3</td><td>0.70</td><td>0.52</td><td>1.15</td><td>1.70</td><td>1.81</td><td>14.2 %</td><td>0.17</td><td>7.83</td><td><span class="pill no">touches MP</span></td></tr>
+    <tr><td>2T</td><td>1.8</td><td>3.50</td><td>31.8</td><td>0.78</td><td>0.39</td><td>0.99</td><td>1.55</td><td>1.68</td><td>12.9 %</td><td>1.02</td><td>8.83</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>2T</td><td>2.4</td><td>2.50</td><td>43.3</td><td>1.11</td><td>0.87</td><td>2.10</td><td>3.28</td><td>3.54</td><td>16.3 %</td><td>0.17</td><td>8.43</td><td><span class="pill no">touches MP</span></td></tr>
+    <tr class="pick"><td>2T ★</td><td>2.4</td><td>2.75</td><td>39.6</td><td>1.14</td><td>0.81</td><td>2.02</td><td>3.24</td><td>3.50</td><td>16.5 %</td><td>0.39</td><td>8.68</td><td><span class="pill ok">selected</span></td></tr>
+    <tr><td>2T</td><td>2.4</td><td>3.00</td><td>36.5</td><td>1.17</td><td>0.75</td><td>1.95</td><td>3.15</td><td>3.42</td><td>15.8 %</td><td>0.60</td><td>8.93</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>2T</td><td>2.4</td><td>3.50</td><td>31.8</td><td>1.24</td><td>0.63</td><td>1.80</td><td>3.03</td><td>3.32</td><td>15.1 %</td><td>1.02</td><td>9.43</td><td><span class="pill ok">feasible</span></td></tr>
+  </tbody>
+</table></div>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>3 turns · w 1.2 mm</th><th>Height</th><th>Sagitta</th><th>Spine R</th><th>k₀ N·mm/rad</th><th>T30°</th><th>T60°</th><th>T90°</th><th>T100°</th><th>ε90°</th><th>Clearance</th><th>Top above axis</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>3T</td><td>1.2</td><td>2.50</td><td>43.3</td><td>0.43</td><td>0.26</td><td>0.46</td><td>0.63</td><td>0.68</td><td>17.1 %</td><td>0.27</td><td>7.23</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>1.2</td><td>3.00</td><td>36.5</td><td>0.45</td><td>0.23</td><td>0.43</td><td>0.60</td><td>0.66</td><td>17.1 %</td><td>0.69</td><td>7.73</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>1.2</td><td>3.50</td><td>31.8</td><td>0.47</td><td>0.20</td><td>0.40</td><td>0.57</td><td>0.63</td><td>15.5 %</td><td>1.10</td><td>8.23</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>1.2</td><td>4.50</td><td>25.6</td><td>0.50</td><td>0.16</td><td>0.35</td><td>0.51</td><td>0.56</td><td>13.5 %</td><td>1.16</td><td>9.23</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>1.8</td><td>2.50</td><td>43.3</td><td>0.82</td><td>0.47</td><td>0.89</td><td>1.27</td><td>1.43</td><td>20.8 %</td><td>0.27</td><td>7.83</td><td><span class="pill no">20.8 % strain</span></td></tr>
+    <tr><td>3T</td><td>1.8</td><td>3.00</td><td>36.5</td><td>0.87</td><td>0.42</td><td>0.84</td><td>1.22</td><td>1.37</td><td>18.4 %</td><td>0.68</td><td>8.33</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>1.8</td><td>3.50</td><td>31.8</td><td>0.92</td><td>0.38</td><td>0.79</td><td>1.16</td><td>1.31</td><td>17.2 %</td><td>1.09</td><td>8.83</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>1.8</td><td>4.50</td><td>25.6</td><td>1.00</td><td>0.32</td><td>0.69</td><td>1.04</td><td>1.18</td><td>15.8 %</td><td>1.16</td><td>9.83</td><td><span class="pill ok">feasible</span></td></tr>
+    <tr><td>3T</td><td>2.4</td><td>3.50</td><td>31.8</td><td>1.46</td><td>0.60</td><td>1.29</td><td>1.96</td><td>2.23</td><td>20.3 %</td><td>1.09</td><td>9.43</td><td><span class="pill no">20.3 % strain</span></td></tr>
+    <tr><td>3T</td><td>2.4</td><td>4.50</td><td>25.6</td><td>1.61</td><td>0.54</td><td>1.12</td><td>1.76</td><td>2.03</td><td>18.0 %</td><td>1.16</td><td>10.4</td><td><span class="pill ok">feasible</span></td></tr>
+  </tbody>
+</table></div>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Wide strips · h 1.2 mm</th><th>Width</th><th>Sagitta</th><th>T60°</th><th>T90°</th><th>ε90°</th><th>Clearance</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>2T</td><td>2.4</td><td>2.50</td><td>2.59</td><td>2.96</td><td>25.3 %</td><td>0.14</td><td><span class="pill no">strain, touches MP</span></td></tr>
+    <tr><td>2T</td><td>2.4</td><td>3.50</td><td>2.28</td><td>2.69</td><td>23.9 %</td><td>0.97</td><td><span class="pill no">23.9 % strain</span></td></tr>
+    <tr><td>3T (amplitude 2.5)</td><td>2.0</td><td>2.50</td><td>3.82</td><td>4.30</td><td>44.8 %</td><td>0.27</td><td><span class="pill no">44.8 % strain</span></td></tr>
+  </tbody>
+</table></div>
+
+<figure>
+  <img src="img/fig_height_tradeoff.png" alt="Two plots against spine sagitta for 3-turn strips at 1.2, 1.8 and 2.4 mm height: torque at 90 degrees, and peak strain at 90 degrees with the 20 percent limit.">
+  <figcaption>3 turns: more height means more torque, and a higher arch lowers strain at the cost of torque. The 2-turn strip reaches more torque than any 3-turn option inside the limit.</figcaption>
+</figure>
+
+<h2>Conclusion</h2>
+<div class="col">
+<ol class="findings">
+  <li><div><strong>Build the 2-turn printable strip:</strong> 1.2 mm true width, 2.4 mm height, 4.4 mm lobe amplitude, spine sagitta 2.75 mm (<strong>bend radius 39.6 mm</strong>), ends at the A3 collar positions. It gives 3.24 N·mm at 90° and 3.50 N·mm at 100°, rising smoothly the whole way, with 16.5 % peak strain and 0.39 mm clearance to the real bones. The file is linked at the top.</div></li>
+  <li><div><strong>It is about five times stronger than a strip like your current one on this joint.</strong> Your 3-turn file cannot be used here as drawn: its 1.14 mm arch would sit inside the joint. A 3-turn strip at its 1.2 mm height, printable and arched to clear the joint, gives 0.63 N·mm. The gain comes from 2 turns (no snap on the real joint), a constant printable width, and double the height.</div></li>
+  <li><div><strong>The curvature is set by clearance, not by a stiffness optimum.</strong> Flatter arches give more torque until the strip meets the middle phalanx base. 2.5 mm sagitta clears by only 0.17 mm and is rejected; 2.75 mm clears by 0.39 mm. If your prints come out proud or the collar sits high, step to 3.0 mm (R 36.5 mm). That gives 3 % less torque and 0.60 mm clearance.</div></li>
+  <li><div><strong>Stay at 3 lines (1.2 mm) wide, and get torque from height.</strong> Wider strips bend in plane and run past the strain limit. Taller than 2.4 mm was not run. Extrapolating the 2-turn trend, strain would reach 20 % at roughly 3.5 mm height. That is not simulated, and the strip would then stand about 10 mm above the bone axis.</div></li>
+  <li><div><strong>3 turns and 4 turns are the wrong direction for this joint.</strong> More turns make the path longer and the spring softer; 3 turns gives about two-thirds of the 2-turn torque, at more strain.</div></li>
+</ol>
+
+<div class="callout">
+  <strong>Watch the collar junction.</strong> At 90° the strain where the strip enters the collar reaches 26 %, against 16.5 % in the strip itself. Part of that is the model tying the end rigidly, which a real TPU collar is not. Still, it is where a print will crack first. Blend the strip into the collar with a 1–2 mm fillet or a short flare rather than a sharp step.
+</div>
+
+<h3>What is not yet known</h3>
+<ul>
+  <li><strong>The material.</strong> E = 19.3 MPa is one filament's datasheet. A tensile test of your printed TPU 90A would replace it and rescale every torque.</li>
+  <li><strong>The torque the hand needs.</strong> These results rank and size springs. Whether 3.2 N·mm is enough depends on joint friction and the actuator, which have not been given.</li>
+  <li><strong>Fatigue.</strong> The 20 % strain limit is engineering judgement for a TPU spring cycling many times, not a measured limit for this filament.</li>
+  <li><strong>Validation.</strong> Nothing here has been measured on a bench. One printed strip on the finger with a torque gauge at 30°, 60° and 90° would check the whole chain.</li>
+  <li><strong>Unsolved cases.</strong> A 1.6 mm-wide 2-turn was not solved: at 2.5 mm sagitta it touches the middle phalanx at rest. A 3.2 mm-wide 2-turn was stopped, because the 2.4 mm one was already over the strain limit.</li>
+</ul>
+</div>
+
+<h2>Files</h2>
+<div class="col">
+<ul>
+  <li><a href="https://github.com/Melle2006/BARNES_UI/tree/claude/sweet-curie-3r59na/results/a8_index_pip_printable/model">Recommended model, STEP (two frames)</a></li>
+  <li><a href="https://github.com/Melle2006/BARNES_UI/tree/claude/sweet-curie-3r59na/results/a8_index_pip_printable">Printable study on the index PIP</a>: matrices, ranking, per-case records with full torque–angle curves, figures</li>
+  <li><a href="https://github.com/Melle2006/BARNES_UI/tree/claude/sweet-curie-3r59na/results/a8_meander_study">Part 1 study on the A8 rings</a>: 2/3/4 turns × curvature, your exports and their rebuilds</li>
+  <li>Scripts: <code>scripts/a8_meander_study.py</code> (<code>--finger index_pip --groups printable</code>), <code>scripts/a8_printable_report.py</code>; template: <code>src/barnes_ui/core/flexure/templates/a8_meander.py</code></li>
+</ul>
+</div>
+
+<footer>
+  Branch <code>claude/sweet-curie-3r59na</code> of Melle2006/BARNES_UI. Solver CalculiX 2.21, 10-node tetrahedra, frictionless surface-to-surface contact, NLGEOM. TPU 90A Neo-Hookean, E = 19.3 MPa (Jabil datasheet), ν = 0.49. Not experimentally validated.
+</footer>
+</div>

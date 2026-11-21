@@ -57,6 +57,12 @@ class TemplatePanel(QWidget):
     build_requested = Signal(object)
     #: Emitted with (parameters, path) to export a STEP file.
     export_requested = Signal(object)
+    #: Emitted whenever a parameter or a safety threshold moves, valid or not.
+    #:
+    #: The window needs this to mark results stale. A stiffness computed before a
+    #: width changed is not a stiffness for the design on screen -- and since
+    #: stiffness goes as width cubed, it is not even close.
+    parameters_changed = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -193,6 +199,23 @@ class TemplatePanel(QWidget):
         except MeanderError:
             return None
 
+    def blocking_reason(self) -> str | None:
+        """Why this design may not be built, or None when it may.
+
+        Public so that the workflow indicator can report the same verdict the Build
+        button enforces, instead of a second copy of the rule drifting away from it.
+        """
+        if self.parameters() is None:
+            return (
+                "The current parameters do not describe a buildable meander."
+            )
+        if not self._build_button.isEnabled():
+            return (
+                "This design has a feature below the minimum printable size, so it "
+                "is flagged and not auto-approved."
+            )
+        return None
+
     def set_parameters(self, parameters: MeanderParameters) -> None:
         for widget, value in (
             (self._run_length, parameters.run_length),
@@ -209,6 +232,7 @@ class TemplatePanel(QWidget):
     # -- behaviour -------------------------------------------------------------
 
     def _refresh(self) -> None:
+        self.parameters_changed.emit()
         parameters = self.parameters()
         if parameters is None:
             self._derived.setText(

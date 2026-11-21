@@ -17,10 +17,13 @@ from PySide6.QtWidgets import (
 )
 
 from ...core.provenance import Caveat, Provenance
+from ..workflow import StepStatus
 
 __all__ = [
     "PROVENANCE_COLOURS",
+    "STATUS_COLOURS",
     "provenance_badge",
+    "status_colour",
     "note_label",
     "banner_label",
     "float_spin",
@@ -44,6 +47,33 @@ PROVENANCE_COLOURS = {
     Provenance.GEOMETRIC_MEASUREMENT: "#7FB069",
     Provenance.EXPERIMENTALLY_VALIDATED: "#7FB069",
 }
+
+
+#: One colour per workflow step status, used by the workflow bar and nowhere else
+#: yet -- kept here so that it cannot drift from the provenance palette above.
+#:
+#: **Red is reserved for the user's problem.** The first version had Blocked in red
+#: and Needs attention in amber, which put four red chips across the bar the instant
+#: the application opened: on an empty project the joint axis, readiness, analysis
+#: and comparison are all blocked, and none of them is wrong. A screenshot showed it
+#: immediately and no assertion ever would have. Blocked now reads as what it is --
+#: not reachable yet, nothing to do here -- in the muted grey used elsewhere for
+#: inactive text, and red means something needs fixing.
+#:
+#: These are darker than the provenance palette because they are drawn as text and
+#: borders on the window background rather than as solid badges with a dark
+#: foreground, and the two need different contrast to be legible.
+STATUS_COLOURS = {
+    StepStatus.NOT_STARTED: "#6B7280",
+    StepStatus.IN_PROGRESS: "#2F6FB0",
+    StepStatus.COMPLETE: "#3F7D32",
+    StepStatus.NEEDS_ATTENTION: "#C0392B",
+    StepStatus.BLOCKED: "#9AA3AD",
+}
+
+
+def status_colour(status: StepStatus) -> str:
+    return STATUS_COLOURS[status]
 
 
 def provenance_badge(provenance: Provenance) -> QLabel:

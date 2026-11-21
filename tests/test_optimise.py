@@ -294,7 +294,7 @@ class TestSensitivity:
             self._search(objectives),
             objectives + [stiffness_from(rom_stiffness())],
             MaterialRange(low=8.0, nominal=12.0, high=18.0,
-                          source="supplier range for TPU 95A filaments"),
+                          source="supplier range for TPU 90A filaments"),
         )
         assert report.front_is_invariant
         assert "IDENTICAL at every modulus" in report.summary()

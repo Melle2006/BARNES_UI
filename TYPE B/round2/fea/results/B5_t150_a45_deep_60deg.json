@@ -1,0 +1,214 @@
+{
+ "variant": "B5_t150_a45",
+ "offset": "deep",
+ "joint": "PIP",
+ "angle": 60.0,
+ "family": "B5_crossed_strip",
+ "params": {
+  "t": 1.5,
+  "angle": 45
+ },
+ "E_mpa": 12.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 3.4,
+ "tendon_dir_yz": [
+  0.5,
+  -0.8660254037844387
+ ],
+ "tendon_entry_yz": [
+  -4.969245899286256,
+  3.518013627132909
+ ],
+ "tendon_exit_yz": [
+  -3.4,
+  0.8
+ ],
+ "element_size": 0.75,
+ "elements": 8790,
+ "nodes": 16765,
+ "contact_faces": null,
+ "info": {
+  "t": 1.5,
+  "w": 1.95,
+  "angle": 45,
+  "strip_len": 8.172061112207574,
+  "k_over_E": 0.26844512906577955
+ },
+ "pose_reached": true,
+ "pose_moment": 3.752706,
+ "pose_ref_u": [
+  0.0,
+  -3.648358,
+  -1.239402
+ ],
+ "guided": false,
+ "load": [
+  {
+   "hold_moment": 3.538069,
+   "du_y": 0.023959000000000064,
+   "du_z": -0.036488000000000076,
+   "du_along": 0.0435790349332867,
+   "T": 0.43124999999999414
+  },
+  {
+   "hold_moment": 2.329628,
+   "du_y": 0.15019800000000005,
+   "du_z": -0.22292100000000015,
+   "du_along": 0.268154249037031,
+   "T": 2.4878999999999984
+  },
+  {
+   "hold_moment": 0.9354299,
+   "du_y": 0.29065399999999997,
+   "du_z": -0.4138950000000001,
+   "du_along": 0.5037705844993603,
+   "T": 4.329900000000009
+  },
+  {
+   "hold_moment": -0.5042839,
+   "du_y": 0.4515579999999999,
+   "du_z": -0.5993600000000001,
+   "du_along": 0.7448399860122412,
+   "T": 5.884200000000006
+  },
+  {
+   "hold_moment": -1.798868,
+   "du_y": 0.670868,
+   "du_z": -0.7674100000000001,
+   "du_along": 1.0000305551182163,
+   "T": 7.195649999999998
+  },
+  {
+   "hold_moment": -2.171654,
+   "du_y": 0.955047,
+   "du_z": -0.8338430000000001,
+   "du_along": 1.1996527207678278,
+   "T": 7.9774499999999975
+  },
+  {
+   "hold_moment": -1.889328,
+   "du_y": 1.1596700000000002,
+   "du_z": -0.8200040000000002,
+   "du_along": 1.289979295204855,
+   "T": 8.227649999999997
+  },
+  {
+   "hold_moment": -0.9892984,
+   "du_y": 1.5299260000000001,
+   "du_z": -0.75814,
+   "du_along": 1.4215314996251345,
+   "T": 8.43885000000001
+  },
+  {
+   "hold_moment": -0.500983,
+   "du_y": 1.710648,
+   "du_z": -0.7268380000000001,
+   "du_along": 1.484784172435874,
+   "T": 8.491950000000003
+  },
+  {
+   "hold_moment": 0.03223928,
+   "du_y": 1.908905,
+   "du_z": -0.696428,
+   "du_along": 1.557576839906789,
+   "T": 8.531100000000013
+  },
+  {
+   "hold_moment": 0.7907181,
+   "du_y": 2.2019859999999998,
+   "du_z": -0.6620010000000001,
+   "du_along": 1.6743026833307022,
+   "T": 8.566949999999995
+  },
+  {
+   "hold_moment": 1.289414,
+   "du_y": 2.405767,
+   "du_z": -0.6463830000000002,
+   "du_along": 1.762667598574397,
+   "T": 8.581199999999988
+  }
+ ],
+ "load_completed_fraction": 0.057207999999999926,
+ "frames": [
+  {
+   "T": 0.43124999999999414,
+   "strain_max": 0.13631289042157047,
+   "strain_p99": 0.1251218049149704,
+   "strain_min": -0.12030484510192618
+  },
+  {
+   "T": 2.487890550000016,
+   "strain_max": 0.1279305603283203,
+   "strain_p99": 0.1241437362901019,
+   "strain_min": -0.15644723353355838
+  },
+  {
+   "T": 4.329968249999994,
+   "strain_max": 0.1510673463382095,
+   "strain_p99": 0.14430041170909008,
+   "strain_min": -0.20217464992617107
+  },
+  {
+   "T": 5.884221300000004,
+   "strain_max": 0.18280660574250573,
+   "strain_p99": 0.17117561911273815,
+   "strain_min": -0.252311620640703
+  },
+  {
+   "T": 7.1956222499999996,
+   "strain_max": 0.22847143979749962,
+   "strain_p99": 0.20745759233503108,
+   "strain_min": -0.30800428361386134
+  },
+  {
+   "T": 7.977384749999994,
+   "strain_max": 0.28458885256156496,
+   "strain_p99": 0.2468397184073851,
+   "strain_min": -0.3571193227446682
+  },
+  {
+   "T": 8.227699049999993,
+   "strain_max": 0.31679780414107084,
+   "strain_p99": 0.26803925875994083,
+   "strain_min": -0.38208847113783173
+  },
+  {
+   "T": 8.438901749999994,
+   "strain_max": 0.36720043856500917,
+   "strain_p99": 0.30219554745101107,
+   "strain_min": -0.4168044396035311
+  },
+  {
+   "T": 8.49188085000001,
+   "strain_max": 0.3899178812159969,
+   "strain_p99": 0.32038144695757315,
+   "strain_min": -0.43145540590998377
+  },
+  {
+   "T": 8.531163600000014,
+   "strain_max": 0.4139335085587943,
+   "strain_p99": 0.3411495642182256,
+   "strain_min": -0.4509730956736667
+  },
+  {
+   "T": 8.566879949999993,
+   "strain_max": 0.44793841339688134,
+   "strain_p99": 0.3698910442929893,
+   "strain_min": -0.47833729401931413
+  },
+  {
+   "T": 8.581199999999988,
+   "strain_max": 0.4705158352477061,
+   "strain_p99": 0.38842253001332744,
+   "strain_min": -0.4963660279902561
+  }
+ ],
+ "ccx_tail": "  constants per material and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n divergence; the increment size is decreased to 8.136646e-06\n the increment is reattempted\n\n\n *ERROR: increment size smaller than minimum\n best solution and residuals are in the frd file\n\n",
+ "stopped": null,
+ "wall_s": 242.0,
+ "capacity_T": 6.377980535735947,
+ "limited_by": "peak strain reached 20 %",
+ "axial_k0": 9.526884881714501,
+ "peak_strain_at_cap": 0.2
+}

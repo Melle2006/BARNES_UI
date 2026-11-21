@@ -1,0 +1,27 @@
+Actuator: 47.0 N usable tension, 31.4 mm stroke (horn 10 mm, derate 0.5)
+Requirement: 5.0 N at the fingertip, safety factor 1.5
+
+MCP: virtual-work residual 0.01 nm (exact model; must be ~0)
+PIP: virtual-work residual 0.01 nm (exact model; must be ~0)
+DIP: virtual-work residual 0.01 nm (exact model; must be ~0)
+
+min_stroke:
+  MCP: cannot reach SF 1.5 even at x = 45.0 mm (best margin 0.57)
+  PIP: cannot reach SF 1.5 even at x = 25.0 mm (best margin 0.71)
+  DIP: cannot reach SF 1.5 even at x = 18.0 mm (best margin 1.08)
+
+max_margin:
+  MCP: x =  25.11 mm of 45.0 | worst margin 0.39 at  11.5 deg | excursion 16.24 mm
+  PIP: x =  11.30 mm of 25.0 | worst margin 0.40 at  11.5 deg | excursion 11.90 mm
+  DIP: x =   4.60 mm of 18.0 | worst margin 0.40 at  11.5 deg | excursion  3.21 mm
+  total excursion 31.35 mm -- fits the 31.4 mm stroke
+
+Horn radius sweep (max-margin design):
+  horn_radius_mm=6.00, tension_N=78.33, stroke_mm=18.85, MCP_x_mm=13.47, PIP_x_mm=6.41, DIP_x_mm=2.67, min_margin=0.41
+  horn_radius_mm=8.00, tension_N=58.75, stroke_mm=25.13, MCP_x_mm=19.02, PIP_x_mm=8.71, DIP_x_mm=3.60, min_margin=0.40
+  horn_radius_mm=10.00, tension_N=47.00, stroke_mm=31.42, MCP_x_mm=25.11, PIP_x_mm=11.30, DIP_x_mm=4.60, min_margin=0.39
+  horn_radius_mm=12.00, tension_N=39.17, stroke_mm=37.70, MCP_x_mm=32.28, PIP_x_mm=13.98, DIP_x_mm=5.60, min_margin=0.39
+  horn_radius_mm=15.00, tension_N=31.33, stroke_mm=47.12, MCP_x_mm=45.00, PIP_x_mm=18.39, DIP_x_mm=7.20, min_margin=0.38
+  horn_radius_mm=20.00, tension_N=23.50, stroke_mm=62.83, MCP_x_mm=45.00, PIP_x_mm=18.39, DIP_x_mm=7.20, min_margin=0.29
+
+Wrote results to results/tendon_pivot/collinear_5N

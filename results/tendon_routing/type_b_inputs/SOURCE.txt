@@ -1,0 +1,2 @@
+Copied from branch claude/keen-keller-s1cv0n at commit 1ca3b8f:
+'TYPE B/<family>/variants_summary.csv'. Do not edit here; regenerate there.

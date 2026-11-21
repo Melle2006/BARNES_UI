@@ -1,0 +1,911 @@
+{
+ "variant": "B5i_t225_a45",
+ "joint": "PIP",
+ "family": "B5_inset",
+ "params": {
+  "t": 2.25,
+  "angle": 45,
+  "collar_half": 4.6
+ },
+ "pinned": true,
+ "pin_dy": -0.65,
+ "pin_xyz": [
+  0.0,
+  -0.65,
+  4.575
+ ],
+ "target_deg": 100.0,
+ "element_size": 0.44999999999999996,
+ "elements": 19760,
+ "nodes": 35564,
+ "info": {
+  "t": 2.25,
+  "w": 0.8999999999999999,
+  "angle": 45,
+  "strip_len": 8.172061112207574,
+  "k_over_E": 0.4181549125832334,
+  "collar_half": 4.6
+ },
+ "completed_fraction": 1.0,
+ "converged_full": true,
+ "moment_scale": 1.0,
+ "model": "whole flex zone",
+ "curve": [
+  {
+   "angle": 3.0,
+   "moment": 0.4850823
+  },
+  {
+   "angle": 6.0,
+   "moment": 0.8880338
+  },
+  {
+   "angle": 9.0,
+   "moment": 1.219952
+  },
+  {
+   "angle": 12.0,
+   "moment": 1.492888
+  },
+  {
+   "angle": 15.0,
+   "moment": 1.719463
+  },
+  {
+   "angle": 18.0,
+   "moment": 1.912534
+  },
+  {
+   "angle": 21.0,
+   "moment": 2.084897
+  },
+  {
+   "angle": 24.0,
+   "moment": 2.249018
+  },
+  {
+   "angle": 27.0,
+   "moment": 2.416788
+  },
+  {
+   "angle": 30.0,
+   "moment": 2.599292
+  },
+  {
+   "angle": 33.0,
+   "moment": 2.806589
+  },
+  {
+   "angle": 36.0,
+   "moment": 3.047513
+  },
+  {
+   "angle": 39.0,
+   "moment": 3.329484
+  },
+  {
+   "angle": 42.0,
+   "moment": 3.658354
+  },
+  {
+   "angle": 45.0,
+   "moment": 4.038282
+  },
+  {
+   "angle": 48.0,
+   "moment": 4.471657
+  },
+  {
+   "angle": 51.0,
+   "moment": 4.959073
+  },
+  {
+   "angle": 54.0,
+   "moment": 5.499268
+  },
+  {
+   "angle": 56.25,
+   "moment": 5.921074
+  },
+  {
+   "angle": 56.8125,
+   "moment": 5.968117
+  },
+  {
+   "angle": 57.10938,
+   "moment": 5.975976
+  },
+  {
+   "angle": 57.953129999999994,
+   "moment": 5.987582
+  },
+  {
+   "angle": 59.06055,
+   "moment": 5.996651
+  },
+  {
+   "angle": 59.68347000000001,
+   "moment": 6.000554
+  },
+  {
+   "angle": 60.90985,
+   "moment": 6.006755
+  },
+  {
+   "angle": 61.97981,
+   "moment": 6.010942
+  },
+  {
+   "angle": 64.26051000000001,
+   "moment": 6.017354
+  },
+  {
+   "angle": 66.54120999999999,
+   "moment": 6.021456
+  },
+  {
+   "angle": 68.8219,
+   "moment": 6.024317
+  },
+  {
+   "angle": 71.10260000000001,
+   "moment": 6.02679
+  },
+  {
+   "angle": 73.38329999999999,
+   "moment": 6.02959
+  },
+  {
+   "angle": 75.664,
+   "moment": 6.033325
+  },
+  {
+   "angle": 77.94469000000001,
+   "moment": 6.038512
+  },
+  {
+   "angle": 80.22538999999999,
+   "moment": 6.045588
+  },
+  {
+   "angle": 82.50609,
+   "moment": 6.05492
+  },
+  {
+   "angle": 84.78679,
+   "moment": 6.066812
+  },
+  {
+   "angle": 87.06748,
+   "moment": 6.08151
+  },
+  {
+   "angle": 89.34818,
+   "moment": 6.099211
+  },
+  {
+   "angle": 91.62888,
+   "moment": 6.120066
+  },
+  {
+   "angle": 93.90957,
+   "moment": 6.144187
+  },
+  {
+   "angle": 96.19027,
+   "moment": 6.171649
+  },
+  {
+   "angle": 98.47097000000001,
+   "moment": 6.202495
+  },
+  {
+   "angle": 100.0,
+   "moment": 6.225079
+  }
+ ],
+ "ref_disp": [
+  {
+   "angle": 3.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 6.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 9.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 12.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 15.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 18.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 21.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 24.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 27.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 30.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 33.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 36.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 39.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 42.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 45.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 48.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 51.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 54.0,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 56.25,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 56.8125,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 57.10938,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 57.953129999999994,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 59.06055,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 59.68347000000001,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 60.90985,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 61.97981,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 64.26051000000001,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 66.54120999999999,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 68.8219,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 71.10260000000001,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 73.38329999999999,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 75.664,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 77.94469000000001,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 80.22538999999999,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 82.50609,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 84.78679,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 87.06748,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 89.34818,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 91.62888,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 93.90957,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 96.19027,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 98.47097000000001,
+   "uy": 0.0,
+   "uz": 0.0
+  },
+  {
+   "angle": 100.0,
+   "uy": 0.0,
+   "uz": 0.0
+  }
+ ],
+ "frames": [
+  {
+   "angle": 3.0,
+   "strain_max": 0.017030827543508487,
+   "strain_p99": 0.014043476405655557,
+   "strain_min": -0.00918640187354891,
+   "vm_max": 0.20445745546173774,
+   "vm_p99": 0.16868630489441008,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 6.0,
+   "strain_max": 0.03389953621007957,
+   "strain_p99": 0.027579958240166853,
+   "strain_min": -0.01803185267278329,
+   "vm_max": 0.40710654236534494,
+   "vm_p99": 0.3315066391193696,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 9.0,
+   "strain_max": 0.050436338973630646,
+   "strain_p99": 0.04067654057187128,
+   "strain_min": -0.02647304139279305,
+   "vm_max": 0.6060052641221583,
+   "vm_p99": 0.4888166480571206,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 12.0,
+   "strain_max": 0.066493137808457,
+   "strain_p99": 0.0532964213947079,
+   "strain_min": -0.03446410901816721,
+   "vm_max": 0.799447316921684,
+   "vm_p99": 0.6403829657049599,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 15.0,
+   "strain_max": 0.08194041377893213,
+   "strain_p99": 0.0652837639284489,
+   "strain_min": -0.041973162181108914,
+   "vm_max": 0.9859122671386005,
+   "vm_p99": 0.7850518082342273,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 18.0,
+   "strain_max": 0.09666492366873891,
+   "strain_p99": 0.07662411472633301,
+   "strain_min": -0.048979302112548306,
+   "vm_max": 1.164051107805374,
+   "vm_p99": 0.9231612794294163,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 21.0,
+   "strain_max": 0.110567949492552,
+   "strain_p99": 0.08729475607562721,
+   "strain_min": -0.05546956732592212,
+   "vm_max": 1.3326520675705398,
+   "vm_p99": 1.0513455197218664,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 24.0,
+   "strain_max": 0.12356427323090702,
+   "strain_p99": 0.09720695724438208,
+   "strain_min": -0.06143663485356321,
+   "vm_max": 1.4906567898342038,
+   "vm_p99": 1.1713800465005253,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 27.0,
+   "strain_max": 0.13558180679325949,
+   "strain_p99": 0.10641015577059194,
+   "strain_min": -0.06687746157786922,
+   "vm_max": 1.6371284506116275,
+   "vm_p99": 1.2817499771114873,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 30.0,
+   "strain_max": 0.14656040982145235,
+   "strain_p99": 0.11490476283436708,
+   "strain_min": -0.07386829870922129,
+   "vm_max": 1.7712727729922535,
+   "vm_p99": 1.3847791630755981,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 33.0,
+   "strain_max": 0.1564534636890491,
+   "strain_p99": 0.12239848582494722,
+   "strain_min": -0.08383965562563289,
+   "vm_max": 1.8924510186772943,
+   "vm_p99": 1.479135019858974,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 36.0,
+   "strain_max": 0.16522592375312106,
+   "strain_p99": 0.1293572475730524,
+   "strain_min": -0.09375783190069853,
+   "vm_max": 2.000142497739319,
+   "vm_p99": 1.5619901108539496,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 39.0,
+   "strain_max": 0.17285654994403288,
+   "strain_p99": 0.1354814511737034,
+   "strain_min": -0.10347880765408168,
+   "vm_max": 2.0940111727710216,
+   "vm_p99": 1.6370058880624492,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 42.0,
+   "strain_max": 0.17933725042005544,
+   "strain_p99": 0.1407721811587942,
+   "strain_min": -0.11285696015254754,
+   "vm_max": 2.1738768697765853,
+   "vm_p99": 1.7013085253259623,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 45.0,
+   "strain_max": 0.18467357686371177,
+   "strain_p99": 0.14588725319629317,
+   "strain_min": -0.12174711861167642,
+   "vm_max": 2.239752680265447,
+   "vm_p99": 1.7638760606947923,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 48.0,
+   "strain_max": 0.1888861092925438,
+   "strain_p99": 0.15040118821651458,
+   "strain_min": -0.13099366690558767,
+   "vm_max": 2.2918234226102236,
+   "vm_p99": 1.8171206106942488,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 51.0,
+   "strain_max": 0.19200684323660244,
+   "strain_p99": 0.15459068696542858,
+   "strain_min": -0.14117899833527592,
+   "vm_max": 2.3304243904098927,
+   "vm_p99": 1.8684933863937871,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 54.0,
+   "strain_max": 0.1940687180210967,
+   "strain_p99": 0.15855718084506837,
+   "strain_min": -0.15212576929044797,
+   "vm_max": 2.3559238546142494,
+   "vm_p99": 1.9169133595566266,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 56.25,
+   "strain_max": 0.1947610798624395,
+   "strain_p99": 0.1612117964024679,
+   "strain_min": -0.17246227448115392,
+   "vm_max": 2.364435306181421,
+   "vm_p99": 2.0138984646481544,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 56.8125,
+   "strain_max": 0.19484189073308777,
+   "strain_p99": 0.16422682072393266,
+   "strain_min": -0.19071586512920413,
+   "vm_max": 2.3653948818229344,
+   "vm_p99": 2.1357412645218883,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 57.1094,
+   "strain_max": 0.19509577241288745,
+   "strain_p99": 0.16626554944753563,
+   "strain_min": -0.19791772298236787,
+   "vm_max": 2.4021556458087243,
+   "vm_p99": 2.192954458553644,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 57.9531,
+   "strain_max": 0.1962104826950284,
+   "strain_p99": 0.17117690269435437,
+   "strain_min": -0.21349433362297054,
+   "vm_max": 2.5961886490154273,
+   "vm_p99": 2.2988712040515127,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 59.060500000000005,
+   "strain_max": 0.19842718626888134,
+   "strain_p99": 0.17661133807355645,
+   "strain_min": -0.2284930307220886,
+   "vm_max": 2.7839510556441254,
+   "vm_p99": 2.417795618558353,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 59.6835,
+   "strain_max": 0.1999578642531541,
+   "strain_p99": 0.17887068871857295,
+   "strain_min": -0.23544146723869397,
+   "vm_max": 2.8712268942488817,
+   "vm_p99": 2.4970981126567127,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 60.90989999999999,
+   "strain_max": 0.2036012319070717,
+   "strain_p99": 0.1829019152407292,
+   "strain_min": -0.24715468641618266,
+   "vm_max": 3.0188145259483714,
+   "vm_p99": 2.629623644531264,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 61.9798,
+   "strain_max": 0.20646116013838012,
+   "strain_p99": 0.18659970053500408,
+   "strain_min": -0.25586192389603435,
+   "vm_max": 3.128843492756536,
+   "vm_p99": 2.7397123263797463,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 64.2605,
+   "strain_max": 0.21179934841890247,
+   "strain_p99": 0.1936346164504751,
+   "strain_min": -0.2712757449018075,
+   "vm_max": 3.3243005773081817,
+   "vm_p99": 2.9118436619934918,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 66.5412,
+   "strain_max": 0.21631324902363436,
+   "strain_p99": 0.19999024859567316,
+   "strain_min": -0.2837442010233321,
+   "vm_max": 3.4829114316156864,
+   "vm_p99": 3.0774405466906756,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 68.8219,
+   "strain_max": 0.2208651774595798,
+   "strain_p99": 0.2046163810685673,
+   "strain_min": -0.2941470145288688,
+   "vm_max": 3.6154802440730207,
+   "vm_p99": 3.2125910802817397,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 71.10260000000001,
+   "strain_max": 0.22799532922106747,
+   "strain_p99": 0.2107829805411153,
+   "strain_min": -0.3029793534636306,
+   "vm_max": 3.7280759225945332,
+   "vm_p99": 3.336214308989787,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 73.38329999999999,
+   "strain_max": 0.23479085609561268,
+   "strain_p99": 0.21755867905342605,
+   "strain_min": -0.311295331817952,
+   "vm_max": 3.8873710378852224,
+   "vm_p99": 3.436852420862466,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 75.664,
+   "strain_max": 0.24134121334966574,
+   "strain_p99": 0.2228636426372671,
+   "strain_min": -0.32208606371436,
+   "vm_max": 4.033947367261256,
+   "vm_p99": 3.530216650661949,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 77.9447,
+   "strain_max": 0.247708574415461,
+   "strain_p99": 0.2269004321735617,
+   "strain_min": -0.3319803812965779,
+   "vm_max": 4.169690458215087,
+   "vm_p99": 3.639201377684348,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 80.22540000000001,
+   "strain_max": 0.25394364659165913,
+   "strain_p99": 0.23300248013740527,
+   "strain_min": -0.34109488287719136,
+   "vm_max": 4.295983947814586,
+   "vm_p99": 3.7372192798324413,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 82.5061,
+   "strain_max": 0.2600843388420737,
+   "strain_p99": 0.23863176072700956,
+   "strain_min": -0.3495218002891477,
+   "vm_max": 4.415443793173891,
+   "vm_p99": 3.829570719898417,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 84.7868,
+   "strain_max": 0.26929573723088485,
+   "strain_p99": 0.24350565594307555,
+   "strain_min": -0.3610798565040544,
+   "vm_max": 4.531189156309354,
+   "vm_p99": 3.9059740057768466,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 87.0675,
+   "strain_max": 0.2784955535037197,
+   "strain_p99": 0.24866516979281345,
+   "strain_min": -0.3723331028361282,
+   "vm_max": 4.643114266541321,
+   "vm_p99": 3.9839469905600344,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 89.3482,
+   "strain_max": 0.28752025604557585,
+   "strain_p99": 0.25457421328846086,
+   "strain_min": -0.38319281094839186,
+   "vm_max": 4.785261255076229,
+   "vm_p99": 4.052736265780292,
+   "self_contact_pairs": 0,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 91.6289,
+   "strain_max": 0.29638656847309575,
+   "strain_p99": 0.2603337587511644,
+   "strain_min": -0.3936919931956617,
+   "vm_max": 4.923025578079881,
+   "vm_p99": 4.114825740729275,
+   "self_contact_pairs": 1,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 93.9096,
+   "strain_max": 0.3051089955804218,
+   "strain_p99": 0.2663192937758089,
+   "strain_min": -0.4038531882365223,
+   "vm_max": 5.056665973055171,
+   "vm_p99": 4.188723818478315,
+   "self_contact_pairs": 1,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 96.1903,
+   "strain_max": 0.31369617034911745,
+   "strain_p99": 0.27139926414909327,
+   "strain_min": -0.4136988795333645,
+   "vm_max": 5.186451946441913,
+   "vm_p99": 4.2740319074694195,
+   "self_contact_pairs": 2,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 98.471,
+   "strain_max": 0.32215593974333,
+   "strain_p99": 0.2768614958283105,
+   "strain_min": -0.4232458354397346,
+   "vm_max": 5.312542329097912,
+   "vm_p99": 4.314302253001661,
+   "self_contact_pairs": 2,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  },
+  {
+   "angle": 100.0,
+   "strain_max": 0.3277580922888612,
+   "strain_p99": 0.2801727402229568,
+   "strain_min": -0.42948660848617837,
+   "vm_max": 5.39510719946545,
+   "vm_p99": 4.377067631980669,
+   "self_contact_pairs": 2,
+   "centre_y": -0.65,
+   "centre_z": 4.575
+  }
+ ],
+ "collision": {
+  "angle": 74.30983437500001,
+  "first_contact": "collar edges"
+ },
+ "k_torsion": 24.145547295357492,
+ "k_lateral": 114.75783137831162,
+ "k_axial": 11.238249999999999,
+ "wall_s": 1285.5,
+ "ccx_tail": {
+  "flex": "oles solver\n Using up to 1 cpu(s) for spooles.\n\n Using up to 1 cpu(s) for the stress calculation.\n\n average force= 0.005383\n time avg. forc= 0.002629\n largest residual force= 0.000000 in node 9639 and dof 3\n largest increment of disp= 6.334908e-04\n largest correction to disp= 5.870051e-08 in node 24667 and dof 2\n\n convergence\n\n the increment size exceeds the remainder of the step and is decreased to 0.000000e+00\n\n Using up to 1 cpu(s) for the stress calculation.\n\n\n Job finished\n\n________________________________________\n\nTotal CalculiX Time: 1237.047477\n________________________________________\n",
+  "offaxis": "pooles solver\n Using up to 1 cpu(s) for spooles.\n\n Using up to 1 cpu(s) for the stress calculation.\n\n average force= 0.000072\n time avg. forc= 0.000072\n largest residual force= 0.000000 in node 11639 and dof 1\n largest increment of disp= 9.373175e-02\n largest correction to disp= 1.706181e-07 in node 1114 and dof 1\n\n convergence\n\n the increment size exceeds the remainder of the step and is decreased to 0.000000e+00\n\n Using up to 1 cpu(s) for the stress calculation.\n\n\n Job finished\n\n________________________________________\n\nTotal CalculiX Time: 35.367898\n________________________________________\n"
+ }
+}

@@ -1,0 +1,12 @@
+Item,Value,Unit,Note
+E F1-1 (tension),25.41,MPa,"area 5.000 mm2, L0 20 mm, 16 readings"
+E F2-1 (tension),18.75,MPa,"area 9.538 mm2, L0 20.2 mm, 16 readings"
+E E1-1 (tension),21.85,MPa,"area 5.800 mm2, L0 20 mm, 16 readings"
+E E2-1 (tension),20.27,MPa,"area 11.013 mm2, L0 20.7 mm, 15 readings"
+E C1 (compression),28.63,MPa,"area 72.382 mm2, h0 9.6 mm"
+E C2 (compression),80.16,MPa,"area 72.382 mm2, h0 9.6 mm; NOT USED: offset start"
+"E tension, printed on edge (E1-1 + E2-1, all readings 2-10 %)",20.96,MPa,main value
+"E tension, printed flat (F1-1 + F2-1, all readings 2-10 %)",21.86,MPa,
+E compression (C1),28.63,MPa,provisional: one fast run
+Neo-Hookean initial shear modulus mu = E/3 (edge tension),6.987,MPa,ANSYS Neo-Hookean 'Initial Shear Modulus Mu'
+Neo-Hookean incompressibility D1 for nu = 0.49,0.00573,1/MPa,"D1 = 2/K, K = E/(3(1-2nu)); use 0 for fully incompressible"

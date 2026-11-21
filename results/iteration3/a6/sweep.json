@@ -1,0 +1,3679 @@
+{
+ "frame": "y' = 54 - y (A6 model frame); pin at y' = 14.82",
+ "axis_positions": [
+  [
+   14.82,
+   0.0
+  ],
+  [
+   14.32,
+   0.0
+  ],
+  [
+   15.32,
+   0.0
+  ]
+ ],
+ "joint_radius_mm": 7.7,
+ "flexion_target_deg": 105.0,
+ "strain_limit_pct": 20.0,
+ "modulus_mpa": 13.0,
+ "best": {
+  "radius_mm": 45.0,
+  "thickness_mm": 3.2,
+  "width_mm": 6.0,
+  "travel_mm": 19.0,
+  "peak_strain_pct": 18.8,
+  "mean_torque_Nmm": 6.449,
+  "torque_at_105_Nmm": 24.067,
+  "travel_window_mm": 1.0,
+  "closest_to_axis_mm": 8.41,
+  "height_above_pp_cuff_mm": 7.37,
+  "mp_cuff_length_mm": 24.0,
+  "valid": true,
+  "reason": ""
+ },
+ "best_by_strain_limit": {
+  "15": {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 11.8,
+   "mean_torque_Nmm": 5.277,
+   "torque_at_105_Nmm": 13.287,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.06,
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  "17.5": {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 11.8,
+   "mean_torque_Nmm": 5.277,
+   "torque_at_105_Nmm": 13.287,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.06,
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  "20": {
+   "radius_mm": 45.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 18.8,
+   "mean_torque_Nmm": 6.449,
+   "torque_at_105_Nmm": 24.067,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 8.41,
+   "height_above_pp_cuff_mm": 7.37,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  }
+ },
+ "simulations": [
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [
+    20.0
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [
+    20.0
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.0708249035853209,
+   "torque_105_per_ei_worst": 0.15338774455974974,
+   "kappa_max_worst": 0.1491427023878053,
+   "closest_to_axis_mm": 8.22,
+   "head_on_stop_from_deg": [
+    82.0,
+    82.0,
+    83.0
+   ],
+   "height_above_pp_cuff_mm": 6.67,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [
+    19.0,
+    19.5
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.07392240302307632,
+   "torque_105_per_ei_worst": 0.16218327740303248,
+   "kappa_max_worst": 0.15602601437495364,
+   "closest_to_axis_mm": 8.11,
+   "head_on_stop_from_deg": [
+    81.0,
+    81.0,
+    82.0
+   ],
+   "height_above_pp_cuff_mm": 6.88,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [
+    20.0
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [
+    20.0
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [
+    20.0
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [
+    18.0,
+    18.5,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.06316055913074406,
+   "torque_105_per_ei_worst": 0.12854494813226272,
+   "kappa_max_worst": 0.13433280637592973,
+   "closest_to_axis_mm": 7.88,
+   "head_on_stop_from_deg": [
+    85.0,
+    84.0,
+    85.0
+   ],
+   "height_above_pp_cuff_mm": 5.76,
+   "mp_cuff_length_mm": 22.5
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [
+    18.0,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.0,
+   "energy_per_ei_worst": 0.050294600005927934,
+   "torque_105_per_ei_worst": 0.09200279482795735,
+   "kappa_max_worst": 0.0964289655076341,
+   "closest_to_axis_mm": 9.17,
+   "head_on_stop_from_deg": [
+    92.0,
+    91.0,
+    92.0
+   ],
+   "height_above_pp_cuff_mm": 6.05,
+   "mp_cuff_length_mm": 24.0
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [
+    18.5,
+    19.0,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.06137882188335187,
+   "torque_105_per_ei_worst": 0.12623023022585836,
+   "kappa_max_worst": 0.12988009889164062,
+   "closest_to_axis_mm": 8.17,
+   "head_on_stop_from_deg": [
+    86.0,
+    85.0,
+    86.0
+   ],
+   "height_above_pp_cuff_mm": 6.2,
+   "mp_cuff_length_mm": 23.0
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [
+    19.0
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.05970469294271198,
+   "torque_105_per_ei_worst": 0.12382335787036657,
+   "kappa_max_worst": 0.1255754812751431,
+   "closest_to_axis_mm": 8.45,
+   "head_on_stop_from_deg": [
+    86.0,
+    86.0,
+    87.0
+   ],
+   "height_above_pp_cuff_mm": 6.64,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [
+    18.5,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.056215563127873354,
+   "torque_105_per_ei_worst": 0.1148282584751161,
+   "kappa_max_worst": 0.11605298204484098,
+   "closest_to_axis_mm": 8.83,
+   "head_on_stop_from_deg": [
+    88.0,
+    87.0,
+    88.0
+   ],
+   "height_above_pp_cuff_mm": 6.87,
+   "mp_cuff_length_mm": 24.0
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [
+    18.5,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.05809975501148178,
+   "torque_105_per_ei_worst": 0.12141113204368068,
+   "kappa_max_worst": 0.12147557724795192,
+   "closest_to_axis_mm": 8.73,
+   "head_on_stop_from_deg": [
+    87.0,
+    86.0,
+    88.0
+   ],
+   "height_above_pp_cuff_mm": 7.08,
+   "mp_cuff_length_mm": 24.5
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [
+    17.5,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.04464344420926071,
+   "torque_105_per_ei_worst": 0.051028684219860065,
+   "kappa_max_worst": 0.060047671073192276,
+   "closest_to_axis_mm": 9.42,
+   "head_on_stop_from_deg": [
+    103.0,
+    102.0,
+    104.0
+   ],
+   "height_above_pp_cuff_mm": 4.73,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    20.0
+   ],
+   "travel_mm": 18.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.04819920725416169,
+   "torque_105_per_ei_worst": 0.07464259631746199,
+   "kappa_max_worst": 0.08577595113611018,
+   "closest_to_axis_mm": 8.51,
+   "head_on_stop_from_deg": [
+    95.0,
+    94.0,
+    96.0
+   ],
+   "height_above_pp_cuff_mm": 4.89,
+   "mp_cuff_length_mm": 23.0
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.5,
+   "energy_per_ei_worst": 0.046623665083372,
+   "torque_105_per_ei_worst": 0.06810863655462289,
+   "kappa_max_worst": 0.07821556832756593,
+   "closest_to_axis_mm": 8.87,
+   "head_on_stop_from_deg": [
+    97.0,
+    96.0,
+    98.0
+   ],
+   "height_above_pp_cuff_mm": 5.12,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.0,
+   "energy_per_ei_worst": 0.04723848542259759,
+   "torque_105_per_ei_worst": 0.07236589929543762,
+   "kappa_max_worst": 0.08242954675419668,
+   "closest_to_axis_mm": 8.8,
+   "head_on_stop_from_deg": [
+    96.0,
+    95.0,
+    97.0
+   ],
+   "height_above_pp_cuff_mm": 5.32,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.5,
+   "energy_per_ei_worst": 0.047974195315416676,
+   "torque_105_per_ei_worst": 0.07684664620436625,
+   "kappa_max_worst": 0.0867856940012514,
+   "closest_to_axis_mm": 8.72,
+   "head_on_stop_from_deg": [
+    95.0,
+    94.0,
+    96.0
+   ],
+   "height_above_pp_cuff_mm": 5.52,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.5,
+   "energy_per_ei_worst": 0.048837720060623424,
+   "torque_105_per_ei_worst": 0.08156931243039384,
+   "kappa_max_worst": 0.09129528403337671,
+   "closest_to_axis_mm": 8.65,
+   "head_on_stop_from_deg": [
+    94.0,
+    93.0,
+    95.0
+   ],
+   "height_above_pp_cuff_mm": 5.72,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.0,
+   "energy_per_ei_worst": 0.04702559310817009,
+   "torque_105_per_ei_worst": 0.07445203986892439,
+   "kappa_max_worst": 0.0833866658440522,
+   "closest_to_axis_mm": 9.01,
+   "head_on_stop_from_deg": [
+    96.0,
+    95.0,
+    97.0
+   ],
+   "height_above_pp_cuff_mm": 5.95,
+   "mp_cuff_length_mm": 24.0
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [
+    18.0,
+    18.5,
+    19.0,
+    19.5
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.050979510688476656,
+   "torque_105_per_ei_worst": 0.09182604847489113,
+   "kappa_max_worst": 0.10082665353968027,
+   "closest_to_axis_mm": 8.48,
+   "head_on_stop_from_deg": [
+    92.0,
+    91.0,
+    92.0
+   ],
+   "height_above_pp_cuff_mm": 6.13,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [
+    16.5,
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 3.5,
+   "energy_per_ei_worst": 0.046788699854021384,
+   "torque_105_per_ei_worst": 0.040126568546504926,
+   "kappa_max_worst": 0.056555605210462545,
+   "closest_to_axis_mm": 8.42,
+   "head_on_stop_from_deg": [
+    "never",
+    "never",
+    "never"
+   ],
+   "height_above_pp_cuff_mm": 3.78,
+   "mp_cuff_length_mm": 23.0
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 3.0,
+   "energy_per_ei_worst": 0.04654075157013762,
+   "torque_105_per_ei_worst": 0.04220838160765835,
+   "kappa_max_worst": 0.056196391272296746,
+   "closest_to_axis_mm": 8.54,
+   "head_on_stop_from_deg": [
+    "never",
+    "never",
+    "never"
+   ],
+   "height_above_pp_cuff_mm": 4.0,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 3.0,
+   "energy_per_ei_worst": 0.04629055319373384,
+   "torque_105_per_ei_worst": 0.04188713111463144,
+   "kappa_max_worst": 0.055822496008347405,
+   "closest_to_axis_mm": 8.64,
+   "head_on_stop_from_deg": [
+    "never",
+    "never",
+    "never"
+   ],
+   "height_above_pp_cuff_mm": 4.2,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 3.0,
+   "energy_per_ei_worst": 0.04604143233035513,
+   "torque_105_per_ei_worst": 0.04111970774409911,
+   "kappa_max_worst": 0.05545389672510118,
+   "closest_to_axis_mm": 8.74,
+   "head_on_stop_from_deg": [
+    "never",
+    "never",
+    "never"
+   ],
+   "height_above_pp_cuff_mm": 4.4,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 3.0,
+   "energy_per_ei_worst": 0.045794352657177094,
+   "torque_105_per_ei_worst": 0.040467134475984545,
+   "kappa_max_worst": 0.0550905067544681,
+   "closest_to_axis_mm": 8.84,
+   "head_on_stop_from_deg": [
+    "never",
+    "never",
+    "never"
+   ],
+   "height_above_pp_cuff_mm": 4.6,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [
+    17.0,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.0,
+   "energy_per_ei_worst": 0.045506899865111916,
+   "torque_105_per_ei_worst": 0.04010897575161636,
+   "kappa_max_worst": 0.054720297800334154,
+   "closest_to_axis_mm": 8.96,
+   "head_on_stop_from_deg": [
+    "never",
+    "never",
+    "never"
+   ],
+   "height_above_pp_cuff_mm": 4.82,
+   "mp_cuff_length_mm": 24.0
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 17.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.047553255527248345,
+   "torque_105_per_ei_worst": 0.06632053486038154,
+   "kappa_max_worst": 0.0803698746908735,
+   "closest_to_axis_mm": 8.23,
+   "head_on_stop_from_deg": [
+    98.0,
+    97.0,
+    99.0
+   ],
+   "height_above_pp_cuff_mm": 4.98,
+   "mp_cuff_length_mm": 22.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.5,
+   "energy_per_ei_worst": 0.04523874209072434,
+   "torque_105_per_ei_worst": 0.04863512427693338,
+   "kappa_max_worst": 0.06156586387746206,
+   "closest_to_axis_mm": 9.04,
+   "head_on_stop_from_deg": [
+    103.0,
+    102.0,
+    105.0
+   ],
+   "height_above_pp_cuff_mm": 5.21,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.2,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.4,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.6,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.8,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 2.0,
+   "passing_travels_mm": [],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.4,
+   "passing_travels_mm": [
+    19.5
+   ],
+   "travel_mm": null,
+   "valid_geometry": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.8,
+   "passing_travels_mm": [
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.07058698472026728,
+   "torque_105_per_ei_worst": 0.16164813291375904,
+   "kappa_max_worst": 0.15279256442405123,
+   "closest_to_axis_mm": 8.21,
+   "head_on_stop_from_deg": [
+    83.0,
+    82.0,
+    83.0
+   ],
+   "height_above_pp_cuff_mm": 8.1,
+   "mp_cuff_length_mm": 24.5
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 3.2,
+   "passing_travels_mm": [
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 0.5,
+   "energy_per_ei_worst": 0.07735505742819565,
+   "torque_105_per_ei_worst": 0.18234843543237683,
+   "kappa_max_worst": 0.16789248269622736,
+   "closest_to_axis_mm": 7.97,
+   "head_on_stop_from_deg": [
+    81.0,
+    81.0,
+    82.0
+   ],
+   "height_above_pp_cuff_mm": 8.51,
+   "mp_cuff_length_mm": 24.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.4,
+   "passing_travels_mm": [
+    18.0,
+    18.5,
+    19.0,
+    19.5
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.5,
+   "energy_per_ei_worst": 0.053735124064374626,
+   "torque_105_per_ei_worst": 0.10333705865590669,
+   "kappa_max_worst": 0.11114400025573974,
+   "closest_to_axis_mm": 8.3,
+   "head_on_stop_from_deg": [
+    90.0,
+    89.0,
+    90.0
+   ],
+   "height_above_pp_cuff_mm": 6.53,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.8,
+   "passing_travels_mm": [
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.0,
+   "energy_per_ei_worst": 0.0485911699110162,
+   "torque_105_per_ei_worst": 0.08645195498460899,
+   "kappa_max_worst": 0.09315724169139931,
+   "closest_to_axis_mm": 9.07,
+   "head_on_stop_from_deg": [
+    93.0,
+    93.0,
+    94.0
+   ],
+   "height_above_pp_cuff_mm": 6.98,
+   "mp_cuff_length_mm": 24.5
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 3.2,
+   "passing_travels_mm": [
+    18.5,
+    19.0,
+    19.5
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 1.0,
+   "energy_per_ei_worst": 0.05549093197344491,
+   "torque_105_per_ei_worst": 0.1129965819813767,
+   "kappa_max_worst": 0.11751449138381048,
+   "closest_to_axis_mm": 8.41,
+   "head_on_stop_from_deg": [
+    89.0,
+    88.0,
+    89.0
+   ],
+   "height_above_pp_cuff_mm": 7.37,
+   "mp_cuff_length_mm": 24.0
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.4,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.5,
+   "energy_per_ei_worst": 0.04552079441343411,
+   "torque_105_per_ei_worst": 0.05698697821137352,
+   "kappa_max_worst": 0.06923469577070798,
+   "closest_to_axis_mm": 8.91,
+   "head_on_stop_from_deg": [
+    101.0,
+    100.0,
+    102.0
+   ],
+   "height_above_pp_cuff_mm": 5.61,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.8,
+   "passing_travels_mm": [
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 18.5,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.5,
+   "energy_per_ei_worst": 0.04622670797347163,
+   "torque_105_per_ei_worst": 0.06514312210297907,
+   "kappa_max_worst": 0.07739423598116507,
+   "closest_to_axis_mm": 8.76,
+   "head_on_stop_from_deg": [
+    98.0,
+    97.0,
+    99.0
+   ],
+   "height_above_pp_cuff_mm": 6.01,
+   "mp_cuff_length_mm": 23.5
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "passing_travels_mm": [
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0
+   ],
+   "travel_mm": 19.0,
+   "valid_geometry": true,
+   "reason": "",
+   "travel_window_mm": 2.0,
+   "energy_per_ei_worst": 0.04540531169388948,
+   "torque_105_per_ei_worst": 0.06238492622699968,
+   "kappa_max_worst": 0.07389577221673431,
+   "closest_to_axis_mm": 9.06,
+   "head_on_stop_from_deg": [
+    99.0,
+    98.0,
+    100.0
+   ],
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0
+  }
+ ],
+ "rows": [
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 18.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 22.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 26.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 4.5,
+   "mean_torque_Nmm": 0.036,
+   "torque_at_105_Nmm": 0.144,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.22,
+   "height_above_pp_cuff_mm": 6.67,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 4.5,
+   "mean_torque_Nmm": 0.045,
+   "torque_at_105_Nmm": 0.179,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.22,
+   "height_above_pp_cuff_mm": 6.67,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 4.5,
+   "mean_torque_Nmm": 0.054,
+   "torque_at_105_Nmm": 0.215,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.22,
+   "height_above_pp_cuff_mm": 6.67,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 6.2,
+   "mean_torque_Nmm": 0.089,
+   "torque_at_105_Nmm": 0.36,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.11,
+   "height_above_pp_cuff_mm": 6.88,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 6.2,
+   "mean_torque_Nmm": 0.112,
+   "torque_at_105_Nmm": 0.45,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.11,
+   "height_above_pp_cuff_mm": 6.88,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 6.2,
+   "mean_torque_Nmm": 0.134,
+   "torque_at_105_Nmm": 0.54,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.11,
+   "height_above_pp_cuff_mm": 6.88,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 30.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 4.0,
+   "mean_torque_Nmm": 0.032,
+   "torque_at_105_Nmm": 0.12,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 7.88,
+   "height_above_pp_cuff_mm": 5.76,
+   "mp_cuff_length_mm": 22.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 4.0,
+   "mean_torque_Nmm": 0.04,
+   "torque_at_105_Nmm": 0.15,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 7.88,
+   "height_above_pp_cuff_mm": 5.76,
+   "mp_cuff_length_mm": 22.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 4.0,
+   "mean_torque_Nmm": 0.048,
+   "torque_at_105_Nmm": 0.18,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 7.88,
+   "height_above_pp_cuff_mm": 5.76,
+   "mp_cuff_length_mm": 22.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.061,
+   "torque_at_105_Nmm": 0.204,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 9.17,
+   "height_above_pp_cuff_mm": 6.05,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.076,
+   "torque_at_105_Nmm": 0.255,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 9.17,
+   "height_above_pp_cuff_mm": 6.05,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.091,
+   "torque_at_105_Nmm": 0.306,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 9.17,
+   "height_above_pp_cuff_mm": 6.05,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.5,
+   "mean_torque_Nmm": 0.145,
+   "torque_at_105_Nmm": 0.547,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.17,
+   "height_above_pp_cuff_mm": 6.2,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.5,
+   "mean_torque_Nmm": 0.181,
+   "torque_at_105_Nmm": 0.684,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.17,
+   "height_above_pp_cuff_mm": 6.2,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.5,
+   "mean_torque_Nmm": 0.218,
+   "torque_at_105_Nmm": 0.82,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.17,
+   "height_above_pp_cuff_mm": 6.2,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 8.8,
+   "mean_torque_Nmm": 0.387,
+   "torque_at_105_Nmm": 1.472,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.45,
+   "height_above_pp_cuff_mm": 6.64,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 8.8,
+   "mean_torque_Nmm": 0.484,
+   "torque_at_105_Nmm": 1.84,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.45,
+   "height_above_pp_cuff_mm": 6.64,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 8.8,
+   "mean_torque_Nmm": 0.581,
+   "torque_at_105_Nmm": 2.209,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.45,
+   "height_above_pp_cuff_mm": 6.64,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 9.3,
+   "mean_torque_Nmm": 0.544,
+   "torque_at_105_Nmm": 2.038,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.83,
+   "height_above_pp_cuff_mm": 6.87,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 9.3,
+   "mean_torque_Nmm": 0.681,
+   "torque_at_105_Nmm": 2.548,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.83,
+   "height_above_pp_cuff_mm": 6.87,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 9.3,
+   "mean_torque_Nmm": 0.817,
+   "torque_at_105_Nmm": 3.057,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.83,
+   "height_above_pp_cuff_mm": 6.87,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 10.9,
+   "mean_torque_Nmm": 0.801,
+   "torque_at_105_Nmm": 3.068,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.73,
+   "height_above_pp_cuff_mm": 7.08,
+   "mp_cuff_length_mm": 24.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 10.9,
+   "mean_torque_Nmm": 1.002,
+   "torque_at_105_Nmm": 3.835,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.73,
+   "height_above_pp_cuff_mm": 7.08,
+   "mp_cuff_length_mm": 24.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 10.9,
+   "mean_torque_Nmm": 1.202,
+   "torque_at_105_Nmm": 4.602,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.73,
+   "height_above_pp_cuff_mm": 7.08,
+   "mp_cuff_length_mm": 24.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "goes taut before 105 deg"
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 1.8,
+   "mean_torque_Nmm": 0.023,
+   "torque_at_105_Nmm": 0.048,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 9.42,
+   "height_above_pp_cuff_mm": 4.73,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 1.8,
+   "mean_torque_Nmm": 0.029,
+   "torque_at_105_Nmm": 0.06,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 9.42,
+   "height_above_pp_cuff_mm": 4.73,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 1.8,
+   "mean_torque_Nmm": 0.034,
+   "torque_at_105_Nmm": 0.072,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 9.42,
+   "height_above_pp_cuff_mm": 4.73,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 3.4,
+   "mean_torque_Nmm": 0.058,
+   "torque_at_105_Nmm": 0.166,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.51,
+   "height_above_pp_cuff_mm": 4.89,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 3.4,
+   "mean_torque_Nmm": 0.073,
+   "torque_at_105_Nmm": 0.207,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.51,
+   "height_above_pp_cuff_mm": 4.89,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 3.4,
+   "mean_torque_Nmm": 0.088,
+   "torque_at_105_Nmm": 0.248,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.51,
+   "height_above_pp_cuff_mm": 4.89,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.11,
+   "torque_at_105_Nmm": 0.295,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.87,
+   "height_above_pp_cuff_mm": 5.12,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.138,
+   "torque_at_105_Nmm": 0.369,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.87,
+   "height_above_pp_cuff_mm": 5.12,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.165,
+   "torque_at_105_Nmm": 0.443,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.87,
+   "height_above_pp_cuff_mm": 5.12,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 4.9,
+   "mean_torque_Nmm": 0.193,
+   "torque_at_105_Nmm": 0.542,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 8.8,
+   "height_above_pp_cuff_mm": 5.32,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 4.9,
+   "mean_torque_Nmm": 0.241,
+   "torque_at_105_Nmm": 0.677,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 8.8,
+   "height_above_pp_cuff_mm": 5.32,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 4.9,
+   "mean_torque_Nmm": 0.29,
+   "torque_at_105_Nmm": 0.813,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 8.8,
+   "height_above_pp_cuff_mm": 5.32,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.1,
+   "mean_torque_Nmm": 0.311,
+   "torque_at_105_Nmm": 0.914,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.72,
+   "height_above_pp_cuff_mm": 5.52,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.1,
+   "mean_torque_Nmm": 0.389,
+   "torque_at_105_Nmm": 1.142,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.72,
+   "height_above_pp_cuff_mm": 5.52,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.1,
+   "mean_torque_Nmm": 0.467,
+   "torque_at_105_Nmm": 1.371,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.72,
+   "height_above_pp_cuff_mm": 5.52,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 7.3,
+   "mean_torque_Nmm": 0.473,
+   "torque_at_105_Nmm": 1.448,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.65,
+   "height_above_pp_cuff_mm": 5.72,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 7.3,
+   "mean_torque_Nmm": 0.591,
+   "torque_at_105_Nmm": 1.81,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.65,
+   "height_above_pp_cuff_mm": 5.72,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 7.3,
+   "mean_torque_Nmm": 0.71,
+   "torque_at_105_Nmm": 2.172,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.65,
+   "height_above_pp_cuff_mm": 5.72,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 7.5,
+   "mean_torque_Nmm": 0.648,
+   "torque_at_105_Nmm": 1.882,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.01,
+   "height_above_pp_cuff_mm": 5.95,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 7.5,
+   "mean_torque_Nmm": 0.811,
+   "torque_at_105_Nmm": 2.352,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.01,
+   "height_above_pp_cuff_mm": 5.95,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 7.5,
+   "mean_torque_Nmm": 0.973,
+   "torque_at_105_Nmm": 2.822,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.01,
+   "height_above_pp_cuff_mm": 5.95,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 10.1,
+   "mean_torque_Nmm": 0.964,
+   "torque_at_105_Nmm": 3.183,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.48,
+   "height_above_pp_cuff_mm": 6.13,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 10.1,
+   "mean_torque_Nmm": 1.205,
+   "torque_at_105_Nmm": 3.979,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.48,
+   "height_above_pp_cuff_mm": 6.13,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 10.1,
+   "mean_torque_Nmm": 1.447,
+   "torque_at_105_Nmm": 4.775,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.48,
+   "height_above_pp_cuff_mm": 6.13,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 1.7,
+   "mean_torque_Nmm": 0.024,
+   "torque_at_105_Nmm": 0.038,
+   "travel_window_mm": 3.5,
+   "closest_to_axis_mm": 8.42,
+   "height_above_pp_cuff_mm": 3.78,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 1.7,
+   "mean_torque_Nmm": 0.03,
+   "torque_at_105_Nmm": 0.047,
+   "travel_window_mm": 3.5,
+   "closest_to_axis_mm": 8.42,
+   "height_above_pp_cuff_mm": 3.78,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": 18.0,
+   "peak_strain_pct": 1.7,
+   "mean_torque_Nmm": 0.036,
+   "torque_at_105_Nmm": 0.056,
+   "travel_window_mm": 3.5,
+   "closest_to_axis_mm": 8.42,
+   "height_above_pp_cuff_mm": 3.78,
+   "mp_cuff_length_mm": 23.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 2.2,
+   "mean_torque_Nmm": 0.056,
+   "torque_at_105_Nmm": 0.094,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.54,
+   "height_above_pp_cuff_mm": 4.0,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 2.2,
+   "mean_torque_Nmm": 0.07,
+   "torque_at_105_Nmm": 0.117,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.54,
+   "height_above_pp_cuff_mm": 4.0,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 2.2,
+   "mean_torque_Nmm": 0.085,
+   "torque_at_105_Nmm": 0.14,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.54,
+   "height_above_pp_cuff_mm": 4.0,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 2.8,
+   "mean_torque_Nmm": 0.109,
+   "torque_at_105_Nmm": 0.182,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.64,
+   "height_above_pp_cuff_mm": 4.2,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 2.8,
+   "mean_torque_Nmm": 0.137,
+   "torque_at_105_Nmm": 0.227,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.64,
+   "height_above_pp_cuff_mm": 4.2,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 2.8,
+   "mean_torque_Nmm": 0.164,
+   "torque_at_105_Nmm": 0.272,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.64,
+   "height_above_pp_cuff_mm": 4.2,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.3,
+   "mean_torque_Nmm": 0.188,
+   "torque_at_105_Nmm": 0.308,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.74,
+   "height_above_pp_cuff_mm": 4.4,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.3,
+   "mean_torque_Nmm": 0.235,
+   "torque_at_105_Nmm": 0.385,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.74,
+   "height_above_pp_cuff_mm": 4.4,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.3,
+   "mean_torque_Nmm": 0.282,
+   "torque_at_105_Nmm": 0.462,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.74,
+   "height_above_pp_cuff_mm": 4.4,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.297,
+   "torque_at_105_Nmm": 0.481,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.84,
+   "height_above_pp_cuff_mm": 4.6,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.371,
+   "torque_at_105_Nmm": 0.601,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.84,
+   "height_above_pp_cuff_mm": 4.6,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 3.9,
+   "mean_torque_Nmm": 0.446,
+   "torque_at_105_Nmm": 0.722,
+   "travel_window_mm": 3.0,
+   "closest_to_axis_mm": 8.84,
+   "height_above_pp_cuff_mm": 4.6,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 4.4,
+   "mean_torque_Nmm": 0.441,
+   "torque_at_105_Nmm": 0.712,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 8.96,
+   "height_above_pp_cuff_mm": 4.82,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 4.4,
+   "mean_torque_Nmm": 0.551,
+   "torque_at_105_Nmm": 0.89,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 8.96,
+   "height_above_pp_cuff_mm": 4.82,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 4.4,
+   "mean_torque_Nmm": 0.661,
+   "torque_at_105_Nmm": 1.068,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 8.96,
+   "height_above_pp_cuff_mm": 4.82,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": 17.5,
+   "peak_strain_pct": 7.2,
+   "mean_torque_Nmm": 0.656,
+   "torque_at_105_Nmm": 1.676,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.23,
+   "height_above_pp_cuff_mm": 4.98,
+   "mp_cuff_length_mm": 22.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": 17.5,
+   "peak_strain_pct": 7.2,
+   "mean_torque_Nmm": 0.82,
+   "torque_at_105_Nmm": 2.095,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.23,
+   "height_above_pp_cuff_mm": 4.98,
+   "mp_cuff_length_mm": 22.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": 17.5,
+   "peak_strain_pct": 7.2,
+   "mean_torque_Nmm": 0.984,
+   "torque_at_105_Nmm": 2.514,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.23,
+   "height_above_pp_cuff_mm": 4.98,
+   "mp_cuff_length_mm": 22.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.2,
+   "mean_torque_Nmm": 0.856,
+   "torque_at_105_Nmm": 1.686,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 9.04,
+   "height_above_pp_cuff_mm": 5.21,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.2,
+   "mean_torque_Nmm": 1.07,
+   "torque_at_105_Nmm": 2.108,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 9.04,
+   "height_above_pp_cuff_mm": 5.21,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 6.2,
+   "mean_torque_Nmm": 1.284,
+   "torque_at_105_Nmm": 2.529,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 9.04,
+   "height_above_pp_cuff_mm": 5.21,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 0.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.2,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.2,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.2,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.4,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.4,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.4,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.6,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.6,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.6,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.8,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.8,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 1.8,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 2.0,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 2.0,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 1000.0,
+   "thickness_mm": 2.0,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "cuts through the joint"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.4,
+   "width_mm": 4.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.4,
+   "width_mm": 5.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.4,
+   "width_mm": 6.0,
+   "travel_mm": null,
+   "valid": false,
+   "reason": "only one travel passes"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.8,
+   "width_mm": 4.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 21.4,
+   "mean_torque_Nmm": 3.664,
+   "torque_at_105_Nmm": 15.377,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.21,
+   "height_above_pp_cuff_mm": 8.1,
+   "mp_cuff_length_mm": 24.5,
+   "valid": false,
+   "reason": "strain over 20%"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.8,
+   "width_mm": 5.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 21.4,
+   "mean_torque_Nmm": 4.58,
+   "torque_at_105_Nmm": 19.221,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.21,
+   "height_above_pp_cuff_mm": 8.1,
+   "mp_cuff_length_mm": 24.5,
+   "valid": false,
+   "reason": "strain over 20%"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 2.8,
+   "width_mm": 6.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 21.4,
+   "mean_torque_Nmm": 5.496,
+   "torque_at_105_Nmm": 23.065,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 8.21,
+   "height_above_pp_cuff_mm": 8.1,
+   "mp_cuff_length_mm": 24.5,
+   "valid": false,
+   "reason": "strain over 20%"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 3.2,
+   "width_mm": 4.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 26.9,
+   "mean_torque_Nmm": 5.994,
+   "torque_at_105_Nmm": 25.893,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 7.97,
+   "height_above_pp_cuff_mm": 8.51,
+   "mp_cuff_length_mm": 24.5,
+   "valid": false,
+   "reason": "strain over 20%"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 3.2,
+   "width_mm": 5.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 26.9,
+   "mean_torque_Nmm": 7.492,
+   "torque_at_105_Nmm": 32.366,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 7.97,
+   "height_above_pp_cuff_mm": 8.51,
+   "mp_cuff_length_mm": 24.5,
+   "valid": false,
+   "reason": "strain over 20%"
+  },
+  {
+   "radius_mm": 35.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 26.9,
+   "mean_torque_Nmm": 8.991,
+   "torque_at_105_Nmm": 38.839,
+   "travel_window_mm": 0.5,
+   "closest_to_axis_mm": 7.97,
+   "height_above_pp_cuff_mm": 8.51,
+   "mp_cuff_length_mm": 24.5,
+   "valid": false,
+   "reason": "strain over 20%"
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.4,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 13.3,
+   "mean_torque_Nmm": 1.756,
+   "torque_at_105_Nmm": 6.19,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.3,
+   "height_above_pp_cuff_mm": 6.53,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.4,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 13.3,
+   "mean_torque_Nmm": 2.196,
+   "torque_at_105_Nmm": 7.738,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.3,
+   "height_above_pp_cuff_mm": 6.53,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.4,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 13.3,
+   "mean_torque_Nmm": 2.635,
+   "torque_at_105_Nmm": 9.285,
+   "travel_window_mm": 1.5,
+   "closest_to_axis_mm": 8.3,
+   "height_above_pp_cuff_mm": 6.53,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.8,
+   "width_mm": 4.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 13.0,
+   "mean_torque_Nmm": 2.522,
+   "torque_at_105_Nmm": 8.224,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 9.07,
+   "height_above_pp_cuff_mm": 6.98,
+   "mp_cuff_length_mm": 24.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.8,
+   "width_mm": 5.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 13.0,
+   "mean_torque_Nmm": 3.153,
+   "torque_at_105_Nmm": 10.28,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 9.07,
+   "height_above_pp_cuff_mm": 6.98,
+   "mp_cuff_length_mm": 24.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 2.8,
+   "width_mm": 6.0,
+   "travel_mm": 19.5,
+   "peak_strain_pct": 13.0,
+   "mean_torque_Nmm": 3.783,
+   "torque_at_105_Nmm": 12.336,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 9.07,
+   "height_above_pp_cuff_mm": 6.98,
+   "mp_cuff_length_mm": 24.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 3.2,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 18.8,
+   "mean_torque_Nmm": 4.3,
+   "torque_at_105_Nmm": 16.045,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 8.41,
+   "height_above_pp_cuff_mm": 7.37,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 3.2,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 18.8,
+   "mean_torque_Nmm": 5.374,
+   "torque_at_105_Nmm": 20.056,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 8.41,
+   "height_above_pp_cuff_mm": 7.37,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 45.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 18.8,
+   "mean_torque_Nmm": 6.449,
+   "torque_at_105_Nmm": 24.067,
+   "travel_window_mm": 1.0,
+   "closest_to_axis_mm": 8.41,
+   "height_above_pp_cuff_mm": 7.37,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.4,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 8.3,
+   "mean_torque_Nmm": 1.488,
+   "torque_at_105_Nmm": 3.414,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.91,
+   "height_above_pp_cuff_mm": 5.61,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.4,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 8.3,
+   "mean_torque_Nmm": 1.86,
+   "torque_at_105_Nmm": 4.267,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.91,
+   "height_above_pp_cuff_mm": 5.61,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.4,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 8.3,
+   "mean_torque_Nmm": 2.232,
+   "torque_at_105_Nmm": 5.121,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.91,
+   "height_above_pp_cuff_mm": 5.61,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.8,
+   "width_mm": 4.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 10.8,
+   "mean_torque_Nmm": 2.4,
+   "torque_at_105_Nmm": 6.197,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.76,
+   "height_above_pp_cuff_mm": 6.01,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.8,
+   "width_mm": 5.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 10.8,
+   "mean_torque_Nmm": 2.999,
+   "torque_at_105_Nmm": 7.746,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.76,
+   "height_above_pp_cuff_mm": 6.01,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 2.8,
+   "width_mm": 6.0,
+   "travel_mm": 18.5,
+   "peak_strain_pct": 10.8,
+   "mean_torque_Nmm": 3.599,
+   "torque_at_105_Nmm": 9.295,
+   "travel_window_mm": 2.5,
+   "closest_to_axis_mm": 8.76,
+   "height_above_pp_cuff_mm": 6.01,
+   "mp_cuff_length_mm": 23.5,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "width_mm": 4.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 11.8,
+   "mean_torque_Nmm": 3.518,
+   "torque_at_105_Nmm": 8.858,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.06,
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "width_mm": 5.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 11.8,
+   "mean_torque_Nmm": 4.398,
+   "torque_at_105_Nmm": 11.073,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.06,
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  },
+  {
+   "radius_mm": 60.0,
+   "thickness_mm": 3.2,
+   "width_mm": 6.0,
+   "travel_mm": 19.0,
+   "peak_strain_pct": 11.8,
+   "mean_torque_Nmm": 5.277,
+   "torque_at_105_Nmm": 13.287,
+   "travel_window_mm": 2.0,
+   "closest_to_axis_mm": 9.06,
+   "height_above_pp_cuff_mm": 6.43,
+   "mp_cuff_length_mm": 24.0,
+   "valid": true,
+   "reason": ""
+  }
+ ]
+}

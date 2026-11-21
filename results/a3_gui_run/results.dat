@@ -1,0 +1,531 @@
+
+                        S T E P       1
+
+
+                                INCREMENT     1
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.1250000E-01
+
+        2.893126E-03  6.982315E-12 -1.381847E-10
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.1250000E-01
+
+        9.933975E-10 -4.727726E-04  5.386731E-06
+
+                                INCREMENT     2
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.2500000E-01
+
+        5.779182E-03 -1.276074E-10  3.225472E-09
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.2500000E-01
+
+        1.365224E-09 -9.436713E-04  1.051157E-05
+
+                                INCREMENT     3
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.3750000E-01
+
+        8.662120E-03 -7.818098E-08  9.828256E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.3750000E-01
+
+       -6.179629E-08 -1.412957E-03  1.553092E-05
+
+                                INCREMENT     4
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.5625000E-01
+
+        1.289817E-02 -4.787041E-10  5.487289E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.5625000E-01
+
+       -1.286828E-09 -2.114163E-03  1.785582E-05
+
+                                INCREMENT     5
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8437500E-01
+
+        1.938743E-02  4.140059E-09  1.991947E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8437500E-01
+
+       -9.131116E-09 -3.159284E-03  3.073338E-05
+
+                                INCREMENT     6
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.1125000E+00
+
+        2.578021E-02 -4.537056E-10  1.780771E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.1125000E+00
+
+       -1.703537E-08 -4.189969E-03  3.867140E-05
+
+                                INCREMENT     7
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.1406250E+00
+
+        3.215165E-02 -2.368980E-10  1.418789E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.1406250E+00
+
+       -2.414254E-08 -5.212867E-03  4.611057E-05
+
+                                INCREMENT     8
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.1687500E+00
+
+        3.848651E-02  2.976552E-10  1.609918E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.1687500E+00
+
+       -3.576306E-08 -6.227597E-03  5.208734E-05
+
+                                INCREMENT     9
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.1968750E+00
+
+        4.479336E-02  1.446062E-09  1.649175E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.1968750E+00
+
+       -4.886540E-08 -7.233220E-03  5.721829E-05
+
+                                INCREMENT    10
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.2250000E+00
+
+        5.107424E-02  3.466946E-09  1.437625E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.2250000E+00
+
+       -6.287979E-08 -8.229744E-03  6.163674E-05
+
+                                INCREMENT    11
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.2531250E+00
+
+        5.732820E-02  6.335296E-09  1.023541E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.2531250E+00
+
+       -7.794407E-08 -9.217344E-03  6.526871E-05
+
+                                INCREMENT    12
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.2812500E+00
+
+        6.355415E-02  9.989296E-09  4.229889E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.2812500E+00
+
+       -9.405356E-08 -1.019614E-02  6.803511E-05
+
+                                INCREMENT    13
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.3093750E+00
+
+        6.975002E-02  1.415991E-08 -3.241255E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.3093750E+00
+
+       -1.113223E-07 -1.116627E-02  6.979393E-05
+
+                                INCREMENT    14
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.3375000E+00
+
+        7.591225E-02  1.827547E-08 -1.087821E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.3375000E+00
+
+       -1.303028E-07 -1.212793E-02  7.029963E-05
+
+                                INCREMENT    15
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.3656250E+00
+
+        8.203568E-02  2.116284E-08 -1.630459E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.3656250E+00
+
+       -1.521113E-07 -1.308134E-02  6.919990E-05
+
+                                INCREMENT    16
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.3937500E+00
+
+        8.811369E-02  2.116670E-08 -1.531322E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.3937500E+00
+
+       -1.786984E-07 -1.402690E-02  6.603732E-05
+
+                                INCREMENT    17
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.4218750E+00
+
+        9.413858E-02  1.612404E-08 -1.849336E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.4218750E+00
+
+       -2.128208E-07 -1.496513E-02  6.027079E-05
+
+                                INCREMENT    18
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.4500000E+00
+
+        1.001018E-01  3.547795E-09  3.216568E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.4500000E+00
+
+       -2.580082E-07 -1.589678E-02  5.128378E-05
+
+                                INCREMENT    19
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.4781250E+00
+
+        1.059927E-01 -1.937912E-08  9.803674E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.4781250E+00
+
+       -3.188802E-07 -1.682297E-02  3.830054E-05
+
+                                INCREMENT    20
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.5062500E+00
+
+        1.122320E-01  9.901187E-09 -1.821365E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.5062500E+00
+
+       -3.197750E-07 -1.772905E-02  4.976194E-05
+
+                                INCREMENT    21
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.5343750E+00
+
+        1.181811E-01  2.381081E-08  4.027559E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.5343750E+00
+
+       -3.594304E-07 -1.863709E-02  4.250096E-05
+
+                                INCREMENT    22
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.5625000E+00
+
+        1.241063E-01  3.106266E-08  8.387880E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.5625000E+00
+
+       -3.997861E-07 -1.953662E-02  3.461962E-05
+
+                                INCREMENT    23
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.5906250E+00
+
+        1.299972E-01  5.298628E-08  2.471900E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.5906250E+00
+
+       -4.443178E-07 -2.043226E-02  2.506516E-05
+
+                                INCREMENT    24
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.6187500E+00
+
+        1.358615E-01  7.255769E-08  4.259220E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.6187500E+00
+
+       -4.906667E-07 -2.132055E-02  1.461452E-05
+
+                                INCREMENT    25
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.6468750E+00
+
+        1.416944E-01  1.186822E-07  8.355775E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.6468750E+00
+
+       -5.401511E-07 -2.220925E-02  2.287773E-06
+
+                                INCREMENT    26
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.6750000E+00
+
+        1.475022E-01  1.115542E-07  9.029919E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.6750000E+00
+
+       -5.920787E-07 -2.307707E-02 -9.683328E-06
+
+                                INCREMENT    27
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.6820312E+00
+
+        1.490263E-01 -7.666749E-08  3.895613E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.6820312E+00
+
+       -6.120051E-07 -2.326589E-02 -5.545407E-06
+
+                                INCREMENT    28
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.6890625E+00
+
+        1.504693E-01 -6.308832E-09  1.016068E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.6890625E+00
+
+       -5.914331E-07 -2.348177E-02 -8.965860E-06
+
+                                INCREMENT    29
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.6996094E+00
+
+        1.525598E-01  2.323613E-08  4.838053E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.6996094E+00
+
+       -6.366987E-07 -2.381255E-02 -1.948606E-05
+
+                                INCREMENT    30
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.7154297E+00
+
+        1.558855E-01  1.349361E-08  1.826133E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.7154297E+00
+
+       -6.392959E-07 -2.428704E-02 -2.101995E-05
+
+                                INCREMENT    31
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.7312500E+00
+
+        1.590851E-01 -4.986402E-08  8.629230E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.7312500E+00
+
+       -6.825257E-07 -2.477328E-02 -3.169396E-05
+
+                                INCREMENT    32
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.7470703E+00
+
+        1.623117E-01 -5.507375E-08  9.786475E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.7470703E+00
+
+       -7.137623E-07 -2.525176E-02 -3.987990E-05
+
+                                INCREMENT    33
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.7628906E+00
+
+        1.654884E-01  4.961958E-08  8.393636E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.7628906E+00
+
+       -7.569112E-07 -2.573412E-02 -5.158945E-05
+
+                                INCREMENT    34
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.7787109E+00
+
+        1.687922E-01 -3.317345E-08  5.070426E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.7787109E+00
+
+       -7.592456E-07 -2.619395E-02 -5.299008E-05
+
+                                INCREMENT    35
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.7945313E+00
+
+        1.719082E-01  2.890290E-08  7.572963E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.7945313E+00
+
+       -8.201675E-07 -2.667393E-02 -6.830835E-05
+
+                                INCREMENT    36
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8103516E+00
+
+        1.752286E-01  1.661930E-08  1.659213E-08
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8103516E+00
+
+       -8.118930E-07 -2.713109E-02 -6.826629E-05
+
+                                INCREMENT    37
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8261719E+00
+
+        1.784049E-01  2.285959E-08  1.251517E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8261719E+00
+
+       -8.489604E-07 -2.759952E-02 -7.852407E-05
+
+                                INCREMENT    38
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8419922E+00
+
+        1.815939E-01  2.342513E-08  1.233381E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8419922E+00
+
+       -8.797222E-07 -2.806374E-02 -8.752339E-05
+
+                                INCREMENT    39
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8578125E+00
+
+        1.847661E-01  2.586742E-08  1.763645E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8578125E+00
+
+       -9.139757E-07 -2.852677E-02 -9.745508E-05
+
+                                INCREMENT    40
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8736328E+00
+
+        1.879308E-01  2.805498E-08  2.301823E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8736328E+00
+
+       -9.486276E-07 -2.898768E-02 -1.076258E-04
+
+                                INCREMENT    41
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.8894531E+00
+
+        1.910855E-01  3.041870E-08  3.011044E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.8894531E+00
+
+       -9.845258E-07 -2.944675E-02 -1.182240E-04
+
+                                INCREMENT    42
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.9052734E+00
+
+        1.942307E-01  3.281401E-08  3.866087E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.9052734E+00
+
+       -1.021513E-06 -2.990394E-02 -1.292126E-04
+
+                                INCREMENT    43
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.9210938E+00
+
+        1.973659E-01  3.518082E-08  4.915931E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.9210938E+00
+
+       -1.059796E-06 -3.035934E-02 -1.406414E-04
+
+                                INCREMENT    44
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.9369141E+00
+
+        2.004908E-01  3.753243E-08  6.177737E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.9369141E+00
+
+       -1.099438E-06 -3.081298E-02 -1.525208E-04
+
+                                INCREMENT    45
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.9527344E+00
+
+        2.036050E-01  3.980341E-08  7.698826E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.9527344E+00
+
+       -1.140635E-06 -3.126494E-02 -1.648959E-04
+
+                                INCREMENT    46
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.9685547E+00
+
+        2.067081E-01  4.184226E-08  9.512339E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.9685547E+00
+
+       -1.183504E-06 -3.171527E-02 -1.777900E-04
+
+                                INCREMENT    47
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.9843750E+00
+
+        2.099660E-01 -3.860424E-08  4.904581E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.9843750E+00
+
+       -1.172258E-06 -3.214688E-02 -1.787906E-04
+
+                                INCREMENT    48
+
+
+ total force (fx,fy,fz) for set DISTAL_ROT and time  0.1000000E+01
+
+        2.130442E-01 -3.764571E-08  4.695935E-07
+
+ total force (fx,fy,fz) for set DISTAL_REF and time  0.1000000E+01
+
+       -1.205998E-06 -3.258475E-02 -1.899024E-04

@@ -1,0 +1,13 @@
+finger,joint,proximal_hole_mm_from_pivot,distal_hole_mm_from_pivot,palmar_offset_mm,worst_margin,holdable_fingertip_force_N,excursion_mm,total_excursion_mm
+Index,MCP,10.35,15.25,3.18,0.483,2.41,11.56,30.75
+Index,PIP,20.53,19.52,0.4,0.466,2.33,17.7,30.75
+Index,DIP,13.22,12.03,0.0,0.601,3.01,1.49,30.75
+Middle,MCP,18.16,37.83,3.0,0.517,2.59,18.0,31.23
+Middle,PIP,8.69,9.64,2.05,0.541,2.7,11.13,31.23
+Middle,DIP,9.27,12.95,0.11,0.533,2.66,2.1,31.23
+Ring,MCP,12.14,16.0,3.75,0.523,2.61,13.29,28.12
+Ring,PIP,27.49,8.6,1.47,0.511,2.55,12.13,28.12
+Ring,DIP,14.78,13.04,0.0,0.603,3.01,2.7,28.12
+Little,MCP,47.22,20.0,0.56,0.409,2.04,16.67,30.8
+Little,PIP,13.95,13.29,0.47,0.418,2.09,12.37,30.8
+Little,DIP,7.86,11.46,0.0,0.467,2.34,1.76,30.8

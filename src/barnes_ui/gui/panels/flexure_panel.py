@@ -209,11 +209,12 @@ class FlexurePanel(QWidget):
         form.addRow("Initial Young's modulus:", self._modulus)
 
         warning = QLabel(
-            "PROVISIONAL. This is not a characterisation of TPU 95A and is not derived "
-            "from the hardness grade - no defensible derivation exists. Every force "
-            "and torque computed from it is unvalidated and is marked as such. Replace "
-            "it by fitting a tensile test on a specimen printed with the same filament, "
-            "printer, orientation and settings as the real part."
+            "PROVISIONAL. This is not a characterisation of SUNLU TPU 90A and is not "
+            "derived from the hardness grade - no defensible derivation exists, and the "
+            "manufacturer's sheet states no modulus. Every force and torque computed "
+            "from it is unvalidated and is marked as such. Replace it by fitting a "
+            "tensile test on a specimen printed with the same filament, printer, "
+            "orientation and settings as the real part."
         )
         warning.setWordWrap(True)
         warning.setStyleSheet("color: #D9534F;")

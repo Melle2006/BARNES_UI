@@ -27,6 +27,7 @@ __all__ = [
     "ConvergenceReport",
     "FeaResult",
     "parse_dat_reactions",
+    "parse_dat_reaction_history",
     "parse_frd_displacements",
     "parse_convergence",
     "CAVEAT_NOT_CONVERGED",
@@ -300,6 +301,37 @@ def parse_dat_reactions(path: Path | str) -> dict[str, np.ndarray]:
     if not reactions:
         logger.info("No total-force blocks found in %s", path)
     return reactions
+
+
+def parse_dat_reaction_history(path: Path | str) -> dict[str, list[tuple[float, np.ndarray]]]:
+    """Read every ``total force`` block from a ``.dat`` file, with its step time.
+
+    :func:`parse_dat_reactions` keeps only the last block per set, which is right for
+    a single stiffness and wrong for a torque-angle curve: with ``*NODE PRINT`` the
+    reaction is printed at every increment, and the curve *is* that history. Each
+    block's header ends ``... for set NAME and time  0.1000000E+00``; the time is the
+    fraction of the step completed, which for a prescribed rotation is the fraction of
+    the angle applied.
+
+    Returns ``{set name: [(time, (fx, fy, fz)), ...]}`` in file order. On a rotation
+    node the three components are the moments about X, Y and Z.
+    """
+    path = Path(path)
+    if not path.is_file():
+        return {}
+    text = path.read_text(encoding="utf-8", errors="replace")
+    pattern = re.compile(
+        r"total force \(fx,fy,fz\) for set ([A-Za-z0-9_]+) and time\s+([-+0-9.eE]+)"
+        r"[^\n]*\n\s*\n?\s*([-+0-9.eE]+)\s+([-+0-9.eE]+)\s+([-+0-9.eE]+)",
+        re.IGNORECASE,
+    )
+    history: dict[str, list[tuple[float, np.ndarray]]] = {}
+    for match in pattern.finditer(text):
+        history.setdefault(match.group(1), []).append(
+            (float(match.group(2)),
+             np.array([float(match.group(i)) for i in (3, 4, 5)]))
+        )
+    return history
 
 
 def parse_frd_displacements(path: Path | str) -> np.ndarray | None:

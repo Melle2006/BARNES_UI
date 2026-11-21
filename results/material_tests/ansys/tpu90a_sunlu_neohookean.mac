@@ -1,0 +1,20 @@
+! SUNLU TPU 90A, measured (results/material_tests, 2026-11): neo-Hookean hyperelastic
+! Units: mm, N, MPa, tonne, s (consistent set). Edit MATID before use.
+!
+! Mechanical APDL:  /INPUT,tpu90a_sunlu_neohookean,mac   (after setting MATID, or edit below)
+! Workbench Mechanical: insert a Commands (APDL) object under the TPU body and paste the
+!   lines from MP to TBDATA; there MATID is the body's material number, so use "matid".
+!
+! E (tension, printed on edge) = 20.96 MPa  ->  mu = E/3 = 6.987 MPa
+! nu = 0.49  ->  K = E/(3(1-2nu)) = 349.3 MPa  ->  d = 2/K = 0.00573 1/MPa
+! (set d = 0 for fully incompressible; then use mixed u-P elements, KEYOPT(6)=1 on SOLID186/187)
+
+MATID = 1
+MP,DENS,MATID,1.23e-9            ! 1.23 g/cm^3 (SUNLU product page) in tonne/mm^3
+TB,HYPER,MATID,1,2,NEO
+TBDATA,1,6.987,0.00573           ! C1 = mu (MPa), C2 = d (1/MPa)
+
+! Optional: fit it yourself from the test data instead (comment out TBDATA above):
+! TBFT,EADD,MATID,UNIA,uniaxial_tension_edge.txt
+! TBFT,SOLVE,MATID,HYPER,NEO,1
+! TBFT,FADD,MATID,HYPER,NEO
