@@ -345,17 +345,18 @@ swinging.
 | **4. Spring-back** | No fingertip hanger, no rest block. Bring it to 60° (or the most it reached) with tendon weight, hold 60 s, then lift the tendon hanger by hand so the line goes slack | Angle 1 s, 10 s, 60 s and 10 min after release. Repeat after the first 1,000 cycles of step 5 |
 | **5. Cycles** (copy 2) | Rest block out. Fingertip weight of half the step-2 value at 30°. Cycle 0 → 60° (or 80 % of its range): by hand, lifting and lowering the tendon hanger, or with the servo. At least 1,000 cycles; up to 10,000 if you use the servo | Every 100 cycles: resting angle and the tension to reach 30°. Stop at a crack, a 20 % change in that tension, a 5° change in the resting angle, or 10,000 cycles; record which |
 
-**What to expect** (at 12 MPa; multiply forces by your E ÷ 12, except the servo limit):
+**What to expect** (at your measured E = 21.0 MPa; the range 18.1–23.9 MPa moves them by ±14 %):
 
 | Module | Tendon pull to reach 30°, no fingertip weight | Expected way it gives way |
 |---|---|---|
-| A (B5 t2.0 deep) | about 1.3 N (130 g) | 20 % strain / bowing at about 30 N at 0°, 10 N at 60° |
-| B (B5 t1.5, as built) | about 1.0 N (100 g) | buckles at about 17 N |
-| H (pinned, outside) | about 0.6 N (60 g) | should reach the servo's 47 N with no buckle (the pins carry it) |
-| K (pinned, inset) | about 0.5 N (50 g) | as H |
+| A (B5 t2.0 deep) | about 2.3 N (235 g) | at 0°: 20 % strain only at about 53 N, so it should reach the 4.8 kg stop without failing; at 60°: about 18 N |
+| B (B5 t1.5, as built) | about 1.7 N (175 g) | buckles at about 29 N |
+| H (pinned, outside) | about 1.0 N (100 g) | should reach the servo's 47 N with no buckle (the pins carry it) |
+| K (pinned, inset) | about 0.9 N (90 g) | as H |
 
-The other modules' figures are in [`TYPE B/round2/predictions.csv`](../TYPE%20B/round2/predictions.csv)
-and section 5 of the report; H and K are in the report's section 5.5. The fingertip load a
+The other modules' figures are in section 5 of the report (at the measured modulus;
+[`TYPE B/round2/predictions.csv`](../TYPE%20B/round2/predictions.csv) is still at 12 MPa: multiply
+its forces by 1.75); H and K are in the report's section 5.5. The fingertip load a
 module holds at angle θ for tendon tension T is about (T × lever − spring moment) ÷
 (44.8 mm × cos θ); the levers are 3.4 mm (deep), 1.9 mm (as built), 2.75 mm (H), 2.6 mm (K).
 

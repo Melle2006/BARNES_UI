@@ -54,7 +54,12 @@ JOINT_HEAD_R = 7.4
 #: The two iteration 3 springs as secant stiffness, N.m/rad (torque at full flexion over
 #: the angle, at 12 MPa): A8 selected, 1.24 N.mm at 90 deg; A6 selected (R60), 12.3 N.mm
 #: at 105 deg.
-SPRINGS = {"A8": 1.24e-3 / math.radians(90), "A6": 12.27e-3 / math.radians(105)}
+SPRINGS_12 = {"A8": 1.24e-3 / math.radians(90), "A6": 12.27e-3 / math.radians(105)}
+#: The springs at the measured modulus (results/sunlu_rescale/basis.json: E_sunlu_mpa, from the
+#: specimen tests; falls back to the provisional 12 MPa).
+_BASIS = json.loads((REPO / "results/sunlu_rescale/basis.json").read_text())
+E_SPRING_MPA = _BASIS.get("E_sunlu_mpa") or 12.0
+SPRINGS = {k: v * E_SPRING_MPA / 12.0 for k, v in SPRINGS_12.items()}
 
 
 def transformed(shape, R, t):
@@ -176,6 +181,7 @@ def main():
                     print(variant, spring, scenario, r["joint"], "fingertip", r["holdable_fingertip_force_N"],
                           "N; guides", r["guide_on_proximal_mm_from_pivot"], r["guide_on_distal_mm_from_pivot"],
                           "offset", r["palmar_offset_from_centreline_mm"], "excursion", r["excursion_mm"])
+    summary["_spring_modulus_mpa"] = E_SPRING_MPA
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1))
 
 

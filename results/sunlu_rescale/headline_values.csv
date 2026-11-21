@@ -1,108 +1,108 @@
 design,quantity,unit,study_E_mpa,value_as_run,at_low,at_work,at_high,note
-A3 twin strap 1.0 mm,rotational stiffness at neutral (FEA),N.mm/rad,12.0,6.1033,2.6956,10.6807,9.8161,"pin-hinged, mesh-converged 0.94 %"
-A6 R32 / 1.8 / 6,worst-case torque at 105 deg,N.mm,13.0,2.28,0.9295,3.6831,3.3849,results/a6/README.md
-A6 R28 / 1.4 / 6,worst-case torque at 105 deg,N.mm,13.0,0.71,0.2895,1.1469,1.0541,results/a6/README.md
-A8 2-turn printable s2.75,restoring torque at 30 deg,N.mm,19.3,0.8053,0.2212,0.8763,0.8053,
-A8 2-turn printable s2.75,restoring torque at 60 deg,N.mm,19.3,2.0201,0.5548,2.1981,2.0201,
-A8 2-turn printable s2.75,restoring torque at 90 deg,N.mm,19.3,3.2359,0.8886,3.521,3.2359,
-A8 2-turn printable s2.75,initial stiffness,N.mm/rad,19.3,1.1409,0.3133,1.2414,1.1409,
-A8 2-turn printable s3.00,restoring torque at 90 deg,N.mm,19.3,3.1513,0.8654,3.4288,3.1513,
-A8 2-turn with collars s2.75,restoring torque at 30 deg,N.mm,19.3,0.7709,0.2117,0.8388,0.7709,A3 fit-check collars as TPU
-A8 2-turn with collars s2.75,restoring torque at 60 deg,N.mm,19.3,1.8333,0.5034,1.9948,1.8333,A3 fit-check collars as TPU
-A8 2-turn with collars s2.75,restoring torque at 90 deg,N.mm,19.3,2.8093,0.7715,3.0567,2.8093,A3 fit-check collars as TPU
-A8 2-turn with collars s3.00,restoring torque at 30 deg,N.mm,19.3,0.7141,0.1961,0.777,0.7141,A3 fit-check collars as TPU
-A8 2-turn with collars s3.00,restoring torque at 60 deg,N.mm,19.3,1.7694,0.4859,1.9252,1.7694,A3 fit-check collars as TPU
-A8 2-turn with collars s3.00,restoring torque at 90 deg,N.mm,19.3,2.7399,0.7524,2.9812,2.7399,A3 fit-check collars as TPU
-B00_baseline,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0707,5.3312,21.1238,19.4138,passes when >= 1
-B00_baseline,tendon force at end of range,N,12.0,2.0893,0.9228,3.6563,3.3603,
-B1_t100_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,2.1238,0.938,3.7167,3.4158,passes when >= 1
-B1_t100_notch050,tendon force at end of range,N,12.0,1.1714,0.5174,2.0499,1.884,
-B1_t100_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,1.1998,0.5299,2.0996,1.9296,passes when >= 1
-B1_t100_notch100,tendon force at end of range,N,12.0,1.1418,0.5043,1.9981,1.8363,
-B1_t125_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,3.483,1.5383,6.0952,5.6018,passes when >= 1
-B1_t125_notch050,tendon force at end of range,N,12.0,1.6971,0.7495,2.9699,2.7294,
-B1_t125_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,2.0266,0.8951,3.5466,3.2595,passes when >= 1
-B1_t125_notch100,tendon force at end of range,N,12.0,1.7752,0.7841,3.1066,2.8551,
-B1_t150_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,5.1912,2.2928,9.0846,8.3492,passes when >= 1
-B1_t150_notch050,tendon force at end of range,N,12.0,2.3472,1.0367,4.1075,3.775,
-B1_t150_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,3.14,1.3868,5.495,5.0502,passes when >= 1
-B1_t150_notch100,tendon force at end of range,N,12.0,2.5257,1.1155,4.42,4.0622,
-B1_t200_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,9.7283,4.2967,17.0245,15.6463,passes when >= 1
-B1_t200_notch050,tendon force at end of range,N,12.0,3.6398,1.6076,6.3697,5.854,
-B1_t200_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,6.2909,2.7785,11.009,10.1178,passes when >= 1
-B1_t200_notch100,tendon force at end of range,N,12.0,4.2826,1.8915,7.4945,6.8878,
-B3_t100_w30_taper15,return margin (moment at 20 deg / finger weight moment),x,12.0,0.5343,0.236,0.935,0.8593,passes when >= 1
-B3_t100_w30_taper15,tendon force at end of range,N,12.0,0.8359,0.3692,1.4628,1.3444,
-B3_t100_w30_taper20,return margin (moment at 20 deg / finger weight moment),x,12.0,0.663,0.2928,1.1603,1.0664,passes when >= 1
-B3_t100_w30_taper20,tendon force at end of range,N,12.0,1.0203,0.4506,1.7854,1.6409,
-B3_t125_w30,return margin (moment at 20 deg / finger weight moment),x,12.0,0.7524,0.3323,1.3166,1.21,passes when >= 1
-B3_t125_w30,tendon force at end of range,N,12.0,1.199,0.5296,2.0983,1.9285,
-B3_t150_w20,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8434,0.3725,1.476,1.3565,passes when >= 1
-B3_t150_w20,tendon force at end of range,N,12.0,1.34,0.5918,2.345,2.1552,
-B3_t150_w30,return margin (moment at 20 deg / finger weight moment),x,12.0,1.2861,0.568,2.2507,2.0685,passes when >= 1
-B3_t150_w30,tendon force at end of range,N,12.0,2.0491,0.905,3.586,3.2957,
-B3_t150_w30_taper15,return margin (moment at 20 deg / finger weight moment),x,12.0,1.7789,0.7857,3.113,2.861,passes when >= 1
-B3_t150_w30_taper15,tendon force at end of range,N,12.0,2.4828,1.0966,4.3449,3.9932,
-B3_t150_w30_taper20,return margin (moment at 20 deg / finger weight moment),x,12.0,2.2035,0.9732,3.8561,3.544,passes when >= 1
-B3_t150_w30_taper20,tendon force at end of range,N,12.0,2.5088,1.108,4.3904,4.035,
-B3_t200_w20,return margin (moment at 20 deg / finger weight moment),x,12.0,2.0274,0.8955,3.548,3.2608,passes when >= 1
-B3_t200_w20,tendon force at end of range,N,12.0,3.0357,1.3408,5.3124,4.8824,
-B3_t200_w30,return margin (moment at 20 deg / finger weight moment),x,12.0,3.0859,1.363,5.4004,4.9632,passes when >= 1
-B3_t200_w30,tendon force at end of range,N,12.0,4.3128,1.9048,7.5475,6.9365,
-B5_t125_a45,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8782,0.3879,1.5369,1.4124,passes when >= 1
-B5_t125_a45,tendon force at end of range,N,12.0,1.4955,0.6605,2.6171,2.4052,
-B5_t125_a60,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8358,0.3691,1.4626,1.3442,passes when >= 1
-B5_t125_a60,tendon force at end of range,N,12.0,1.5092,0.6666,2.6412,2.4274,
-B5_t125_a75,return margin (moment at 20 deg / finger weight moment),x,12.0,0.7766,0.343,1.359,1.249,passes when >= 1
-B5_t125_a75,tendon force at end of range,N,12.0,1.5264,0.6741,2.6712,2.4549,
-B5_t150_a45,return margin (moment at 20 deg / finger weight moment),x,12.0,1.5394,0.6799,2.6939,2.4759,passes when >= 1
-B5_t150_a45,tendon force at end of range,N,12.0,2.6073,1.1515,4.5627,4.1933,
-B5_t150_a60,return margin (moment at 20 deg / finger weight moment),x,12.0,1.4572,0.6436,2.5502,2.3437,passes when >= 1
-B5_t150_a60,tendon force at end of range,N,12.0,2.4398,1.0776,4.2696,3.9239,
-B5_t150_a75,return margin (moment at 20 deg / finger weight moment),x,12.0,1.3645,0.6027,2.3879,2.1946,passes when >= 1
-B5_t150_a75,tendon force at end of range,N,12.0,2.4272,1.072,4.2476,3.9038,
-B5_t200_a45,return margin (moment at 20 deg / finger weight moment),x,12.0,3.7357,1.6499,6.5375,6.0083,passes when >= 1
-B5_t200_a45,tendon force at end of range,N,12.0,4.7165,2.0831,8.2539,7.5857,
-B5_t200_a60,return margin (moment at 20 deg / finger weight moment),x,12.0,3.5431,1.5649,6.2005,5.6985,passes when >= 1
-B5_t200_a60,tendon force at end of range,N,12.0,4.8294,2.133,8.4514,7.7673,
-B5_t200_a75,return margin (moment at 20 deg / finger weight moment),x,12.0,3.3582,1.4832,5.8769,5.4011,passes when >= 1
-B5_t200_a75,tendon force at end of range,N,12.0,4.6018,2.0325,8.0532,7.4013,
-B6_n4_t150,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8191,0.3618,1.4335,1.3175,passes when >= 1
-B6_n4_t150,tendon force at end of range,N,12.0,1.3067,0.5771,2.2868,2.1016,
-B6_n4_t150_taper15,return margin (moment at 20 deg / finger weight moment),x,12.0,1.1521,0.5089,2.0162,1.853,passes when >= 1
-B6_n4_t150_taper15,tendon force at end of range,N,12.0,1.7194,0.7594,3.009,2.7654,
-B6_n4_t150_taper20,return margin (moment at 20 deg / finger weight moment),x,12.0,1.42,0.6272,2.4851,2.2839,passes when >= 1
-B6_n4_t150_taper20,tendon force at end of range,N,12.0,1.6982,0.75,2.9718,2.7312,
-B6_n4_t200,return margin (moment at 20 deg / finger weight moment),x,12.0,1.9385,0.8562,3.3923,3.1177,passes when >= 1
-B6_n4_t200,tendon force at end of range,N,12.0,2.5877,1.1429,4.5285,4.1619,
-B6_n6_t150,return margin (moment at 20 deg / finger weight moment),x,12.0,0.806,0.356,1.4104,1.2963,passes when >= 1
-B6_n6_t150,tendon force at end of range,N,12.0,1.2587,0.5559,2.2027,2.0244,
-B6_n6_t200,return margin (moment at 20 deg / finger weight moment),x,12.0,1.9133,0.8451,3.3483,3.0773,passes when >= 1
-B6_n6_t200,tendon force at end of range,N,12.0,1.8501,0.8171,3.2376,2.9755,
-B_T090_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,8.7209,3.8517,15.2616,14.0261,passes when >= 1
-B_T090_X3,tendon force at end of range,N,12.0,1.3762,0.6078,2.4084,2.2134,
-B_T100_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0954,5.3421,21.167,19.4534,passes when >= 1
-B_T100_X3,tendon force at end of range,N,12.0,1.7177,0.7587,3.006,2.7627,
-B_T120_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,19.5662,8.6417,34.2409,31.469,passes when >= 1
-B_T120_X3,tendon force at end of range,N,12.0,2.6425,1.1671,4.6243,4.25,
-B1_t100_notch100,tendon capacity at 0 deg,N,12.0,9.8986,4.3719,17.3226,15.9203,peak strain reached 20 %
-B1_t100_notch100,tendon capacity at 30 deg,N,12.0,5.3068,2.3438,9.2869,8.5351,peak strain reached 20 %
-B1_t100_notch100_deep,tendon capacity at 0 deg,N,12.0,9.8986,4.3719,17.3226,15.9203,"20 % strain at 9.9 N, taken from B1_t100_notch100_0deg.json: at 0 deg the deep and as-built decks are identical; this run stopped at the minimum increment at 9.2 N on the same path"
-B1_t100_notch100_deep,tendon capacity at 30 deg,N,12.0,5.3068,2.3438,9.2869,8.5351,peak strain reached 20 %
-B1_t200_notch050,tendon capacity at 0 deg,N,12.0,24.8859,10.9913,43.5504,40.0248,peak strain reached 20 %
-B1_t200_notch050,tendon capacity at 15 deg,N,12.0,7.4248,3.2793,12.9933,11.9415,peak strain reached 20 %
+A3 twin strap 1.0 mm,rotational stiffness at neutral (FEA),N.mm/rad,12.0,6.1033,9.2058,10.6807,12.1557,"pin-hinged, mesh-converged 0.94 %"
+A6 R32 / 1.8 / 6,worst-case torque at 105 deg,N.mm,13.0,2.28,3.1745,3.6831,4.1917,results/a6/README.md
+A6 R28 / 1.4 / 6,worst-case torque at 105 deg,N.mm,13.0,0.71,0.9885,1.1469,1.3053,results/a6/README.md
+A8 2-turn printable s2.75,restoring torque at 30 deg,N.mm,19.3,0.8053,0.7553,0.8763,0.9973,
+A8 2-turn printable s2.75,restoring torque at 60 deg,N.mm,19.3,2.0201,1.8945,2.1981,2.5016,
+A8 2-turn printable s2.75,restoring torque at 90 deg,N.mm,19.3,3.2359,3.0347,3.521,4.0072,
+A8 2-turn printable s2.75,initial stiffness,N.mm/rad,19.3,1.1409,1.0699,1.2414,1.4128,
+A8 2-turn printable s3.00,restoring torque at 90 deg,N.mm,19.3,3.1513,2.9553,3.4288,3.9023,
+A8 2-turn with collars s2.75,restoring torque at 30 deg,N.mm,19.3,0.7709,0.723,0.8388,0.9547,A3 fit-check collars as TPU
+A8 2-turn with collars s2.75,restoring torque at 60 deg,N.mm,19.3,1.8333,1.7193,1.9948,2.2702,A3 fit-check collars as TPU
+A8 2-turn with collars s2.75,restoring torque at 90 deg,N.mm,19.3,2.8093,2.6346,3.0567,3.4789,A3 fit-check collars as TPU
+A8 2-turn with collars s3.00,restoring torque at 30 deg,N.mm,19.3,0.7141,0.6697,0.777,0.8843,A3 fit-check collars as TPU
+A8 2-turn with collars s3.00,restoring torque at 60 deg,N.mm,19.3,1.7694,1.6593,1.9252,2.1911,A3 fit-check collars as TPU
+A8 2-turn with collars s3.00,restoring torque at 90 deg,N.mm,19.3,2.7399,2.5695,2.9812,3.3929,A3 fit-check collars as TPU
+B00_baseline,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0707,18.2067,21.1238,24.0409,passes when >= 1
+B00_baseline,tendon force at end of range,N,12.0,2.0893,3.1514,3.6563,4.1613,
+B1_t100_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,2.1238,3.2034,3.7167,4.2299,passes when >= 1
+B1_t100_notch050,tendon force at end of range,N,12.0,1.1714,1.7668,2.0499,2.333,
+B1_t100_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,1.1998,1.8097,2.0996,2.3896,passes when >= 1
+B1_t100_notch100,tendon force at end of range,N,12.0,1.1418,1.7222,1.9981,2.274,
+B1_t125_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,3.483,5.2535,6.0952,6.937,passes when >= 1
+B1_t125_notch050,tendon force at end of range,N,12.0,1.6971,2.5597,2.9699,3.38,
+B1_t125_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,2.0266,3.0568,3.5466,4.0364,passes when >= 1
+B1_t125_notch100,tendon force at end of range,N,12.0,1.7752,2.6776,3.1066,3.5356,
+B1_t150_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,5.1912,7.83,9.0846,10.3391,passes when >= 1
+B1_t150_notch050,tendon force at end of range,N,12.0,2.3472,3.5403,4.1075,4.6747,
+B1_t150_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,3.14,4.7362,5.495,6.2538,passes when >= 1
+B1_t150_notch100,tendon force at end of range,N,12.0,2.5257,3.8096,4.42,5.0303,
+B1_t200_notch050,return margin (moment at 20 deg / finger weight moment),x,12.0,9.7283,14.6735,17.0245,19.3755,passes when >= 1
+B1_t200_notch050,tendon force at end of range,N,12.0,3.6398,5.49,6.3697,7.2493,
+B1_t200_notch100,return margin (moment at 20 deg / finger weight moment),x,12.0,6.2909,9.4887,11.009,12.5293,passes when >= 1
+B1_t200_notch100,tendon force at end of range,N,12.0,4.2826,6.4596,7.4945,8.5295,
+B3_t100_w30_taper15,return margin (moment at 20 deg / finger weight moment),x,12.0,0.5343,0.8059,0.935,1.0641,passes when >= 1
+B3_t100_w30_taper15,tendon force at end of range,N,12.0,0.8359,1.2608,1.4628,1.6648,
+B3_t100_w30_taper20,return margin (moment at 20 deg / finger weight moment),x,12.0,0.663,1.0001,1.1603,1.3206,passes when >= 1
+B3_t100_w30_taper20,tendon force at end of range,N,12.0,1.0203,1.5389,1.7854,2.032,
+B3_t125_w30,return margin (moment at 20 deg / finger weight moment),x,12.0,0.7524,1.1348,1.3166,1.4984,passes when >= 1
+B3_t125_w30,tendon force at end of range,N,12.0,1.199,1.8086,2.0983,2.3881,
+B3_t150_w20,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8434,1.2722,1.476,1.6798,passes when >= 1
+B3_t150_w20,tendon force at end of range,N,12.0,1.34,2.0212,2.345,2.6689,
+B3_t150_w30,return margin (moment at 20 deg / finger weight moment),x,12.0,1.2861,1.9399,2.2507,2.5615,passes when >= 1
+B3_t150_w30,tendon force at end of range,N,12.0,2.0491,3.0908,3.586,4.0812,
+B3_t150_w30_taper15,return margin (moment at 20 deg / finger weight moment),x,12.0,1.7789,2.6831,3.113,3.5429,passes when >= 1
+B3_t150_w30_taper15,tendon force at end of range,N,12.0,2.4828,3.7449,4.3449,4.9449,
+B3_t150_w30_taper20,return margin (moment at 20 deg / finger weight moment),x,12.0,2.2035,3.3236,3.8561,4.3887,passes when >= 1
+B3_t150_w30_taper20,tendon force at end of range,N,12.0,2.5088,3.7841,4.3904,4.9967,
+B3_t200_w20,return margin (moment at 20 deg / finger weight moment),x,12.0,2.0274,3.0581,3.548,4.038,passes when >= 1
+B3_t200_w20,tendon force at end of range,N,12.0,3.0357,4.5788,5.3124,6.0461,
+B3_t200_w30,return margin (moment at 20 deg / finger weight moment),x,12.0,3.0859,4.6546,5.4004,6.1462,passes when >= 1
+B3_t200_w30,tendon force at end of range,N,12.0,4.3128,6.5052,7.5475,8.5897,
+B5_t125_a45,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8782,1.3246,1.5369,1.7491,passes when >= 1
+B5_t125_a45,tendon force at end of range,N,12.0,1.4955,2.2557,2.6171,2.9785,
+B5_t125_a60,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8358,1.2606,1.4626,1.6646,passes when >= 1
+B5_t125_a60,tendon force at end of range,N,12.0,1.5092,2.2764,2.6412,3.0059,
+B5_t125_a75,return margin (moment at 20 deg / finger weight moment),x,12.0,0.7766,1.1713,1.359,1.5467,passes when >= 1
+B5_t125_a75,tendon force at end of range,N,12.0,1.5264,2.3023,2.6712,3.04,
+B5_t150_a45,return margin (moment at 20 deg / finger weight moment),x,12.0,1.5394,2.3219,2.6939,3.066,passes when >= 1
+B5_t150_a45,tendon force at end of range,N,12.0,2.6073,3.9326,4.5627,5.1928,
+B5_t150_a60,return margin (moment at 20 deg / finger weight moment),x,12.0,1.4572,2.198,2.5502,2.9023,passes when >= 1
+B5_t150_a60,tendon force at end of range,N,12.0,2.4398,3.68,4.2696,4.8592,
+B5_t150_a75,return margin (moment at 20 deg / finger weight moment),x,12.0,1.3645,2.0581,2.3879,2.7176,passes when >= 1
+B5_t150_a75,tendon force at end of range,N,12.0,2.4272,3.661,4.2476,4.8342,
+B5_t200_a45,return margin (moment at 20 deg / finger weight moment),x,12.0,3.7357,5.6347,6.5375,7.4403,passes when >= 1
+B5_t200_a45,tendon force at end of range,N,12.0,4.7165,7.1141,8.2539,9.3937,
+B5_t200_a60,return margin (moment at 20 deg / finger weight moment),x,12.0,3.5431,5.3442,6.2005,7.0567,passes when >= 1
+B5_t200_a60,tendon force at end of range,N,12.0,4.8294,7.2843,8.4514,9.6185,
+B5_t200_a75,return margin (moment at 20 deg / finger weight moment),x,12.0,3.3582,5.0653,5.8769,6.6885,passes when >= 1
+B5_t200_a75,tendon force at end of range,N,12.0,4.6018,6.9411,8.0532,9.1653,
+B6_n4_t150,return margin (moment at 20 deg / finger weight moment),x,12.0,0.8191,1.2355,1.4335,1.6315,passes when >= 1
+B6_n4_t150,tendon force at end of range,N,12.0,1.3067,1.971,2.2868,2.6025,
+B6_n4_t150_taper15,return margin (moment at 20 deg / finger weight moment),x,12.0,1.1521,1.7378,2.0162,2.2946,passes when >= 1
+B6_n4_t150_taper15,tendon force at end of range,N,12.0,1.7194,2.5935,3.009,3.4245,
+B6_n4_t150_taper20,return margin (moment at 20 deg / finger weight moment),x,12.0,1.42,2.1419,2.4851,2.8282,passes when >= 1
+B6_n4_t150_taper20,tendon force at end of range,N,12.0,1.6982,2.5614,2.9718,3.3822,
+B6_n4_t200,return margin (moment at 20 deg / finger weight moment),x,12.0,1.9385,2.9239,3.3923,3.8608,passes when >= 1
+B6_n4_t200,tendon force at end of range,N,12.0,2.5877,3.9031,4.5285,5.1538,
+B6_n6_t150,return margin (moment at 20 deg / finger weight moment),x,12.0,0.806,1.2157,1.4104,1.6052,passes when >= 1
+B6_n6_t150,tendon force at end of range,N,12.0,1.2587,1.8985,2.2027,2.5069,
+B6_n6_t200,return margin (moment at 20 deg / finger weight moment),x,12.0,1.9133,2.886,3.3483,3.8107,passes when >= 1
+B6_n6_t200,tendon force at end of range,N,12.0,1.8501,2.7905,3.2376,3.6847,
+B_T090_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,8.7209,13.1541,15.2616,17.3692,passes when >= 1
+B_T090_X3,tendon force at end of range,N,12.0,1.3762,2.0758,2.4084,2.741,
+B_T100_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,12.0954,18.2439,21.167,24.09,passes when >= 1
+B_T100_X3,tendon force at end of range,N,12.0,1.7177,2.5909,3.006,3.4211,
+B_T120_X3,return margin (moment at 20 deg / finger weight moment),x,12.0,19.5662,29.5124,34.2409,38.9694,passes when >= 1
+B_T120_X3,tendon force at end of range,N,12.0,2.6425,3.9857,4.6243,5.2629,
+B1_t100_notch100,tendon capacity at 0 deg,N,12.0,9.8986,14.9304,17.3226,19.7148,peak strain reached 20 %
+B1_t100_notch100,tendon capacity at 30 deg,N,12.0,5.3068,8.0044,9.2869,10.5694,peak strain reached 20 %
+B1_t100_notch100_deep,tendon capacity at 0 deg,N,12.0,9.8986,14.9304,17.3226,19.7148,"20 % strain at 9.9 N, taken from B1_t100_notch100_0deg.json: at 0 deg the deep and as-built decks are identical; this run stopped at the minimum increment at 9.2 N on the same path"
+B1_t100_notch100_deep,tendon capacity at 30 deg,N,12.0,5.3068,8.0044,9.2869,10.5694,peak strain reached 20 %
+B1_t200_notch050,tendon capacity at 0 deg,N,12.0,24.8859,37.5363,43.5504,49.5644,peak strain reached 20 %
+B1_t200_notch050,tendon capacity at 15 deg,N,12.0,7.4248,11.199,12.9933,14.7876,peak strain reached 20 %
 B1_t200_notch050,tendon capacity at 60 deg,N,12.0,0.0,0.0,0.0,0.0,"already 68 % strain from bending to the pose, before any tendon load"
-B3_t200_w30,tendon capacity at 0 deg,N,12.0,9.981,4.4083,17.4668,16.0528,axial stiffness fell below 10 % of its initial value
-B3_t200_w30,tendon capacity at 30 deg,N,12.0,10.1172,4.4684,17.7051,16.2718,axial stiffness fell below 10 % of its initial value
-B3_t200_w30,tendon capacity at 60 deg,N,12.0,8.5921,3.7949,15.0362,13.819,peak strain reached 20 %
-B4_t100_a60_deep,tendon capacity at 0 deg,N,12.0,11.1487,4.924,19.5102,17.9308,solver stopped (guided) before the bearing gave way: a lower bound
-B5_t150_a45,tendon capacity at 0 deg,N,12.0,16.8329,7.4345,29.4575,27.0728,limit point: no equilibrium beyond this tension (buckling/collapse)
-B5_t150_a45,tendon capacity at 60 deg,N,12.0,6.4468,2.8474,11.282,10.3687,peak strain reached 20 %
-B5_t150_a45_deep,tendon capacity at 0 deg,N,12.0,16.8329,7.4345,29.4575,27.0728,"limit point at 16.8 N, taken from B5_t150_a45_0deg.json: at 0 deg the deep and as-built decks are identical (tendon line straight down either way); this run followed the same path and stopped at the minimum increment at 11.8 N"
-B5_t150_a45_deep,tendon capacity at 60 deg,N,12.0,6.378,2.8169,11.1615,10.2579,peak strain reached 20 %
-B5_t200_a45_deep,tendon capacity at 0 deg,N,12.0,30.2371,13.3547,52.9149,48.6313,peak strain reached 20 %
-B5_t200_a45_deep,tendon capacity at 60 deg,N,12.0,10.2551,4.5293,17.9464,16.4936,peak strain reached 20 %
-B8_y00_r150,tendon capacity at 0 deg,N,12.0,5.8207,2.5708,10.1862,9.3616,solver stopped (guided) before the bearing gave way: a lower bound
-B8_y20_r125,tendon capacity at 0 deg,N,12.0,4.86,2.1465,8.505,7.8165,solver stopped (guided) before the bearing gave way: a lower bound
-B9_n150,tendon capacity at 0 deg,N,12.0,12.6866,5.6032,22.2016,20.4043,peak strain reached 20 %
+B3_t200_w30,tendon capacity at 0 deg,N,12.0,9.981,15.0547,17.4668,19.8788,axial stiffness fell below 10 % of its initial value
+B3_t200_w30,tendon capacity at 30 deg,N,12.0,10.1172,15.2601,17.7051,20.1501,axial stiffness fell below 10 % of its initial value
+B3_t200_w30,tendon capacity at 60 deg,N,12.0,8.5921,12.9598,15.0362,17.1126,peak strain reached 20 %
+B4_t100_a60_deep,tendon capacity at 0 deg,N,12.0,11.1487,16.8159,19.5102,22.2045,solver stopped (guided) before the bearing gave way: a lower bound
+B5_t150_a45,tendon capacity at 0 deg,N,12.0,16.8329,25.3895,29.4575,33.5254,limit point: no equilibrium beyond this tension (buckling/collapse)
+B5_t150_a45,tendon capacity at 60 deg,N,12.0,6.4468,9.724,11.282,12.8399,peak strain reached 20 %
+B5_t150_a45_deep,tendon capacity at 0 deg,N,12.0,16.8329,25.3895,29.4575,33.5254,"limit point at 16.8 N, taken from B5_t150_a45_0deg.json: at 0 deg the deep and as-built decks are identical (tendon line straight down either way); this run followed the same path and stopped at the minimum increment at 11.8 N"
+B5_t150_a45_deep,tendon capacity at 60 deg,N,12.0,6.378,9.6201,11.1615,12.7028,peak strain reached 20 %
+B5_t200_a45_deep,tendon capacity at 0 deg,N,12.0,30.2371,45.6076,52.9149,60.2222,peak strain reached 20 %
+B5_t200_a45_deep,tendon capacity at 60 deg,N,12.0,10.2551,15.4681,17.9464,20.4247,peak strain reached 20 %
+B8_y00_r150,tendon capacity at 0 deg,N,12.0,5.8207,8.7795,10.1862,11.5928,solver stopped (guided) before the bearing gave way: a lower bound
+B8_y20_r125,tendon capacity at 0 deg,N,12.0,4.86,7.3305,8.505,9.6795,solver stopped (guided) before the bearing gave way: a lower bound
+B9_n150,tendon capacity at 0 deg,N,12.0,12.6866,19.1356,22.2016,25.2675,peak strain reached 20 %
 B9_n150,tendon capacity at 60 deg,N,12.0,0.0,0.0,0.0,0.0,"already 37 % strain from bending to the pose, before any tendon load"

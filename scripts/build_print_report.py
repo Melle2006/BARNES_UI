@@ -156,13 +156,14 @@ def fig_round2(r2, preds, basis):
     if not names:
         return None
     fig, axes = plt.subplots(1, 2, figsize=(10, 3.9), gridspec_kw=dict(width_ratios=[1.25, 1]))
+    km = (basis.get("E_sunlu_mpa") or 12.0) / 12.0       # runs at 12 MPa -> measured modulus
     ax = axes[0]
     x = np.arange(len(names))
     angles = sorted({a for n in names for a in r2[n]})
     wbar = 0.8 / max(1, len(angles))
     palette = ["#1f5fa8", "#e07b39", "#3a9d5d"]
     for i, a in enumerate(angles):
-        vals = [r2[n].get(a, {}).get("capacity_T") for n in names]
+        vals = [(r2[n].get(a, {}).get("capacity_T") or 0) * km for n in names]
         lower = [bool(r2[n].get(a, {}).get("guided")) and "lower bound" in r2[n].get(a, {}).get("limited_by", "")
                  for n in names]
         bars = ax.bar(x + (i - (len(angles) - 1) / 2) * wbar, [v or 0 for v in vals], wbar * 0.92,
@@ -175,10 +176,10 @@ def fig_round2(r2, preds, basis):
     est = []
     for n in names:
         p = preds.get(n) or preds.get(n.replace("_deep", ""))
-        est.append(float(p["compression_capacity_N"]) if p and p.get("compression_capacity_N") else np.nan)
-    top = 60.0
+        est.append(float(p["compression_capacity_N"]) * km if p and p.get("compression_capacity_N") else np.nan)
+    top = 70.0
     est_c = [min(e, top - 2) if np.isfinite(e) else np.nan for e in est]
-    ax.scatter(x, est_c, marker="_", s=420, color="#222", zorder=5, label="hand estimate (TEST_PLAN)")
+    ax.scatter(x, est_c, marker="_", s=420, color="#222", zorder=5, label="hand estimate (TEST_PLAN), rescaled")
     for xi, e in zip(x, est):
         if np.isfinite(e) and e > top - 2:
             ax.annotate(f"{e:.0f} ↑", (xi, top - 2), xytext=(0, -11), textcoords="offset points",
@@ -188,7 +189,7 @@ def fig_round2(r2, preds, basis):
     ax.text(len(names) - 0.5, basis["servo_tension_N"] + 1.5, "servo tension 47 N", ha="right",
             fontsize=7.5, color="#b03030")
     ax.set_xticks(x, [n.replace("_", " ") for n in names], rotation=30, ha="right", fontsize=7.5)
-    ax.set_ylabel("tendon tension the joint carries (N), E = 12 MPa")
+    ax.set_ylabel(f"tendon tension the joint carries (N), E = {12 * km:.1f} MPa")
     ax.set_title("Round 2: tendon capacity at the PIP (FEA)", fontsize=9.5)
     ax.legend(fontsize=7, frameon=False)
     ax.grid(axis="y", alpha=0.3)
@@ -197,17 +198,17 @@ def fig_round2(r2, preds, basis):
         for a, r in sorted(r2[n].items()):
             if a != 0.0 or not r.get("load"):
                 continue
-            T = [0] + [l["T"] for l in r["load"]]
+            T = [0] + [l["T"] * km for l in r["load"]]
             d = [0] + [l["du_along"] for l in r["load"]]
             line, = ax.plot(d, T, lw=1.3, label=n.replace("_", " "))
             cap = r.get("capacity_T")
             if cap:
-                ax.plot(np.interp(cap, T, d), cap, "o", ms=4, color=line.get_color())
+                ax.plot(np.interp(cap * km, T, d), cap * km, "o", ms=4, color=line.get_color())
     ax.set_xlabel("joint shortening along the tendon (mm)")
     ax.set_ylabel("tendon tension (N)")
     ax.set_xlim(0, 2.0)
-    ax.set_ylim(0, 45)
-    ax.set_title("Load–shortening at 0° (dot = capacity)", fontsize=9.5)
+    ax.set_ylim(0, 60)
+    ax.set_title(f"Load–shortening at 0°, {12 * km:.1f} MPa (dot = capacity)", fontsize=9.5)
     ax.legend(fontsize=6.5, frameon=False)
     ax.grid(alpha=0.3)
     fig.tight_layout()
@@ -220,17 +221,18 @@ def fig_round2(r2, preds, basis):
 def fig_return_gate(summary, basis):
     names = N.RETURN_GATE_NAMES
     lo, hi = basis["E_bracket_mpa"]
+    em = basis.get("E_sunlu_mpa") or 12.0
     fig, ax = plt.subplots(figsize=(8.5, 3.0))
     x = np.arange(len(names))
     m = np.array([float(summary[n]["return_margin"]) for n in names])
     ax.vlines(x, m * lo / 12, m * hi / 12, color="#9fb6d4", lw=6)
-    ax.scatter(x, m, color="#1f5fa8", zorder=3, label="at 12 MPa")
+    ax.scatter(x, m * em / 12, color="#1f5fa8", zorder=3, label=f"at {em:g} MPa (measured)")
     ax.axhline(1.0, color="#b03030", ls="--", lw=1)
     ax.text(len(names) - 0.6, 1.05, "holds the finger straight above this line", ha="right", fontsize=7, color="#b03030")
     ax.set_yscale("log")
     ax.set_xticks(x, [n.replace("_", " ") for n in names], rotation=30, ha="right", fontsize=7.5)
     ax.set_ylabel("return margin (×)")
-    ax.set_title(f"Return gate across the modulus bracket {lo}–{hi} MPa (bar) — round-1 candidates", fontsize=9.5)
+    ax.set_title(f"Return gate at the measured {em:g} MPa (dot), range {lo}–{hi} MPa (bar) — round-1 candidates", fontsize=9.5)
     ax.grid(axis="y", alpha=0.3, which="both")
     fig.tight_layout()
     p = FIG / "return_gate_bracket.png"

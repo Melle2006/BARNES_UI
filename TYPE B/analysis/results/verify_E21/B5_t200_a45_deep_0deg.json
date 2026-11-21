@@ -1,0 +1,227 @@
+{
+ "variant": "B5_t200_a45",
+ "offset": "deep",
+ "joint": "PIP",
+ "angle": 0.0,
+ "family": "B5_crossed_strip",
+ "params": {
+  "t": 2.0,
+  "angle": 45
+ },
+ "E_mpa": 21.0,
+ "T_max": 150.0,
+ "side_push": 0.01,
+ "tendon_offset_mm": 3.4,
+ "tendon_dir_yz": [
+  0.0,
+  -1.0
+ ],
+ "tendon_entry_yz": [
+  -3.4,
+  8.35
+ ],
+ "tendon_exit_yz": [
+  -3.4,
+  0.8
+ ],
+ "element_size": 0.975,
+ "elements": 6056,
+ "nodes": 11505,
+ "contact_faces": null,
+ "info": {
+  "t": 2.0,
+  "w": 1.95,
+  "angle": 45,
+  "strip_len": 8.172061112207574,
+  "k_over_E": 0.6363143800077737
+ },
+ "pose_reached": true,
+ "pose_moment": 0.0,
+ "pose_ref_u": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "guided": false,
+ "load": [
+  {
+   "hold_moment": 0.01715111,
+   "du_y": 0.0006085946,
+   "du_z": -0.01112459,
+   "du_along": 0.01112459,
+   "T": 0.43124999999999414
+  },
+  {
+   "hold_moment": 0.1015317,
+   "du_y": 0.003538486,
+   "du_z": -0.0639026,
+   "du_along": 0.0639026,
+   "T": 2.4878999999999984
+  },
+  {
+   "hold_moment": 0.3621429,
+   "du_y": 0.01200895,
+   "du_z": -0.2099185,
+   "du_along": 0.2099185,
+   "T": 8.269349999999998
+  },
+  {
+   "hold_moment": 0.6697711,
+   "du_y": 0.02112488,
+   "du_z": -0.3580426,
+   "du_along": 0.3580426,
+   "T": 14.269350000000003
+  },
+  {
+   "hold_moment": 1.014331,
+   "du_y": 0.03048293,
+   "du_z": -0.503061,
+   "du_along": 0.503061,
+   "T": 20.26935000000001
+  },
+  {
+   "hold_moment": 1.391491,
+   "du_y": 0.03993487,
+   "du_z": -0.645409,
+   "du_along": 0.645409,
+   "T": 26.269350000000014
+  },
+  {
+   "hold_moment": 1.791382,
+   "du_y": 0.04925736,
+   "du_z": -0.7856099,
+   "du_along": 0.7856099,
+   "T": 32.26934999999999
+  },
+  {
+   "hold_moment": 2.195325,
+   "du_y": 0.05813623,
+   "du_z": -0.9243177,
+   "du_along": 0.9243177,
+   "T": 38.26934999999999
+  },
+  {
+   "hold_moment": 2.570413,
+   "du_y": 0.06615554,
+   "du_z": -1.062389,
+   "du_along": 1.062389,
+   "T": 44.269349999999996
+  },
+  {
+   "hold_moment": 2.85904,
+   "du_y": 0.07279598,
+   "du_z": -1.201017,
+   "du_along": 1.201017,
+   "T": 50.26935
+  },
+  {
+   "hold_moment": 2.953209,
+   "du_y": 0.07745224,
+   "du_z": -1.34201,
+   "du_along": 1.34201,
+   "T": 56.26935000000001
+  },
+  {
+   "hold_moment": 2.613992,
+   "du_y": 0.07968454,
+   "du_z": -1.488632,
+   "du_along": 1.488632,
+   "T": 62.26935000000001
+  },
+  {
+   "hold_moment": 2.451924,
+   "du_y": 0.1054197,
+   "du_z": -1.62803,
+   "du_along": 1.62803,
+   "T": 67.14435
+  }
+ ],
+ "load_completed_fraction": 0.44762900000000005,
+ "frames": [
+  {
+   "T": 0.43124999999999414,
+   "strain_max": 0.001498694982769111,
+   "strain_p99": 0.0012939454908221667,
+   "strain_min": -0.0023521174008909185
+  },
+  {
+   "T": 2.487890550000016,
+   "strain_max": 0.008666173142866773,
+   "strain_p99": 0.007455894449169459,
+   "strain_min": -0.01351443794470808
+  },
+  {
+   "T": 8.269335899999996,
+   "strain_max": 0.028990874482575757,
+   "strain_p99": 0.024651561972197974,
+   "strain_min": -0.04441762808309946
+  },
+  {
+   "T": 14.269335900000002,
+   "strain_max": 0.05035655561409791,
+   "strain_p99": 0.042432151248994285,
+   "strain_min": -0.07578315695631199
+  },
+  {
+   "T": 20.26933590000001,
+   "strain_max": 0.0720097716942929,
+   "strain_p99": 0.06058165690659273,
+   "strain_min": -0.10649100668228662
+  },
+  {
+   "T": 26.269335900000012,
+   "strain_max": 0.09398189915174227,
+   "strain_p99": 0.07920160121980206,
+   "strain_min": -0.13662692258602327
+  },
+  {
+   "T": 32.26933589999999,
+   "strain_max": 0.11633970801795912,
+   "strain_p99": 0.09769109247508721,
+   "strain_min": -0.166313113110788
+  },
+  {
+   "T": 38.26933589999999,
+   "strain_max": 0.13920879244711815,
+   "strain_p99": 0.1170158896811126,
+   "strain_min": -0.19572982480650591
+  },
+  {
+   "T": 44.269335899999994,
+   "strain_max": 0.16282108911324156,
+   "strain_p99": 0.136438798825669,
+   "strain_min": -0.22516213305708843
+  },
+  {
+   "T": 50.2693359,
+   "strain_max": 0.18762305445823513,
+   "strain_p99": 0.15888471393017178,
+   "strain_min": -0.25690744021164424
+  },
+  {
+   "T": 56.26933590000001,
+   "strain_max": 0.2145510767852481,
+   "strain_p99": 0.1835107769702065,
+   "strain_min": -0.2909400257916086
+  },
+  {
+   "T": 62.26933590000001,
+   "strain_max": 0.24599837033141903,
+   "strain_p99": 0.212079178916427,
+   "strain_min": -0.32747445402597697
+  },
+  {
+   "T": 67.1443359,
+   "strain_max": 0.2850609851031811,
+   "strain_p99": 0.2507621752998858,
+   "strain_min": -0.36973586591173635
+  }
+ ],
+ "ccx_tail": "  constants per material and temperature:            2\n   temperature points per material:            1\n   plastic data points per material:            0\n\n   orientations:            0\n   amplitudes:            2\n   data points in all amplitudes:            2\n   print requests:            4\n   transformations:            0\n   property cards:            0\n\n *INFO reading *HYPERELASTIC: nonlinear geometric\n       effects are turned on\n\n\n STEP            1\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n\n STEP            2\n\n *INFO reading *STEP: nonlinear geometric\n       effects are turned on\n\n *WARNING in modaldynamics: parameter not recognized:\n          TOTALS=NO\n *WARNING reading *NODE PRINT. Card image:\n          *NODEPRINT,NSET=ROT,TOTALS=NO,FREQUENCY=1\n\n Static analysis was selected\n\n Nonlinear material laws are taken into account\n\n Newton-Raphson iterative procedure is active\n\n Nonlinear geometric effects are taken into account\n\n divergence; the increment size is decreased to 4.882813e-06\n the increment is reattempted\n\n\n *ERROR: increment size smaller than minimum\n best solution and residuals are in the frd file\n\n",
+ "stopped": null,
+ "wall_s": 79.8,
+ "capacity_T": 53.027120053205095,
+ "limited_by": "peak strain reached 20 %",
+ "axial_k0": 38.86670370410987,
+ "peak_strain_at_cap": 0.2
+}

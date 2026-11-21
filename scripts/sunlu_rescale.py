@@ -41,8 +41,13 @@ OUT = REPO / "results" / "sunlu_rescale"
 
 DENSITY_G_CM3 = 1.23          # SUNLU TPU 90A product page
 E_SUNLU_MPA = 21.0            # measured: edge-printed tension, results/material_tests (2026-11)
-E_WORK_MPA = 12.0             # working value until then
-E_LOW_MPA, E_HIGH_MPA = 5.3, 19.3
+E_SD_MPA = 2.9                # standard deviation of the four tension specimens
+E_PROVISIONAL_MPA = 12.0      # the value the studies were quoted at before the tests
+#: Working value and range: the measured value and +/- 1 SD once measured, otherwise the
+#: provisional 12 MPa and the datasheet bracket.
+E_WORK_MPA = E_SUNLU_MPA or E_PROVISIONAL_MPA
+E_LOW_MPA, E_HIGH_MPA = ((round(E_SUNLU_MPA - E_SD_MPA, 1), round(E_SUNLU_MPA + E_SD_MPA, 1)) if E_SUNLU_MPA
+                         else (5.3, 19.3))
 
 #: modulus each study was run at
 E_RUN = {"A3": 12.0, "A6": 13.0, "A8": 19.3, "TypeB_r1": 12.0, "TypeB_r2": 12.0}
@@ -120,9 +125,13 @@ def main():
     meta = dict(density_g_cm3=DENSITY_G_CM3, E_sunlu_mpa=E_SUNLU_MPA, E_work_mpa=E_WORK_MPA,
                 E_bracket_mpa=[E_LOW_MPA, E_HIGH_MPA], E_as_run=E_RUN,
                 servo_tension_N=SERVO_TENSION_N,
+                E_sd_mpa=E_SD_MPA if E_SUNLU_MPA else None, E_provisional_mpa=E_PROVISIONAL_MPA,
+                E_datasheet_bracket_mpa=[5.3, 19.3],
                 sources={"density": "SUNLU TPU 90A product page (docs/06-required-inputs.md item 7)",
-                         "E_low": "Bambu Lab TPU 90A technical data sheet, printed XY, 5.3 +/- 0.7 MPa",
-                         "E_high": "Jabil TPU 90A datasheet, 19.3 MPa (used by the A8 study)"})
+                         "E": "measured: edge-printed tension specimens, results/material_tests (mean of E1-1, E2-1; "
+                              "range +/- 1 SD of the four tension specimens)",
+                         "E_datasheet_low": "Bambu Lab TPU 90A technical data sheet, printed XY, 5.3 +/- 0.7 MPa",
+                         "E_datasheet_high": "Jabil TPU 90A datasheet, 19.3 MPa (used by the A8 study)"})
     (OUT / "basis.json").write_text(json.dumps(meta, indent=1))
     print(f"{len(rs)} rows -> {OUT / 'headline_values.csv'}")
 

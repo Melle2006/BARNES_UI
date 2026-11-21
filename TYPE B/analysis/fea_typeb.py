@@ -74,7 +74,9 @@ def _write_brep(shape, path):
 
 _repo_export.write_brep = _write_brep
 
-E_MPA = 12.0
+#: Modulus for the runs. 12 MPa was the provisional value; BARNES_E_MPA overrides it (the measured
+#: SUNLU value is 21.0 MPa, results/material_tests). Results scale exactly with E.
+E_MPA = float(os.environ.get("BARNES_E_MPA", "12.0"))
 TARGET_DEG = {"MCP": 90.0, "PIP": 100.0, "DIP": 80.0}
 # Every PIP joint meets the collar hard stop near 76 deg (85 deg with relieved
 # collars), so later runs may stop short of the anatomical target to save time.
