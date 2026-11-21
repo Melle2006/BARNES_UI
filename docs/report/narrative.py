@@ -279,14 +279,34 @@ def story(c):
     s += models(c, ["test_rig"])
     s += [c["PageBreak"](), P("9. Files to print — links", "h1"), P(LINKS_INTRO)]
     for head, items in PRINT_LINKS:
-        rows = [["Part", "Print", "Files"]]
+        rig = head.startswith("Type B joint modules")
+        rows = [["Part", "Rig label", "Print", "Files"] if rig else ["Part", "Print", "Files"]]
         for part, how, files in items:
-            rows.append([part, how, "<br/>".join(L(f, f.split("/")[-1], tree=f.endswith("/")) for f in files)])
-        s += [P(head, "h2"), T(rows, widths=[46 * mm, 44 * mm, W - 90 * mm])]
+            links = "<br/>".join(L(f, f.split("/")[-1], tree=f.endswith("/")) for f in files)
+            rows.append([part, rig_label(part), how, links] if rig else [part, how, links])
+        widths = [42 * mm, 18 * mm, 40 * mm, W - 100 * mm] if rig else [46 * mm, 44 * mm, W - 90 * mm]
+        s += [P(head, "h2"), T(rows, widths=widths)]
+        if rig:
+            s += [P("Rig labels are the engraved codes used in the rig procedure (docs/12, Part 2) and the rig "
+                    "workbook: 12 TPU PIP modules in all (A, B, H, K ×2; C, E, F, G ×1). The two PLA rows are the "
+                    "hinge-plate phalanges the H and K modules sit between, not separate rig tests. All 12 modules, "
+                    "laid out in the print orientation, are in print_ready/plates/ (one STL, one 3MF, one-page PDF).")]
     s += [P("Appendix: where every result lives", "h1")]
     s += [T([["Study", "Results", "Script"]] + [[a, L(b, tree=b.endswith("/")), L(cc)] for a, b, cc in APPENDIX],
             widths=[40 * mm, 72 * mm, W - 112 * mm])]
     return s
+
+
+RIG_LABELS = [
+    ("B5 crossed strip t2.0 / 45°, deep", "A1-P, A2-P"), ("B5 crossed strip t1.5 / 45°, as built", "B1-P, B2-P"),
+    ("Pinned B5 hybrid", "H1-P, H2-P"), ("Pinned B5, plates outside: PLA", "H1, H2 (PLA)"),
+    ("Inset pinned B5: B5i", "K1-P, K2-P"), ("Inset pinned B5: PLA", "K1, K2 (PLA)"), ("B4 rolling", "C-P"),
+    ("B8 knuckle 2 mm", "E-P"), ("B8 knuckle central", "F-P"), ("B3 dual leaf", "G-P"),
+]
+
+
+def rig_label(part):
+    return next((lab for start, lab in RIG_LABELS if part.startswith(start)), "—")
 
 
 BRANCH_LABEL = "claude/modest-cray-kbb75b"
