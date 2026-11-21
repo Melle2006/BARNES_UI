@@ -10,8 +10,9 @@ adapter and pulley, and one set of each kind of phalanges the 12 TPU modules sit
 * H1, H2  pinned, plates outside, for H1-P, H2-P
 * K1, K2  pinned, inset plates,   for K1-P, K2-P
 
-Phalanx 3 is not used on the rig (the load adapter takes its place). Writes
-print_ready/plates/PLA_rig_parts_A1.stl / .3mf / .pdf.
+Phalanx 3 is not used on the rig (the load adapter takes its place). Parts listed in
+PRINTED are already printed and left off the plate (as of 2026-11-21 everything but K1, K2).
+Writes print_ready/plates/PLA_rig_parts_A1.stl / .3mf / .pdf.
 """
 
 from __future__ import annotations
@@ -50,22 +51,25 @@ PARTS = [
 ]
 #: small parts, in rows to the right of the base
 GRID = [["ADP", "PUL", "S1", "S2"], ["X1", "X2", "H1", "H2"], ["K1", "K2"]]
+#: already printed (rig and the earlier phalanges): left off the plate; empty this to get the full set
+PRINTED = {"RIG", "ADP", "PUL", "S1", "S2", "X1", "X2", "H1", "H2"}
+GRID = [[c for c in row if c not in PRINTED] for row in GRID]
+GRID = [row for row in GRID if row]
 
 SETTINGS = [
     ("Printer / filament", "Bambu A1, 0.4 mm nozzle, Textured PEI plate; any PLA (Bambu PLA Basic profile), AMS lite is fine"),
     ("Temperatures", "Profile defaults: nozzle 220 °C, Textured PEI bed 55 °C"),
     ("Quality", "Layer 0.2 mm (0.2 mm Standard), default line widths"),
-    ("Strength", "4 wall loops; sparse infill 50 % gyroid (the pin load on H1, H2, K1, K2 goes through the plates; "
-                 "4 walls on the base, whose protractor stands up)"),
+    ("Strength", "4 wall loops; sparse infill 50 % gyroid (the hinge-pin load goes through the plates)"),
     ("Speed", "Profile defaults"),
     ("Support", "On: Tree (auto), On build plate only, threshold 30°. Nothing goes in the pin holes or sockets; "
-                "it catches the rig base's overhangs and the H/K plates' discs"),
-    ("Bed adhesion", "Brim: Auto. Add a 5 mm brim on ADP and the phalanges if they wobble (they stand on their ends)"),
+                "it catches the overhang under the hinge plates' discs (and the rig base's, if on the plate)"),
+    ("Bed adhesion", "Brim: Outer brim only, 5 mm: the phalanges stand on their ends (40–60 mm² each, up to 39 mm tall)"),
     ("Why this way up", "Phalanges stand on the end away from the joint, so the sockets and hinge-plate pin holes come out "
-                        "round and the plates vertical; the base lies on its big side plate"),
+                        "round and the plates vertical. K2 is upside down on purpose (its joint end up)"),
     ("On loading", "Open the 3MF (or the STL, answering 'No' to 'load as a single object'); don't auto-arrange or rotate"),
-    ("After printing", "Drill pin holes to Ø2.0 if tight; push a pin through each tab hole to check; the pulley takes "
-                       "a 623ZZ bearing and an M3 bolt; the rig also needs 8 Ø2 tab pins and the H/K hinge pins"),
+    ("After printing", "Drill pin holes to Ø2.0 if tight; push a pin through each tab hole to check. K2's hinge hole is "
+                       "blind on the inside: Ø2 × 1.8 mm pins pushed in from outside through K1's plate, glued at the outer end"),
 ]
 
 
@@ -79,18 +83,19 @@ def load(rel, rot):
 def build():
     info = {p[0]: p for p in PARTS}
     meshes = {p[0]: load(p[1], p[2]) for p in PARTS}
-    base = meshes["RIG"]
+    base = meshes["RIG"] if "RIG" not in PRINTED else None
     cell = np.max([meshes[c].extents for row in GRID for c in row], axis=0)
     ncol = max(len(r) for r in GRID)
     gw = ncol * cell[0] + (ncol - 1) * GAP
     gd = len(GRID) * cell[1] + (len(GRID) - 1) * GAP
-    W = base.extents[0] + GAP + gw
-    x0 = (BED - W) / 2
+    bw = base.extents[0] + GAP if base is not None else 0.0
+    x0 = (BED - (bw + gw)) / 2
     placed = []
-    b = base.copy()
-    b.apply_translation([x0, (BED - base.extents[1]) / 2, 0])
-    placed.append(("RIG", b))
-    gx, gy = x0 + base.extents[0] + GAP, (BED - gd) / 2
+    if base is not None:
+        b = base.copy()
+        b.apply_translation([x0, (BED - base.extents[1]) / 2, 0])
+        placed.append(("RIG", b))
+    gx, gy = x0 + bw, (BED - gd) / 2
     for r, row in enumerate(GRID):
         for k, code in enumerate(row):
             m = meshes[code].copy()
@@ -117,7 +122,7 @@ def stats(placed):
 
 def page(placed, info, st):
     fig = plt.figure(figsize=(11.69, 8.27))
-    fig.suptitle("PLA print plate: the rig and the phalanges for the 12 TPU modules (Bambu A1)", fontsize=13,
+    fig.suptitle("PLA print plate: the parts still to print for the rig (Bambu A1)", fontsize=13,
                  fontweight="bold", x=0.03, ha="left", y=0.975)
     fig.text(0.03, 0.935, "print_ready/plates/PLA_rig_parts_A1.stl / .3mf  ·  made by scripts/make_pla_plate.py  ·  "
              "partner of TPU_rig_modules_A1 (the 12 TPU modules)", fontsize=8, color="0.3")
@@ -168,8 +173,9 @@ def page(placed, info, st):
                 cell._loc = "left"
                 cell.get_text().set_ha("left")
     tot = sum(s[3] for s in st) / 1000
-    fig.text(0.03, 0.243, f"11 parts, {tot:.0f} cm³ (about {tot * 1.24 * 0.75:.0f}–{tot * 1.24:.0f} g of PLA at 50 % "
-             "infill). One set of each kind of phalanges: pull the pins and swap modules. Phalanx 3 is not needed.",
+    fig.text(0.03, 0.243, f"{len(st)} parts, {tot:.0f} cm³ (about {tot * 1.24 * 0.75:.0f}–{tot * 1.24:.0f} g of PLA at 50 % "
+             "infill). Left off as already printed: " + ", ".join(c for c, *_ in PARTS if c in PRINTED) + ". "
+             "Phalanx 3 is not needed on the rig.",
              fontsize=7.5)
     ax_s = fig.add_axes([0.03, 0.02, 0.94, 0.215])
     ax_s.axis("off")
