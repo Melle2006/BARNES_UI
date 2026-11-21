@@ -14,6 +14,8 @@ negative.
 | `raw/<specimen>.csv` | every reading as measured, one file per specimen | checking; not cleaned |
 | `apdl/*.txt` | the same four tables, no header, space separated | Mechanical APDL curve fitting |
 | `summary.csv` | E per specimen and group, neo-Hookean μ and D1 | quick values |
+| `tpu90a_sunlu_neohookean.mac` | the material as APDL commands (density, neo-Hookean μ and d) | APDL `/INPUT`, or a Workbench Commands object |
+| `../TPU90A_ansys_data.zip` | all of the above in one file | download |
 
 "Fit-ready" tables (the four top-level files): (0, 0) kept once; readings with stress but
 no measurable strain dropped (the gap was read to 0.1 mm = 0.5 % strain, so the first one or
