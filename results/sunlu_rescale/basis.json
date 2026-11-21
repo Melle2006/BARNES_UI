@@ -1,6 +1,6 @@
 {
  "density_g_cm3": 1.23,
- "E_sunlu_mpa": null,
+ "E_sunlu_mpa": 21.0,
  "E_work_mpa": 12.0,
  "E_bracket_mpa": [
   5.3,

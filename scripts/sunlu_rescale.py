@@ -40,7 +40,7 @@ REPO = Path(__file__).resolve().parents[1]
 OUT = REPO / "results" / "sunlu_rescale"
 
 DENSITY_G_CM3 = 1.23          # SUNLU TPU 90A product page
-E_SUNLU_MPA = None            # not published by SUNLU; set from a tensile test
+E_SUNLU_MPA = 21.0            # measured: edge-printed tension, results/material_tests (2026-11)
 E_WORK_MPA = 12.0             # working value until then
 E_LOW_MPA, E_HIGH_MPA = 5.3, 19.3
 
