@@ -251,6 +251,21 @@ Phalanx 3 (the fingertip) is not used on the rig: the load adapter takes its pla
 | **H1-P, H2-P** | **Pinned B5, plates outside** (B5 t1.5 deep) | **H1, H2** + two Ø2 mm hinge pins | 2 | the pins carry the tendon's squeeze |
 | **K1-P, K2-P** | **Inset pinned B5** (strips t1.75) | **K1, K2** + two Ø2 × 1.8 mm hinge pins | 2 | glue the pins' outer ends |
 
+**What to test, in order of importance** (if time is short, stop after priority 2):
+
+| Priority | Modules | Why |
+|---|---|---|
+| 1 | **H1-P, H2-P, K1-P, K2-P** | the pinned hybrids, the designs Type B is betting on: check the pins don't rub, the offset pivot behaves, nothing buckles up to 47 N |
+| 2 | **A1-P, A2-P** | the best free Type B joint; straight, it now reaches the servo's limit |
+| 3 | B1-P, B2-P | the round-1 winner as built: the reference that shows what the deep tendon and the pins add |
+| 4 | C-P, E-P, F-P | the bearings: only a print shows whether they seat (their FEA stopped at lower bounds) |
+| 5 | G-P | optional plain-leaf control |
+
+For each two-copy design: copy 1 does steps 1, 2, 3, 4; copy 2 does steps 1, 2, 4, 5. Single
+copies do steps 1, 2, 4 and then step 3 last. Record everything in the workbook
+[`results/rig_tests/rig_tests_typeB.xlsx`](../results/rig_tests/rig_tests_typeB.xlsx)
+(one sheet per module copy, section 10).
+
 The pinned phalanges (H, K) fit the rig: checked in CAD with no clash from 0° to 115°.
 Their hinge pins sit 0.65 mm (H) and 0.8 mm (K) palm-side of the scale's centre, which
 changes the angle you read by well under 1°.
@@ -353,6 +368,10 @@ swinging.
 | B (B5 t1.5, as built) | about 1.7 N (175 g) | buckles at about 29 N |
 | H (pinned, outside) | about 1.0 N (100 g) | should reach the servo's 47 N with no buckle (the pins carry it) |
 | K (pinned, inset) | about 0.9 N (90 g) | as H |
+| C (B4 rolling, deep) | about 0.35 N (35 g) | at least 19 N at 0° (26 N on the compression modulus); its lever falls as it rolls |
+| E (B8 knuckle 2 mm dorsal, deep) | about 0.04 N (almost nothing) | at least 8.6 N at 0° (12 N); may snap sideways before it seats |
+| F (B8 knuckle central, as built) | about 0.07 N | at least 10 N at 0° (14 N); may snap sideways before it seats |
+| G (B3 dual leaf, as built) | about 1.4 N (145 g) | buckles sideways, below B3 t2.0's 17 N |
 
 The other modules' figures are in section 5 of the report (at the measured modulus;
 [`TYPE B/round2/predictions.csv`](../TYPE%20B/round2/predictions.csv) is still at 12 MPa: multiply
@@ -362,14 +381,20 @@ module holds at angle θ for tendon tension T is about (T × lever − spring mo
 
 ## 10. Recording and reporting the rig results
 
-* One row per reading in [`results/rig_tests/rig_log.csv`](../results/rig_tests/rig_log.csv)
-  (delete the example row first); photos named `<label>_<step>_<n>.jpg` next to it, e.g.
-  `H1-P_3_1.jpg`.
+* Record in the workbook [`results/rig_tests/rig_tests_typeB.xlsx`](../results/rig_tests/rig_tests_typeB.xlsx)
+  (made by `scripts/make_rig_workbook.py`). Fill the **Setup** sheet first (pulley friction,
+  both hanger masses): every sheet uses them. Then one sheet per module copy (A1-P … K2-P),
+  steps 1–5 top to bottom. Blue cells are yours; you enter **weights added in grams** and
+  the sheet works out the tension (hanger + weights, × 9.81, less friction) and the
+  fingertip load. Each sheet shows that module's prediction next to your result, and the
+  **Summary** sheet collects every pass check. (The older one-row-per-reading
+  [`rig_log.csv`](../results/rig_tests/rig_log.csv) still works if you prefer it.)
+* Photos named `<label>_<step>_<n>.jpg` next to the workbook, e.g. `H1-P_3_1.jpg`.
 * Before each module, measure its strips or leaves (thickness and width, 3 points each)
-  and any bearing gap, and write them in the log: the analyses are rerun with the measured
+  and any bearing gap, and write them at the top of its sheet: the analyses are rerun with the measured
   sizes, not the nominal ones. Also weigh the module.
 * **A design passes** if, at your measured E, it holds at least 2 N (204 g) at the 44.8 mm
   hook at 30°, gives way gradually (squash) rather than suddenly (buckle or twist),
   springs back to within 5° after 10 min, and survives 1,000 cycles.
-* Send me the log (and the specimen E values from Part 1) and I'll compare every module
+* Send me the workbook and I'll compare every module
   with its prediction and update the report.
