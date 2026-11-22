@@ -1,25 +1,27 @@
-"""Rig pulley for a 5 × 15 × 5 mm ball bearing, on the printed rig's M3 axle.
+"""Rig pulley for a 625ZZ ball bearing (5 × 16 × 5 mm), on the printed rig's M3 axle.
 
-    python3 scripts/make_pulley_bearing15.py         # needs trimesh, manifold3d
+    python3 scripts/make_pulley_bearing16.py         # needs trimesh, manifold3d
 
 Replaces PUL (made for a 623ZZ, 3 × 10 × 4) on the already printed rig base. Three parts:
 
-* PULB pulley: bore Ø15.0 press fit on the bearing's outer ring, 5.0 mm wide (the bearing's
-  width, so it sits flush both sides), rim Ø20.4, 1.2 mm deep groove with sloped sides
-  (1.2 mm at the bottom, 1.8 mm at the rim) for 0.5–0.8 mm line. Groove bottom Ø18.0
-  leaves 1.5 mm of PLA round the bearing.
+* PULB pulley: bore Ø16.2 for the bearing's Ø16 outer ring (0.2 mm clearance: printed holes
+  come out a little small, so this is a snug push fit; a drop of glue if it is loose),
+  5.0 mm wide (the bearing's width, flush both sides), rim Ø21.6, 1.2 mm deep groove with
+  sloped sides (1.2 mm at the bottom, 1.8 mm at the rim) for 0.5–0.8 mm line. Groove bottom
+  Ø19.2 leaves 1.5 mm of PLA round the bearing.
 * SLV sleeve: Ø4.95 × 5.0 mm, Ø3.3 hole: fills the bearing's 5 mm bore on the M3 bolt.
 * WSH washers (print 2): Ø6.5 × 0.7 mm, Ø3.3 hole: one each side between the bearing's inner
   ring and the clevis arms, so the bolt clamps only the inner ring and the 6.6 mm clevis gap
   is filled (0.7 + 5.0 + 0.7 = 6.4 mm, 0.2 mm play). Ø6.5 keeps them off the outer ring.
 
-The rig's axle was placed for a groove bottom at r = 8.0; this groove is at r = 9.0 (the
-bearing needs the room), so the line meets the groove 1.0 mm further from the axle, about
-5° off straight at the post's tendon slot: a percent or two of friction, which the Setup
+The rig's axle was placed for a groove bottom at r = 8.0; this groove is at r = 9.6 (the
+bearing needs the room), so the line meets the groove 1.6 mm further from the axle, about
+8° off straight at the post's tendon slot: a percent or two of friction, which the Setup
 sheet's friction check picks up if you run it with the line through the slot.
 
 The pulley is checked against the rig base mesh at its real axle position (no overlap).
-Writes print_ready/rig/PULB_pulley_bearing15.stl, SLV_sleeve_5to3.stl, WSH_washer.stl.
+Writes print_ready/rig/PULB_pulley_625.stl, SLV_sleeve_5to3.stl, WSH_washer.stl, and
+PULB_pulley_set_plate.stl: all four pieces (pulley, sleeve, 2 washers) flat on one plate.
 """
 
 from __future__ import annotations
@@ -32,7 +34,7 @@ import trimesh
 RIG = Path(__file__).resolve().parents[1] / "print_ready" / "rig"
 AXLE_YZ = (4.27, -33.0)          # M3 axle on RIG_rig_base.stl, along X, clevis gap x = ±3.3
 W = 5.0
-R_BORE, R_RIM, R_GROOVE = 7.5, 10.2, 9.0
+R_BORE, R_RIM, R_GROOVE = 8.1, 10.8, 9.6
 G_BOT, G_TOP = 1.2, 1.8
 
 
@@ -62,12 +64,23 @@ def clearance(p):
 
 def main():
     p = pulley()
-    parts = {"PULB_pulley_bearing15.stl": p, "SLV_sleeve_5to3.stl": ring(1.65, 2.475, 5.0),
+    parts = {"PULB_pulley_625.stl": p, "SLV_sleeve_5to3.stl": ring(1.65, 2.475, 5.0),
              "WSH_washer.stl": ring(1.65, 3.25, 0.7)}
     for name, m in parts.items():
         assert m.is_watertight and m.is_volume, name
         m.export(RIG / name)
         print(f"wrote {name}: {m.extents.round(2)} mm, {m.volume:.0f} mm³")
+    # one plate: pulley, sleeve, two washers, side by side, flat
+    plate, x = [], 0.0
+    for m in (p, parts["SLV_sleeve_5to3.stl"], parts["WSH_washer.stl"], parts["WSH_washer.stl"]):
+        q = m.copy()
+        q.apply_translation([x - q.bounds[0][0], -q.bounds[0][1] - q.extents[1] / 2, -q.bounds[0][2]])
+        plate.append(q)
+        x = q.bounds[1][0] + 5.0
+    tot = trimesh.util.concatenate(plate)
+    tot.apply_translation([128 - tot.bounds[:, 0].mean(), 128, 0])
+    tot.export(RIG / "PULB_pulley_set_plate.stl")
+    print(f"wrote PULB_pulley_set_plate.stl: {len(plate)} pieces, {tot.extents.round(1)} mm")
     vol, gap, xs = clearance(p)
     print(f"pulley vs rig base: overlap {vol:.3f} mm³, nearest {gap:.2f} mm, pulley spans x {xs.round(2)}")
     assert vol < 1e-3
