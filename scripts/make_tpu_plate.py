@@ -49,7 +49,8 @@ SETTINGS = [
               "accel. 1000 (normal), 300 first layer, 500 outer wall, 3000 travel"),
     ("Cooling", "Part fan 50–100 %"),
     ("Support", "On: Normal (auto), On build plate only, threshold 30°, top Z distance 0.2 mm, interface 2 layers. "
-                "(under the tabs and bridging strips); support blocker over the C/E/F bearing gaps"),
+                "(under the tab ends and collar edges). No blocker needed: every gap roof has the part beneath it, "
+                "so 'build plate only' keeps support out of the gaps (support_blockers.png)"),
     ("Bed adhesion", "Brim: Outer brim only, 5 mm (each part stands 13 mm tall on its collar's side face, about 12 mm², "
                      "plus its supports). Clean PEI; glue stick only if TPU bonds too hard to release"),
     ("Why this way up", "On its side the strips' thickness is set by the walls (accurate) not by 0.2 mm layer steps, "
@@ -144,7 +145,7 @@ def page(placed, stats, box):
                  fontsize=8.5)
     ax.tick_params(labelsize=7)
     ax.text(x0 - pad + 2, y0 - pad + 2, "front of the bed", fontsize=7, color="0.4")
-    ax.text(x0 + W + pad - 2, y0 - pad + 2, "orange: bearing gap, block support inside it", fontsize=7,
+    ax.text(x0 + W + pad - 2, y0 - pad + 2, "orange: 0.5 mm bearing gap (stays clear)", fontsize=7,
             color="#b5704a", ha="right")
 
     # 3D view
@@ -169,7 +170,7 @@ def page(placed, stats, box):
     rows = []
     for code, on_bed, over, h, vol in stats:
         rows.append([code, NAMES[code[0]], f"{h:.1f}", f"{on_bed:.0f}", f"{over:.0f}", f"{vol / 1000:.2f}",
-                     "gap: block" if code in GAPPED else ""])
+                     "0.5 mm gap" if code in GAPPED else ""])
     half = (len(rows) + 1) // 2
     hdr = ["Label", "Design", "Height mm", "On bed mm²", "Needs support mm²", "Vol cm³", ""]
     for i, chunk in enumerate((rows[:half], rows[half:])):
