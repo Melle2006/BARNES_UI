@@ -96,6 +96,9 @@ def yz_poly(pts, x0, x1):
 
 # ---------------------------------------------------------------------------
 PLATE_X = (-14.0, -11.0)     # protractor plane, beside the finger
+STAND_EXTRA = 6.0            # protractor stand thickened by this, outward (x < PLATE_X[0])
+STAND_Z0 = -26.0             # stand column from here to z = -16 (was -22)
+GUSSET = 14.0                # legs of the gusset between the stand's foot and the side plate
 VANE_X = (-10.5, -3.0)       # pointer vane, between the plate and the arm
 RHO_IN, RHO_OUT = 34.0, 58.0
 TICK = (44.0, 49.0)          # tick band, radius from the pivot
@@ -128,6 +131,16 @@ def rig_base(g):
     # protractor frame and sector, in the plate plane
     frame = [(-22, -16), (-16, -16), (-16, 52), (pz - 8, 52), (pz - 8, 58), (-22, 58)]
     parts.append(yz_poly([(z, -y) for z, y in frame], *PLATE_X))  # v = -y is "up"
+    # stiffened stand: the frame's column and top beam thickened outward (away from the finger,
+    # so the protractor face, the vane and every clearance stay as they were), the column
+    # widened back towards the clevis, and a gusset tying its foot to the side plate
+    sx0 = PLATE_X[0] - STAND_EXTRA
+    parts.append(box(sx0, PLATE_X[1], -58, 16, STAND_Z0, -16))                 # column, 10 x 9 mm
+    parts.append(box(sx0, PLATE_X[1], -58, -52, -16, pz - 8))                  # top beam, 6 x 9 mm
+    gus = (cq.Workplane("XY").workplane(offset=STAND_Z0)
+           .polyline([(sx0, 10.0), (sx0 - GUSSET, 10.0), (sx0, 10.0 - GUSSET)]).close()
+           .extrude(-16 - STAND_Z0).val())
+    parts.append(gus)
     sector = []
     for i in range(61):
         a = math.radians(-5 + (ANGLE_MAX + 10) * i / 60)
