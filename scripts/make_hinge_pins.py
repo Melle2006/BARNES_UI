@@ -74,7 +74,7 @@ def pin(d, shank, tab):
     x_tab = -HEAD_T - nl
     tabm = trimesh.creation.box(bounds=[[x_tab - tab, -TAB_W / 2, 0], [x_tab, TAB_W / 2, TAB_H]])
     m = U([body, tip, head, neck, tabm])
-    m = trimesh.boolean.intersection([m, trimesh.creation.box(bounds=[[-50, -10, 0], [10, 10, 10]])], engine="manifold")
+    m = trimesh.boolean.intersection([m, trimesh.creation.box(bounds=[[-50, -10, 0], [50, 10, 10]])], engine="manifold")
     m.apply_translation(-m.bounds[0])
     return m
 
