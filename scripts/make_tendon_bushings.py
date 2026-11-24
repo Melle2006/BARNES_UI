@@ -6,10 +6,10 @@ The modules' tendon channel is Ø3.0 for a 0.5-0.8 mm line, so under load the li
 the channel's joint-side wall and the tendon's lever at the PIP drops by up to about 1 mm
 (seen on the rig in step 2). The lever is set where the line leaves the two collars into the
 flex zone. A bushing pressed into the channel at each of those two mouths holds the line
-within 0.2-0.3 mm of the channel centre, which is the lever the analyses use.
+within about 0.2 mm of the channel centre, which is the lever the analyses use.
 
 Bushing: Ø3.1 (snug in the TPU channel, which stretches) or Ø2.9 (if 3.1 is too tight),
-bore Ø1.2 with a 0.3 mm rounded-off lead at both ends so the line slides and bends over a
+bore Ø1.1 (for the 0.7 mm line) with a 0.3 mm rounded-off lead at both ends so the line slides and bends over a
 smooth edge, 3.0 mm long (through the 0.8 mm collar into the tab's channel). Push it in from
 the flex-zone side with a 1.75 mm filament end until flush with the collar face.
 
@@ -24,7 +24,7 @@ import numpy as np
 import trimesh
 
 OUT = Path(__file__).resolve().parents[1] / "print_ready" / "plates" / "tendon_bushings_plate.stl"
-L, BORE, LEAD = 3.0, 1.2, 0.3
+L, BORE, LEAD = 3.0, 1.1, 0.3     # bore for the 0.7 mm line: ~0.15-0.2 mm play a side as printed
 SIZES = (3.1, 2.9)
 N = 12
 
