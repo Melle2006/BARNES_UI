@@ -182,7 +182,12 @@ def rig_base(g):
     return base.cut(B.fuse(cuts)).clean(), dict(y_tendon_line=y_t, pulley_axle_y=yc)
 
 
-def load_adapter(g):
+def load_adapter(g, anchor_y=None):
+    """anchor_y: depth of the tendon anchor hole. None = midway between the two tendon depths
+    (the original ADP). That midway anchor makes the tensioned line run straight from mid-depth
+    at the post to mid-depth here, so it crosses the PIP on the joint-side wall of the 3 mm
+    channel, not its centre, and the lever is a third short (found on the rig). ADP-D / ADP-S
+    (anchor_for) put it where the straight line runs through the channel centres."""
     lay_d = g["lay"]["DIP"]
     spec = B.DIP
     e = spec["end_len"]
@@ -198,12 +203,26 @@ def load_adapter(g):
     # blade on y = 0, beyond the last hook hole; it crosses the tick band at 46-49 mm
     adapter = B.fuse(parts)
     cuts = [obround_slot(lay_d["tendon_y"], -g["deep"]["DIP"], z0 - 1, zb - 1.0),
-            B.cyl(B.TENDON_ANCHOR_D / 2, 40, (-20, (lay_d["tendon_y"] - g["deep"]["DIP"]) / 2, z0 + e + 1.2),
+            B.cyl(B.TENDON_ANCHOR_D / 2, 40, (-20, (lay_d["tendon_y"] - g["deep"]["DIP"]) / 2 if anchor_y is None
+                                                else anchor_y, z0 + e + 1.2),
                   (1, 0, 0))]
     cuts += B.pins(lay_d["pin_x"], z0 + e / 2)
     for r in HOOK_R:
         cuts.append(B.cyl(1.25, 20, (-10, 0, pz + r), (1, 0, 0)))
     return adapter.cut(B.fuse(cuts)).clean()
+
+
+#: tendon tangent on the 625ZZ pulley (scripts/make_pulley_bearing16.py): axle y, groove radius
+PULB_AXLE_Y, PULB_GROOVE_R = 4.27, 9.6
+
+
+def anchor_for(g, depth):
+    """Anchor depth so the straight line from the pulley's tangent to the anchor crosses the
+    PIP pivot on the centre of that tendon channel ('deep' or 'as-built')."""
+    yp, zp = PULB_AXLE_Y - PULB_GROOVE_R, PULLEY_Z
+    ypip = -g["deep"]["PIP"] if depth == "deep" else g["lay"]["PIP"]["tendon_y"]
+    za = g["z"]["05_DIP_module"] + B.DIP["end_len"] + 1.2
+    return yp + (ypip - yp) * (za - zp) / (g["pivot_z"] - zp)
 
 
 def pulley():
@@ -239,6 +258,10 @@ def compression_cylinder():
 
 
 # ---------------------------------------------------------------------------
+def ph2_at(g):
+    return g["parts"]["04_Phalanx2"].translate(cq.Vector(0, 0, g["z"]["04_Phalanx2"]))
+
+
 def rotate_about_pivot(shape, deg, pz):
     # +deg about +x carries a point at (y=0, z=pz+r) to y = -r sin(deg): flexion
     return shape.rotate(cq.Vector(0, 0, pz), cq.Vector(1, 0, pz), deg)
@@ -319,6 +342,12 @@ def main(argv=None):
     stl = not args.no_stl
     export(base, "rig_base", stl)
     export(adapter, "load_adapter", stl)
+    for tag, depth in (("deep", "deep"), ("asbuilt", "as-built")):
+        ya = anchor_for(g, depth)
+        ad = load_adapter(g, ya)
+        v = ad.intersect(ph2_at(g)).Volume()
+        print(f"  adapter_{tag}: anchor y {ya:.3f}, valid {ad.isValid()}, solids {len(ad.Solids())}, clear of Phalanx 2 {v:.4f}")
+        export(ad, f"load_adapter_{tag}", stl)
     export(pulley(), "pulley", stl)
     for t in (1.0, 2.0):
         export(dogbone_1ba(t), f"tensile_1BA_t{t:.1f}_flat", stl)

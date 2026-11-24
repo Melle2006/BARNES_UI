@@ -272,7 +272,7 @@ changes the angle you read by well under 1°.
 
 **Also needed:**
 
-* the rig parts: RIG base, ADP load adapter, PUL pulley;
+* the rig parts: RIG base, PUL pulley, and the **load adapter that matches the module's tendon depth: ADP-D for the deep modules (A, C, E, H, K), ADP-S for the as-built ones (B, F, G)**. The original ADP anchors the line halfway between the two depths, so the tensioned line crosses the PIP on the joint-side wall of the 3 mm channel and the tendon's lever is about a third short: don't use it for step 2 or 3;
 * a 623ZZ bearing and an M3 bolt (about 20 mm) with nut, for the pulley;
 * **tab pins: 8 per assembly**, Ø2 mm (steel dowel or 1.75 mm filament), each cut to the
   depth of the phalanx at its hole so it sits flush both sides: about 14 mm for the two
@@ -312,8 +312,10 @@ changes the angle you read by well under 1°.
    module and Phalanx 2, along the palm-side groove, then through the ADP adapter's anchor
    hole. Tie it off there with a knot that cannot slip or pull through the hole (e.g. a
    double overhand knot, then a drop of glue); leave the line long at the post end.
-6. **Adapter.** Push the adapter's dummy DIP tab into Phalanx 2's far end, its pointer vane
-   towards the protractor, and pin it.
+6. **Adapter.** Push the adapter (ADP-D for deep modules, ADP-S for as-built) into Phalanx 2's far
+   end, its pointer vane towards the protractor, and pin it. Check: with the tendon loaded, look into
+   the channel at the PIP: the line should run through the middle of the channel, not along its
+   lower (joint-side) wall.
 7. **Tendon hanger.** Take the line out of the back of the post, over the top of the
    pulley, and tie the empty tendon hanger to it so it hangs clear of the floor and table.
    Tendon tension T = (hanger + weights, in kg) × 9.81 N, less the pulley friction
