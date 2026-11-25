@@ -94,6 +94,24 @@ limits this further if it is not turning the crank all the way round.
    strain limit that every design decision uses as a 20 % placeholder (peak strain at each
    angle from the FEA, e.g. B5 t1.5 about 14.7 % at 60°). Report it as such.
 
+## Which servo
+
+Use a **standard (positional) MG995**, not the continuous-rotation "360°" version.
+
+* A continuous servo turns the crank all the way round, so the rocker always makes its full
+  ~90° swing. Every joint's range is below that (H 74°, K 76°, B5 t1.5 77.8°: collars meet or
+  20 % strain), so each cycle would force the collars together; the 1.5° of slot play cannot take
+  up 12-16° of overtravel. It also cannot hold an angle (step 4) or know where it is (cycle count,
+  parking at 0°) without an extra sensor.
+* A positional servo sweeps the crank only as far as needed (about 64-82° of crank for 30° of
+  rocker, 106-122° for 60°, 151-176° for 90°), holds, and lets the code count cycles and park at 0°.
+* If the continuous servo is kept, the crank must be shortened so its full swing is the test
+  angle (same coupler and rocker, ground link 105-110 mm): about 11 mm for 30°, 16 mm for 45°,
+  21.5 mm for 60°, one crank per test angle, plus a sensor for counting and a manual release for
+  step 4.
+* Either way, assemble with the finger straight at the rocker's start position, so the cycle runs
+  0° → test angle.
+
 ## How it changes the procedure
 
 * Steps 1-3 stay manual (tendon and weights).
