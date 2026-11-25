@@ -17,9 +17,14 @@ added.
 | `MG995_Assembly.SLDASM` | Servo sub-assembly | new | |
 | `Fatigue_assembly.SLDASM` | Fatigue (cycling) sub-assembly | new | step 5 |
 | `Master_Testrig_Assembly.SLDASM` | Whole test rig | new | top-level assembly |
+| `rocker_arm.SLDPRT` | Rocker arm of the linkage | new | the output link (four-bar: ground, crank, coupler, rocker) |
+| `S1_common_phalanges_02_Phalanx1.SLDPRT` | Phalanx 1 (as-built), as used in the assembly | S1 | SolidWorks copy of the repo's S1 |
+| `S2_common_phalanges_04_Phalanx2.SLDPRT` | Phalanx 2 (as-built), as used in the assembly | S2 | SolidWorks copy of the repo's S2 |
+| `s2_phalange.SLDPRT` | Modified Phalanx 2 | S2 | likely the S2 adapted to the linkage (to be confirmed) |
+| `pan_head_tapping_screw_am.SLDPRT` | Pan-head tapping screw (hardware model) | — | fastener |
 | _(STL exports to come)_ | | | |
 
-The parts point to an MG995 servo driving a four-bar linkage (ground link, crank, coupler) that
+The parts point to an MG995 servo driving a four-bar linkage (ground link, crank, coupler, rocker arm) that
 cycles the finger for the fatigue test (step 5) and the spring-back test (step 4); details to be
 confirmed. Open `Master_Testrig_Assembly.SLDASM` in SolidWorks with all the parts in this folder. The parts are SolidWorks files (SolidWorks 2015+ format), which
 can't be opened outside SolidWorks; STEP or STL exports of each would let them be checked against
