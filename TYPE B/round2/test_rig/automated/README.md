@@ -58,15 +58,55 @@ turn is then about 120° at 93 mm, 95° at 100 mm, 88-90° between 105 and 115 m
 119 mm. A swing near 90° matches the 0-90° range of steps 4 and 5. The servo's own sweep
 limits this further if it is not turning the crank all the way round.
 
+## How it works (from the team)
+
+* **Drive:** an MG995 servo turns the crank of a crank-rocker four-bar (crank 30 mm, coupler
+  106 mm, rocker 43.2 mm). The rocker swings about 90°. For a smaller angle the servo sweeps
+  the crank only part way. The MG995 is a positional servo (about 180°), not a 360° one, and
+  that is all this needs: for a ground link of 105-115 mm the crank sweeps about 64-79° for 30°
+  of rocker, 106-122° for 60° and 171-176° for the full 90°. (A "360°" MG995 is a
+  continuous-rotation version with speed control only, which could not stop at an angle.)
+* **Finger:** the bottom phalanx (S1) is fixed. The rocker is attached to the top phalanx (S2),
+  with the rocker's pivot on the TPU joint's pivot, so the joint is bent to the rocker's angle:
+  the test is angle-controlled.
+* **Rocker-coupler joint:** a hole looser than the pin instead of a tight pin joint (Ø4.23 hole
+  on a Ø3.13 pin: about 1.1 mm of play, about 1.5° of rocker). It takes up small
+  misalignments, limits the force on the TPU if the servo goes past its target, and lets the
+  joint settle a little at the end of each move instead of being held rigidly.
+
+## Points to check
+
+1. **Pivot drift (free modules).** A free TPU joint does not turn about a fixed point: the
+   round-1 FEA has the B5's rotation centre moving about 1.1 mm palmar by 90°. With the rocker
+   fixed to S2 and pivoting on a fixed point, the TPU is forced round a fixed centre, which adds
+   load the real finger does not see. The pinned modules (H, K) already turn on a pin, so put
+   the rocker pivot on the hinge pin's axis for them (0.65 mm palmar of the strip crossing for
+   H, 0.8 mm for K) and there is no conflict. For the free modules (A, B, C, E, F, G), either
+   accept it (and note it), or let the rocker-to-S2 connection slide about 1-2 mm along the
+   finger.
+2. **Step 4 (spring-back) needs the finger free.** The 1.5° of play lets the joint settle but
+   not spring back: with the rocker fixed to S2, the finger follows the servo. For step 4, after
+   the 60 s hold, either take the coupler pin out (or unhook the rocker) and read the angle as
+   before, or add a lost-motion slot in the coupler long enough for the whole return.
+3. **Step 5 becomes a different test.** Driven by angle, without the tendon and the fingertip
+   weight, it cycles the strips in pure bending: a strain-controlled fatigue test, not the
+   tendon-loaded cycle of the manual step 5. That is useful in its own right: it can measure the
+   strain limit that every design decision uses as a 20 % placeholder (peak strain at each
+   angle from the FEA, e.g. B5 t1.5 about 14.7 % at 60°). Report it as such.
+
 ## How it changes the procedure
 
-_To be written once all files are in: what moves the tendon, how the angle and cycle count
-are recorded, and what stays manual (steps 1–3)._
+* Steps 1-3 stay manual (tendon and weights).
+* Step 4: drive to the angle with the servo, hold 60 s, release (point 2), read the angle at
+  1 s, 10 s, 60 s and 10 min.
+* Step 5: cycle 0 → θ with the servo (θ = 60° or the angle for a chosen peak strain), count
+  cycles in the controller, and every 100 (or 1,000) cycles stop at 0° and record the resting
+  angle; stop at a crack or a 5° change in the resting angle. Record the servo's crank angles
+  for 0° and θ once per module.
 
 ## Status
 
 * Files: all in (20 SolidWorks files, 2 STEP, 5 STL).
-* Still to confirm: the ground-link length (servo axis to rocker pivot), whether the MG995
-  turns the crank continuously or sweeps, and how the rocker and slider move the finger (tendon
-  or direct).
+* Still to confirm: the ground-link length (servo axis to rocker pivot), and how step 4's release
+  will be done.
 * Report: to be added to the test report when the rig results are written up.
