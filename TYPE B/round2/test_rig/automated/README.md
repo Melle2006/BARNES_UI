@@ -22,6 +22,11 @@ added.
 | `S2_common_phalanges_04_Phalanx2.SLDPRT` | Phalanx 2 (as-built), as used in the assembly | S2 | SolidWorks copy of the repo's S2 |
 | `s2_phalange.SLDPRT` | Modified Phalanx 2 | S2 | likely the S2 adapted to the linkage (to be confirmed) |
 | `pan_head_tapping_screw_am.SLDPRT` | Pan-head tapping screw (hardware model) | — | fastener |
+| `Shaft.SLDPRT` | Shaft | new | axle for the linkage (to be confirmed) |
+| `slider_hole.SLDPRT` | Slider with a hole | new | guide for the moving end (to be confirmed) |
+| `tpu_mimic.SLDPRT` | Stand-in for the TPU joint module | PIP module | CAD placeholder for the module, for fitting the assembly |
+| `tpu_mimic_centre.SLDPRT` | Centre part of the TPU stand-in | PIP module | as above |
+| `Wire_Boot.SLDPRT` | Wire boot | new | strain relief / guide for the tendon or a lead (to be confirmed) |
 | _(STL exports to come)_ | | | |
 
 The parts point to an MG995 servo driving a four-bar linkage (ground link, crank, coupler, rocker arm) that
