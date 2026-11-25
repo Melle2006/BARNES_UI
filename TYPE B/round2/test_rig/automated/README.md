@@ -12,10 +12,16 @@ added.
 | `Coupler_new.SLDPRT` | Coupler (current version) | new | supersedes `coupler.SLDPRT` |
 | `crank.SLDPRT` | Crank (earlier version) | new | kept for the record |
 | `coupler.SLDPRT` | Coupler (earlier version) | new | kept for the record |
-| _(more files to come)_ | | | |
+| `ground_link.SLDPRT` | Ground link of the linkage | new | the fixed link the crank and coupler work against |
+| `MG995.SLDPRT` | MG995 servo (model) | new | the drive |
+| `MG995_Assembly.SLDASM` | Servo sub-assembly | new | |
+| `Fatigue_assembly.SLDASM` | Fatigue (cycling) sub-assembly | new | step 5 |
+| `Master_Testrig_Assembly.SLDASM` | Whole test rig | new | top-level assembly |
+| _(STL exports to come)_ | | | |
 
-The crank and coupler suggest a crank-driven linkage that moves the finger through its cycle
-(description to be confirmed). The parts are SolidWorks files (SolidWorks 2015+ format), which
+The parts point to an MG995 servo driving a four-bar linkage (ground link, crank, coupler) that
+cycles the finger for the fatigue test (step 5) and the spring-back test (step 4); details to be
+confirmed. Open `Master_Testrig_Assembly.SLDASM` in SolidWorks with all the parts in this folder. The parts are SolidWorks files (SolidWorks 2015+ format), which
 can't be opened outside SolidWorks; STEP or STL exports of each would let them be checked against
 the rest of the rig and shown here.
 
