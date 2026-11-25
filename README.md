@@ -433,3 +433,9 @@ These are honest limitations of the current build, not bugs:
 ## Licence
 
 MIT. See `pyproject.toml`.
+
+## Type B bending rig: automated steps 4 and 5
+
+Rig changes that automate the spring-back (step 4) and cycle (step 5) tests are collected in
+[`TYPE B/round2/test_rig/automated/`](TYPE%20B/round2/test_rig/automated/README.md). The manual rig
+and its procedure are in [`docs/12-tpu-specimen-test-procedure.md`](docs/12-tpu-specimen-test-procedure.md), Part 2.
