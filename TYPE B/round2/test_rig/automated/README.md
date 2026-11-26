@@ -58,6 +58,18 @@ turn is then about 120° at 93 mm, 95° at 100 mm, 88-90° between 105 and 115 m
 119 mm. A swing near 90° matches the 0-90° range of steps 4 and 5. The servo's own sweep
 limits this further if it is not turning the crank all the way round.
 
+## The mechanism in motion
+
+![Automated rig, SolidWorks motion study](automated_rig_motion.gif)
+
+![Four positions through one crank turn](automated_rig_frames.png)
+
+From the team's SolidWorks motion study (`automated_rig_motion.mp4`, 21 s). The servo (lower
+right) turns the crank (light blue) on its horn. The coupler (green) runs up to the rocker (red),
+which pivots on the joint's axis beside the protractor and is fixed to the moving phalanx, so the
+finger follows the rocker over the scale. In the study the crank turns all the way round (the
+continuous-rotation servo) and the rocker rocks back and forth: the crank-rocker described above.
+
 ## How it works (from the team)
 
 * **Drive:** an MG995 servo turns the crank of a crank-rocker four-bar (crank 30 mm, coupler
@@ -124,7 +136,7 @@ Use a **standard (positional) MG995**, not the continuous-rotation "360°" versi
 
 ## Status
 
-* Files: all in (20 SolidWorks files, 2 STEP, 5 STL).
+* Files: all in (20 SolidWorks files, 2 STEP, 5 STL, and the motion-study video).
 * Still to confirm: the ground-link length (servo axis to rocker pivot), and how step 4's release
   will be done.
 * Report: to be added to the test report when the rig results are written up.
