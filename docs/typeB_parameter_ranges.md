@@ -77,7 +77,7 @@ These are a choice, not a sweep that was run; the reasons are given.
 
 | Parameter | Min | Max | Step | Why these limits |
 |---|---|---|---|---|
-| Strip thickness t | 1.00 mm | 2.25 mm | 0.25 mm | below 1.0 too weak against the tendon (buckles); above about 2.25 the strain passes 20 % before 60° |
+| Strip thickness t | 1.00 mm | 2.25 mm | 0.25 mm | round 2: thinner strips buckle at lower tendon loads, so 1.0 is the floor; peak strain scales about with t (14.7 % at 60° for t1.5), so t ≈ 2.0 reaches 20 % near 60°, and 2.25 is one step past it to show the boundary |
 | Strip width w | 0.90 mm | 1.95 mm | 0.15 mm | 0.9 = the inset version; 1.95 = all the room there is at the PIP (MCP 2.45, DIP 1.45) |
 | Crossing angle | 40° | 75° | 5° | 45° won; 75° is the last angle that builds at t ≥ 2.0 |
 | Flex length | 7.55 mm | 7.55 mm | fixed | set by the phalanges |
