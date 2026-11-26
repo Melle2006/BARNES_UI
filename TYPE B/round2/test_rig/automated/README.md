@@ -124,6 +124,34 @@ Use a **standard (positional) MG995**, not the continuous-rotation "360°" versi
 * Either way, assemble with the finger straight at the rocker's start position, so the cycle runs
   0° → test angle.
 
+## Servo code: `firmware/fatigue_rig/fatigue_rig.ino`
+
+For a **standard (positional) MG995** on pin 9 of an Arduino Uno/Nano. Power the servo from its
+own 5-6 V supply (at least 2 A) with its GND joined to the Arduino's; never from the Arduino's
+5 V pin. Serial Monitor at 115200 baud, line ending "Newline".
+
+The finger angle is not computed from the linkage: you calibrate by eye on the protractor, so it
+is right whatever the exact link lengths are. Calibration is kept in EEPROM.
+
+**Once per module (calibrate):**
+1. `j 1500`, then `+` / `-` (5 µs steps; `++` / `--` for 50 µs) until the finger reads **0°**. Type `z`.
+2. Jog until it reads the **test angle** (e.g. 60°). Type `t`, then `a 60` to note the angle.
+3. Optional but recommended: jog to just before the collars meet on each side and type `lo` /
+   `hi`; the sketch then never drives past them (`L` resets them).
+4. `0` and `T` move to the two saved points to check them.
+
+**Step 5 (cycles):** `f 2000` (2 s per cycle, 0.5 Hz), `w 200` (dwell at each end), `k 100`
+(stop at 0° every 100 cycles), then `c 1000` (or `c 0` to run until `x`). At each stop, read the
+protractor and type `r 1.5` (the resting angle) to log it and carry on. The count survives a
+power cut (saved every 50 cycles); `n` resets it.
+
+**Step 4 (spring-back):** `h 60` drives to the test angle and holds 60 s. Type the held angle
+(`r 60`), pull the coupler pin when told, type `r` the moment it is free; the servo then goes limp
+and the sketch prompts you at 1 s, 10 s, 60 s and 10 min (`r <deg>` each time). Refit the pin,
+`e`, `0`.
+
+Every reading is printed as a `LOG,...` CSV line, ready to paste into the workbook.
+
 ## How it changes the procedure
 
 * Steps 1-3 stay manual (tendon and weights).
