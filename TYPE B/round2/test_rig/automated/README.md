@@ -124,7 +124,25 @@ Use a **standard (positional) MG995**, not the continuous-rotation "360°" versi
 * Either way, assemble with the finger straight at the rocker's start position, so the cycle runs
   0° → test angle.
 
-## Servo code: `firmware/fatigue_rig/fatigue_rig.ino`
+## Servo code for the continuous-rotation MG995: `firmware/fatigue_rig_continuous/fatigue_rig_continuous.ino`
+
+The version for the servo the rig actually uses. Signal on pin 9; a once-per-turn sensor on pin 2
+is optional but recommended (a micro-switch the crank presses, or an A3144 hall sensor with a
+magnet on the crank, switching to GND), placed where the finger is at 0°.
+
+* **Swing is fixed by the linkage** (about 88-90° with the 30 mm crank): only the speed is set in
+  code. Check that this is inside the module's range (H 74°, K 76°, B 78°) or shorten the crank
+  (about 21.5 mm for 60°).
+* **Set up:** `go`, then `halt` and adjust `stop 1490` / `stop 1510` until it stands still; `v 1600`
+  for a slow speed (0.5-1 turn per second).
+* **With the sensor:** `c 1000` counts every turn exactly and parks at 0° every `k` cycles for
+  the resting-angle reading (`r <deg>`).
+* **Without it:** `sensor 0`, time 10 turns with a stopwatch while `go` runs, enter `P <ms per turn>`;
+  turns are then counted by time and the stop position is only approximate.
+* Step 4 (spring-back) can't be done with a continuous servo (it can't hold an angle): do it by
+  hand as in the manual procedure.
+
+## Servo code for a standard (positional) MG995: `firmware/fatigue_rig/fatigue_rig.ino`
 
 For a **standard (positional) MG995** on pin 9 of an Arduino Uno/Nano. Power the servo from its
 own 5-6 V supply (at least 2 A) with its GND joined to the Arduino's; never from the Arduino's
