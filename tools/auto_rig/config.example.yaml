@@ -1,0 +1,36 @@
+# Copy to config.yaml and edit. Paths/ports are examples.
+camera:
+  angle: "http://192.168.1.20:8080/video"   # phone (IP Webcam app) or a USB camera index, e.g. 0
+  scale: same                               # 'same' if one camera sees the rig AND the scale display
+markers:
+  fixed_mm: 16        # printed size of the black square of marker id 0 (rig post)
+  moving_mm: 14       # marker id 1 (flag on the load adapter)
+  sign: 1             # -1 if flexion reads negative in 'check'
+force:
+  source: scale_camera   # scale_camera (read the display) or hx711 (load cell on the winch Arduino)
+  unit: g                # what the display shows: g, kg, N, lb
+  mode: inline           # inline: scale in the tendon line; platform: winch standing on the scale
+  tare: 0.0              # display reading with no tendon load
+  reader:                # filled in by 'run.py scale-setup'
+    corners: [[0, 0], [100, 0], [100, 40], [0, 40]]
+    n_digits: 4
+    decimals: 0
+    dark_digits: true
+    slant_deg: 0.0
+    gap: 0.12
+    on_fraction: 0.45
+    stable_frames: 3
+winch:
+  port: "COM5"           # Windows: COMx; Linux: /dev/ttyACM0; macOS: /dev/cu.usbmodem...
+  slack_us: 1200         # set by 'run.py winch-setup'
+  direction: 1
+  step_us: 4             # ~0.1 mm of line per step with a 20 mm spool
+  fast_ms: 150
+  settle_s: 1.2          # longer if the scale display is slow to settle
+  samples: 3
+  max_travel_us: 900
+  max_force_n: 30.0      # what the rig takes safely (47 N is the servo-limit target)
+  max_angle_deg: 72.0    # just under the module's collar contact (H 74, K 76, B 78)
+  twist_limit_deg: 6.0
+  lost_limit: 5
+  lever_hook_mm: 44.8
