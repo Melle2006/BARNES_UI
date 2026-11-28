@@ -186,7 +186,8 @@ def run_tests(a, rig_cfg, winch, sens, say=print, **clock):
         elif s == "step4":
             res.append(r.step4(target_deg=a.target, hold_s=a.hold, record_s=a.record, label=a.label))
         elif s == "step5":
-            res.append(r.step5(cycles=a.cycles, target_deg=a.target, check_every=a.every, period_s=a.period))
+            res.append(r.step5(cycles=a.cycles, target_deg=a.target, check_every=a.every, period_s=a.period,
+                                fingertip_g=a.fingertip))
         else:
             res.append(getattr(r, s)())
     return res
@@ -290,6 +291,7 @@ def main():
     ap.add_argument("--cycles", type=int, default=1000)
     ap.add_argument("--every", type=int, default=100)
     ap.add_argument("--period", type=float, default=2.0)
+    ap.add_argument("--fingertip", type=float, default=0.0, help="step 5 fingertip weight hung during the cycles, g")
     a = ap.parse_args()
     if a.command in ("run",) and not a.module:
         sys.exit("--module is required, e.g. --module H1-P")
